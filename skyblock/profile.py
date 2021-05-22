@@ -108,10 +108,10 @@ class Profile:
 
             crafted_minions=data.get('crafted_minions', []),
 
-            armor=data.get('armor', []),
+            armor=data.get('armor', [{} for _ in range(4)]),
             pets=data.get('wardrobe', []),
             ender_chest=data.get('ender_chest', []),
-            inventory=data.get('inventory', []),
+            inventory=data.get('inventory', [{} for _ in range(36)]),
             potion_bag=data.get('potion_bag', []),
             quiver=data.get('quiver', []),
             talisman_bag=data.get('talisman_bag', []),
@@ -154,11 +154,11 @@ class Profile:
             }, file, indent=4, sort_keys=True)
 
     def update(self):
-        now = time()
+        now = int(time())
         last = now if self.last_update is None else self.last_update
         dt = now - last
 
-        self.last_update = time()
+        self.last_update = now
 
     def mainloop(self):
         while True:
