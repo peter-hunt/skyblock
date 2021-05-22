@@ -1,4 +1,4 @@
-from setuptools import find_packages, setup
+from setuptools import setup
 
 
 with open('README.md') as file:
@@ -9,7 +9,7 @@ with open('requirements.txt') as file:
 
 
 setup(
-    name='regex-peterhunt',
+    name='skyblock-peterhunt',
     author='Peter Hunt',
     author_email='huangtianhao@icloud.com',
     description='Clone of Hypixel Skyblock, but in Python Cmd.',

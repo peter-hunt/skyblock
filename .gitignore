@@ -1,0 +1,6 @@
+.DS_Store
+__pycache__
+build
+dist
+skyblock_peterhunt.egg-info
+*.pyc

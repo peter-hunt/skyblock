@@ -14,7 +14,7 @@ git clone https://github.com/peter-hunt/skyblock.git
 Or use pip.
 
 ```bash
-pip install git+https://github.com/peter-hunt/regex.git
+pip install git+https://github.com/peter-hunt/skyblock.git
 ```
 
 This project requires Python 3.8+
@@ -22,6 +22,10 @@ This project requires Python 3.8+
 ## Usage
 ```python
 import skyblock
+```
+Or
+```bash
+python -m skyblock
 ```
 
 ## License
