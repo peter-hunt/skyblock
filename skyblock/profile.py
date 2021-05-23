@@ -5,10 +5,21 @@ from pathlib import Path
 from time import time
 from typing import Any, Dict, List, Optional
 
-from .func import red
+from .func import gen_help, red, green
 
 
 ItemTyping = Dict[str, Any]
+
+
+profile_doc = """
+> help [command]
+Show this message or get command description.
+
+> exit
+> quit
+Exit to the menu.
+""".strip()
+profile_help = gen_help(profile_doc)
 
 
 def exist_dir(*names, warn=False):
@@ -163,12 +174,26 @@ class Profile:
     def mainloop(self):
         while True:
             self.update()
+
             words = input(':> ').split()
             if words[0] in {'exit', 'quit'}:
                 if len(words) == 1:
                     self.dump()
+                    green('Saved!')
                     break
                 else:
                     red(f'Invalid usage of command {words[0]!r}.')
+
+            elif words[0] == 'help':
+                if len(words) == 1:
+                    print(profile_doc)
+                else:
+                    phrase = ' '.join(words[1:])
+                    if phrase in profile_help:
+                        print(f'> {phrase}')
+                        print(profile_help[phrase])
+                    else:
+                        red(f'Command not found: {phrase!r}.')
+
             else:
                 red(f'Unknown command: {words[0]!r}')

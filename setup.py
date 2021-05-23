@@ -10,6 +10,7 @@ with open('requirements.txt') as file:
 
 setup(
     name='skyblock-peterhunt',
+    version='0.1.0',
     author='Peter Hunt',
     author_email='huangtianhao@icloud.com',
     description='Clone of Hypixel Skyblock, but in Python Cmd.',
@@ -22,5 +23,6 @@ setup(
         'License :: OSI Approved :: MIT License',
     ],
     python_requires='>=3.8',
-
 )
+
+# 8ed7ac86-359d-4301-9730-b993a9886c43
