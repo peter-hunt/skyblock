@@ -266,16 +266,18 @@ class Profile:
                     path, _ = path_find(region, get(island.regions, dest),
                                         island.conns, island.dists)
                     for target in path[1:]:
-                        cyan(f'Going from {region.name} to {target}...')
                         dist = calc_dist(region, target)
-                        sleep(float(dist) / (5 * (self.base_speed / 100)))
+                        time_cost = float(dist) / (5 * (self.base_speed / 100))
+                        cyan(f'Going from {region} to {target}...')
+                        cyan(f'(time cost: {time_cost:.2f}s)')
+                        sleep(time_cost)
                         region = target
                 else:
                     red(f'Invalid usage of command {words[0]!r}.')
 
             elif words[0] == 'location':
                 if len(words) == 1:
-                    cyan(f"You're at {region.name} of {island.name}.")
+                    cyan(f"You're at {region} of {island}.")
                 else:
                     red(f'Invalid usage of command {words[0]!r}.')
 
@@ -289,14 +291,14 @@ class Profile:
                         dx, dz = ox - sx, oz - sz
                         direc = ''
                         if dx == 0:
-                            direc = 'east' if dz > 0 else 'west'
+                            direc = 'south' if dz > 0 else 'north'
                         elif dz == 0:
-                            direc = 'south' if dx > 0 else 'north'
+                            direc = 'east' if dx > 0 else 'west'
                         else:
-                            if dz / dx < tan(radians(60)):
-                                direc += 'south' if dx > 0 else 'north'
                             if dx / dz < tan(radians(60)):
-                                direc += 'east' if dz > 0 else 'west'
+                                direc += 'south' if dz > 0 else 'north'
+                            if dz / dx < tan(radians(60)):
+                                direc += 'east' if dx > 0 else 'west'
                         cyan(f"{other.name} on the {direc}")
                 else:
                     red(f'Invalid usage of command {words[0]!r}.')

@@ -2,13 +2,12 @@ from decimal import Decimal
 from dataclasses import dataclass
 from math import dist, inf
 from typing import Dict, List, Tuple, Union
-from pprint import pprint
 
 
 __all__ = [
     'HUB_ISLAND',
-    'VILLAGE', 'COMMUNITY_CENTER', 'FOREST', 'WASTELAND',
-    'COAL_MINE', 'FARM', 'RUINS', 'WILDERNESS',
+    'COAL_MINE', 'COMMUNITY_CENTER', 'FARM', 'FOREST', 'HIGH_LEVEL',
+    'RUINS', 'VILLAGE', 'WASTELAND', 'WILDERNESS', 'WIZARD_TOWER',
     'get', 'includes', 'path_find',
 ]
 
@@ -20,7 +19,7 @@ class Region:
     z: int
 
     def __repr__(self):
-        return self.name.replace('_', ' ')
+        return ' '.join(word.capitalize() for word in self.name.split('_'))
 
     def __hash__(self):
         return hash(self.name)
@@ -106,7 +105,7 @@ class Map:
     dists: Dict[Tuple[Region, Region], Decimal]
 
     def __repr__(self):
-        return self.name.replace('_', ' ')
+        return ' '.join(word.capitalize() for word in self.name.split('_'))
 
 
 def get(ls: List[Union[Region, Map]], name: str, default=None):
@@ -123,18 +122,21 @@ def includes(ls: List[Union[Region, Map]], name: str):
     return False
 
 
-VILLAGE = Region('village', 0, 0)
-COMMUNITY_CENTER = Region('community_center', -20, 10)
-FOREST = Region('forest', 0, -50)
-WASTELAND = Region('wasteland', -50, -40)
-COAL_MINE = Region('coal_mine', -60, -10)
-FARM = Region('farm', -50, 40)
-RUINS = Region('ruins', 60, -90)
-WILDERNESS = Region('wilderness', 80, 80)
+VILLAGE = Region('village', 0, -60)
+COMMUNITY_CENTER = Region('community_center', 0, -100)
+FOREST = Region('forest', -160, -20)
+WASTELAND = Region('wasteland', -120, -100)
+MOUNTAIN = Region('mountain', -25, 40)
+HIGH_LEVEL = Region('high_level', 0, 150)
+WIZARD_TOWER = Region('wizard_tower', 40, 70)
+COAL_MINE = Region('coal_mine', -20, -160)
+FARM = Region('farm', 50, -150)
+RUINS = Region('ruins', -250, -80)
+WILDERNESS = Region('wilderness', 100, 80)
 
 HUB_JOINTS = [
-    VILLAGE, COMMUNITY_CENTER, FOREST, WASTELAND,
-    COAL_MINE, FARM, RUINS, WILDERNESS,
+    VILLAGE, COMMUNITY_CENTER, FOREST, WASTELAND, HIGH_LEVEL,
+    WIZARD_TOWER, COAL_MINE, FARM, RUINS, WILDERNESS,
 ]
 
 HUB_CONNS = [
@@ -144,12 +146,21 @@ HUB_CONNS = [
     (COMMUNITY_CENTER, VILLAGE),
     (FARM, VILLAGE),
     (FARM, WILDERNESS),
+    (FOREST, HIGH_LEVEL),
     (FOREST, RUINS),
     (FOREST, VILLAGE),
     (FOREST, WASTELAND),
+    (HIGH_LEVEL, MOUNTAIN),
+    (HIGH_LEVEL, RUINS),
+    (HIGH_LEVEL, WILDERNESS),
+    (HIGH_LEVEL, WIZARD_TOWER),
+    (HIGH_LEVEL, WIZARD_TOWER),
+    (MOUNTAIN, WIZARD_TOWER),
     (RUINS, VILLAGE),
     (VILLAGE, WASTELAND),
     (VILLAGE, WILDERNESS),
+    (VILLAGE, WIZARD_TOWER),
+    (WILDERNESS, WIZARD_TOWER),
 ]
 
 HUB_DISTS = {}
