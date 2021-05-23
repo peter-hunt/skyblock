@@ -1,11 +1,13 @@
 from dataclasses import dataclass, field
 from json import dump, load
+from math import radians, tan
 from os.path import join
 from pathlib import Path
-from time import time
+from time import sleep, time
 from typing import Any, Dict, List, Optional
 
-from .func import gen_help, red, green
+from .func import gen_help, red, green, yellow, cyan
+from .map import ISLANDS, calc_dist, path_find, get, includes
 
 
 ItemTyping = Dict[str, Any]
@@ -18,6 +20,15 @@ Show this message or get command description.
 > exit
 > quit
 Exit to the menu.
+
+> goto <location>
+Go to a region.
+
+> location
+Display your location.
+
+> look
+Look at regions you can go to.
 """.strip()
 profile_help = gen_help(profile_doc)
 
@@ -49,6 +60,22 @@ class Profile:
     bank_level: str = 'starter'
     balance: float = 0.0
     purse: float = 0.0
+
+    location: str = 'hub'
+
+    base_health: int = 100
+    base_defense: int = 0
+    base_strength: int = 0
+    base_speed: int = 100
+    base_crit_chance: int = 0
+    base_crit_damage: int = 0
+    base_attack_speed: int = 0
+    base_intelligence: int = 0
+    base_sea_creature_chance: int = 0
+    base_magic_find: int = 0
+    base_pet_luck: int = 0
+    base_ferocity: int = 0
+    base_ability_damage: int = 0
 
     skill_xp_alchemy: float = 0.0
     skill_xp_carpentry: float = 0.0
@@ -104,6 +131,21 @@ class Profile:
             bank_level=data.get('bank_level', 'starter'),
             balance=data.get('balance', 0.0),
             purse=data.get('purse', 0.0),
+            location=data.get('location', 'hub'),
+
+            base_health=data.get('base_health', 100),
+            base_defense=data.get('base_defense', 0),
+            base_strength=data.get('base_strength', 0),
+            base_speed=data.get('base_speed', 100),
+            base_crit_chance=data.get('base_crit_chance', 0),
+            base_crit_damage=data.get('base_crit_damage', 0),
+            base_attack_speed=data.get('base_attack_speed', 0),
+            base_intelligence=data.get('base_intelligence', 0),
+            base_sea_creature_chance=data.get('base_sea_creature_chance', 0),
+            base_magic_find=data.get('base_magic_find', 0),
+            base_pet_luck=data.get('base_pet_luck', 0),
+            base_ferocity=data.get('base_ferocity', 0),
+            base_ability_damage=data.get('base_ability_damage', 0),
 
             collection=data.get('collection', {}),
             skill_xp_alchemy=data.get('skill_xp_alchemy', 0.0),
@@ -138,6 +180,21 @@ class Profile:
                 'bank_level': self.bank_level,
                 'balance': self.balance,
                 'purse': self.purse,
+                'location': self.location,
+
+                'base_health': self.base_health,
+                'base_defense': self.base_defense,
+                'base_strength': self.base_strength,
+                'base_speed': self.base_speed,
+                'base_crit_chance': self.base_crit_chance,
+                'base_crit_damage': self.base_crit_damage,
+                'base_attack_speed': self.base_attack_speed,
+                'base_intelligence': self.base_intelligence,
+                'base_sea_creature_chance': self.base_sea_creature_chance,
+                'base_magic_find': self.base_magic_find,
+                'base_pet_luck': self.base_pet_luck,
+                'base_ferocity': self.base_ferocity,
+                'base_ability_damage': self.base_ability_damage,
 
                 'collection': self.collection,
                 'skill_xp_alchemy': self.skill_xp_alchemy,
@@ -172,6 +229,8 @@ class Profile:
         self.last_update = now
 
     def mainloop(self):
+        island = get(ISLANDS, self.location)
+        region = get(island.regions, island.spawn)
         while True:
             self.update()
 
@@ -194,6 +253,53 @@ class Profile:
                         print(profile_help[phrase])
                     else:
                         red(f'Command not found: {phrase!r}.')
+
+            elif words[0] == 'goto':
+                if len(words) == 2:
+                    dest = words[1]
+                    if not includes(island.regions, dest):
+                        red(f'Region not found: {dest!r}')
+                        continue
+                    if region.name == dest:
+                        yellow(f'Already at region: {dest!r}')
+                        continue
+                    path, _ = path_find(region, get(island.regions, dest),
+                                        island.conns, island.dists)
+                    for target in path[1:]:
+                        cyan(f'Going from {region.name} to {target}...')
+                        dist = calc_dist(region, target)
+                        sleep(float(dist) / (5 * (self.base_speed / 100)))
+                        region = target
+                else:
+                    red(f'Invalid usage of command {words[0]!r}.')
+
+            elif words[0] == 'location':
+                if len(words) == 1:
+                    cyan(f"You're at {region.name} of {island.name}.")
+                else:
+                    red(f'Invalid usage of command {words[0]!r}.')
+
+            elif words[0] == 'look':
+                if len(words) == 1:
+                    for conn in island.conns:
+                        if region not in conn:
+                            continue
+                        other = conn[0] if conn[1] == region else conn[1]
+                        sx, sz, ox, oz = region.x, region.z, other.x, other.z
+                        dx, dz = ox - sx, oz - sz
+                        direc = ''
+                        if dx == 0:
+                            direc = 'east' if dz > 0 else 'west'
+                        elif dz == 0:
+                            direc = 'south' if dx > 0 else 'north'
+                        else:
+                            if dz / dx < tan(radians(60)):
+                                direc += 'south' if dx > 0 else 'north'
+                            if dx / dz < tan(radians(60)):
+                                direc += 'east' if dz > 0 else 'west'
+                        cyan(f"{other.name} on the {direc}")
+                else:
+                    red(f'Invalid usage of command {words[0]!r}.')
 
             else:
                 red(f'Unknown command: {words[0]!r}')

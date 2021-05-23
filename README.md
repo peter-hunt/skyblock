@@ -19,11 +19,12 @@ pip install git+https://github.com/peter-hunt/skyblock.git
 
 This project requires Python 3.8+
 
-## Usage
-```python
-import skyblock
+If you installed Skyblock with `git`, it's recommended to go into the folder and install the package, so you can run skyblock from anywhere:
+```bash
+python setup.py install
 ```
-Or
+
+## Usage
 ```bash
 python -m skyblock
 ```
