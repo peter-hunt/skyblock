@@ -19,7 +19,7 @@ def backupable(func: FunctionType) -> FunctionType:
         try:
             return func(*args, **kwargs)
         except KeyboardInterrupt:
-            print('\nKeyboardInterruption')
+            yellow('\nKeyboardInterruption')
     result.__name__ = func.__name__
     return result
 

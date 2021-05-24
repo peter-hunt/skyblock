@@ -1,15 +1,27 @@
 from decimal import Decimal
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from math import dist, inf
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Optional, Tuple, Union
+
+from .item import Item
 
 
 __all__ = [
-    'HUB_ISLAND',
-    'COAL_MINE', 'COMMUNITY_CENTER', 'FARM', 'FOREST', 'HIGH_LEVEL',
-    'RUINS', 'VILLAGE', 'WASTELAND', 'WILDERNESS', 'WIZARD_TOWER',
-    'get', 'includes', 'path_find',
+    'Npc', 'Region', 'Map',
+    'HUB_ISLAND', 'get', 'includes', 'path_find',
 ]
+
+
+@dataclass
+class Npc:
+    name: str
+    init_dialog: Optional[List[str]] = None
+    dialog: Optional[List[List[str]]] = None
+    trades: Optional[List[Tuple[int, Item]]] = None  # price, item
+    claim_item: Optional[Item] = None  # price, item, amount
+
+    def __repr__(self):
+        return ' '.join(word.capitalize() for word in self.name.split('_'))
 
 
 @dataclass(order=True)
@@ -17,6 +29,7 @@ class Region:
     name: str
     x: int
     z: int
+    npcs: List[Npc] = field(default_factory=list)
 
     def __repr__(self):
         return ' '.join(word.capitalize() for word in self.name.split('_'))
@@ -122,46 +135,137 @@ def includes(ls: List[Union[Region, Map]], name: str):
     return False
 
 
-VILLAGE = Region('village', 0, -60)
-COMMUNITY_CENTER = Region('community_center', 0, -100)
-FOREST = Region('forest', -160, -20)
-WASTELAND = Region('wasteland', -120, -100)
-MOUNTAIN = Region('mountain', -25, 40)
-HIGH_LEVEL = Region('high_level', 0, 150)
-WIZARD_TOWER = Region('wizard_tower', 40, 70)
+AUCTION_HOUSE = Region('auction_house', -18, -90)
+BANK = Region('bank', -20, -65)
+BAZAAR_ALLEY = Region('bazaar_alley', -32, -76)
+BLACKSMITHS_HOUSE = Region('blacksmiths_house', -28, -125)
+BUILDERS_HOUSE = Region('builders_house', -50, -36)
 COAL_MINE = Region('coal_mine', -20, -160)
-FARM = Region('farm', 50, -150)
+COLOSSEUM = Region('colosseum', -58, -58)
+COMMUNITY_CENTER = Region('community_center', 0, -100)
+FARM = Region('farm', 41, -137)
+FARMHOUSE = Region(
+    'farmhouse', 23, -80,
+    npcs=[
+        Npc(
+            'farm_merchant',
+            init_dialog=[
+                'You can buy and sell harvested crops with me!',
+                'Wheat, carrots, potatoes, and melon are my specialties!',
+                'Talk to me again to open the Farmer Shop!',
+            ],
+            trades=[
+                (7/3, 'wheat'), (7/3, 'carrot'), (7/3, 'potato'),
+                (2, 'melon'), (5, 'sugar_cane'), (8, 'pumpkin'),
+                (5, 'cocoa_beans'), (12, 'red_mushroom'),
+                (12, 'brown_mushroom'), (4, 'sand'), (10, 'rookie_hoe'),
+            ]
+        ),
+        Npc(
+            'jacob',
+            dialog=[[
+                'Howdy!',
+                'I organize farming contests once every few days!',
+                'You need Farming X to participate! :)',
+            ]],
+        ),
+        Npc(
+            'anita',
+        ),
+    ],
+)
+FASHION_SHOP = Region('fashion_shop', 27, -44)
+FLOWER_HOUSE = Region('flower_house', -7, -25)
+FOREST = Region('forest', -95, -40)
+GRAVEYARD = Region('graveyard', -99, -54)
+HIGH_LEVEL = Region('high_level', 0, 150)
+HUB_CRYPTS = Region('hub_crypts', -120, -100)
+LIBRARY = Region('library', 37, -111)
+MOUNTAIN = Region('mountain', 0, 0)
+PETS_BUILDING = Region('pets_building', 24, -90)
+POTION_SHOP = Region('potion_shop', 41, -63)
 RUINS = Region('ruins', -250, -80)
-WILDERNESS = Region('wilderness', 100, 80)
+TAVERN = Region('tavern', -85, -69)
+VILLAGE = Region('village', -3, -85)
+WILDERNESS = Region('wilderness', 75, -11)
+WIZARD_TOWER = Region('wizard_tower', 40, 70)
+
 
 HUB_JOINTS = [
-    VILLAGE, COMMUNITY_CENTER, FOREST, WASTELAND, HIGH_LEVEL,
-    WIZARD_TOWER, COAL_MINE, FARM, RUINS, WILDERNESS,
+    AUCTION_HOUSE, BANK, BAZAAR_ALLEY, BLACKSMITHS_HOUSE, BUILDERS_HOUSE,
+    COAL_MINE, FARM, FARMHOUSE, FASHION_SHOP, FLOWER_HOUSE, FOREST, GRAVEYARD,
+    HIGH_LEVEL, HUB_CRYPTS, LIBRARY, MOUNTAIN, PETS_BUILDING, POTION_SHOP,
+    RUINS, TAVERN, VILLAGE, WILDERNESS, WIZARD_TOWER,
 ]
 
 HUB_CONNS = [
+    (AUCTION_HOUSE, BAZAAR_ALLEY),
+    (AUCTION_HOUSE, LIBRARY),
+    (AUCTION_HOUSE, VILLAGE),
+    (BANK, BAZAAR_ALLEY),
+    (BANK, BUILDERS_HOUSE),
+    (BANK, FLOWER_HOUSE),
+    (BANK, VILLAGE),
+    (BAZAAR_ALLEY, BUILDERS_HOUSE),
+    (BAZAAR_ALLEY, TAVERN),
+    (BAZAAR_ALLEY, VILLAGE),
+    (BLACKSMITHS_HOUSE, COAL_MINE),
+    (BLACKSMITHS_HOUSE, FARM),
+    (BLACKSMITHS_HOUSE, LIBRARY),
+    (BLACKSMITHS_HOUSE, VILLAGE),
+    (BUILDERS_HOUSE, FLOWER_HOUSE),
+    (BUILDERS_HOUSE, FOREST),
+    (BUILDERS_HOUSE, MOUNTAIN),
+    (BUILDERS_HOUSE, TAVERN),
     (COAL_MINE, FARM),
-    (COAL_MINE, VILLAGE),
-    (COAL_MINE, WASTELAND),
+    (COAL_MINE, GRAVEYARD),
+    (COAL_MINE, LIBRARY),
+    (COLOSSEUM, FARM),
+    (COLOSSEUM, FASHION_SHOP),
+    (COLOSSEUM, MOUNTAIN),
+    (COLOSSEUM, POTION_SHOP),
+    (COLOSSEUM, WILDERNESS),
+    (COMMUNITY_CENTER, FARM),
+    (COMMUNITY_CENTER, FARMHOUSE),
+    (COMMUNITY_CENTER, LIBRARY),
+    (COMMUNITY_CENTER, PETS_BUILDING),
     (COMMUNITY_CENTER, VILLAGE),
+    (FARM, FARMHOUSE),
+    (FARM, PETS_BUILDING),
+    (FARM, POTION_SHOP),
     (FARM, VILLAGE),
-    (FARM, WILDERNESS),
+    (FARMHOUSE, PETS_BUILDING),
+    (FARMHOUSE, POTION_SHOP),
+    (FARMHOUSE, VILLAGE),
+    (FASHION_SHOP, FLOWER_HOUSE),
+    (FASHION_SHOP, MOUNTAIN),
+    (FASHION_SHOP, POTION_SHOP),
+    (FASHION_SHOP, VILLAGE),
+    (FASHION_SHOP, WILDERNESS),
+    (FASHION_SHOP, WIZARD_TOWER),
+    (FLOWER_HOUSE, MOUNTAIN),
+    (FLOWER_HOUSE, VILLAGE),
+    (FOREST, GRAVEYARD),
     (FOREST, HIGH_LEVEL),
+    (FOREST, HUB_CRYPTS),
     (FOREST, RUINS),
-    (FOREST, VILLAGE),
-    (FOREST, WASTELAND),
+    (FOREST, TAVERN),
+    (GRAVEYARD, HUB_CRYPTS),
+    (GRAVEYARD, TAVERN),
     (HIGH_LEVEL, MOUNTAIN),
     (HIGH_LEVEL, RUINS),
     (HIGH_LEVEL, WILDERNESS),
     (HIGH_LEVEL, WIZARD_TOWER),
-    (HIGH_LEVEL, WIZARD_TOWER),
+    (LIBRARY, VILLAGE),
+    (MOUNTAIN, RUINS),
+    (MOUNTAIN, WILDERNESS),
     (MOUNTAIN, WIZARD_TOWER),
-    (RUINS, VILLAGE),
-    (VILLAGE, WASTELAND),
-    (VILLAGE, WILDERNESS),
-    (VILLAGE, WIZARD_TOWER),
+    (PETS_BUILDING, VILLAGE),
     (WILDERNESS, WIZARD_TOWER),
 ]
+
+# for conn in sorted(tuple(sorted(_conn)) for _conn in HUB_CONNS):
+#     print(f'    ({conn[0].name.upper()}, {conn[1].name.upper()}),')
 
 HUB_DISTS = {}
 

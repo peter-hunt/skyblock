@@ -9,6 +9,12 @@ class Item:
     # common | uncommon | rare | epic | legendary |
     # mythic | supreme | special | very_special
     rarity: str = 'common'
+
+
+@dataclass
+class Tool:
+    name: str
+    rarity: str = 'common'
     modifier: Optional[str] = None
     ench: Dict[str, int] = field(default_factory=dict)
 
@@ -16,7 +22,6 @@ class Item:
 @dataclass
 class Weapon:
     name: str
-    count: int = 1
     damage: int = 0
     rarity: str = 'common'
     modifier: Optional[str] = None
@@ -29,7 +34,6 @@ class Weapon:
 @dataclass
 class Armor:
     name: str
-    count: int = 1
     rarity: str = 'common'
     modifier: Optional[str] = None
     ench: Dict[str, int] = field(default_factory=dict)
@@ -54,3 +58,22 @@ class Pet:
     exp: float = 0.0
     candy_used: int = 0
     rarity: str = 'common'
+
+
+MATERIALS = [
+    # name, stack_size, rarity
+    ('wheat', 64, 'common'),
+    ('carrot', 64, 'common'),
+    ('potato', 64, 'common'),
+    ('melon', 64, 'common'),
+    ('sugar_cane', 64, 'common'),
+    ('pumpkin', 64, 'common'),
+    ('cocoa_beans', 64, 'common'),
+    ('red_mushroom', 64, 'common'),
+    ('brown_mushroom', 64, 'common'),
+    ('sand', 64, 'common'),
+]
+
+ITEMS = [
+    Tool('rookie_hoe')
+]

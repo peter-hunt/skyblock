@@ -3,10 +3,11 @@ from json import dump, load
 from math import radians, tan
 from os.path import join
 from pathlib import Path
+from random import choice, choices
 from time import sleep, time
 from typing import Any, Dict, List, Optional
 
-from .func import gen_help, red, green, yellow, cyan
+from .func import gen_help, red, green, blue, yellow, cyan
 from .map import ISLANDS, calc_dist, path_find, get, includes
 
 
@@ -29,6 +30,9 @@ Display your location.
 
 > look
 Look at regions you can go to.
+
+> talkto <npc>
+Talk to an npc.
 """.strip()
 profile_help = gen_help(profile_doc)
 
@@ -105,6 +109,8 @@ class Profile:
     wardrobe: List[ItemTyping] = field(default_factory=list)
     wardrobe_slot: Optional[int] = None
 
+    npc_talked: List[str] = field(default_factory=list)
+
     @staticmethod
     def is_valid(name, warn=False):
         if not exist_dir(warn=warn):
@@ -170,6 +176,8 @@ class Profile:
             talisman_bag=data.get('talisman_bag', []),
             wardrobe=data.get('wardrobe', []),
             wardrobe_slot=data.get('wardrobe_slot', 0),
+
+            npc_talked=data.get('npc_talked', []),
         )
 
     def dump(self):
@@ -219,7 +227,17 @@ class Profile:
                 'talisman_bag': self.talisman_bag,
                 'wardrobe': self.wardrobe,
                 'wardrobe_slot': self.wardrobe_slot,
+
+                'npc_talked': self.npc_talked,
             }, file, indent=4, sort_keys=True)
+
+    @staticmethod
+    def npc_talk(dialog):
+        iterator = iter(dialog)
+        blue(next(iterator))
+        for sentence in iterator:
+            sleep(2)
+            blue(sentence)
 
     def update(self):
         now = int(time())
@@ -236,12 +254,13 @@ class Profile:
 
             words = input(':> ').split()
             if words[0] in {'exit', 'quit'}:
-                if len(words) == 1:
-                    self.dump()
-                    green('Saved!')
-                    break
-                else:
+                if len(words) != 1:
                     red(f'Invalid usage of command {words[0]!r}.')
+                    continue
+
+                self.dump()
+                green('Saved!')
+                break
 
             elif words[0] == 'help':
                 if len(words) == 1:
@@ -255,53 +274,114 @@ class Profile:
                         red(f'Command not found: {phrase!r}.')
 
             elif words[0] == 'goto':
-                if len(words) == 2:
-                    dest = words[1]
-                    if not includes(island.regions, dest):
-                        red(f'Region not found: {dest!r}')
-                        continue
-                    if region.name == dest:
-                        yellow(f'Already at region: {dest!r}')
-                        continue
-                    path, _ = path_find(region, get(island.regions, dest),
-                                        island.conns, island.dists)
+                if len(words) != 2:
+                    red(f'Invalid usage of command {words[0]!r}.')
+                    continue
+
+                dest = words[1]
+                if not includes(island.regions, dest):
+                    red(f'Region not found: {dest!r}')
+                    continue
+                if region.name == dest:
+                    yellow(f'Already at region: {dest!r}')
+                    continue
+                path, accum_dist = path_find(region, get(island.regions, dest),
+                                             island.conns, island.dists)
+                try:
+                    route = ' -> '.join(f'{region}' for region in path)
+                    cyan(f'Route: {route} ({float(accum_dist):.2f}m)')
                     for target in path[1:]:
                         dist = calc_dist(region, target)
                         time_cost = float(dist) / (5 * (self.base_speed / 100))
                         cyan(f'Going from {region} to {target}...')
                         cyan(f'(time cost: {time_cost:.2f}s)')
-                        sleep(time_cost)
+                        # sleep(time_cost)
                         region = target
-                else:
-                    red(f'Invalid usage of command {words[0]!r}.')
+                except KeyboardInterrupt:
+                    yellow('\nKeyboardInterruption')
 
             elif words[0] == 'location':
-                if len(words) == 1:
-                    cyan(f"You're at {region} of {island}.")
-                else:
+                if len(words) != 1:
                     red(f'Invalid usage of command {words[0]!r}.')
+                    continue
+
+                cyan(f"You're at {region} of {island}.")
 
             elif words[0] == 'look':
-                if len(words) == 1:
-                    for conn in island.conns:
-                        if region not in conn:
-                            continue
-                        other = conn[0] if conn[1] == region else conn[1]
-                        sx, sz, ox, oz = region.x, region.z, other.x, other.z
-                        dx, dz = ox - sx, oz - sz
-                        direc = ''
-                        if dx == 0:
-                            direc = 'south' if dz > 0 else 'north'
-                        elif dz == 0:
-                            direc = 'east' if dx > 0 else 'west'
-                        else:
-                            if dx / dz < tan(radians(60)):
-                                direc += 'south' if dz > 0 else 'north'
-                            if dz / dx < tan(radians(60)):
-                                direc += 'east' if dx > 0 else 'west'
-                        cyan(f"{other.name} on the {direc}")
-                else:
+                if len(words) != 1:
                     red(f'Invalid usage of command {words[0]!r}.')
+                    continue
+
+                cyan('Nearby places:')
+                for conn in island.conns:
+                    if region not in conn:
+                        continue
+                    other = conn[0] if conn[1] == region else conn[1]
+                    sx, sz, ox, oz = region.x, region.z, other.x, other.z
+                    dx, dz = ox - sx, oz - sz
+                    direc = ''
+                    if dx == 0:
+                        direc = 'South' if dz > 0 else 'North'
+                    elif dz == 0:
+                        direc = 'East' if dx > 0 else 'West'
+                    else:
+                        if dx / dz < tan(radians(60)):
+                            direc += 'South' if dz > 0 else 'North'
+                        if dz / dx < tan(radians(60)):
+                            direc += 'East' if dx > 0 else 'West'
+                    cyan(f"  {other} on the {direc} ({other.name})")
+
+                if len(region.npcs) > 0:
+                    cyan('NPCs:')
+                    for npc in region.npcs:
+                        cyan(f'  {npc} ({npc.name})')
+
+            elif words[0] == 'talkto':
+                if len(words) != 2:
+                    red(f'Invalid usage of command {words[0]!r}.')
+                    continue
+
+                name = words[1]
+                if not includes(region.npcs, name):
+                    red(f'Npc not found: {dest!r}')
+                    continue
+                npc = get(region.npcs, name)
+                try:
+                    if name not in self.npc_talked:
+                        if npc.init_dialog is not None:
+                            self.npc_talk(npc.init_dialog)
+                        elif npc.dialog is not None:
+                            self.npc_talk(choice(npc.dialog))
+                        else:
+                            cyan(choices((
+                                f"{npc} doesn't seem to want to talk to you.",
+                                f"{npc} has got nothing to say to you.",
+                                f"{npc} is in his peace.",
+                                f"{npc} seems tired and sleepy.",
+                                f"{npc} stared at you and didn't talk.",
+                                f"{npc} smiled mysteriously.",
+                                f"{npc} made a strange noise.",
+                                f"{npc} spoke a language you've never heard before",
+                            ), (20, 25, 20, 18, 10, 4, 2, 1))[0])
+                        self.npc_talked.append(name)
+                        continue
+                    if npc.trades is not None:
+                        pass
+                    elif npc.dialog is not None:
+                        self.npc_talk(choice(npc.dialog))
+                    else:
+                        cyan(choices((
+                            f"{npc} doesn't seem to want to talk to you.",
+                            f"{npc} has got nothing to say to you.",
+                            f"{npc} is in his peace.",
+                            f"{npc} seems tired and sleepy.",
+                            f"{npc} stared at you and didn't talk.",
+                            f"{npc} smiled mysteriously.",
+                            f"{npc} made a strange noise.",
+                            f"{npc} spoke a language you've never heard before",
+                        ), (20, 25, 20, 18, 10, 4, 2, 1))[0])
+                except KeyboardInterrupt:
+                    yellow('\nKeyboardInterruption')
 
             else:
                 red(f'Unknown command: {words[0]!r}')
