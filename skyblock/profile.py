@@ -63,7 +63,8 @@ class Profile:
     balance: float = 0.0
     purse: float = 0.0
 
-    location: str = 'hub'
+    island: str = 'hub'
+    region: str = 'village'
 
     base_health: int = 100
     base_defense: int = 0
@@ -123,7 +124,7 @@ class Profile:
     @classmethod
     def load(cls, name):
         if not cls.is_valid(name, warn=True):
-            print('Error: Profile not found.')
+            red('Error: Profile not found.')
             return
 
         with open(join(Path.home(), 'skyblock',
@@ -135,7 +136,8 @@ class Profile:
             bank_level=data.get('bank_level', 'starter'),
             balance=data.get('balance', 0.0),
             purse=data.get('purse', 0.0),
-            location=data.get('location', 'hub'),
+            island=data.get('island', 'hub'),
+            region=data.get('region', 'village'),
 
             base_health=data.get('base_health', 100),
             base_defense=data.get('base_defense', 0),
@@ -192,7 +194,8 @@ class Profile:
                 'bank_level': self.bank_level,
                 'balance': self.balance,
                 'purse': self.purse,
-                'location': self.location,
+                'island': self.island,
+                'region': self.region,
 
                 'base_health': self.base_health,
                 'base_defense': self.base_defense,
@@ -252,8 +255,8 @@ class Profile:
         self.last_update = now
 
     def mainloop(self):
-        island = get(ISLANDS, self.location)
-        region = get(island.regions, island.spawn)
+        island = get(ISLANDS, self.island)
+        region = get(island.regions, self.region)
         while True:
             self.update()
 
@@ -306,6 +309,7 @@ class Profile:
                         cyan(f'(time cost: {time_cost:.2f}s)')
                         # sleep(time_cost)
                         region = target
+                        self.region = target.name
                 except KeyboardInterrupt:
                     yellow('\nKeyboardInterruption')
 

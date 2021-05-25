@@ -1,236 +1,153 @@
-from dataclasses import dataclass, field
-from typing import Any, Dict, Optional
+from typing import Dict, Optional
 
 
-class Item:
+ITEM_OBJS = []
+
+
+def item_type(cls):
+    anno = getattr(cls, '__annotations__', {})
+    default = {}
+    for name in anno:
+        if hasattr(cls, name):
+            default[name] = getattr(cls, name)
+
+    init_str = 'lambda self'
+    for key in anno:
+        if key in default:
+            init_str += f', {key}={default[key]!r}'
+        else:
+            init_str += f', {key}'
+    init_str += ': ('
+    for key in anno:
+        init_str += f'setattr(self, {key!r}, {key}), '
+    init_str += 'None,)[-1]'
+    # print(init_str)
+    setattr(cls, '__init__', eval(init_str))
+
+    if cls.__name__ == 'Empty':
+        to_obj_str = 'lambda self: {}'
+    else:
+        to_obj_str = 'lambda self: {'
+        for key in anno:
+            to_obj_str += f'{key!r}: self.{key}, '
+        to_obj_str += f"'type': {cls.__name__.lower()!r}" + '}'
+    # print(to_obj_str)
+    setattr(cls, 'to_obj', eval(to_obj_str))
+
+    from_obj_str = 'lambda cls, obj: cls('
+    from_obj_str += ', '.join(
+        f'obj.get({key!r}, {default[key]!r})' if key in default
+        else f'obj[{key!r}]' for key in anno
+    )
+    from_obj_str += ')'
+    # print(from_obj_str)
+    setattr(cls, 'from_obj', classmethod(eval(to_obj_str)))
+
+    ITEM_OBJS.append(cls)
+
+    return cls
+
+
+class ItemType:
+    pass
+
+
+@item_type
+class Item(ItemType):
+    name: str
+    count: int
     # common | uncommon | rare | epic | legendary |
     # mythic | supreme | special | very_special
-    def __init__(self, name: str, count: int, rarity: str):
-        self.name = name
-        self.count = count
-        self.rarity = rarity
-
-    def to_obj(self) -> Dict[str, Any]:
-        return {
-            'name': self.name,
-            'count': self.count,
-            'rarity': self.rarity,
-            'type': 'item',
-        }
-
-    @classmethod
-    def from_obj(cls, obj: Dict[str, Any]):
-        return cls(obj['name'], obj['count'], obj['rarity'])
+    rarity: str = 'common'
 
 
-class Empty(Item):
-    def __init__(self):
-        pass
-
-    def to_obj(self) -> Dict[str, Any]:
-        return {'type': 'empty'}
+@item_type
+class Empty(ItemType):
+    pass
 
 
-class Tool(Item):
-    def __init__(self, name: str, rarity: str,
-                 modifier: Optional[str] = None,
-                 enchantments: Dict[str, int] = {}):
-        self.name = name
-        self.rarity = rarity
-        self.modifier = modifier
-        self.enchantments = enchantments
+@item_type
+class Tool(ItemType):
+    name: str
+    rarity: str = 'common'
+    modifier: Optional[str] = None
+    enchantments: Dict[str, int] = {}
 
 
-class Pickaxe(Tool):
-    def __init__(self, name: str, rarity: str, breaking_power: int,
-                 mining_speed: int, modifier: Optional[str] = None,
-                 enchantments: Dict[str, int] = {}):
-        self.name = name
-        self.rarity = rarity
-        self.breaking_power = breaking_power
-        self.mining_speed = mining_speed
-        self.modifier = modifier
-        self.enchantments = enchantments
-
-    def to_obj(self) -> Dict[str, Any]:
-        return {
-            'name': self.name,
-            'rarity': self.rarity,
-            'breaking_power': self.breaking_power,
-            'mining_speed': self.mining_speed,
-            'modifier': self.modifier,
-            'enchantments': self.enchantments,
-            'type': 'pickaxe',
-        }
-
-    @classmethod
-    def from_obj(cls, obj: Dict[str, Any]):
-        return cls(obj['name'], obj['rarity'],
-                   obj['breaking_power'], obj['mining_speed'],
-                   obj.get('modifier', None),
-                   obj.get('enchantments', {}))
+@item_type
+class Pickaxe(ItemType):
+    name: str
+    rarity: str
+    breaking_power: int
+    mining_speed: int
+    modifier: Optional[str] = None,
+    enchantments: Dict[str, int] = {}
 
 
-class Weapon(Item):
-    def __init__(self, name: str, rarity: str, damage: int,
-                 modifier: Optional[str] = None,
-                 enchantments: Dict[str, int] = {},
-                 dungeon_stars: Optional[int] = None,
-                 combat_skill_req: Optional[int] = None,
-                 dungeon_skill_req: Optional[int] = None):
-        self.name = name
-        self.rarity = rarity
-        self.damage = damage
-        self.modifier = modifier
-        self.enchantments = enchantments
-        self.dungeon_stars = dungeon_stars
-        self.combat_skill_req = combat_skill_req
-        self.dungeon_skill_req = dungeon_skill_req
-
-    def to_obj(self) -> Dict[str, Any]:
-        return {
-            'name': self.name,
-            'rarity': self.rarity,
-            'damage': self.damage,
-            'modifier': self.modifier,
-            'enchantments': self.enchantments,
-            'dungeon_stars': self.dungeon_stars,
-            'combat_skill_req': self.combat_skill_req,
-            'dungeon_skill_req': self.dungeon_skill_req,
-            'type': 'weapon',
-        }
-
-    @classmethod
-    def from_obj(cls, obj: Dict[str, Any]):
-        return cls(obj['name'], obj['rarity'], obj['damage'],
-                   obj.get('modifier', None),
-                   obj.get('enchantments', {}),
-                   obj.get('dungeon_stars', None),
-                   obj.get('combat_skill_req', None),
-                   obj.get('dungeon_skill_req', None))
+@item_type
+class Weapon(ItemType):
+    name: str
+    rarity: str
+    damage: int
+    modifier: Optional[str] = None
+    enchantments: Dict[str, int] = {}
+    dungeon_stars: Optional[int] = None
+    combat_skill_req: Optional[int] = None
+    dungeon_skill_req: Optional[int] = None
 
 
-class Armor(Item):
+class Armor(ItemType):
+    name: str
+    rarity: str
     # helmet | chestplate | leggings | boots
-    def __init__(self, name: str, rarity: str, part: str,
-                 modifier: Optional[str] = None,
-                 enchantments: Dict[str, int] = {},
-                 dungeon_stars: Optional[int] = None,
-                 combat_skill_req: Optional[int] = None,
-                 dungeon_skill_req: Optional[int] = None):
-        self.name = name
-        self.rarity = rarity
-        self.part = part
-        self.modifier = modifier
-        self.enchantments = enchantments
-        self.dungeon_stars = dungeon_stars
-        self.combat_skill_req = combat_skill_req
-        self.dungeon_skill_req = dungeon_skill_req
-
-    def to_obj(self) -> Dict[str, Any]:
-        return {
-            'name': self.name,
-            'rarity': self.rarity,
-            'modifier': self.modifier,
-            'enchantments': self.enchantments,
-            'dungeon_stars': self.dungeon_stars,
-            'combat_skill_req': self.combat_skill_req,
-            'dungeon_skill_req': self.dungeon_skill_req,
-            'type': 'armor',
-        }
-
-    @classmethod
-    def from_obj(cls, obj: Dict[str, Any]):
-        return cls(obj['name'], obj['rarity'],
-                   obj.get('modifier', None),
-                   obj.get('enchantments', {}),
-                   obj.get('dungeon_stars', None),
-                   obj.get('combat_skill_req', None),
-                   obj.get('dungeon_skill_req', None))
+    part: str
+    modifier: Optional[str] = None
+    enchantments: Dict[str, int] = {}
+    dungeon_stars: Optional[int] = None
+    combat_skill_req: Optional[int] = None
+    dungeon_skill_req: Optional[int] = None
 
 
-class Potion(Item):
-    def __init__(self, name: str, rarity: str,
-                 potion: str, duration: int, level: int):
-        self.name = name
-        self.rarity = rarity
-        self.potion = potion
-        self.duration = duration
-        self.level = level
-
-    def to_obj(self) -> Dict[str, Any]:
-        return {
-            'name': self.name,
-            'rarity': self.rarity,
-            'potion': self.potion,
-            'duration': self.duration,
-            'level': self.level,
-            'type': 'potion',
-        }
-
-    @classmethod
-    def from_obj(cls, obj: Dict[str, Any]):
-        return cls(obj['name'], obj['rarity'], obj['potion'],
-                   obj['duration'], obj['level'])
+class Potion(ItemType):
+    name: str
+    rarity: str
+    potion: str
+    duration: int
+    level: int
 
 
-class Pet:
-    def __init__(self, name: str, rarity: str,
-                 active: bool = False, exp: float = 0.0, candy_used: int = 0):
-        self.name = name
-        self.rarity = rarity
-        self.active = active
-        self.exp = exp
-        self.candy_used = candy_used
-
-    def to_obj(self) -> Dict[str, Any]:
-        return {
-            'name': self.name,
-            'rarity': self.rarity,
-            'active': self.active,
-            'exp': self.exp,
-            'candy_used': self.candy_used,
-        }
-
-    @classmethod
-    def from_obj(cls, obj: Dict[str, Any]):
-        return cls(obj['name'], obj['rarity'], obj['active'],
-                   obj['exp'], obj['candy_used'])
+class Pet(ItemType):
+    name: str
+    rarity: str
+    active: bool = False
+    exp: float = 0.0
+    candy_used: int = 0
 
 
 def from_obj(obj):
-    if isinstance(obj, Item):
+    if isinstance(obj, ItemType):
         return obj
-    elif obj['type'] == 'empty':
+    elif 'type' not in obj:
         return Empty()
-    elif obj['type'] == 'item':
-        return Item.from_obj(obj)
-    elif obj['type'] == 'pickaxe':
-        return Pickaxe.from_obj(obj)
-    elif obj['type'] == 'weapon':
-        return Weapon.from_obj(obj)
-    elif obj['type'] == 'armor':
-        return Armor.from_obj(obj)
-    elif obj['type'] == 'potion':
-        return Potion.from_obj(obj)
-    elif obj['type'] == 'pet':
-        return Pet.from_obj(obj)
+    for cls in ITEM_OBJS:
+        if obj['type'] == cls.__name__.lower():
+            return cls.from_obj(obj)
     else:
         raise ValueError(f"invalid item obj type: {obj['type']!r}")
 
 
 MATERIALS = [
     # name, stack_size, rarity
-    ('wheat', 64, 'common'),
-    ('carrot', 64, 'common'),
-    ('potato', 64, 'common'),
-    ('melon', 64, 'common'),
-    ('sugar_cane', 64, 'common'),
-    ('pumpkin', 64, 'common'),
-    ('cocoa_beans', 64, 'common'),
-    ('red_mushroom', 64, 'common'),
-    ('brown_mushroom', 64, 'common'),
-    ('sand', 64, 'common'),
+    Item('wheat', 64, 'common'),
+    Item('carrot', 64, 'common'),
+    Item('potato', 64, 'common'),
+    Item('melon', 64, 'common'),
+    Item('sugar_cane', 64, 'common'),
+    Item('pumpkin', 64, 'common'),
+    Item('cocoa_beans', 64, 'common'),
+    Item('red_mushroom', 64, 'common'),
+    Item('brown_mushroom', 64, 'common'),
+    Item('sand', 64, 'common'),
 ]
 
 ITEMS = [
