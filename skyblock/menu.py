@@ -76,7 +76,11 @@ def main():
 
     while True:
         words = input('> ').split()
-        if words[0] in {'exit', 'quit'}:
+
+        if len(words) == 0:
+            continue
+
+        elif words[0] in {'exit', 'quit'}:
             if len(words) == 1:
                 break
             else:

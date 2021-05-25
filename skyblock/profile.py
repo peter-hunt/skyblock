@@ -8,10 +8,8 @@ from time import sleep, time
 from typing import Any, Dict, List, Optional
 
 from .func import gen_help, red, green, blue, yellow, cyan
+from .item import Item, from_obj
 from .map import ISLANDS, calc_dist, path_find, get, includes
-
-
-ItemTyping = Dict[str, Any]
 
 
 profile_doc = """
@@ -95,18 +93,18 @@ class Profile:
 
     crafted_minions: List[str] = field(default_factory=list)
 
-    armor: List[ItemTyping] = field(
+    armor: List[Item] = field(
         default_factory=lambda: [{} for _ in range(4)]
     )
-    pets: List[ItemTyping] = field(default_factory=list)
-    ender_chest: List[ItemTyping] = field(default_factory=list)
-    inventory: List[ItemTyping] = field(
+    pets: List[Item] = field(default_factory=list)
+    ender_chest: List[Item] = field(default_factory=list)
+    inventory: List[Item] = field(
         default_factory=lambda: [{} for _ in range(36)]
     )
-    potion_bag: List[ItemTyping] = field(default_factory=list)
-    quiver: List[ItemTyping] = field(default_factory=list)
-    talisman_bag: List[ItemTyping] = field(default_factory=list)
-    wardrobe: List[ItemTyping] = field(default_factory=list)
+    potion_bag: List[Item] = field(default_factory=list)
+    quiver: List[Item] = field(default_factory=list)
+    talisman_bag: List[Item] = field(default_factory=list)
+    wardrobe: List[Item] = field(default_factory=list)
     wardrobe_slot: Optional[int] = None
 
     npc_talked: List[str] = field(default_factory=list)
@@ -167,14 +165,20 @@ class Profile:
 
             crafted_minions=data.get('crafted_minions', []),
 
-            armor=data.get('armor', [{} for _ in range(4)]),
-            pets=data.get('wardrobe', []),
-            ender_chest=data.get('ender_chest', []),
-            inventory=data.get('inventory', [{} for _ in range(36)]),
-            potion_bag=data.get('potion_bag', []),
-            quiver=data.get('quiver', []),
-            talisman_bag=data.get('talisman_bag', []),
-            wardrobe=data.get('wardrobe', []),
+            armor=[from_obj(item) for item in data.get(
+                'armor', [{'type': 'empty'} for _ in range(4)]
+            )],
+            pets=[from_obj(item) for item in data.get('pets', [])],
+            ender_chest=[from_obj(item)
+                         for item in data.get('ender_chest', [])],
+            inventory=[from_obj(item) for item in data.get(
+                'inventory', [{'type': 'empty'} for _ in range(36)]
+            )],
+            potion_bag=[from_obj(item) for item in data.get('potion_bag', [])],
+            quiver=[from_obj(item) for item in data.get('quiver', [])],
+            talisman_bag=[from_obj(item)
+                          for item in data.get('talisman_bag', [])],
+            wardrobe=[from_obj(item) for item in data.get('wardrobe', [])],
             wardrobe_slot=data.get('wardrobe_slot', 0),
 
             npc_talked=data.get('npc_talked', []),
@@ -218,14 +222,15 @@ class Profile:
 
                 'crafted_minions': self.crafted_minions,
 
-                'armor': self.armor,
-                'pets': self.pets,
-                'ender_chest': self.ender_chest,
-                'inventory': self.inventory,
-                'potion_bag': self.potion_bag,
-                'quiver': self.quiver,
-                'talisman_bag': self.talisman_bag,
-                'wardrobe': self.wardrobe,
+                'armor': [item.to_obj() for item in self.armor],
+                'pets': [item.to_obj() for item in self.pets],
+                'ender_chest': [item.to_obj() for item in self.ender_chest],
+                'inventory': [item.to_obj() for item in self.inventory],
+                'potion_bag': [item.to_obj() for item in self.potion_bag],
+                'quiver': [item.to_obj() for item in self.quiver],
+                'talisman_bag': [item.to_obj() for item in self.talisman_bag],
+                'wardrobe': [item.to_obj() for item in self.wardrobe],
+                'wardrobe': [item.to_obj() for item in self.wardrobe],
                 'wardrobe_slot': self.wardrobe_slot,
 
                 'npc_talked': self.npc_talked,
@@ -253,7 +258,11 @@ class Profile:
             self.update()
 
             words = input(':> ').split()
-            if words[0] in {'exit', 'quit'}:
+
+            if len(words) == 0:
+                continue
+
+            elif words[0] in {'exit', 'quit'}:
                 if len(words) != 1:
                     red(f'Invalid usage of command {words[0]!r}.')
                     continue
