@@ -7,7 +7,7 @@ from .item import Item
 
 
 __all__ = [
-    'Npc', 'Region', 'Map',
+    'Npc', 'Region', 'Island',
     'HUB_ISLAND', 'get', 'includes', 'path_find',
 ]
 
@@ -40,9 +40,7 @@ class Region:
 
 def calc_dist(region_1: Region, region_2: Region) -> Decimal:
     return round(Decimal(
-        dist(
-            (region_1.x, region_1.z), (region_2.x, region_2.z),
-        )
+        dist((region_1.x, region_1.z), (region_2.x, region_2.z))
     ), 2)
 
 
@@ -110,7 +108,7 @@ def path_find(start_region: Region, end_region: Region,
 
 
 @dataclass
-class Map:
+class Island:
     name: str
     spawn: str
     regions: List[Region]
@@ -121,14 +119,14 @@ class Map:
         return ' '.join(word.capitalize() for word in self.name.split('_'))
 
 
-def get(ls: List[Union[Region, Map]], name: str, default=None):
+def get(ls: List[Union[Region, Island]], name: str, default=None):
     for item in ls:
         if item.name == name:
             return item
     return default
 
 
-def includes(ls: List[Union[Region, Map]], name: str):
+def includes(ls: List[Union[Region, Island]], name: str):
     for item in ls:
         if item.name == name:
             return True
@@ -193,9 +191,9 @@ WIZARD_TOWER = Region('wizard_tower', 40, 70)
 
 HUB_JOINTS = [
     AUCTION_HOUSE, BANK, BAZAAR_ALLEY, BLACKSMITH, BUILDERS_HOUSE,
-    COAL_MINE, FARM, FARMHOUSE, FASHION_SHOP, FLOWER_HOUSE, FOREST, GRAVEYARD,
-    HIGH_LEVEL, HUB_CRYPTS, LIBRARY, MOUNTAIN, PETS_BUILDING, POTION_SHOP,
-    RUINS, TAVERN, VILLAGE, WILDERNESS, WIZARD_TOWER,
+    COAL_MINE, COMMUNITY_CENTER, FARM, FARMHOUSE, FASHION_SHOP, FLOWER_HOUSE,
+    FOREST, GRAVEYARD, HIGH_LEVEL, HUB_CRYPTS, LIBRARY, MOUNTAIN, PETS_BUILDING,
+    POTION_SHOP, RUINS, TAVERN, VILLAGE, WILDERNESS, WIZARD_TOWER,
 ]
 
 HUB_CONNS = [
@@ -273,7 +271,7 @@ HUB_DISTS = {}
 for conn in HUB_CONNS:
     add_dist(*conn, HUB_DISTS)
 
-HUB_ISLAND = Map('hub', 'village', HUB_JOINTS, HUB_CONNS, HUB_DISTS)
+HUB_ISLAND = Island('hub', 'village', HUB_JOINTS, HUB_CONNS, HUB_DISTS)
 ISLANDS = [
     HUB_ISLAND,
 ]
