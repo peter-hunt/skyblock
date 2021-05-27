@@ -5,12 +5,16 @@ from os.path import join
 from pathlib import Path
 from random import choice, choices
 from time import sleep, time
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union
 
 from .func import backupable, gen_help, red, green, blue, yellow, cyan
-from .item import Item, from_obj
+from .item import (
+    ALL_ITEM, ItemType, Item, Empty, from_obj,
+)
 from .map import Island, Region, ISLANDS, calc_dist, path_find, get, includes
 
+
+Number = Union[float, int]
 
 profile_doc = """
 > help [command]
@@ -19,6 +23,12 @@ Show this message or get command description.
 > exit
 > quit
 Exit to the menu.
+
+> inv
+> inventory
+> list
+> ls
+List all the items in the inventory.
 
 > goto <location>
 Go to a region.
@@ -60,8 +70,10 @@ class Profile:
 
     # starter | gold | deluxe | super_deluxe | premier
     bank_level: str = 'starter'
-    balance: float = 0.0
-    purse: float = 0.0
+    balance: Number = 0.0
+    purse: Number = 0.0
+
+    experience: Number = 0
 
     island: Island = get(ISLANDS, 'hub')
     region: Region = get(get(ISLANDS, 'hub').regions, 'village')
@@ -104,6 +116,7 @@ class Profile:
     )
     potion_bag: List[Item] = field(default_factory=list)
     quiver: List[Item] = field(default_factory=list)
+    stash: List[Item] = field(default_factory=list)
     talisman_bag: List[Item] = field(default_factory=list)
     wardrobe: List[Item] = field(default_factory=list)
     wardrobe_slot: Optional[int] = None
@@ -134,8 +147,11 @@ class Profile:
         return cls(
             name=name, last_update=data.get('last_update'),
             bank_level=data.get('bank_level', 'starter'),
-            balance=data.get('balance', 0.0),
-            purse=data.get('purse', 0.0),
+            balance=data.get('balance', 0),
+            purse=data.get('purse', 0),
+
+            experience=data.get('experience', 0),
+
             island=data.get('island', 'hub'),
             region=data.get('region', 'village'),
 
@@ -178,6 +194,7 @@ class Profile:
             )],
             potion_bag=[from_obj(item) for item in data.get('potion_bag', [])],
             quiver=[from_obj(item) for item in data.get('quiver', [])],
+            stash=[from_obj(item) for item in data.get('stash', [])],
             talisman_bag=[from_obj(item)
                           for item in data.get('talisman_bag', [])],
             wardrobe=[from_obj(item) for item in data.get('wardrobe', [])],
@@ -194,6 +211,9 @@ class Profile:
                 'bank_level': self.bank_level,
                 'balance': self.balance,
                 'purse': self.purse,
+
+                'experience': self.experience,
+
                 'island': self.island,
                 'region': self.region,
 
@@ -231,6 +251,7 @@ class Profile:
                 'inventory': [item.to_obj() for item in self.inventory],
                 'potion_bag': [item.to_obj() for item in self.potion_bag],
                 'quiver': [item.to_obj() for item in self.quiver],
+                'stash': [item.to_obj() for item in self.stash],
                 'talisman_bag': [item.to_obj() for item in self.talisman_bag],
                 'wardrobe': [item.to_obj() for item in self.wardrobe],
                 'wardrobe': [item.to_obj() for item in self.wardrobe],
@@ -238,6 +259,52 @@ class Profile:
 
                 'npc_talked': self.npc_talked,
             }, file, indent=4, sort_keys=True)
+
+    def put_stash(self, item: ItemType):
+        if isinstance(item, Item):
+            for index, slot in enumerate(self.stash):
+                if not isinstance(slot, Item):
+                    continue
+                if slot.name != item.name or slot.rarity != item.rarity:
+                    continue
+                self.stash[index].count += item.count
+                break
+            else:
+                self.stash.append(item)
+        else:
+            self.stash.append(item)
+
+    def recieve(self, item: ItemType):
+        if isinstance(item, Item):
+            item_type = get(ALL_ITEM, item.name)
+            name = item.name
+            count = item.count
+            max_count = item_type.count
+            rarity = item.rarity
+            for index, slot in enumerate(self.inventory):
+                if isinstance(slot, Empty):
+                    delta = min(count, max_count)
+                    self.inventory[index] = Item(name, delta, rarity)
+                    count -= delta
+                elif not isinstance(slot, Item):
+                    continue
+                elif slot.name != name or slot.rarity != rarity:
+                    continue
+                else:
+                    delta = min(count, max_count - slot.count)
+                    count -= delta
+                    self.inventory[index].count += delta
+                if count == 0:
+                    break
+            else:
+                self.put_stash(Item(name, count, rarity))
+        else:
+            # if isinstance(item, (Tool, Weapon, Armor, Potion, Pet)):
+            for index, slot in enumerate(self.inventory):
+                if isinstance(slot, Empty):
+                    self.inventory[index] = item
+            else:
+                self.put_stash(item)
 
     def look(self):
         island = get(ISLANDS, self.island)
@@ -327,6 +394,26 @@ class Profile:
             sleep(time_cost)
             self.region = target.name
 
+    def ls(self):
+        length = len(self.inventory)
+        digits = len(f'{length}')
+        index = 0
+        while index < length:
+            item = self.inventory[index]
+            if isinstance(item, Empty):
+                end = index + 1
+                while end < length:
+                    if not isinstance(self.inventory[end], Empty):
+                        break
+                    end += 1
+                if end == index + 1:
+                    cyan(f'{index + 1} Empty')
+                else:
+                    cyan(f'{index + 1}~{end} Empty')
+                continue
+            cyan(f'{(index + 1):>{digits}} {item.display()}')
+            index += 1
+
     @staticmethod
     def npc_talk(dialog):
         iterator = iter(dialog)
@@ -380,6 +467,13 @@ class Profile:
                     continue
 
                 self.goto(words[1])
+
+            elif words[0] in {'inv', 'inventory', 'list', 'ls'}:
+                if len(words) != 1:
+                    red(f'Invalid usage of command {words[0]!r}.')
+                    continue
+
+                self.ls()
 
             elif words[0] == 'location':
                 if len(words) != 1:
