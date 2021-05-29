@@ -3,12 +3,13 @@ from dataclasses import dataclass, field
 from math import dist, inf
 from typing import Dict, List, Optional, Tuple, Union
 
-from .item import Item
+from .func import get
+from .item import Item, Resource, MINERALS
 
 
 __all__ = [
     'Npc', 'Region', 'Island',
-    'HUB_ISLAND', 'get', 'includes', 'path_find',
+    'HUB_ISLAND', 'includes', 'path_find',
 ]
 
 
@@ -30,6 +31,7 @@ class Region:
     x: int
     z: int
     npcs: List[Npc] = field(default_factory=list)
+    resources: List[Resource] = field(default_factory=list)
 
     def __repr__(self):
         return ' '.join(word.capitalize() for word in self.name.split('_'))
@@ -102,6 +104,7 @@ def path_find(start_region: Region, end_region: Region,
                     paths = [other_path for other_path in paths
                              if other_region != other_path[0][-1]]
                     paths.append(path)
+
         paths = sorted(paths, key=lambda group: group[1] + group[2])
         if len(paths) == 0 and best_found == True:
             return best_path, best_dist
@@ -119,13 +122,6 @@ class Island:
         return ' '.join(word.capitalize() for word in self.name.split('_'))
 
 
-def get(ls: List[Union[Region, Island]], name: str, default=None):
-    for item in ls:
-        if item.name == name:
-            return item
-    return default
-
-
 def includes(ls: List[Union[Region, Island]], name: str):
     for item in ls:
         if item.name == name:
@@ -138,7 +134,12 @@ BANK = Region('bank', -20, -65)
 BAZAAR_ALLEY = Region('bazaar_alley', -32, -76)
 BLACKSMITH = Region('blacksmith', -28, -125)
 BUILDERS_HOUSE = Region('builders_house', -50, -36)
-COAL_MINE = Region('coal_mine', -20, -160)
+COAL_MINE = Region(
+    'coal_mine', -20, -160,
+    resources=[
+        get(MINERALS, 'coal_ore'),
+    ],
+)
 COLOSSEUM = Region('colosseum', -58, -58)
 COMMUNITY_CENTER = Region('community_center', 0, -100)
 FARM = Region('farm', 41, -137)

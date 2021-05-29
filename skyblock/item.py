@@ -1,12 +1,15 @@
 from typing import Dict, Optional, Union
 
+from .const import RARITY_COLORS
+from .func import roman
+
 __all__ = [
     'item_type', 'ItemType',
     'Item', 'Empty',
-    'Tool', 'Pickaxe', 'Weapon', 'Armor',
+    'Pickaxe', 'Weapon', 'Armor',
     'Potion', 'Pet', 'Resource', 'Mineral',
     'from_obj',
-    'ITEMS', 'MINERALS', 'TOOLS', 'ALL_ITEM',
+    'ITEMS', 'MINERALS', 'RESOURCES', 'TOOLS', 'ALL_ITEM',
 ]
 
 Number = Union[int, float]
@@ -53,13 +56,66 @@ def item_type(cls):
     # print(from_obj_str)
     setattr(cls, 'from_obj', classmethod(eval(from_obj_str)))
 
-    display_str = "lambda self: f'{self.__class__.__name__}("
-    display_str += ', '.join(
-        f'{{key}}={{obj[{key!r}]}}' for key in anno
+    display_str = """
+    lambda self: (
+        rarity_color := RARITY_COLORS[self.rarity],
+        name := ' '.join(word.capitalize() for word in self.name.split('_')),
+        count := f' x {self.count}' if getattr(self, 'count', 1) != 1 else '',
+        display := f'{rarity_color}{name}{count}'
+    )[-1] if (not isinstance(self, Empty)) else (
+        '\x1b[1;38;2;255;255;255mEmpty\x1b[0m'
     )
-    display_str += ")'"
+    """.replace('\n', '')
     # print(display_str)
-    setattr(cls, 'display', eval(to_obj_str))
+    setattr(cls, 'display', eval(display_str))
+    # 170	170	170
+    info_str = """
+    lambda self: (
+        rarity_color := RARITY_COLORS[self.rarity],
+        display_name := ' '.join(word.capitalize()
+                                 for word in self.name.split('_')),
+        info := f'{rarity_color}{display_name}\\x1b[0m',
+        type_name := self.__class__.__name__.upper(),
+        (
+            info := (info + f'\\n\\x1b[38;2;170;170;170m'
+                     f'Damage: \\x1b[38;2;255;85;85m+{self.damage}\\x1b[0m'),
+        ) if (hasattr(self, 'damage')) else (),
+        (
+            info := (info + '\\n\\n\\x1b[38;2;85;85;85m'
+                     'This item can be reforged!\\x1b[0m'),
+        ) if (hasattr(self, 'modifier')) else (),
+        (
+            info := (info + f'\\n\\x1b[38;2;170;0;0m❣ '
+                     f'\\x1b[38;2;255;85;85mRequires '
+                     f'\\x1b[38;2;85;255;85mCombat Skill '
+                     f'{self.combat_skill_req}\\x1b[0m'),
+        ) if (hasattr(self, 'combat_skill_req') and
+              self.combat_skill_req is not None) else (),
+        (
+            info := (info + f'\\n\\x1b[38;2;170;0;0m❣ '
+                     f'\\x1b[38;2;255;85;85mRequires '
+                     f'\\x1b[38;2;85;255;85mCatacombs Skill '
+                     f'{self.dungeon_skill_req}\\x1b[0m'),
+        ) if (hasattr(self, 'dungeon_skill_req') and
+              self.dungeon_skill_req is not None) else (),
+        (
+            info := (info + f'\\n\\x1b[38;2;170;0;0m❣ '
+                     f'\\x1b[38;2;255;85;85mRequires '
+                     f'\\x1b[38;2;85;255;85mCatacombs Floor '
+                     f'{roman(self.dungeon_completion_req)} Completion\\x1b[0m'),
+        ) if (hasattr(self, 'dungeon_completion_req') and
+              self.dungeon_completion_req is not None) else (),
+        info := (info + f'\\n{rarity_color}{self.rarity.upper()} '
+                 f'{type_name}\\x1b[0m'),
+        info,
+    )[-1]
+    """.replace('\n', '')
+    # print(info_str)
+    setattr(cls, 'info', eval(info_str))
+
+    # inform_str = "lambda self: f'{self.__class__.__name__}'"
+    # # print(inform_str)
+    # setattr(cls, 'inform', eval(inform_str))
 
     ITEM_OBJS.append(cls)
 
@@ -85,25 +141,17 @@ class Empty(ItemType):
 
 
 @item_type
-class Tool(ItemType):
-    name: str
-    rarity: str = 'common'
-    modifier: Optional[str] = None
-    enchantments: Dict[str, int] = {}
-
-
-@item_type
 class Pickaxe(ItemType):
     name: str
     rarity: str
     breaking_power: int
     mining_speed: int
-    modifier: Optional[str] = None,
+    modifier: Optional[str] = None
     enchantments: Dict[str, int] = {}
 
 
 @item_type
-class Weapon(ItemType):
+class Sword(ItemType):
     name: str
     rarity: str
     damage: int
@@ -112,6 +160,20 @@ class Weapon(ItemType):
     dungeon_stars: Optional[int] = None
     combat_skill_req: Optional[int] = None
     dungeon_skill_req: Optional[int] = None
+    dungeon_completion_req: Optional[int] = None
+
+
+@item_type
+class Bow(ItemType):
+    name: str
+    rarity: str
+    damage: int
+    modifier: Optional[str] = None
+    enchantments: Dict[str, int] = {}
+    dungeon_stars: Optional[int] = None
+    combat_skill_req: Optional[int] = None
+    dungeon_skill_req: Optional[int] = None
+    dungeon_completion_req: Optional[int] = None
 
 
 @item_type
@@ -146,7 +208,8 @@ class Pet(ItemType):
 
 
 class Resource:
-    pass
+    def type(self):
+        return type(self).__name__
 
 
 @item_type
@@ -154,7 +217,9 @@ class Mineral(Resource):
     name: str
     drop: str
     amount: int = 1
+    breaking_power: int = 0
     exp: Number = 1
+    hardness: int = 2
     mining_exp: Number = 1
 
 
@@ -210,15 +275,35 @@ ITEMS = [
     Item('mithril', 64, 'common'),
 ]
 
-MINREALS = [
-    Mineral('coal_ore', 'coal', 1, 1, 5),
+MINERALS = [
+    Mineral('stone', 'cobblestone', 1, 1, 0, 1.5, 1),
+    Mineral('coal_ore', 'coal', 1, 1, 1, 3, 5),
+]
+
+RESOURCES = MINERALS + []
+
+WEAPONS = [
+    Sword('aspect_of_the_dragons', 'legendary', 225,
+          combat_skill_req=18),
+    Sword('dreadlord_sword', 'rare', 120,
+          dungeon_skill_req=5),
+    Sword('livid_dagger', 'legendary', 210,
+          dungeon_completion_req=5),
 ]
 
 TOOLS = [
-    Pickaxe('rookie_pickaxe', rarity='common',
-            breaking_power=2, mining_speed=150),
-    Pickaxe('promising_pickaxe', rarity='uncommon',
-            breaking_power=3, mining_speed=190),
+    Pickaxe('wooden_pickaxe', rarity='common',
+            breaking_power=1, mining_speed=70),
+    Pickaxe('stone_pickaxe', rarity='common',
+            breaking_power=2, mining_speed=110),
+    Pickaxe('iron_pickaxe', rarity='common',
+            breaking_power=3, mining_speed=160),
+    Pickaxe('diamond_pickaxe', rarity='uncommon',
+            breaking_power=4, mining_speed=230),
+    # Pickaxe('rookie_pickaxe', rarity='common',
+    #         breaking_power=2, mining_speed=150),
+    # Pickaxe('promising_pickaxe', rarity='uncommon',
+    #         breaking_power=3, mining_speed=190),
 ]
 
-ALL_ITEM = ITEMS + MINREALS + TOOLS
+ALL_ITEM = ITEMS + MINERALS + WEAPONS + TOOLS

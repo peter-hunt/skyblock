@@ -1,17 +1,22 @@
 from dataclasses import dataclass, field
+from itertools import count
 from json import dump, load
-from math import radians, tan
+from math import ceil, radians, tan
+from os import get_terminal_size
 from os.path import join
 from pathlib import Path
 from random import choice, choices
+from re import fullmatch
 from time import sleep, time
 from typing import Dict, List, Optional, Union
 
-from .func import backupable, gen_help, red, green, blue, yellow, cyan
+from .const import EXP_LIMITS, SKILL_EXP, DUNGEON_EXP
+from .func import get, backupable, gen_help, red, green, blue, yellow, cyan
 from .item import (
-    ALL_ITEM, ItemType, Item, Empty, from_obj,
+    ALL_ITEM, RESOURCES, ItemType, Item, Empty, Pickaxe, from_obj,
+    Pickaxe, Mineral,
 )
-from .map import Island, Region, ISLANDS, calc_dist, path_find, get, includes
+from .map import Island, Region, ISLANDS, calc_dist, path_find, includes
 
 
 Number = Union[float, int]
@@ -24,11 +29,18 @@ Show this message or get command description.
 > quit
 Exit to the menu.
 
+> info <index>
+> information <index>
+Display specified informatioon about the item.
+
 > inv
 > inventory
 > list
 > ls
 List all the items in the inventory.
+
+> get <resource> [amount=1] [tool=hand]
+Get resources for an amount with specified tool or hand by default.
 
 > goto <location>
 Go to a region.
@@ -100,7 +112,6 @@ class Profile:
     skill_xp_fishing: float = 0.0
     skill_xp_foraging: float = 0.0
     skill_xp_mining: float = 0.0
-    skill_xp_runecrafting: float = 0.0
     skill_xp_taming: float = 0.0
     collection: Dict[str, int] = field(default_factory=dict)
 
@@ -178,19 +189,18 @@ class Profile:
             skill_xp_fishing=data.get('skill_xp_fishing', 0.0),
             skill_xp_foraging=data.get('skill_xp_foraging', 0.0),
             skill_xp_mining=data.get('skill_xp_mining', 0.0),
-            skill_xp_runecrafting=data.get('skill_xp_runecrafting', 0.0),
             skill_xp_taming=data.get('skill_xp_taming', 0.0),
 
             crafted_minions=data.get('crafted_minions', []),
 
             armor=[from_obj(item) for item in data.get(
-                'armor', [{'type': 'empty'} for _ in range(4)]
+                'armor', [{'type': 'empty'} for _ in range(4)],
             )],
             pets=[from_obj(item) for item in data.get('pets', [])],
             ender_chest=[from_obj(item)
                          for item in data.get('ender_chest', [])],
             inventory=[from_obj(item) for item in data.get(
-                'inventory', [{'type': 'empty'} for _ in range(36)]
+                'inventory', [{'type': 'empty'} for _ in range(36)],
             )],
             potion_bag=[from_obj(item) for item in data.get('potion_bag', [])],
             quiver=[from_obj(item) for item in data.get('quiver', [])],
@@ -240,7 +250,6 @@ class Profile:
                 'skill_xp_fishing': self.skill_xp_fishing,
                 'skill_xp_foraging': self.skill_xp_foraging,
                 'skill_xp_mining': self.skill_xp_mining,
-                'skill_xp_runecrafting': self.skill_xp_runecrafting,
                 'skill_xp_taming': self.skill_xp_taming,
 
                 'crafted_minions': self.crafted_minions,
@@ -276,6 +285,7 @@ class Profile:
 
     def recieve(self, item: ItemType):
         if isinstance(item, Item):
+            print(item.name)
             item_type = get(ALL_ITEM, item.name)
             name = item.name
             count = item.count
@@ -299,12 +309,66 @@ class Profile:
             else:
                 self.put_stash(Item(name, count, rarity))
         else:
-            # if isinstance(item, (Tool, Weapon, Armor, Potion, Pet)):
             for index, slot in enumerate(self.inventory):
                 if isinstance(slot, Empty):
                     self.inventory[index] = item
+                    break
             else:
                 self.put_stash(item)
+
+    @staticmethod
+    def calc_exp(amount):
+        if amount <= 352:
+            for lvl in range(17):
+                if (lvl + 1) ** 2 + 6 * (lvl + 1) > amount:
+                    return lvl
+
+        elif amount <= 1507:
+            for lvl in range(17, 32):
+                if 2.5 ** (lvl + 1) ** 2 - 40.5 * (lvl + 1) + 360 > amount:
+                    return lvl
+
+        else:
+            for lvl in count(32):
+                if 4.5 ** (lvl + 1) ** 2 - 162.5 * (lvl + 1) + 2220 > amount:
+                    return lvl
+
+    def add_exp(self, amount):
+        original_lvl = self.calc_exp(self.experience)
+        self.experience += amount
+        current_lvl = self.calc_exp(self.experience)
+        if current_lvl > original_lvl:
+            green(f'Reached XP level {current_lvl}.')
+
+    @staticmethod
+    def calc_skill_exp(name, amount):
+        if name == 'dungeoneering':
+            for lvl, _, cumulative in DUNGEON_EXP:
+                if amount < cumulative:
+                    return lvl - 1
+            else:
+                return 50
+        else:
+            for lvl, _, cumulative, _ in SKILL_EXP:
+                if amount < cumulative:
+                    return lvl - 1
+            else:
+                return EXP_LIMITS[name]
+
+    def add_skill_exp(self, name, amount):
+        if not hasattr(self, f'skill_xp_{name}'):
+            red(f'Skill not found: {name}')
+        exp = getattr(self, f'skill_xp_{name}')
+        original_lvl = self.calc_skill_exp(name, exp)
+        exp += amount
+        setattr(self, f'skill_xp_{name}', exp)
+        current_lvl = self.calc_skill_exp(name, original_lvl)
+        if current_lvl > original_lvl:
+            for lvl in range(original_lvl + 1, current_lvl + 1):
+                green(f'Reached {name.capitalize()} XP level {lvl} level!')
+                if name != 'dungeoneering':
+                    green(f'Reward: {SKILL_EXP[lvl][3]} coins')
+                    self.purse += SKILL_EXP[lvl][3]
 
     def look(self):
         island = get(ISLANDS, self.island)
@@ -327,12 +391,17 @@ class Profile:
                     direc += 'South' if dz > 0 else 'North'
                 if dz / dx < tan(radians(60)):
                     direc += 'East' if dx > 0 else 'West'
-            cyan(f"  {other} on the {direc} ({other.name})")
+            cyan(f'  {other.name} on the {direc}')
 
         if len(region.npcs) > 0:
             cyan('NPCs:')
             for npc in region.npcs:
                 cyan(f'  {npc} ({npc.name})')
+
+        if len(region.resources) > 0:
+            cyan('Resources:')
+            for resource in region.resources:
+                cyan(f'  {resource.name} ({resource.type()})')
 
     @backupable
     def talkto_npc(self, npc):
@@ -401,18 +470,64 @@ class Profile:
         while index < length:
             item = self.inventory[index]
             if isinstance(item, Empty):
-                end = index + 1
-                while end < length:
-                    if not isinstance(self.inventory[end], Empty):
+                while index < length:
+                    if not isinstance(self.inventory[index], Empty):
                         break
-                    end += 1
-                if end == index + 1:
-                    cyan(f'{index + 1} Empty')
-                else:
-                    cyan(f'{index + 1}~{end} Empty')
+                    index += 1
                 continue
-            cyan(f'{(index + 1):>{digits}} {item.display()}')
+            cyan(f'{(index + 1):>{digits * 2 + 1}} {item.display()}')
             index += 1
+
+    def info(self, index: int):
+        item = self.inventory[index]
+        if isinstance(item, Empty):
+            cyan('Empty')
+            return
+        width, _ = get_terminal_size()
+        width = ceil(width * 0.85)
+        print(f"\x1b[1;38;2;255;255;85m{'':-^{width}}\x1b[0m")
+        print(item.info())
+        print(f"\x1b[1;38;2;255;255;85m{'':-^{width}}\x1b[0m")
+
+    def get(self, name: str, tool_index: Optional[int], amount: int):
+        resource = get(RESOURCES, name)
+        if tool_index is None:
+            tool = Empty()
+        else:
+            tool = self.inventory[tool_index]
+
+        if not isinstance(tool, (Empty, Pickaxe)):
+            tool = Empty()
+
+        if isinstance(resource, Mineral):
+            if isinstance(tool, Pickaxe):
+                breaking_power = tool.breaking_power
+                mining_speed = tool.mining_speed
+            else:
+                breaking_power = 0
+                mining_speed = 50
+
+            if resource.breaking_power > breaking_power:
+                red(f'Insufficient breaking power for {resource.name}.')
+                return
+
+            time_cost = 30 * resource.hardness / mining_speed
+
+            last_cp = 0
+            for count in range(amount):
+                sleep(time_cost)
+                self.recieve(
+                    Item(resource.drop, resource.amount),
+                )
+                self.add_exp(resource.exp)
+                self.add_skill_exp('mining', resource.mining_exp)
+                if (count + 1) >= last_cp * amount:
+                    while count < last_cp * amount:
+                        last_cp += 0.1
+                    print(f'{count + 1} / {amount} ({(last_cp * 100):d}%) done')
+
+        else:
+            red('Unknown resource type.')
 
     @staticmethod
     def npc_talk(dialog):
@@ -461,6 +576,53 @@ class Profile:
                     else:
                         red(f'Command not found: {phrase!r}.')
 
+            elif words[0] == 'get':
+                if len(words) < 2 or len(words) > 4:
+                    red(f'Invalid usage of command {words[0]!r}.')
+                    continue
+
+                name = words[1]
+                if get(RESOURCES, name) is None:
+                    red(f'Resource not found: {name!r}')
+                    continue
+                if get(region.resources, name) is None:
+                    red(f'Resource not avaliable at {region}: {name!r}')
+                    continue
+
+                tool_index = None
+
+                if len(words) >= 3:
+                    tool_str = words[2]
+                    if not fullmatch(r'\d+', tool_str):
+                        red(f'Invalid number for tool index: {tool_str}')
+                        continue
+                    tool_index = int(tool_str)
+                    if tool_index <= 0 or tool_index > len(self.inventory):
+                        red(f'Item index out of bound: {tool_index}')
+                        continue
+                    tool_index -= 1
+                    tool_item = self.inventory[tool_index]
+                    if not isinstance(tool_item, (Empty, Pickaxe)):
+                        yellow(
+                            f'{tool_item.name} item is not tool.\n'
+                            f'Using barehand by default.'
+                        )
+                        tool_index = None
+
+                amount = None
+
+                if len(words) == 4:
+                    amount_str = words[3]
+                    if not fullmatch(r'\d+', amount_str):
+                        red(f'Invalid number for amount: {amount_str}')
+                        continue
+                    amount = int(amount_str)
+                    if amount == 0:
+                        red(f'Amount must be a positive integer.')
+                        continue
+
+                self.get(name, tool_index, amount)
+
             elif words[0] == 'goto':
                 if len(words) != 2:
                     red(f'Invalid usage of command {words[0]!r}.')
@@ -474,6 +636,23 @@ class Profile:
                     continue
 
                 self.ls()
+
+            elif words[0] in {'info', 'information'}:
+                if len(words) != 2:
+                    red(f'Invalid usage of command {words[0]!r}.')
+                    continue
+
+                index_str = words[1]
+                if not fullmatch(r'\d+', index_str):
+                    red(f'Invalid number for tool index: {index_str}')
+                    continue
+                item_index = int(index_str)
+                if item_index <= 0 or item_index > len(self.inventory):
+                    red(f'Item index out of bound: {item_index}')
+                    continue
+                item_index -= 1
+
+                self.info(item_index)
 
             elif words[0] == 'location':
                 if len(words) != 1:
@@ -500,6 +679,13 @@ class Profile:
                     continue
                 npc = get(region.npcs, name)
                 self.talkto_npc(npc)
+
+            elif words[0] == 'test':
+                if len(words) != 1:
+                    red(f'Invalid usage of command {words[0]!r}.')
+                    continue
+
+                self.recieve(get(ALL_ITEM, 'livid_dagger'))
 
             else:
                 red(f'Unknown command: {words[0]!r}')
