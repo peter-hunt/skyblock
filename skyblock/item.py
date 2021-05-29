@@ -1,18 +1,16 @@
 from typing import Dict, Optional, Union
 
 from .const import RARITY_COLORS
-from .func import roman
+from .func import Number, roman
 
 __all__ = [
-    'item_type', 'ItemType',
+    'item_type', 'ItemType', 'from_obj',
     'Item', 'Empty',
-    'Pickaxe', 'Weapon', 'Armor',
-    'Potion', 'Pet', 'Resource', 'Mineral',
-    'from_obj',
-    'ITEMS', 'MINERALS', 'RESOURCES', 'TOOLS', 'ALL_ITEM',
+    'Pickaxe', 'Axe', 'Sword', 'Bow', 'Armor',
+    'Potion', 'Pet', 'Resource', 'Mineral', 'TreeType',
+    'COLLECTIONS', 'MINERALS', 'TREES', 'RESOURCES',
+    'WEAPONS', 'TOOLS', 'ALL_ITEM', 'SELL_PRICE',
 ]
-
-Number = Union[int, float]
 
 ITEM_OBJS = []
 
@@ -138,7 +136,7 @@ class ItemType:
 @item_type
 class Item(ItemType):
     name: str
-    count: int
+    count: int = 1
     # common | uncommon | rare | epic | legendary |
     # mythic | supreme | special | very_special
     rarity: str = 'common'

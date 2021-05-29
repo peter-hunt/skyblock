@@ -1,6 +1,5 @@
 from dataclasses import dataclass, field
 from decimal import Decimal
-from itertools import count
 from json import dump, load
 from math import ceil, radians, tan
 from os import get_terminal_size
@@ -11,92 +10,22 @@ from re import fullmatch
 from time import sleep, time
 from typing import Dict, List, Optional, Union
 
-from .const import EXP_LIMITS, SKILL_EXP, DUNGEON_EXP
+from .const import SKILL_EXP, INTEREST_TABLE, profile_doc
 from .func import (
-    get, backupable, gen_help, random_int, display_money, short_money,
+    Number, calc_skill_exp, calc_exp, exist_dir, exist_file,
+    get, backupable, gen_help, random_int, display_money, shorten_money,
     red, green, blue, yellow, cyan, GREEN, YELLOW, CYAN,
 )
 from .item import (
-    ALL_ITEM, COLLECTIONS, RESOURCES, SELL_PRICE,
-    ItemType, Item, Empty, Pickaxe, from_obj,
-    Pickaxe, Axe, Mineral, TreeType,
+    ALL_ITEM, COLLECTIONS, RESOURCES, SELL_PRICE, from_obj, ItemType,
+    Item, Empty, Pickaxe, Pickaxe, Axe, Mineral, TreeType,
 )
 from .map import Island, Region, ISLANDS, calc_dist, path_find, includes
 
+__all__ = ['Profile']
 
-Number = Union[float, int]
 
-profile_doc = """
-> exit
-> quit
-Exit to the menu.
-
-> deposit <coins>
-Deposit coins from the purse to the bank.
-
-> withdraw <coins>
-Withdraw coins from the bank to the purse.
-
-> info <index>
-> information <index>
-Display detailed informatioon about the item.
-
-> help [command]
-Show this message or get command description.
-
-> inv
-> inventory
-> list
-> ls
-List all the items in the inventory.
-
-> get <resource> [amount=1] [tool=hand]
-Get resources for an amount with chosen tool or hand by default.
-
-> goto <location>
-Go to a region.
-
-> look
-Get information about the region.
-
-> money
-Display information about your money.
-
-> sell <index>
-Sell the item.
-
-> merge <index-from> <index-to>
-Merge stackable items in the inventory.
-
-> move <index> <index>
-> switch <index> <index>
-Switch items slot in the inventory.
-
-> split <index-from> <index-to> <amount>
-Split items to another slot.
-
-> talkto <npc>
-Talk to an npc.
-""".strip()
 profile_help = gen_help(profile_doc)
-
-
-def exist_dir(*names, warn=False):
-    if not Path(join(Path.home(), 'skyblock', *names)).is_dir():
-        path = join('~', 'skyblock', *names)
-        if warn:
-            print(f'Warning: folder {path} not found.')
-        return False
-    return True
-
-
-def exist_file(*names, warn=False):
-    if not Path(join(Path.home(), 'skyblock', *names)).is_file():
-        path = join('~', 'skyblock', *names)
-        if warn:
-            print(f'Warning: file {path} not found.')
-        return False
-    return True
 
 
 @dataclass
@@ -160,14 +89,8 @@ class Profile:
 
     @staticmethod
     def is_valid(name, warn=False):
-        if not exist_dir(warn=warn):
-            return False
-        if not exist_dir('saves', warn=warn):
-            return False
-        if not exist_file('saves', f'{name}.json', warn=warn):
-            return False
-
-        return True
+        return (exist_dir(warn=warn) and exist_dir('saves', warn=warn)
+                and exist_file('saves', f'{name}.json', warn=warn))
 
     @classmethod
     def load(cls, name):
@@ -301,37 +224,31 @@ class Profile:
                 if slot.name != item.name or slot.rarity != item.rarity:
                     continue
                 self.stash[index].count += item.count
-                break
-            else:
-                self.stash.append(item)
-        else:
-            self.stash.append(item)
+                return
+        self.stash.append(item)
 
     def recieve(self, item: ItemType):
         cyan(f'+{item.display()}')
         if isinstance(item, Item):
             item_type = get(ALL_ITEM, item.name)
-            name = item.name
             count = item.count
-            max_count = item_type.count
-            rarity = item.rarity
             for index, slot in enumerate(self.inventory):
                 if isinstance(slot, Empty):
-                    delta = min(count, max_count)
-                    self.inventory[index] = Item(name, delta, rarity)
+                    delta = min(count, item_type.count)
+                    self.inventory[index] = Item(item.name, delta, item.rarity)
                     count -= delta
                 elif not isinstance(slot, Item):
                     continue
-                elif slot.name != name or slot.rarity != rarity:
+                elif slot.name != item.name or slot.rarity != item.rarity:
                     continue
                 else:
-                    delta = min(count, max_count - slot.count)
+                    delta = min(count, item_type.count - slot.count)
                     count -= delta
                     self.inventory[index].count += delta
                 if count == 0:
                     break
             else:
-                self.put_stash(Item(name, count, rarity))
+                self.put_stash(Item(item.name, count, item.rarity))
         else:
             for index, slot in enumerate(self.inventory):
                 if isinstance(slot, Empty):
@@ -340,53 +257,22 @@ class Profile:
             else:
                 self.put_stash(item)
 
-    @staticmethod
-    def calc_exp(amount):
-        if amount <= 352:
-            for lvl in range(17):
-                if (lvl + 1) ** 2 + 6 * (lvl + 1) > amount:
-                    return lvl
-
-        elif amount <= 1507:
-            for lvl in range(17, 32):
-                if 2.5 ** (lvl + 1) ** 2 - 40.5 * (lvl + 1) + 360 > amount:
-                    return lvl
-
-        else:
-            for lvl in count(32):
-                if 4.5 ** (lvl + 1) ** 2 - 162.5 * (lvl + 1) + 2220 > amount:
-                    return lvl
-
     def add_exp(self, amount):
-        original_lvl = self.calc_exp(self.experience)
+        original_lvl = calc_exp(self.experience)
         self.experience += amount
-        current_lvl = self.calc_exp(self.experience)
+        current_lvl = calc_exp(self.experience)
         if current_lvl > original_lvl:
             green(f'Reached XP level {current_lvl}.')
-
-    @staticmethod
-    def calc_skill_exp(name, amount):
-        if name == 'dungeoneering':
-            for lvl, _, cumulative in DUNGEON_EXP:
-                if amount < cumulative:
-                    return lvl - 1
-            else:
-                return 50
-        else:
-            for lvl, _, cumulative, _ in SKILL_EXP:
-                if amount < cumulative:
-                    return lvl - 1
-            else:
-                return EXP_LIMITS[name]
 
     def add_skill_exp(self, name, amount):
         if not hasattr(self, f'skill_xp_{name}'):
             red(f'Skill not found: {name}')
+            return
         exp = getattr(self, f'skill_xp_{name}')
-        original_lvl = self.calc_skill_exp(name, exp)
+        original_lvl = calc_skill_exp(name, exp)
         exp += amount
         setattr(self, f'skill_xp_{name}', exp)
-        current_lvl = self.calc_skill_exp(name, original_lvl)
+        current_lvl = calc_skill_exp(name, original_lvl)
         if current_lvl > original_lvl:
             for lvl in range(original_lvl + 1, current_lvl + 1):
                 green(f'Reached {name.capitalize()} XP level {lvl} level!')
@@ -419,19 +305,21 @@ class Profile:
                     direc += 'East' if dx > 0 else 'West'
             cyan(f'  {other.name} on the {direc}')
 
-        if len(region.npcs) > 0:
-            cyan('NPCs:')
-            for npc in region.npcs:
-                cyan(f'  {npc} ({npc.name})')
-
         if len(region.resources) > 0:
             cyan('Resources:')
             for resource in region.resources:
                 cyan(f'  {resource.name} ({resource.type()})')
 
+        if len(region.npcs) > 0:
+            cyan('NPCs:')
+            for npc in region.npcs:
+                cyan(f'  {npc} ({npc.name})')
+
     def money(self):
-        cyan(f'Purse: {YELLOW}{display_money(self.purse)} coins')
-        cyan(f'Balance: {YELLOW}{display_money(self.balance)} coins')
+        cyan(f'Purse: {YELLOW}{display_money(self.purse)} coins'
+             f' {CYAN}({YELLOW}{shorten_money(self.purse)}{CYAN})')
+        cyan(f'Balance: {YELLOW}{display_money(self.balance)} coins'
+             f' {CYAN}({YELLOW}{shorten_money(self.balance)}{CYAN})')
         bank_level = ' '.join(word.capitalize()
                               for word in self.bank_level.split('_'))
         cyan(f'Bank Level: {bank_level}')
@@ -452,12 +340,16 @@ class Profile:
                     f"{npc} stared at you and didn't talk.",
                     f"{npc} smiled mysteriously.",
                     f"{npc} made a strange noise.",
-                    f"{npc} spoke a language you've never heard before",
+                    f"{npc} spoke a strange language you've never heard before.",
                 ), (20, 25, 20, 18, 10, 4, 2, 1))[0])
             self.npc_talked.append(npc.name)
             return
         if npc.trades is not None:
-            pass
+            cyan(f"{npc}'s shop:")
+            digits = len(f'{len(npc.trades)}')
+            for index, (price, item) in enumerate(npc.trades):
+                cyan(f'  {index:>{digits}} {item.display()}{CYAN} for '
+                     f'{YELLOW}{display_money(price)} coins{CYAN}.')
         elif npc.dialog is not None:
             self.npc_talk(choice(npc.dialog))
         else:
@@ -543,7 +435,7 @@ class Profile:
         delta = SELL_PRICE[item.name] * getattr(item, 'count', 1)
         self.purse += delta
         red(f"Sold {item.display()} for "
-            f"{YELLOW}{short_money(delta)} coins{CYAN}.")
+            f"{YELLOW}{shorten_money(delta)} coins{CYAN}.")
         self.inventory[index] = Empty()
 
     def get(self, name: str, tool_index: Optional[int], amount: int):
@@ -572,9 +464,7 @@ class Profile:
 
             time_cost = 30 * resource.hardness / mining_speed
 
-            mining_lvl = self.calc_skill_exp(
-                'mining', self.skill_xp_mining,
-            )
+            mining_lvl = calc_skill_exp('mining', self.skill_xp_mining,)
             drop_mult = (1 + 0.1 * tool.enchantments.get('fortune', 0)
                          + 0.04 * mining_lvl)
             exp_mult = 1 + 0.125 * tool.enchantments.get('experience', 0)
@@ -596,8 +486,7 @@ class Profile:
                 if count >= (last_cp + cp_step) * amount:
                     while count >= (last_cp + cp_step) * amount:
                         last_cp += cp_step
-                    print(f'{count} / {amount} '
-                          f'({(last_cp * 100):.0f}%) done')
+                    print(f'{count} / {amount} ({(last_cp * 100):.0f}%) done')
 
         if isinstance(resource, TreeType):
             if isinstance(tool, Axe):
@@ -609,9 +498,7 @@ class Profile:
                 tool_speed = 1
                 time_cost = ceil(5 * resource.hardness / tool_speed)
 
-            foraging_lvl = self.calc_skill_exp(
-                'foraging', self.skill_xp_foraging,
-            )
+            foraging_lvl = calc_skill_exp('foraging', self.skill_xp_foraging)
             drop_mult = (1 + 0.01 * foraging_lvl
                          + 0.01 * max(0, foraging_lvl - 14))
 
@@ -631,8 +518,7 @@ class Profile:
                 if count >= (last_cp + cp_step) * amount:
                     while count >= (last_cp + cp_step) * amount:
                         last_cp += cp_step
-                    print(f'{count} / {amount} '
-                          f'({(last_cp * 100):.0f}%) done')
+                    print(f'{count} / {amount} ({(last_cp * 100):.0f}%) done')
 
         else:
             red('Unknown resource type.')
@@ -642,7 +528,7 @@ class Profile:
         iterator = iter(dialog)
         blue(next(iterator))
         for sentence in iterator:
-            sleep(2)
+            sleep(1.5)
             blue(sentence)
 
     def update(self):
@@ -654,51 +540,13 @@ class Profile:
         now_cp = now // (31 * 3600)
         if now_cp > last_cp:
             interest = 0
-            if self.bank_level == 'starter':
-                interest += 0.02 * min(self.balance, 10 ** 7)
-                if self.balance > 10 ** 7:
-                    interest += 0.01 * \
-                        (min(self.balance, 1.5 * 10 ** 7) - 10 ** 7)
-            elif self.bank_level == 'gold':
-                interest += 0.02 * min(self.balance, 10 ** 7)
-                if self.balance > 10 ** 7:
-                    interest += 0.01 * \
-                        (min(self.balance, 2 * 10 ** 7) - 10 ** 7)
-            elif self.bank_level == 'deluxe':
-                interest += 0.02 * min(self.balance, 10 ** 7)
-                if self.balance > 10 ** 7:
-                    interest += 0.01 * \
-                        (min(self.balance, 2 * 10 ** 7) - 10 ** 7)
-                if self.balance > 2 * 10 ** 7:
-                    interest += 0.005 * \
-                        (min(self.balance, 3 * 10 ** 7) - 2 * 10 ** 7)
-            elif self.bank_level == 'super_deluxe':
-                interest += 0.02 * min(self.balance, 10 ** 7)
-                if self.balance > 10 ** 7:
-                    interest += 0.01 * \
-                        (min(self.balance, 2 * 10 ** 7) - 10 ** 7)
-                if self.balance > 2 * 10 ** 7:
-                    interest += 0.005 * \
-                        (min(self.balance, 3 * 10 ** 7) - 2 * 10 ** 7)
-                if self.balance > 3 * 10 ** 7:
-                    interest += 0.002 * \
-                        (min(self.balance, 5 * 10 ** 7) - 3 * 10 ** 7)
-            elif self.bank_level == 'premier':
-                interest += 0.02 * min(self.balance, 10 ** 7)
-                if self.balance > 10 ** 7:
-                    interest += 0.01 * \
-                        (min(self.balance, 2 * 10 ** 7) - 10 ** 7)
-                if self.balance > 2 * 10 ** 7:
-                    interest += 0.005 * \
-                        (min(self.balance, 3 * 10 ** 7) - 2 * 10 ** 7)
-                if self.balance > 3 * 10 ** 7:
-                    interest += 0.002 * \
-                        (min(self.balance, 5 * 10 ** 7) - 3 * 10 ** 7)
-                if self.balance > 5 * 10 ** 7:
-                    interest += 0.001 * \
-                        (min(self.balance, 1.6 * 10 ** 8) - 5 * 10 ** 7)
-            else:
-                red(f'Invalid bank level: {self.bank_level!r}')
+            if self.bank_level not in INTEREST_TABLE:
+                red(f'Invalid bank level: {self.bank_level!r}.')
+                return
+            table = INTEREST_TABLE[self.bank_level]
+            for start, end, ratio in table:
+                if self.balance > start:
+                    interest += ratio * (min(self.balance, end) - start)
 
             interest *= now_cp - last_cp
             self.balance += interest
@@ -729,51 +577,46 @@ class Profile:
                 green('Saved!')
                 break
 
-            elif words[0] == 'deposit':
+            elif words[0] in {'deposit', 'withdraw'}:
                 if len(words) != 2:
                     red(f'Invalid usage of command {words[0]!r}.')
                     continue
 
                 coins_str = words[1]
-                if not fullmatch(r'\d+(\.\d{1,2})?', coins_str):
+                if not fullmatch(r'\d+(\.\d{1,2})?[TtBbMmKk]', coins_str):
                     red('Invalid amount of coins.')
                     continue
-                coins = eval(coins_str)
+                if coins_str[-1].lower() in 'kmbt':
+                    mult = 1000 ** ('kmbt'.index(coins_str[-1].lower()) + 1)
+                    coins_str = coins_str[:-1]
+                else:
+                    mult = 1
+                coins = eval(coins_str) * mult
 
-                if self.purse < coins:
-                    red('Not enough coins to deposit.')
-                    continue
+                if words[0] == 'deposit':
+                    if self.purse < coins:
+                        red('Not enough coins to deposit.')
+                        continue
 
-                self.purse -= coins
-                self.balance += coins
+                    self.purse -= coins
+                    self.balance += coins
 
-                cyan(f'Desposited {YELLOW}'
-                     f'{short_money(coins)}'f'{CYAN} coins. '
-                     f'You have {YELLOW}'
-                     f'{short_money(self.purse)}{CYAN} coins in purse.')
+                    cyan(f'Desposited {YELLOW}'
+                         f'{shorten_money(coins)}'f'{CYAN} coins. '
+                         f'You have {YELLOW}'
+                         f'{shorten_money(self.purse)}{CYAN} coins in purse.')
+                else:
+                    if self.balance < coins:
+                        red('Not enough coins to withdraw.')
+                        continue
 
-            elif words[0] == 'withdraw':
-                if len(words) != 2:
-                    red(f'Invalid usage of command {words[0]!r}.')
-                    continue
+                    self.balance -= coins
+                    self.purse += coins
 
-                coins_str = words[1]
-                if not fullmatch(r'\d+(\.\d{1,2})?', coins_str):
-                    red('Invalid amount of coins.')
-                    continue
-                coins = eval(coins_str)
-
-                if self.balance < coins:
-                    red('Not enough coins to withdraw.')
-                    continue
-
-                self.balance -= coins
-                self.purse += coins
-
-                cyan(f'Withdrew {YELLOW}'
-                     f'{short_money(coins)}'f'{CYAN} coins. '
-                     f'You have {YELLOW}'
-                     f'{short_money(self.purse)}{CYAN} coins in purse.')
+                    cyan(f'Withdrew {YELLOW}'
+                         f'{shorten_money(coins)}'f'{CYAN} coins. '
+                         f'You have {YELLOW}'
+                         f'{shorten_money(self.purse)}{CYAN} coins in purse.')
 
             elif words[0] == 'help':
                 if len(words) == 1:
@@ -813,10 +656,8 @@ class Profile:
                     tool_index -= 1
                     tool_item = self.inventory[tool_index]
                     if not isinstance(tool_item, (Empty, Pickaxe, Axe)):
-                        yellow(
-                            f'{tool_item.name} item is not tool.\n'
-                            f'Using barehand by default.'
-                        )
+                        yellow(f'{tool_item.name} item is not tool.\n'
+                               f'Using barehand by default.')
                         tool_index = None
 
                 amount = None
@@ -959,8 +800,7 @@ class Profile:
                 index_2 -= 1
 
                 self.inventory[index_1], self.inventory[index_2] = (
-                    self.inventory[index_2], self.inventory[index_1],
-                )
+                    self.inventory[index_2], self.inventory[index_1])
                 cyan(f'Switched {self.inventory[index_2].display()}{CYAN}'
                      f' and {self.inventory[index_1].display()}')
 
@@ -1032,16 +872,13 @@ class Profile:
                     continue
 
                 if item_1.name != item_2.name:
-                    red('Cannot split to different items.')
+                    red('Cannot split to a slot with different item.')
                     continue
 
                 item_type = get(ALL_ITEM, item_1.name)
                 if item_2.count == item_type.count:
-                    yellow('Target item is already full as a stack.')
+                    yellow('Targeted slot is already full as a stack.')
                     continue
-
-                if item_1.count == amount:
-                    yellow('Moving all the item possible.')
 
                 delta = min(amount, item_type.count - item_2.count)
                 if amount > delta:
@@ -1061,14 +898,9 @@ class Profile:
                 if not includes(region.npcs, name):
                     red(f'Npc not found: {name!r}')
                     continue
-                npc = get(region.npcs, name)
-                self.talkto_npc(npc)
+                self.talkto_npc(get(region.npcs, name))
 
             # elif words[0] == 'test':
-            #     if len(words) != 1:
-            #         red(f'Invalid usage of command {words[0]!r}.')
-            #         continue
-
             #     self.recieve(get(ALL_ITEM, 'golden_axe'))
 
             else:

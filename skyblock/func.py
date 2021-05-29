@@ -1,3 +1,6 @@
+from itertools import count
+from os.path import join
+from pathlib import Path
 from random import random
 from re import escape, fullmatch
 from sys import stdout
@@ -5,15 +8,18 @@ from textwrap import wrap
 from typing import Any, Dict, List, Union
 from types import FunctionType
 
-ROMAN_NUM = [
-    ('I', 1), ('IV', 4), ('V', 5), ('IX', 9), ('X', 10),
-    ('XL', 40), ('L', 50), ('XC', 90), ('C', 100),
-    ('CD', 400), ('D', 500), ('CM', 900), ('M', 1000),
+from .const import SKILL_EXP, DUNGEON_EXP, EXP_LIMITS, ROMAN_NUM, NUMBER_SCALES
+
+__all__ = [
+    'Number', 'get', 'exist_dir', 'exist_file', 'roman', 'random_int',
+    'display_money', 'shorten_money', 'calc_exp', 'calc_skill_exp',
+    'gen_help', 'backupable', 'input_regex',
+    'black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white',
+    'BLACK', 'RED', 'GREEN', 'YELLOW', 'BLUE', 'MAGENTA', 'CYAN', 'WHITE',
 ]
 
-NUMBER_SCALES = [
-    ('', 1), ('K', 10 ** 3), ('M', 10 ** 6), ('B', 10 ** 9), ('T', 10 ** 12),
-]
+
+Number = Union[float, int]
 
 
 def get(ls: List[Any], name: str, default=None) -> Any:
@@ -21,6 +27,24 @@ def get(ls: List[Any], name: str, default=None) -> Any:
         if item.name == name:
             return item
     return default
+
+
+def exist_dir(*names, warn=False):
+    if not Path(join(Path.home(), 'skyblock', *names)).is_dir():
+        path = join('~', 'skyblock', *names)
+        if warn:
+            print(f'Warning: folder {path} not found.')
+        return False
+    return True
+
+
+def exist_file(*names, warn=False):
+    if not Path(join(Path.home(), 'skyblock', *names)).is_file():
+        path = join('~', 'skyblock', *names)
+        if warn:
+            print(f'Warning: file {path} not found.')
+        return False
+    return True
 
 
 def roman(num: int) -> str:
@@ -44,11 +68,37 @@ def display_money(money: Union[int, float]) -> str:
     return f'{integer}.{floating}'
 
 
-def short_money(money: Union[int, float]) -> str:
+def shorten_money(money: Union[int, float]) -> str:
     for letter, amount in reversed(NUMBER_SCALES):
         if money > amount:
             return f'{money / amount:.1f}{letter}'
     return f'{money / amount:.1f}'
+
+
+def calc_exp(amount):
+    if amount <= 352:
+        for lvl in range(17):
+            if (lvl + 1) ** 2 + 6 * (lvl + 1) > amount:
+                return lvl
+
+    elif amount <= 1507:
+        for lvl in range(17, 32):
+            if 2.5 ** (lvl + 1) ** 2 - 40.5 * (lvl + 1) + 360 > amount:
+                return lvl
+
+    else:
+        for lvl in count(32):
+            if 4.5 ** (lvl + 1) ** 2 - 162.5 * (lvl + 1) + 2220 > amount:
+                return lvl
+
+
+def calc_skill_exp(name, amount):
+    exp_table = DUNGEON_EXP if name == 'dungeoneering' else SKILL_EXP
+    for lvl, _, cumulative, _ in exp_table:
+        if amount < cumulative:
+            return lvl - 1
+    else:
+        return EXP_LIMITS[name]
 
 
 def gen_help(doc: str) -> Dict[str, str]:
@@ -120,11 +170,11 @@ def white(*args, sep=' ', end='\n'):
     stdout.write(f'\x1b[97m{string}{end}\x1b[0m')
 
 
-BLACK = '\x1b[90m'
-RED = '\x1b[91m'
-GREEN = '\x1b[92m'
-YELLOW = '\x1b[93m'
-BLUE = '\x1b[94m'
-MAGENTA = '\x1b[95m'
-CYAN = '\x1b[96m'
-WHITE = '\x1b[97m'
+BLACK = '\x1b[0;90m'
+RED = '\x1b[0;91m'
+GREEN = '\x1b[0;92m'
+YELLOW = '\x1b[0;93m'
+BLUE = '\x1b[0;94m'
+MAGENTA = '\x1b[0;95m'
+CYAN = '\x1b[0;96m'
+WHITE = '\x1b[0;97m'

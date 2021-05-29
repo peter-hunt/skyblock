@@ -2,34 +2,13 @@ from os import walk
 from os.path import join
 from pathlib import Path
 
+from .const import menu_doc
 from .func import gen_help, backupable, input_regex, red, green, cyan
 from .profile import Profile
 
+__all__ = ['main']
 
-menu_doc = """
-> help [command]
-Show this message or get command description.
 
-> exit
-> quit
-Exit the menu.
-
-> create
-> new
-Create a new profile.
-
-> list
-> ls
-List all the profile avaliable.
-
-> delete <name>
-Delete a profile.
-
-> load <name>
-> open <name>
-> start <name>
-Load a profile and run it.
-""".strip()
 menu_help = gen_help(menu_doc)
 
 

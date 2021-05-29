@@ -1,3 +1,18 @@
+__all__ = [
+    'ROMAN_NUM', 'NUMBER_SCALES', 'EXP_LIMITS', 'SKILL_EXP', 'DUNGEON_EXP',
+    'INTEREST_TABLE', 'RARITY_COLORS', 'menu_doc', 'profile_doc',
+]
+
+ROMAN_NUM = [
+    ('I', 1), ('IV', 4), ('V', 5), ('IX', 9), ('X', 10),
+    ('XL', 40), ('L', 50), ('XC', 90), ('C', 100),
+    ('CD', 400), ('D', 500), ('CM', 900), ('M', 1000),
+]
+
+NUMBER_SCALES = [
+    ('', 1), ('K', 10 ** 3), ('M', 10 ** 6), ('B', 10 ** 9), ('T', 10 ** 12),
+]
+
 EXP_LIMITS = {
     'farming': 60,
     'mining': 60,
@@ -129,6 +144,36 @@ DUNGEON_EXP = [
     (50, 116250000, 569809640),
 ]
 
+INTEREST_TABLE = {
+    'starter': [
+        # start, end, ratio
+        (0, 10_000_000, 0.02),
+        (10_000_000, 15_000_000, 0.01),
+    ],
+    'gold': [
+        (0, 10_000_000, 0.02),
+        (10_000_000, 20_000_000, 0.01),
+    ],
+    'deluxe': [
+        (0, 10_000_000, 0.02),
+        (10_000_000, 20_000_000, 0.01),
+        (20_000_000, 30_000_000, 0.005),
+    ],
+    'super_deluxe': [
+        (0, 10_000_000, 0.02),
+        (10_000_000, 20_000_000, 0.01),
+        (20_000_000, 30_000_000, 0.005),
+        (30_000_000, 50_000_000, 0.002),
+    ],
+    'premier': [
+        (0, 10_000_000, 0.02),
+        (10_000_000, 20_000_000, 0.01),
+        (20_000_000, 30_000_000, 0.005),
+        (30_000_000, 50_000_000, 0.002),
+        (50_000_000, 160_000_000, 0.002),
+    ],
+}
+
 RARITY_COLORS = {
     'common': f'\x1b[1;38;2;255;255;255m',
     'uncommon': f'\x1b[1;38;2;85;255;85m',
@@ -140,3 +185,81 @@ RARITY_COLORS = {
     'special': f'\x1b[1;38;2;255;85;85m',
     'very_special': f'\x1b[1;38;2;255;85;85m',
 }
+
+menu_doc = """
+> help [command]
+Show this message or get command description.
+
+> exit
+> quit
+Exit the menu.
+
+> create
+> new
+Create a new profile.
+
+> list
+> ls
+List all the profile avaliable.
+
+> delete <name>
+Delete a profile.
+
+> load <name>
+> open <name>
+> start <name>
+Load a profile and run it.
+""".strip()
+
+profile_doc = """
+> exit
+> quit
+Exit to the menu.
+
+> deposit <coins>
+Deposit coins from the purse to the bank.
+
+> withdraw <coins>
+Withdraw coins from the bank to the purse.
+
+> info <index>
+> information <index>
+Display detailed informatioon about the item.
+
+> help [command]
+Show this message or get command description.
+
+> inv
+> inventory
+> list
+> ls
+List all the items in the inventory.
+
+> get <resource> [amount=1] [tool=hand]
+Get resources for an amount with chosen tool or hand by default.
+
+> goto <location>
+Go to a region.
+
+> look
+Get information about the region.
+
+> money
+Display information about your money.
+
+> sell <index>
+Sell the item.
+
+> merge <index-from> <index-to>
+Merge stackable items in the inventory.
+
+> move <index> <index>
+> switch <index> <index>
+Switch items slot in the inventory.
+
+> split <index-from> <index-to> <amount>
+Split items to another slot.
+
+> talkto <npc>
+Talk to an npc.
+""".strip()

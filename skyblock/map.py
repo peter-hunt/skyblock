@@ -4,7 +4,7 @@ from math import dist, inf
 from typing import Dict, List, Optional, Tuple, Union
 
 from .func import get
-from .item import Item, Resource, MINERALS, TREES
+from .item import ALL_ITEM, Item, Resource, MINERALS, TREES
 
 
 __all__ = [
@@ -155,10 +155,12 @@ FARMHOUSE = Region(
                 'Talk to me again to open the Farmer Shop!',
             ],
             trades=[
-                (7/3, 'wheat'), (7/3, 'carrot'), (7/3, 'potato'),
-                (2, 'melon'), (5, 'sugar_cane'), (8, 'pumpkin'),
-                (5, 'cocoa_beans'), (12, 'red_mushroom'),
-                (12, 'brown_mushroom'), (4, 'sand'), (10, 'rookie_hoe'),
+                (7/3, Item('wheat')), (7/3, Item('carrot')),
+                (7/3, Item('potato')), (8, Item('pumpkin')),
+                (2, Item('melon')), (5, Item('sugar_cane')),
+                (5, Item('cocoa_beans')), (12, Item('red_mushroom')),
+                (12, Item('brown_mushroom')), (4, Item('sand')),
+                # (10, get(ALL_ITEM, 'rookie_hoe')),
             ]
         ),
         Npc(
