@@ -13,11 +13,12 @@ from typing import Dict, List, Optional, Union
 
 from .const import EXP_LIMITS, SKILL_EXP, DUNGEON_EXP
 from .func import (
-    get, backupable, gen_help, random_int,
-    red, green, blue, yellow, cyan,
+    get, backupable, gen_help, random_int, display_money, short_money,
+    red, green, blue, yellow, cyan, GREEN, YELLOW, CYAN,
 )
 from .item import (
-    ALL_ITEM, COLLECTIONS, RESOURCES, ItemType, Item, Empty, Pickaxe, from_obj,
+    ALL_ITEM, COLLECTIONS, RESOURCES, SELL_PRICE,
+    ItemType, Item, Empty, Pickaxe, from_obj,
     Pickaxe, Axe, Mineral, TreeType,
 )
 from .map import Island, Region, ISLANDS, calc_dist, path_find, includes
@@ -26,16 +27,22 @@ from .map import Island, Region, ISLANDS, calc_dist, path_find, includes
 Number = Union[float, int]
 
 profile_doc = """
-> help [command]
-Show this message or get command description.
-
 > exit
 > quit
 Exit to the menu.
 
+> deposit <coins>
+Deposit coins from the purse to the bank.
+
+> withdraw <coins>
+Withdraw coins from the bank to the purse.
+
 > info <index>
 > information <index>
 Display detailed informatioon about the item.
+
+> help [command]
+Show this message or get command description.
 
 > inv
 > inventory
@@ -49,11 +56,14 @@ Get resources for an amount with chosen tool or hand by default.
 > goto <location>
 Go to a region.
 
-> location
-Display your location.
-
 > look
 Get information about the region.
+
+> money
+Display information about your money.
+
+> sell <index>
+Sell the item.
 
 > merge <index-from> <index-to>
 Merge stackable items in the inventory.
@@ -419,6 +429,13 @@ class Profile:
             for resource in region.resources:
                 cyan(f'  {resource.name} ({resource.type()})')
 
+    def money(self):
+        cyan(f'Purse: {YELLOW}{display_money(self.purse)} coins')
+        cyan(f'Balance: {YELLOW}{display_money(self.balance)} coins')
+        bank_level = ' '.join(word.capitalize()
+                              for word in self.bank_level.split('_'))
+        cyan(f'Bank Level: {bank_level}')
+
     @backupable
     def talkto_npc(self, npc):
         if npc.name not in self.npc_talked:
@@ -509,6 +526,25 @@ class Profile:
         if name not in self.collection:
             self.collection[name] = 0
         self.collection[name] += amount
+
+    def sell(self, index: int):
+        island = get(ISLANDS, self.island)
+        region = get(island.regions, self.region)
+
+        if len(region.npcs) == 0:
+            red('No NPCs around to sell the item.')
+            return
+
+        item = self.inventory[index]
+        if item.name not in SELL_PRICE:
+            red(f"Can't sell {item.display()}.")
+            return
+
+        delta = SELL_PRICE[item.name] * getattr(item, 'count', 1)
+        self.purse += delta
+        red(f"Sold {item.display()} for "
+            f"{YELLOW}{short_money(delta)} coins{CYAN}.")
+        self.inventory[index] = Empty()
 
     def get(self, name: str, tool_index: Optional[int], amount: int):
         resource = get(RESOURCES, name)
@@ -612,7 +648,63 @@ class Profile:
     def update(self):
         now = int(time())
         last = now if self.last_update is None else self.last_update
-        dt = now - last
+        # dt = now - last
+
+        last_cp = last // (31 * 3600)
+        now_cp = now // (31 * 3600)
+        if now_cp > last_cp:
+            interest = 0
+            if self.bank_level == 'starter':
+                interest += 0.02 * min(self.balance, 10 ** 7)
+                if self.balance > 10 ** 7:
+                    interest += 0.01 * \
+                        (min(self.balance, 1.5 * 10 ** 7) - 10 ** 7)
+            elif self.bank_level == 'gold':
+                interest += 0.02 * min(self.balance, 10 ** 7)
+                if self.balance > 10 ** 7:
+                    interest += 0.01 * \
+                        (min(self.balance, 2 * 10 ** 7) - 10 ** 7)
+            elif self.bank_level == 'deluxe':
+                interest += 0.02 * min(self.balance, 10 ** 7)
+                if self.balance > 10 ** 7:
+                    interest += 0.01 * \
+                        (min(self.balance, 2 * 10 ** 7) - 10 ** 7)
+                if self.balance > 2 * 10 ** 7:
+                    interest += 0.005 * \
+                        (min(self.balance, 3 * 10 ** 7) - 2 * 10 ** 7)
+            elif self.bank_level == 'super_deluxe':
+                interest += 0.02 * min(self.balance, 10 ** 7)
+                if self.balance > 10 ** 7:
+                    interest += 0.01 * \
+                        (min(self.balance, 2 * 10 ** 7) - 10 ** 7)
+                if self.balance > 2 * 10 ** 7:
+                    interest += 0.005 * \
+                        (min(self.balance, 3 * 10 ** 7) - 2 * 10 ** 7)
+                if self.balance > 3 * 10 ** 7:
+                    interest += 0.002 * \
+                        (min(self.balance, 5 * 10 ** 7) - 3 * 10 ** 7)
+            elif self.bank_level == 'premier':
+                interest += 0.02 * min(self.balance, 10 ** 7)
+                if self.balance > 10 ** 7:
+                    interest += 0.01 * \
+                        (min(self.balance, 2 * 10 ** 7) - 10 ** 7)
+                if self.balance > 2 * 10 ** 7:
+                    interest += 0.005 * \
+                        (min(self.balance, 3 * 10 ** 7) - 2 * 10 ** 7)
+                if self.balance > 3 * 10 ** 7:
+                    interest += 0.002 * \
+                        (min(self.balance, 5 * 10 ** 7) - 3 * 10 ** 7)
+                if self.balance > 5 * 10 ** 7:
+                    interest += 0.001 * \
+                        (min(self.balance, 1.6 * 10 ** 8) - 5 * 10 ** 7)
+            else:
+                red(f'Invalid bank level: {self.bank_level!r}')
+
+            interest *= now_cp - last_cp
+            self.balance += interest
+            green(f"Since you've been away you earned "
+                  f"{YELLOW}{display_money(interest)} coins{GREEN} "
+                  f"as interest in your personal bank account!")
 
         self.last_update = now
 
@@ -636,6 +728,52 @@ class Profile:
                 self.dump()
                 green('Saved!')
                 break
+
+            elif words[0] == 'deposit':
+                if len(words) != 2:
+                    red(f'Invalid usage of command {words[0]!r}.')
+                    continue
+
+                coins_str = words[1]
+                if not fullmatch(r'\d+(\.\d{1,2})?', coins_str):
+                    red('Invalid amount of coins.')
+                    continue
+                coins = eval(coins_str)
+
+                if self.purse < coins:
+                    red('Not enough coins to deposit.')
+                    continue
+
+                self.purse -= coins
+                self.balance += coins
+
+                cyan(f'Desposited {YELLOW}'
+                     f'{short_money(coins)}'f'{CYAN} coins. '
+                     f'You have {YELLOW}'
+                     f'{short_money(self.purse)}{CYAN} coins in purse.')
+
+            elif words[0] == 'withdraw':
+                if len(words) != 2:
+                    red(f'Invalid usage of command {words[0]!r}.')
+                    continue
+
+                coins_str = words[1]
+                if not fullmatch(r'\d+(\.\d{1,2})?', coins_str):
+                    red('Invalid amount of coins.')
+                    continue
+                coins = eval(coins_str)
+
+                if self.balance < coins:
+                    red('Not enough coins to withdraw.')
+                    continue
+
+                self.balance -= coins
+                self.purse += coins
+
+                cyan(f'Withdrew {YELLOW}'
+                     f'{short_money(coins)}'f'{CYAN} coins. '
+                     f'You have {YELLOW}'
+                     f'{short_money(self.purse)}{CYAN} coins in purse.')
 
             elif words[0] == 'help':
                 if len(words) == 1:
@@ -726,19 +864,19 @@ class Profile:
 
                 self.info(item_index)
 
-            elif words[0] == 'location':
-                if len(words) != 1:
-                    red(f'Invalid usage of command {words[0]!r}.')
-                    continue
-
-                cyan(f"You're at {region} of {island}.")
-
             elif words[0] == 'look':
                 if len(words) != 1:
                     red(f'Invalid usage of command {words[0]!r}.')
                     continue
 
                 self.look()
+
+            elif words[0] == 'money':
+                if len(words) != 1:
+                    red(f'Invalid usage of command {words[0]!r}.')
+                    continue
+
+                self.money()
 
             elif words[0] == 'save':
                 if len(words) != 1:
@@ -823,8 +961,25 @@ class Profile:
                 self.inventory[index_1], self.inventory[index_2] = (
                     self.inventory[index_2], self.inventory[index_1],
                 )
-                cyan(f'Switched {self.inventory[index_2].display()}\x1b[96m'
+                cyan(f'Switched {self.inventory[index_2].display()}{CYAN}'
                      f' and {self.inventory[index_1].display()}')
+
+            elif words[0] == 'sell':
+                if len(words) != 2:
+                    red(f'Invalid usage of command {words[0]!r}.')
+                    continue
+
+                index_str = words[1]
+                if not fullmatch(r'\d+', index_str):
+                    red(f'Invalid number for item index: {index_str}')
+                    continue
+                item_index = int(index_str)
+                if item_index <= 0 or item_index > len(self.inventory):
+                    red(f'Item index out of bound: {item_index}')
+                    continue
+                item_index -= 1
+
+                self.sell(item_index)
 
             elif words[0] == 'split':
                 if len(words) != 4:
