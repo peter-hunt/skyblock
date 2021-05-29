@@ -24,5 +24,3 @@ setup(
     ],
     python_requires='>=3.8',
 )
-
-# 8ed7ac86-359d-4301-9730-b993a9886c43
