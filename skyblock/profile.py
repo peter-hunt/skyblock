@@ -750,12 +750,12 @@ class Profile:
                 npc = get(region.npcs, name)
                 self.talkto_npc(npc)
 
-            elif words[0] == 'test':
-                if len(words) != 1:
-                    red(f'Invalid usage of command {words[0]!r}.')
-                    continue
+            # elif words[0] == 'test':
+            #     if len(words) != 1:
+            #         red(f'Invalid usage of command {words[0]!r}.')
+            #         continue
 
-                self.recieve(get(ALL_ITEM, 'golden_axe'))
+            #     self.recieve(get(ALL_ITEM, 'golden_axe'))
 
             else:
                 red(f'Unknown command: {words[0]!r}')
