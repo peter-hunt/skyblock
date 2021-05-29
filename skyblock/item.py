@@ -160,6 +160,15 @@ class Pickaxe(ItemType):
 
 
 @item_type
+class Axe(ItemType):
+    name: str
+    rarity: str
+    tool_speed: int
+    modifier: Optional[str] = None
+    enchantments: Dict[str, int] = {}
+
+
+@item_type
 class Sword(ItemType):
     name: str
     rarity: str
@@ -232,6 +241,14 @@ class Mineral(Resource):
     mining_exp: Number = 1
 
 
+@item_type
+class TreeType(Resource):
+    name: str
+    drop: str
+    hardness: int = 2
+    foraging_exp: Number = 1
+
+
 def from_obj(obj):
     if isinstance(obj, ItemType):
         return obj
@@ -244,7 +261,7 @@ def from_obj(obj):
         raise ValueError(f"invalid item obj type: {obj['type']!r}")
 
 
-ITEMS = [
+COLLECTIONS = [
     # name, stack_size, rarity
     Item('wheat', 64, 'common'),
     Item('carrot', 64, 'common'),
@@ -282,6 +299,13 @@ ITEMS = [
     Item('sand', 64, 'common'),
     Item('endstone', 64, 'common'),
     Item('mithril', 64, 'common'),
+
+    Item('oak_wood', 64, 'common'),
+    Item('birch_wood', 64, 'common'),
+    Item('spruce_wood', 64, 'common'),
+    Item('dark_oak_wood', 64, 'common'),
+    Item('acacia_wood', 64, 'common'),
+    Item('jungle_wood', 64, 'common'),
 ]
 
 MINERALS = [
@@ -289,14 +313,23 @@ MINERALS = [
     Mineral('coal_ore', 'coal', 1, 1, 1, 3, 5),
 ]
 
-RESOURCES = MINERALS + []
+TREES = [
+    TreeType('oak', 'oak_wood', 2, 6),
+    TreeType('birch', 'birch_wood', 2, 6),
+    TreeType('spruce', 'spruce_wood', 2, 6),
+    TreeType('dark_oak', 'dark_oak_wood', 2, 6),
+    TreeType('acacia', 'acacia_wood', 2, 6),
+    TreeType('jungle', 'jungle_wood', 2, 6),
+]
+
+RESOURCES = MINERALS + TREES
 
 WEAPONS = [
-    Sword('aspect_of_the_dragons', 'legendary', 225,
+    Sword('aspect_of_the_dragons', 'legendary', damage=225,
           combat_skill_req=18),
-    Sword('dreadlord_sword', 'rare', 120,
+    Sword('dreadlord_sword', 'rare', damage=120,
           dungeon_skill_req=5),
-    Sword('livid_dagger', 'legendary', 210,
+    Sword('livid_dagger', 'legendary', damage=210,
           dungeon_completion_req=5),
 ]
 
@@ -311,10 +344,12 @@ TOOLS = [
             breaking_power=3, mining_speed=160),
     Pickaxe('diamond_pickaxe', rarity='uncommon',
             breaking_power=4, mining_speed=230),
-    # Pickaxe('rookie_pickaxe', rarity='common',
-    #         breaking_power=2, mining_speed=150),
-    # Pickaxe('promising_pickaxe', rarity='uncommon',
-    #         breaking_power=3, mining_speed=190),
+
+    Axe('wooden_axe', rarity='common', tool_speed=2),
+    Axe('stone_axe', rarity='common', tool_speed=4),
+    Axe('golden_axe', rarity='common', tool_speed=12),
+    Axe('iron_axe', rarity='common', tool_speed=6),
+    Axe('wooden_axe', rarity='uncommon', tool_speed=8),
 ]
 
-ALL_ITEM = ITEMS + MINERALS + WEAPONS + TOOLS
+ALL_ITEM = COLLECTIONS + MINERALS + WEAPONS + TOOLS

@@ -1,3 +1,4 @@
+from random import random
 from re import escape, fullmatch
 from sys import stdout
 from typing import Any, Dict, List
@@ -24,6 +25,11 @@ def roman(num: int) -> str:
             num -= amount
             result += letter
     return result
+
+
+def random_int(num: float) -> int:
+    int_part, float_part = divmod(num, 1)
+    return int(int_part + (float_part > random()))
 
 
 def gen_help(doc: str) -> Dict[str, str]:

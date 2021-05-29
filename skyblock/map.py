@@ -4,7 +4,7 @@ from math import dist, inf
 from typing import Dict, List, Optional, Tuple, Union
 
 from .func import get
-from .item import Item, Resource, MINERALS
+from .item import Item, Resource, MINERALS, TREES
 
 
 __all__ = [
@@ -137,6 +137,7 @@ BUILDERS_HOUSE = Region('builders_house', -50, -36)
 COAL_MINE = Region(
     'coal_mine', -20, -160,
     resources=[
+        get(MINERALS, 'stone'),
         get(MINERALS, 'coal_ore'),
     ],
 )
@@ -175,7 +176,12 @@ FARMHOUSE = Region(
 )
 FASHION_SHOP = Region('fashion_shop', 27, -44)
 FLOWER_HOUSE = Region('flower_house', -7, -25)
-FOREST = Region('forest', -95, -40)
+FOREST = Region(
+    'forest', -95, -40,
+    resources=[
+        get(TREES, 'oak'),
+    ],
+)
 GRAVEYARD = Region('graveyard', -99, -54)
 HIGH_LEVEL = Region('high_level', 0, 150)
 HUB_CRYPTS = Region('hub_crypts', -120, -100)

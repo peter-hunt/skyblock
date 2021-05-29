@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from decimal import Decimal
 from itertools import count
 from json import dump, load
 from math import ceil, radians, tan
@@ -11,10 +12,13 @@ from time import sleep, time
 from typing import Dict, List, Optional, Union
 
 from .const import EXP_LIMITS, SKILL_EXP, DUNGEON_EXP
-from .func import get, backupable, gen_help, red, green, blue, yellow, cyan
+from .func import (
+    get, backupable, gen_help, random_int,
+    red, green, blue, yellow, cyan,
+)
 from .item import (
-    ALL_ITEM, RESOURCES, ItemType, Item, Empty, Pickaxe, from_obj,
-    Pickaxe, Mineral,
+    ALL_ITEM, COLLECTIONS, RESOURCES, ItemType, Item, Empty, Pickaxe, from_obj,
+    Pickaxe, Axe, Mineral, TreeType,
 )
 from .map import Island, Region, ISLANDS, calc_dist, path_find, includes
 
@@ -267,7 +271,7 @@ class Profile:
                 'wardrobe_slot': self.wardrobe_slot,
 
                 'npc_talked': self.npc_talked,
-            }, file, indent=4, sort_keys=True)
+            }, file, indent=2, sort_keys=True)
 
     def put_stash(self, item: ItemType):
         if isinstance(item, Item):
@@ -284,8 +288,8 @@ class Profile:
             self.stash.append(item)
 
     def recieve(self, item: ItemType):
+        cyan(f'+{item.display()}')
         if isinstance(item, Item):
-            print(item.name)
             item_type = get(ALL_ITEM, item.name)
             name = item.name
             count = item.count
@@ -374,6 +378,8 @@ class Profile:
         island = get(ISLANDS, self.island)
         region = get(island.regions, self.region)
 
+        cyan('Location:')
+        cyan(f"  You're at {region} of {island}.")
         cyan('Nearby places:')
         for conn in island.conns:
             if region not in conn:
@@ -489,6 +495,11 @@ class Profile:
         print(item.info())
         print(f"\x1b[1;38;2;255;255;85m{'':-^{width}}\x1b[0m")
 
+    def collect(self, name: str, amount: int):
+        if name not in self.collection:
+            self.collection[name] = 0
+        self.collection[name] += amount
+
     def get(self, name: str, tool_index: Optional[int], amount: int):
         resource = get(RESOURCES, name)
         if tool_index is None:
@@ -496,13 +507,15 @@ class Profile:
         else:
             tool = self.inventory[tool_index]
 
-        if not isinstance(tool, (Empty, Pickaxe)):
+        if not isinstance(tool, (Empty, Axe, Pickaxe)):
             tool = Empty()
 
         if isinstance(resource, Mineral):
             if isinstance(tool, Pickaxe):
                 breaking_power = tool.breaking_power
                 mining_speed = tool.mining_speed
+                if 'efficiency' in tool.enchantments:
+                    mining_speed += 10 + 20 * tool.enchantments['efficiency']
             else:
                 breaking_power = 0
                 mining_speed = 50
@@ -513,18 +526,67 @@ class Profile:
 
             time_cost = 30 * resource.hardness / mining_speed
 
-            last_cp = 0
-            for count in range(amount):
+            mining_lvl = self.calc_skill_exp(
+                'mining', self.skill_xp_mining,
+            )
+            drop_mult = (1 + 0.1 * tool.enchantments.get('fortune', 0)
+                         + 0.04 * mining_lvl)
+            exp_mult = 1 + 0.125 * tool.enchantments.get('experience', 0)
+            drop_item = resource.drop
+            default_amount = resource.amount
+
+            last_cp = Decimal()
+            cp_step = Decimal('0.1')
+            is_collection = get(COLLECTIONS, drop_item) is not None
+            for count in range(1, amount + 1):
                 sleep(time_cost)
-                self.recieve(
-                    Item(resource.drop, resource.amount),
-                )
-                self.add_exp(resource.exp)
+                drop_pool = random_int(drop_mult)
+                self.recieve(Item(drop_item, default_amount * drop_pool))
+                if is_collection:
+                    self.collect(drop_item, default_amount * drop_pool)
+
+                self.add_exp(resource.exp * random_int(exp_mult))
                 self.add_skill_exp('mining', resource.mining_exp)
-                if (count + 1) >= last_cp * amount:
-                    while count < last_cp * amount:
-                        last_cp += 0.1
-                    print(f'{count + 1} / {amount} ({(last_cp * 100):d}%) done')
+                if count >= (last_cp + cp_step) * amount:
+                    while count >= (last_cp + cp_step) * amount:
+                        last_cp += cp_step
+                    print(f'{count} / {amount} '
+                          f'({(last_cp * 100):.0f}%) done')
+
+        if isinstance(resource, TreeType):
+            if isinstance(tool, Axe):
+                tool_speed = tool.tool_speed
+                if 'efficiency' in tool.enchantments:
+                    tool_speed += tool.enchantments['efficiency'] ** 2 + 1
+                time_cost = ceil(1.5 * resource.hardness / tool_speed)
+            else:
+                tool_speed = 1
+                time_cost = ceil(5 * resource.hardness / tool_speed)
+
+            foraging_lvl = self.calc_skill_exp(
+                'foraging', self.skill_xp_foraging,
+            )
+            drop_mult = (1 + 0.01 * foraging_lvl
+                         + 0.01 * max(0, foraging_lvl - 14))
+
+            drop_item = resource.drop
+
+            last_cp = Decimal()
+            cp_step = Decimal('0.1')
+            is_collection = get(COLLECTIONS, drop_item) is not None
+            for count in range(1, amount + 1):
+                sleep(time_cost)
+                drop_pool = random_int(drop_mult)
+                self.recieve(Item(drop_item, drop_pool))
+                if is_collection:
+                    self.collect(drop_item, drop_pool)
+
+                self.add_skill_exp('foraging', resource.foraging_exp)
+                if count >= (last_cp + cp_step) * amount:
+                    while count >= (last_cp + cp_step) * amount:
+                        last_cp += cp_step
+                    print(f'{count} / {amount} '
+                          f'({(last_cp * 100):.0f}%) done')
 
         else:
             red('Unknown resource type.')
@@ -602,7 +664,7 @@ class Profile:
                         continue
                     tool_index -= 1
                     tool_item = self.inventory[tool_index]
-                    if not isinstance(tool_item, (Empty, Pickaxe)):
+                    if not isinstance(tool_item, (Empty, Pickaxe, Axe)):
                         yellow(
                             f'{tool_item.name} item is not tool.\n'
                             f'Using barehand by default.'
@@ -668,6 +730,14 @@ class Profile:
 
                 self.look()
 
+            elif words[0] == 'save':
+                if len(words) != 1:
+                    red(f'Invalid usage of command {words[0]!r}.')
+                    continue
+
+                self.dump()
+                green('Saved!')
+
             elif words[0] == 'talkto':
                 if len(words) != 2:
                     red(f'Invalid usage of command {words[0]!r}.')
@@ -685,7 +755,7 @@ class Profile:
                     red(f'Invalid usage of command {words[0]!r}.')
                     continue
 
-                self.recieve(get(ALL_ITEM, 'livid_dagger'))
+                self.recieve(get(ALL_ITEM, 'golden_axe'))
 
             else:
                 red(f'Unknown command: {words[0]!r}')
