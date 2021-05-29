@@ -353,3 +353,15 @@ TOOLS = [
 ]
 
 ALL_ITEM = COLLECTIONS + MINERALS + WEAPONS + TOOLS
+
+SELL_PRICE = {
+    'cobblestone': 1,
+    'coal': 2,
+
+    'oak_wood': 2,
+    'birch_wood': 2,
+    'spruce_wood': 2,
+    'dark_oak_wood': 2,
+    'acacia_wood': 2,
+    'jungle_wood': 2,
+}

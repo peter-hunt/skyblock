@@ -53,7 +53,17 @@ Go to a region.
 Display your location.
 
 > look
-Look at regions you can go to.
+Get information about the region.
+
+> merge <index-from> <index-to>
+Merge stackable items in the inventory.
+
+> move <index> <index>
+> switch <index> <index>
+Switch items slot in the inventory.
+
+> split <index-from> <index-to> <amount>
+Split items to another slot.
 
 > talkto <npc>
 Talk to an npc.
@@ -656,7 +666,7 @@ class Profile:
                 if len(words) >= 3:
                     tool_str = words[2]
                     if not fullmatch(r'\d+', tool_str):
-                        red(f'Invalid number for tool index: {tool_str}')
+                        red(f'Invalid number for item index: {tool_str}')
                         continue
                     tool_index = int(tool_str)
                     if tool_index <= 0 or tool_index > len(self.inventory):
@@ -706,7 +716,7 @@ class Profile:
 
                 index_str = words[1]
                 if not fullmatch(r'\d+', index_str):
-                    red(f'Invalid number for tool index: {index_str}')
+                    red(f'Invalid number for item index: {index_str}')
                     continue
                 item_index = int(index_str)
                 if item_index <= 0 or item_index > len(self.inventory):
@@ -737,6 +747,155 @@ class Profile:
 
                 self.dump()
                 green('Saved!')
+
+            elif words[0] == 'merge':
+                if len(words) != 3:
+                    red(f'Invalid usage of command {words[0]!r}.')
+                    continue
+
+                index_1_str = words[1]
+                if not fullmatch(r'\d+', index_1_str):
+                    red(f'Invalid number for item index: {index_1_str}')
+                    continue
+                index_1 = int(index_1_str)
+                if index_1 <= 0 or index_1 > len(self.inventory):
+                    red(f'Item index out of bound: {index_1}')
+                    continue
+                index_1 -= 1
+
+                index_2_str = words[2]
+                if not fullmatch(r'\d+', index_2_str):
+                    red(f'Invalid number for item index: {index_2_str}')
+                    continue
+                index_2 = int(index_2_str)
+                if index_2 <= 0 or index_2 > len(self.inventory):
+                    red(f'Item index out of bound: {index_2}')
+                    continue
+                index_2 -= 1
+
+                item_from = self.inventory[index_1]
+                item_to = self.inventory[index_2]
+                if not hasattr(item_from, 'count') or not hasattr(item_to, 'count'):
+                    red('Cannot merge unstackable items.')
+                    continue
+                if item_from.name != item_to.name:
+                    red('Cannot merge different items.')
+                    continue
+
+                item_type = get(ALL_ITEM, item_from.name)
+                if item_to.count == item_type.count:
+                    yellow('Target item is already full as a stack.')
+                    continue
+
+                delta = max(item_from.count, item_to.count - item_type.count)
+                self.inventory[index_1].count -= delta
+                if self.inventory[index_1].count == 0:
+                    self.inventory[index_1] = Empty()
+                self.inventory[index_2].count += delta
+
+                cyan(f'Merged {item_type.display()}')
+
+            elif words[0] in {'move', 'switch'}:
+                if len(words) != 3:
+                    red(f'Invalid usage of command {words[0]!r}.')
+                    continue
+
+                index_1_str = words[1]
+                if not fullmatch(r'\d+', index_1_str):
+                    red(f'Invalid number for item index: {index_1_str}')
+                    continue
+                index_1 = int(index_1_str)
+                if index_1 <= 0 or index_1 > len(self.inventory):
+                    red(f'Item index out of bound: {index_1}')
+                    continue
+                index_1 -= 1
+
+                index_2_str = words[2]
+                if not fullmatch(r'\d+', index_2_str):
+                    red(f'Invalid number for item index: {index_2_str}')
+                    continue
+                index_2 = int(index_2_str)
+                if index_2 <= 0 or index_2 > len(self.inventory):
+                    red(f'Item index out of bound: {index_2}')
+                    continue
+                index_2 -= 1
+
+                self.inventory[index_1], self.inventory[index_2] = (
+                    self.inventory[index_2], self.inventory[index_1],
+                )
+                cyan(f'Switched {self.inventory[index_2].display()}\x1b[96m'
+                     f' and {self.inventory[index_1].display()}')
+
+            elif words[0] == 'split':
+                if len(words) != 4:
+                    red(f'Invalid usage of command {words[0]!r}.')
+                    continue
+
+                index_1_str = words[1]
+                if not fullmatch(r'\d+', index_1_str):
+                    red(f'Invalid number for item index: {index_1_str}')
+                    continue
+                index_1 = int(index_1_str)
+                if index_1 <= 0 or index_1 > len(self.inventory):
+                    red(f'Item index out of bound: {index_1}')
+                    continue
+                index_1 -= 1
+
+                index_2_str = words[2]
+                if not fullmatch(r'\d+', index_2_str):
+                    red(f'Invalid number for item index: {index_2_str}')
+                    continue
+                index_2 = int(index_2_str)
+                if index_2 <= 0 or index_2 > len(self.inventory):
+                    red(f'Item index out of bound: {index_2}')
+                    continue
+                index_2 -= 1
+
+                amount_str = words[3]
+                if not fullmatch(r'\d+', amount_str):
+                    red(f'Invalid number for item index: {amount_str}')
+                    continue
+                amount = int(amount_str)
+
+                item_1 = self.inventory[index_1]
+                item_2 = self.inventory[index_2]
+
+                if not hasattr(item_1, 'count'):
+                    red('Cannot split unstackable items.')
+                    continue
+
+                if item_1.count < amount:
+                    red('Cannot split more than the original amount.')
+                    continue
+
+                if isinstance(item_2, Empty):
+                    self.inventory[index_1].count -= amount
+                    self.inventory[index_2] = item_1
+                    self.inventory[index_2].count = amount
+                    cyan(f'Splitted {amount} item from '
+                         f'slot {index_1 + 1} to slot {index_2 + 1}.')
+                    continue
+
+                if item_1.name != item_2.name:
+                    red('Cannot split to different items.')
+                    continue
+
+                item_type = get(ALL_ITEM, item_1.name)
+                if item_2.count == item_type.count:
+                    yellow('Target item is already full as a stack.')
+                    continue
+
+                if item_1.count == amount:
+                    yellow('Moving all the item possible.')
+
+                delta = min(amount, item_type.count - item_2.count)
+                if amount > delta:
+                    yellow(f'Splitting {delta} istead of {amount} item.')
+
+                self.inventory[index_1].count -= delta
+                self.inventory[index_2].count += delta
+                cyan(f'Splitted {delta} item from '
+                     f'slot {index_1 + 1} to slot {index_2 + 1}.')
 
             elif words[0] == 'talkto':
                 if len(words) != 2:
