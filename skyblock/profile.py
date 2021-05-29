@@ -31,7 +31,7 @@ Exit to the menu.
 
 > info <index>
 > information <index>
-Display specified informatioon about the item.
+Display detailed informatioon about the item.
 
 > inv
 > inventory
@@ -40,7 +40,7 @@ Display specified informatioon about the item.
 List all the items in the inventory.
 
 > get <resource> [amount=1] [tool=hand]
-Get resources for an amount with specified tool or hand by default.
+Get resources for an amount with chosen tool or hand by default.
 
 > goto <location>
 Go to a region.

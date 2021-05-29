@@ -140,6 +140,3 @@ RARITY_COLORS = {
     'special': f'\x1b[1;38;2;255;85;85m',
     'very_special': f'\x1b[1;38;2;255;85;85m',
 }
-
-# for rarity in RARITY_COLORS:
-#     print(f'{RARITY_COLORS[rarity]}{rarity.capitalize()}\x1b[0m')

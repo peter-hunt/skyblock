@@ -1,33 +1,41 @@
 # Skyblock
+![](https://img.shields.io/github/repo-size/peter-hunt/skyblock)
+![](https://img.shields.io/github/license/peter-hunt/skyblock)
+
 
 Clone of Hypixel Skyblock, but in Python Cmd.
 Specifically, Ironman mode.
 
 # Installation
 Use git to install Skyblock.
-Go to the directory you want to download Regex in, and enter the following command:
 
-```bash
-git clone https://github.com/peter-hunt/skyblock.git
-```
-
-Or use pip.
+Use pip to install the project straight as an executable library.
 
 ```bash
 pip install git+https://github.com/peter-hunt/skyblock.git
 ```
 
-This project requires Python 3.8+
+Or, if you want to install from the source, use git to clone the source code.
 
-If you installed Skyblock with `git`, it's recommended to go into the folder and install the package, so you can run skyblock from anywhere:
+```bash
+git clone https://github.com/peter-hunt/skyblock.git
+```
+
+To install the library from the source, go into the directory and:
+
 ```bash
 python setup.py install
 ```
+
+This project requires Python 3.8+
 
 ## Usage
 ```bash
 python -m skyblock
 ```
 
-## License
+# Furthur information
+This project is a clone of [Hypixel Skyblock](https://hypixel-skyblock.fandom.com/wiki/Hypixel_SkyBlock_Wiki)
+
+# License
 [MIT](LICENSE.txt)

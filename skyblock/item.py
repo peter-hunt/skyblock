@@ -77,6 +77,16 @@ def item_type(cls):
         info := f'{rarity_color}{display_name}\\x1b[0m',
         type_name := self.__class__.__name__.upper(),
         (
+            info := (info + f'\\n\\x1b[38;2;85;85;85m'
+                     f'Breaking Power: \\x1b[38;2;255;85;85m+'
+                     f'{self.breaking_power}\\x1b[0m\\n'),
+        ) if (hasattr(self, 'breaking_power')) else (),
+        (
+            info := (info + f'\\n\\n\\x1b[38;2;170;170;170m'
+                     f'Mining Speed: \\x1b[38;2;255;85;85m+'
+                     f'{self.mining_speed}\\x1b[0m\\n'),
+        ) if (hasattr(self, 'mining_speed')) else (),
+        (
             info := (info + f'\\n\\x1b[38;2;170;170;170m'
                      f'Damage: \\x1b[38;2;255;85;85m+{self.damage}\\x1b[0m'),
         ) if (hasattr(self, 'damage')) else (),
@@ -90,15 +100,13 @@ def item_type(cls):
                      f'\\x1b[38;2;85;255;85mCombat Skill '
                      f'{self.combat_skill_req}\\x1b[0m'),
         ) if (hasattr(self, 'combat_skill_req') and
-              self.combat_skill_req is not None) else (),
-        (
+              self.combat_skill_req is not None) else (
             info := (info + f'\\n\\x1b[38;2;170;0;0m❣ '
                      f'\\x1b[38;2;255;85;85mRequires '
                      f'\\x1b[38;2;85;255;85mCatacombs Skill '
                      f'{self.dungeon_skill_req}\\x1b[0m'),
         ) if (hasattr(self, 'dungeon_skill_req') and
-              self.dungeon_skill_req is not None) else (),
-        (
+              self.dungeon_skill_req is not None) else (
             info := (info + f'\\n\\x1b[38;2;170;0;0m❣ '
                      f'\\x1b[38;2;255;85;85mRequires '
                      f'\\x1b[38;2;85;255;85mCatacombs Floor '
@@ -107,6 +115,7 @@ def item_type(cls):
               self.dungeon_completion_req is not None) else (),
         info := (info + f'\\n{rarity_color}{self.rarity.upper()} '
                  f'{type_name}\\x1b[0m'),
+        info := info.replace('\\n\\n', '\\n'),
         info,
     )[-1]
     """.replace('\n', '')
@@ -294,6 +303,8 @@ WEAPONS = [
 TOOLS = [
     Pickaxe('wooden_pickaxe', rarity='common',
             breaking_power=1, mining_speed=70),
+    Pickaxe('golden_pickaxe', rarity='common',
+            breaking_power=1, mining_speed=250),
     Pickaxe('stone_pickaxe', rarity='common',
             breaking_power=2, mining_speed=110),
     Pickaxe('iron_pickaxe', rarity='common',
