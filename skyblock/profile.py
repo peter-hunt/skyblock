@@ -40,8 +40,8 @@ class Profile:
 
     experience: Number = 0
 
-    island: Island = get(ISLANDS, 'hub')
-    region: Region = get(get(ISLANDS, 'hub').regions, 'village')
+    island: str = 'hub'
+    region: str = 'village'
 
     base_health: int = 100
     base_defense: int = 0
@@ -71,12 +71,12 @@ class Profile:
     crafted_minions: List[str] = field(default_factory=list)
 
     armor: List[Item] = field(
-        default_factory=lambda: [{} for _ in range(4)]
+        default_factory=lambda: [Empty() for _ in range(4)]
     )
     pets: List[Item] = field(default_factory=list)
     ender_chest: List[Item] = field(default_factory=list)
     inventory: List[Item] = field(
-        default_factory=lambda: [{} for _ in range(36)]
+        default_factory=lambda: [Empty() for _ in range(36)]
     )
     potion_bag: List[Item] = field(default_factory=list)
     quiver: List[Item] = field(default_factory=list)
