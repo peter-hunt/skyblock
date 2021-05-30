@@ -3,16 +3,15 @@ from os.path import join
 from pathlib import Path
 
 from .constant import menu_doc
-from .function import (
-    gen_help, backupable, input_regex, is_dir,
-    red, green, yellow, cyan,
-)
+from .function.io import gray, red, green, yellow, aqua, white, input_regex
+from .function.path import is_dir
+from .function.util import backupable, generate_help
 from .profile import Profile
 
 __all__ = ['main']
 
 
-menu_help = gen_help(menu_doc)
+menu_help = generate_help(menu_doc)
 
 
 def init_home_dir(*names):
@@ -43,17 +42,17 @@ def ls():
     if len(names) == 0:
         yellow('No profiles to be displayed.')
     else:
-        cyan('Avaliable profiles:')
+        gray('Avaliable profiles:')
         for name in names:
             if Profile.is_valid(name):
-                cyan(f' {name}')
+                aqua(f' {name}')
             else:
                 yellow(f' {name}')
 
 
 @backupable
 def main():
-    print('Checking environment...')
+    gray('Checking environment...')
     init_env()
 
     while True:
@@ -71,15 +70,15 @@ def main():
 
         elif words[0] == 'help':
             if len(words) == 1:
-                print(menu_doc)
+                white(menu_doc)
             else:
                 phrase = ' '.join(words[1:])
                 if phrase not in menu_help:
                     red(f'Command not found: {phrase!r}.')
                     continue
 
-                print(f'> {phrase}')
-                print(menu_help[phrase])
+                white(f'> {phrase}')
+                white(menu_help[phrase])
 
         elif words[0] in {'create', 'new', 'touch'}:
             if len(words) != 1:

@@ -3,8 +3,8 @@ from dataclasses import dataclass, field
 from math import dist, inf
 from typing import Dict, List, Optional, Tuple
 
-from .function import display_name
-from .item.items import get_item
+from .function.item import get_item
+from .function.util import display_name
 from .item.object import Item, Resource
 
 

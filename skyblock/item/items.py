@@ -1,10 +1,8 @@
-from typing import Any
+from .object import Item, Mineral, Tree, Pickaxe, Axe, Sword
 
-from ..function import get
-
-from .object import (
-    ItemType, Item, Empty, Mineral, Tree, Pickaxe, Axe, Sword, ITEM_OBJS,
-)
+__all__ = [
+    'COLLECTIONS', 'RESOURCES', 'WEAPONS', 'TOOLS', 'ALL_ITEM',
+]
 
 
 COLLECTIONS = [
@@ -53,12 +51,10 @@ COLLECTIONS = [
     Item('jungle_wood', 64, 'common'),
 ]
 
-MINERALS = [
+RESOURCES = [
     Mineral('stone', 'cobblestone', 1, 1, 0, 1.5, 1),
     Mineral('coal_ore', 'coal', 1, 1, 1, 3, 5),
-]
 
-TREES = [
     Tree('oak', 'oak_wood', 2, 6),
     Tree('birch', 'birch_wood', 2, 6),
     Tree('spruce', 'spruce_wood', 2, 6),
@@ -66,8 +62,6 @@ TREES = [
     Tree('acacia', 'acacia_wood', 2, 6),
     Tree('jungle', 'jungle_wood', 2, 6),
 ]
-
-RESOURCES = MINERALS + TREES
 
 WEAPONS = [
     Sword('raider_axe', 'rare',
@@ -124,32 +118,3 @@ TOOLS = [
 ]
 
 ALL_ITEM = COLLECTIONS + RESOURCES + WEAPONS + TOOLS
-
-
-def get_item(name: str, *, default: Any = None) -> ItemType:
-    return get(ALL_ITEM, name, default=default).copy()
-
-
-SELL_PRICE = {
-    'cobblestone': 1,
-    'coal': 2,
-
-    'oak_wood': 2,
-    'birch_wood': 2,
-    'spruce_wood': 2,
-    'dark_oak_wood': 2,
-    'acacia_wood': 2,
-    'jungle_wood': 2,
-}
-
-
-def from_obj(obj):
-    if isinstance(obj, ItemType):
-        return obj
-    elif 'type' not in obj:
-        return Empty()
-    for cls in ITEM_OBJS:
-        if obj['type'] == cls.__name__.lower():
-            return cls.from_obj(obj)
-    else:
-        raise ValueError(f"invalid item obj type: {obj['type']!r}")

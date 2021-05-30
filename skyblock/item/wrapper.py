@@ -2,7 +2,10 @@ from ..constant import (
     RARITY_COLORS,
     CLN, BOLD, F_DARK_RED, F_GOLD, F_GRAY, F_DARK_GRAY, F_GREEN, F_RED, F_WHITE,
 )
-from ..function import display_name, roman, dung_stat
+from ..function.math import dung_stat
+from ..function.util import display_name, roman
+
+__all__ = ['item_type']
 
 
 def item_type(cls: type, /) -> type:
@@ -72,7 +75,7 @@ def item_type(cls: type, /) -> type:
             stars = (f' {F_RED}' + (self.stars - 5) * '✪'
                      + F_GOLD + (10 - self.stars) * '✪')
 
-        return f'{color}{modifier}{name}{stars}{color}{count}{CLN}'
+        return f'{color}{modifier}{name}{stars}{F_DARK_GRAY}{count}{CLN}'
 
     cls.display = display
 

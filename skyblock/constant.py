@@ -3,8 +3,7 @@ from typing import Union
 __all__ = [
     'Number',
 
-    'CLN',
-    'BLACK', 'RED', 'GREEN', 'YELLOW', 'BLUE', 'MAGENTA', 'CYAN', 'WHITE',
+    'CLN', 'BOLD',
 
     'F_BLACK', 'F_DARK_BLUE', 'F_DARK_GREEN', 'F_DARK_AQUA', 'F_DARK_RED',
     'F_DARK_PURPLE', 'F_GOLD', 'F_GRAY', 'F_DARK_GRAY',
@@ -21,14 +20,6 @@ Number = Union[float, int]
 
 CLN = '\x1b[0m'
 BOLD = '\x1b[1m'
-BLACK = '\x1b[0;90m'
-RED = '\x1b[0;91m'
-GREEN = '\x1b[0;92m'
-YELLOW = '\x1b[0;93m'
-BLUE = '\x1b[0;94m'
-MAGENTA = '\x1b[0;95m'
-CYAN = '\x1b[0;96m'
-WHITE = '\x1b[0;97m'
 
 F_BLACK = '\x1b[0;38;2;0;0;0m'
 F_DARK_BLUE = '\x1b[0;38;2;0;0;170m'
@@ -63,7 +54,7 @@ NUMBER_SCALES = [
     ('', 1), ('K', 10 ** 3), ('M', 10 ** 6), ('B', 10 ** 9), ('T', 10 ** 12),
 ]
 
-EXP_LIMITS = {
+SKILL_LIMITS = {
     'farming': 60,
     'mining': 60,
     'combat': 60,
@@ -315,3 +306,15 @@ Split items to another slot.
 > talkto <npc>
 Talk to an npc.
 """.strip()
+
+SELL_PRICE = {
+    'cobblestone': 1,
+    'coal': 2,
+
+    'oak_wood': 2,
+    'birch_wood': 2,
+    'spruce_wood': 2,
+    'dark_oak_wood': 2,
+    'acacia_wood': 2,
+    'jungle_wood': 2,
+}
