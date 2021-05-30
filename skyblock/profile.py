@@ -21,7 +21,7 @@ from .function import (
 )
 from .item import (
     COLLECTIONS, SELL_PRICE, get_item, from_obj, ItemType,
-    Item, Empty, Pickaxe, Pickaxe, Axe, Mineral, TreeType,
+    Item, Empty, Pickaxe, Pickaxe, Axe, Mineral, Tree,
 )
 from .map import Npc, ISLANDS, calc_dist, path_find
 
@@ -489,7 +489,7 @@ class Profile:
                         last_cp += cp_step
                     print(f'{count} / {amount} ({(last_cp * 100):.0f}%) done')
 
-        elif isinstance(resource, TreeType):
+        elif isinstance(resource, Tree):
             if isinstance(tool, Axe):
                 tool_speed = tool.tool_speed
                 if 'efficiency' in tool.enchantments:
@@ -901,7 +901,7 @@ class Profile:
                     continue
                 self.talkto_npc(get(region.npcs, name))
 
-            elif words[0] == 'test':
+            # elif words[0] == 'test':
                 # item = get_item('livid_dagger')
                 # item.stars = 3
                 # self.recieve(item)
