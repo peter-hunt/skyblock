@@ -8,19 +8,19 @@ from pathlib import Path
 from random import choice, choices
 from re import fullmatch
 from time import sleep, time
-from typing import Dict, List, Optional, Union
+from typing import Dict, Iterable, List, Optional
 
-from .const import SKILL_EXP, INTEREST_TABLE, profile_doc
-from .func import (
-    Number, calc_skill_exp, calc_exp, exist_dir, exist_file,
+from .constant import SKILL_EXP, INTEREST_TABLE, profile_doc
+from .function import (
+    Number, calc_skill_exp, calc_exp, is_dir, is_file, includes,
     get, backupable, gen_help, random_int, display_money, shorten_money,
     red, green, blue, yellow, cyan, GREEN, YELLOW, CYAN,
 )
 from .item import (
-    ALL_ITEM, COLLECTIONS, RESOURCES, SELL_PRICE, from_obj, ItemType,
+    COLLECTIONS, SELL_PRICE, get_item, from_obj, ItemType,
     Item, Empty, Pickaxe, Pickaxe, Axe, Mineral, TreeType,
 )
-from .map import Island, Region, ISLANDS, calc_dist, path_find, includes
+from .map import Island, Region, Npc, ISLANDS, calc_dist, path_find
 
 __all__ = ['Profile']
 
@@ -88,12 +88,12 @@ class Profile:
     npc_talked: List[str] = field(default_factory=list)
 
     @staticmethod
-    def is_valid(name, warn=False):
-        return (exist_dir(warn=warn) and exist_dir('saves', warn=warn)
-                and exist_file('saves', f'{name}.json', warn=warn))
+    def is_valid(name, *, warn=False) -> bool:
+        return (is_dir(warn=warn) and is_dir('saves', warn=warn)
+                and is_file('saves', f'{name}.json', warn=warn))
 
     @classmethod
-    def load(cls, name):
+    def load(cls, name: str):
         if not cls.is_valid(name, warn=True):
             red('Error: Profile not found.')
             return
@@ -216,7 +216,7 @@ class Profile:
                 'npc_talked': self.npc_talked,
             }, file, indent=2, sort_keys=True)
 
-    def put_stash(self, item: ItemType):
+    def put_stash(self, item: ItemType, /):
         if isinstance(item, Item):
             for index, slot in enumerate(self.stash):
                 if not isinstance(slot, Item):
@@ -227,10 +227,10 @@ class Profile:
                 return
         self.stash.append(item)
 
-    def recieve(self, item: ItemType):
-        cyan(f'+{item.display()}')
+    def recieve(self, item: ItemType, /):
+        cyan(f'+ {item.display()}')
         if isinstance(item, Item):
-            item_type = get(ALL_ITEM, item.name)
+            item_type = get_item(item.name)
             count = item.count
             for index, slot in enumerate(self.inventory):
                 if isinstance(slot, Empty):
@@ -257,14 +257,14 @@ class Profile:
             else:
                 self.put_stash(item)
 
-    def add_exp(self, amount):
+    def add_exp(self, amount: Number, /):
         original_lvl = calc_exp(self.experience)
         self.experience += amount
         current_lvl = calc_exp(self.experience)
         if current_lvl > original_lvl:
             green(f'Reached XP level {current_lvl}.')
 
-    def add_skill_exp(self, name, amount):
+    def add_skill_exp(self, name: str, amount: Number, /):
         if not hasattr(self, f'skill_xp_{name}'):
             red(f'Skill not found: {name}')
             return
@@ -325,7 +325,7 @@ class Profile:
         cyan(f'Bank Level: {bank_level}')
 
     @backupable
-    def talkto_npc(self, npc):
+    def talkto_npc(self, npc: Npc, /):
         if npc.name not in self.npc_talked:
             if npc.init_dialog is not None:
                 self.npc_talk(npc.init_dialog)
@@ -365,7 +365,7 @@ class Profile:
             ), (20, 25, 20, 18, 10, 4, 2, 1))[0])
 
     @backupable
-    def goto(self, dest):
+    def goto(self, dest: str, /):
         island = get(ISLANDS, self.island)
         region = get(island.regions, self.region)
 
@@ -379,7 +379,7 @@ class Profile:
                                      island.conns, island.dists)
 
         route = ' -> '.join(f'{region}' for region in path)
-        cyan(f'Route: {route} ({float(accum_dist):.2f}m)')
+        green(f'Route: {route} ({float(accum_dist):.2f}m)')
         for target in path[1:]:
             dist = calc_dist(region, target)
             time_cost = float(dist) / (5 * (self.base_speed / 100))
@@ -387,6 +387,7 @@ class Profile:
             cyan(f'(time cost: {time_cost:.2f}s)')
             sleep(time_cost)
             self.region = target.name
+            region = get(island.regions, target.name)
 
     def ls(self):
         length = len(self.inventory)
@@ -403,7 +404,7 @@ class Profile:
             cyan(f'{(index + 1):>{digits * 2 + 1}} {item.display()}')
             index += 1
 
-    def info(self, index: int):
+    def info(self, index: int, /):
         item = self.inventory[index]
         if isinstance(item, Empty):
             cyan('Empty')
@@ -414,12 +415,12 @@ class Profile:
         print(item.info())
         print(f"\x1b[1;38;2;255;255;85m{'':-^{width}}\x1b[0m")
 
-    def collect(self, name: str, amount: int):
+    def collect(self, name: str, amount: int, /):
         if name not in self.collection:
             self.collection[name] = 0
         self.collection[name] += amount
 
-    def sell(self, index: int):
+    def sell(self, index: int, /):
         island = get(ISLANDS, self.island)
         region = get(island.regions, self.region)
 
@@ -438,12 +439,9 @@ class Profile:
             f"{YELLOW}{shorten_money(delta)} coins{CYAN}.")
         self.inventory[index] = Empty()
 
-    def get(self, name: str, tool_index: Optional[int], amount: int):
-        resource = get(RESOURCES, name)
-        if tool_index is None:
-            tool = Empty()
-        else:
-            tool = self.inventory[tool_index]
+    def get(self, name: str, tool_index: Optional[int], amount: int, /):
+        resource = get_item(name)
+        tool = Empty() if tool_index is None else self.inventory[tool_index]
 
         if not isinstance(tool, (Empty, Axe, Pickaxe)):
             tool = Empty()
@@ -473,7 +471,7 @@ class Profile:
 
             last_cp = Decimal()
             cp_step = Decimal('0.1')
-            is_collection = get(COLLECTIONS, drop_item) is not None
+            is_collection = includes(COLLECTIONS, drop_item)
             for count in range(1, amount + 1):
                 sleep(time_cost)
                 drop_pool = random_int(drop_mult)
@@ -488,7 +486,7 @@ class Profile:
                         last_cp += cp_step
                     print(f'{count} / {amount} ({(last_cp * 100):.0f}%) done')
 
-        if isinstance(resource, TreeType):
+        elif isinstance(resource, TreeType):
             if isinstance(tool, Axe):
                 tool_speed = tool.tool_speed
                 if 'efficiency' in tool.enchantments:
@@ -506,7 +504,7 @@ class Profile:
 
             last_cp = Decimal()
             cp_step = Decimal('0.1')
-            is_collection = get(COLLECTIONS, drop_item) is not None
+            is_collection = includes(COLLECTIONS, drop_item)
             for count in range(1, amount + 1):
                 sleep(time_cost)
                 drop_pool = random_int(drop_mult)
@@ -524,7 +522,7 @@ class Profile:
             red('Unknown resource type.')
 
     @staticmethod
-    def npc_talk(dialog):
+    def npc_talk(dialog: Iterable):
         iterator = iter(dialog)
         blue(next(iterator))
         for sentence in iterator:
@@ -635,7 +633,7 @@ class Profile:
                     continue
 
                 name = words[1]
-                if get(RESOURCES, name) is None:
+                if get_item(name) is None:
                     red(f'Resource not found: {name!r}')
                     continue
                 if get(region.resources, name) is None:
@@ -761,7 +759,7 @@ class Profile:
                     red('Cannot merge different items.')
                     continue
 
-                item_type = get(ALL_ITEM, item_from.name)
+                item_type = get_item(item_from.name)
                 if item_to.count == item_type.count:
                     yellow('Target item is already full as a stack.')
                     continue
@@ -875,7 +873,7 @@ class Profile:
                     red('Cannot split to a slot with different item.')
                     continue
 
-                item_type = get(ALL_ITEM, item_1.name)
+                item_type = get_item(item_1.name)
                 if item_2.count == item_type.count:
                     yellow('Targeted slot is already full as a stack.')
                     continue
@@ -901,7 +899,9 @@ class Profile:
                 self.talkto_npc(get(region.npcs, name))
 
             # elif words[0] == 'test':
-            #     self.recieve(get(ALL_ITEM, 'golden_axe'))
+            #     item = get_item('aspect_of_the_dragons')
+            #     item.dungeon_stars = 10
+            #     self.recieve(item)
 
             else:
                 red(f'Unknown command: {words[0]!r}')

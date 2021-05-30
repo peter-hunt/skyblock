@@ -3,13 +3,12 @@ from dataclasses import dataclass, field
 from math import dist, inf
 from typing import Dict, List, Optional, Tuple, Union
 
-from .func import get
-from .item import ALL_ITEM, Item, Resource, MINERALS, TREES
+from .item import Item, Resource, get_item
 
 
 __all__ = [
     'Npc', 'Region', 'Island',
-    'HUB_ISLAND', 'includes', 'path_find',
+    'HUB_ISLAND', 'path_find',
 ]
 
 
@@ -122,13 +121,6 @@ class Island:
         return ' '.join(word.capitalize() for word in self.name.split('_'))
 
 
-def includes(ls: List[Union[Region, Island]], name: str):
-    for item in ls:
-        if item.name == name:
-            return True
-    return False
-
-
 AUCTION_HOUSE = Region('auction_house', -18, -90)
 BANK = Region('bank', -20, -65)
 BAZAAR_ALLEY = Region('bazaar_alley', -32, -76)
@@ -136,10 +128,7 @@ BLACKSMITH = Region('blacksmith', -28, -125)
 BUILDERS_HOUSE = Region('builders_house', -50, -36)
 COAL_MINE = Region(
     'coal_mine', -20, -160,
-    resources=[
-        get(MINERALS, 'stone'),
-        get(MINERALS, 'coal_ore'),
-    ],
+    resources=[get_item('stone'), get_item('coal_ore')],
 )
 COLOSSEUM = Region('colosseum', -58, -58)
 COMMUNITY_CENTER = Region('community_center', 0, -100)
@@ -147,42 +136,39 @@ FARM = Region('farm', 41, -137)
 FARMHOUSE = Region(
     'farmhouse', 23, -80,
     npcs=[
-        Npc(
-            'farm_merchant',
+        Npc('farm_merchant',
             init_dialog=[
                 'You can buy and sell harvested crops with me!',
                 'Wheat, carrots, potatoes, and melon are my specialties!',
                 'Talk to me again to open the Farmer Shop!',
             ],
             trades=[
-                (7/3, Item('wheat')), (7/3, Item('carrot')),
-                (7/3, Item('potato')), (8, Item('pumpkin')),
-                (2, Item('melon')), (5, Item('sugar_cane')),
-                (5, Item('cocoa_beans')), (12, Item('red_mushroom')),
-                (12, Item('brown_mushroom')), (4, Item('sand')),
-                # (10, get(ALL_ITEM, 'rookie_hoe')),
-            ]
-        ),
-        Npc(
-            'jacob',
+                (7/3, Item('wheat')),
+                (7/3, Item('carrot')),
+                (7/3, Item('potato')),
+                (8, Item('pumpkin')),
+                (2, Item('melon')),
+                (12, Item('red_mushroom')),
+                (12, Item('brown_mushroom')),
+                (5, Item('cocoa_beans')),
+                (5, Item('sugar_cane')),
+                (4, Item('sand')),
+                # (10, get_item('rookie_hoe')),
+            ]),
+        Npc('jacob',
             dialog=[[
                 'Howdy!',
                 'I organize farming contests once every few days!',
                 'You need Farming X to participate! :)',
-            ]],
-        ),
-        Npc(
-            'anita',
-        ),
+            ]]),
+        Npc('anita'),
     ],
 )
 FASHION_SHOP = Region('fashion_shop', 27, -44)
 FLOWER_HOUSE = Region('flower_house', -7, -25)
 FOREST = Region(
     'forest', -95, -40,
-    resources=[
-        get(TREES, 'oak'),
-    ],
+    resources=[get_item('oak')],
 )
 GRAVEYARD = Region('graveyard', -99, -54)
 HIGH_LEVEL = Region('high_level', 0, 150)
@@ -199,9 +185,9 @@ WIZARD_TOWER = Region('wizard_tower', 40, 70)
 
 
 HUB_JOINTS = [
-    AUCTION_HOUSE, BANK, BAZAAR_ALLEY, BLACKSMITH, BUILDERS_HOUSE,
-    COAL_MINE, COMMUNITY_CENTER, FARM, FARMHOUSE, FASHION_SHOP, FLOWER_HOUSE,
-    FOREST, GRAVEYARD, HIGH_LEVEL, HUB_CRYPTS, LIBRARY, MOUNTAIN, PETS_BUILDING,
+    AUCTION_HOUSE, BANK, BAZAAR_ALLEY, BLACKSMITH, BUILDERS_HOUSE, COAL_MINE,
+    COMMUNITY_CENTER, FARM, FARMHOUSE, FASHION_SHOP, FLOWER_HOUSE, FOREST,
+    GRAVEYARD, HIGH_LEVEL, HUB_CRYPTS, LIBRARY, MOUNTAIN, PETS_BUILDING,
     POTION_SHOP, RUINS, TAVERN, VILLAGE, WILDERNESS, WIZARD_TOWER,
 ]
 
@@ -214,6 +200,7 @@ HUB_CONNS = [
     (BANK, FLOWER_HOUSE),
     (BANK, VILLAGE),
     (BAZAAR_ALLEY, BUILDERS_HOUSE),
+    (BAZAAR_ALLEY, FOREST),
     (BAZAAR_ALLEY, TAVERN),
     (BAZAAR_ALLEY, VILLAGE),
     (BLACKSMITH, COAL_MINE),
@@ -224,6 +211,7 @@ HUB_CONNS = [
     (BUILDERS_HOUSE, FOREST),
     (BUILDERS_HOUSE, MOUNTAIN),
     (BUILDERS_HOUSE, TAVERN),
+    (BUILDERS_HOUSE, VILLAGE),
     (COAL_MINE, FARM),
     (COAL_MINE, GRAVEYARD),
     (COAL_MINE, LIBRARY),
@@ -255,8 +243,10 @@ HUB_CONNS = [
     (FOREST, GRAVEYARD),
     (FOREST, HIGH_LEVEL),
     (FOREST, HUB_CRYPTS),
+    (FOREST, MOUNTAIN),
     (FOREST, RUINS),
     (FOREST, TAVERN),
+    (FOREST, VILLAGE),
     (GRAVEYARD, HUB_CRYPTS),
     (GRAVEYARD, TAVERN),
     (HIGH_LEVEL, MOUNTAIN),

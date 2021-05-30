@@ -1,7 +1,7 @@
-from typing import Dict, Optional, Union
+from typing import Any, Dict, Optional
 
-from .const import RARITY_COLORS
-from .func import Number, roman
+from .constant import RARITY_COLORS
+from .function import Number, roman, get
 
 __all__ = [
     'item_type', 'ItemType', 'from_obj',
@@ -15,7 +15,7 @@ __all__ = [
 ITEM_OBJS = []
 
 
-def item_type(cls):
+def item_type(cls: type, /) -> type:
     anno = getattr(cls, '__annotations__', {})
     default = {}
     for name in anno:
@@ -32,7 +32,6 @@ def item_type(cls):
     for key in anno:
         init_str += f'setattr(self, {key!r}, {key}), '
     init_str += 'None,)[-1]'
-    # print(init_str)
     setattr(cls, '__init__', eval(init_str))
 
     if cls.__name__ == 'Empty':
@@ -42,7 +41,6 @@ def item_type(cls):
         for key in anno:
             to_obj_str += f'{key!r}: self.{key}, '
         to_obj_str += f"'type': {cls.__name__.lower()!r}}}"
-    # print(to_obj_str)
     setattr(cls, 'to_obj', eval(to_obj_str))
 
     from_obj_str = 'lambda cls, obj: cls('
@@ -51,28 +49,54 @@ def item_type(cls):
         else f'obj[{key!r}]' for key in anno
     )
     from_obj_str += ')'
-    # print(from_obj_str)
     setattr(cls, 'from_obj', classmethod(eval(from_obj_str)))
+
+    copy_str = 'lambda self: self.__class__('
+    copy_str += ', '.join(f'self.{key}' for key in anno)
+    copy_str += ')'
+    setattr(cls, 'copy', eval(copy_str))
 
     display_str = """
     lambda self: (
         rarity_color := RARITY_COLORS[self.rarity],
         name := ' '.join(word.capitalize() for word in self.name.split('_')),
         count := f' x {self.count}' if getattr(self, 'count', 1) != 1 else '',
-        display := f'{rarity_color}{name}{count}'
+        (
+            stars := '',
+        ) if (not hasattr(self, 'dungeon_stars')
+              or self.dungeon_stars is None) else (
+            stars := (' \\x1b[38;2;255;170;0m'
+                      + self.dungeon_stars * '✪' + rarity_color),
+        ) if (self.dungeon_stars <= 5) else (
+            stars := (' \\x1b[38;2;255;85;850m' + (self.dungeon_stars - 5) * '✪'
+                      + '\\x1b[38;2;255;170;0m' + (10 - self.dungeon_stars) * '✪'
+                      + rarity_color),
+        ),
+        display := f'{rarity_color}{name}{stars}{count}\\x1b[0m'
     )[-1] if (not isinstance(self, Empty)) else (
         '\x1b[1;38;2;255;255;255mEmpty\x1b[0m'
     )
     """.replace('\n', '')
-    # print(display_str)
     setattr(cls, 'display', eval(display_str))
-    # 170	170	170
+
+    # 0;0;170 for enchantments
     info_str = """
     lambda self: (
         rarity_color := RARITY_COLORS[self.rarity],
         display_name := ' '.join(word.capitalize()
                                  for word in self.name.split('_')),
-        info := f'{rarity_color}{display_name}\\x1b[0m',
+        info := f'{rarity_color}{display_name}',
+        (
+            info := info + '\\x1b[0m',
+        ) if (not hasattr(self, 'dungeon_stars')
+              or self.dungeon_stars is None) else (
+            info := (info + ' \\x1b[38;2;255;170;0m'
+                     + self.dungeon_stars * '✪' + '\\x1b[0m'),
+        ) if (self.dungeon_stars <= 5) else (
+            info := (info + ' \\x1b[38;2;255;85;850m'
+                     + (self.dungeon_stars - 5) * '✪' + '\\x1b[38;2;255;170;0m'
+                     + (10 - self.dungeon_stars) * '✪' + '\\x1b[0m'),
+        ),
         type_name := self.__class__.__name__.upper(),
         (
             info := (info + f'\\n\\x1b[38;2;85;85;85m'
@@ -117,12 +141,7 @@ def item_type(cls):
         info,
     )[-1]
     """.replace('\n', '')
-    # print(info_str)
     setattr(cls, 'info', eval(info_str))
-
-    # inform_str = "lambda self: f'{self.__class__.__name__}'"
-    # # print(inform_str)
-    # setattr(cls, 'inform', eval(inform_str))
 
     ITEM_OBJS.append(cls)
 
@@ -350,7 +369,12 @@ TOOLS = [
     Axe('wooden_axe', rarity='uncommon', tool_speed=8),
 ]
 
-ALL_ITEM = COLLECTIONS + MINERALS + WEAPONS + TOOLS
+ALL_ITEM = COLLECTIONS + RESOURCES + WEAPONS + TOOLS
+
+
+def get_item(name: str, *, default: Any = None) -> ItemType:
+    return get(ALL_ITEM, name, default=default).copy()
+
 
 SELL_PRICE = {
     'cobblestone': 1,

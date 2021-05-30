@@ -170,7 +170,7 @@ INTEREST_TABLE = {
         (10_000_000, 20_000_000, 0.01),
         (20_000_000, 30_000_000, 0.005),
         (30_000_000, 50_000_000, 0.002),
-        (50_000_000, 160_000_000, 0.002),
+        (50_000_000, 160_000_000, 0.001),
     ],
 }
 
@@ -196,12 +196,14 @@ Exit the menu.
 
 > create
 > new
+> touch
 Create a new profile.
 
 > list
 > ls
 List all the profile avaliable.
 
+> del <name>
 > delete <name>
 Delete a profile.
 
@@ -216,16 +218,6 @@ profile_doc = """
 > quit
 Exit to the menu.
 
-> deposit <coins>
-Deposit coins from the purse to the bank.
-
-> withdraw <coins>
-Withdraw coins from the bank to the purse.
-
-> info <index>
-> information <index>
-Display detailed informatioon about the item.
-
 > help [command]
 Show this message or get command description.
 
@@ -235,11 +227,9 @@ Show this message or get command description.
 > ls
 List all the items in the inventory.
 
-> get <resource> [amount=1] [tool=hand]
-Get resources for an amount with chosen tool or hand by default.
-
-> goto <location>
-Go to a region.
+> info <index>
+> information <index>
+Display detailed informatioon about the item.
 
 > look
 Get information about the region.
@@ -247,17 +237,29 @@ Get information about the region.
 > money
 Display information about your money.
 
+> deposit <coins>
+Deposit coins from the purse to the bank.
+
+> withdraw <coins>
+Withdraw coins from the bank to the purse.
+
+> goto <location>
+Go to a region.
+
+> get <resource> [amount=1] [tool=hand]
+Get resources for an amount with chosen tool or hand by default.
+
 > sell <index>
 Sell the item.
 
-> merge <index-from> <index-to>
+> merge <from-index> <to-index>
 Merge stackable items in the inventory.
 
-> move <index> <index>
-> switch <index> <index>
+> move <index-1> <index-2>
+> switch <index-1> <index-2>
 Switch items slot in the inventory.
 
-> split <index-from> <index-to> <amount>
+> split <from-index> <to-index> <amount>
 Split items to another slot.
 
 > talkto <npc>

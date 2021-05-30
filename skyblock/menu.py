@@ -2,8 +2,11 @@ from os import walk
 from os.path import join
 from pathlib import Path
 
-from .const import menu_doc
-from .func import gen_help, backupable, input_regex, red, green, cyan
+from .constant import menu_doc
+from .function import (
+    gen_help, backupable, input_regex, is_dir,
+    red, green, yellow, cyan,
+)
 from .profile import Profile
 
 __all__ = ['main']
@@ -25,27 +28,27 @@ def init_env():
 @backupable
 def create():
     name = input_regex('Please enter the name of the profile.', r'\w+')
+    Profile(name).dump()
+    green('New profile created!')
 
 
 @backupable
 def ls():
-    path = join(Path.home(), 'skyblock')
-    if not Path(path).is_dir():
-        print('Directory not found: {path}')
-    path = join(Path.home(), 'skyblock', 'saves')
-    if not Path(path).is_dir():
-        print('Directory not found: {path}')
+    if not is_dir(warn=True):
+        return
+    if not is_dir('saves', warn=True):
+        return
     names = [*walk(join(Path.home(), 'skyblock', 'saves'))][0][2]
     names = [name[:-5] for name in names if name.endswith('.json')]
     if len(names) == 0:
-        print('No profiles to be displayed.')
+        yellow('No profiles to be displayed.')
     else:
-        print('Avaliable profiles:')
+        cyan('Avaliable profiles:')
         for name in names:
             if Profile.is_valid(name):
                 cyan(f' {name}')
             else:
-                red(f' {name}')
+                yellow(f' {name}')
 
 
 @backupable
@@ -60,53 +63,60 @@ def main():
             continue
 
         elif words[0] in {'exit', 'quit'}:
-            if len(words) == 1:
-                break
-            else:
+            if len(words) != 1:
                 red(f'Invalid usage of command {words[0]!r}.')
+                continue
+
+            break
 
         elif words[0] == 'help':
             if len(words) == 1:
                 print(menu_doc)
             else:
                 phrase = ' '.join(words[1:])
-                if phrase in menu_help:
-                    print(f'> {phrase}')
-                    print(menu_help[phrase])
-                else:
+                if phrase not in menu_help:
                     red(f'Command not found: {phrase!r}.')
+                    continue
 
-        elif words[0] in {'create', 'new'}:
-            if len(words) == 1:
-                create()
-            else:
-                red(f'Invalid usage of command {words[0]!r}.')
+                print(f'> {phrase}')
+                print(menu_help[phrase])
 
-        elif words[0] == 'delete':
-            if len(words) == 2:
-                path = Path(join(Path.home(), 'saves', f'{words[1]}.json'))
-                if path.is_file():
-                    path.unlink()
-                    green(f'Deleted profile {words[1]}!')
-                else:
-                    red(f'Profile not found: {words[1]}')
-            else:
+        elif words[0] in {'create', 'new', 'touch'}:
+            if len(words) != 1:
                 red(f'Invalid usage of command {words[0]!r}.')
+                continue
+
+            create()
+
+        elif words[0] in {'del', 'delete'}:
+            if len(words) != 2:
+                red(f'Invalid usage of command {words[0]!r}.')
+                continue
+
+            path = Path(join(Path.home(), 'saves', f'{words[1]}.json'))
+            if path.is_file():
+                path.unlink()
+                green(f'Deleted profile {words[1]}!')
+            else:
+                red(f'Profile not found: {words[1]}')
 
         elif words[0] in {'list', 'ls'}:
-            if len(words) == 1:
-                ls()
-            else:
+            if len(words) != 1:
                 red(f'Invalid usage of command {words[0]!r}.')
+                continue
+
+            ls()
 
         elif words[0] in {'load', 'open', 'start'}:
-            if len(words) == 2:
-                game = Profile.load(words[1])
-                if game is None:
-                    continue
-                game.mainloop()
-            else:
+            if len(words) != 2:
                 red(f'Invalid usage of command {words[0]!r}.')
+                continue
+
+            game = Profile.load(words[1])
+            if game is None:
+                continue
+
+            game.mainloop()
 
         else:
             red(f'Unknown command: {words[0]!r}')
