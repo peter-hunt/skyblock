@@ -9,20 +9,19 @@ from typing import Any, Dict, List, Optional, Union
 from types import FunctionType
 
 from .constant import (
+    Number,
     SKILL_EXP, DUNGEON_EXP, EXP_LIMITS, ROMAN_NUM, NUMBER_SCALES, SPECIAL_NAMES,
 )
 
 __all__ = [
-    'Number', 'get', 'includes', 'is_dir', 'is_file', 'roman', 'random_int',
+    'get', 'includes', 'is_dir', 'is_file',
+    'roman', 'random_int',
     'display_name', 'display_money', 'shorten_money',
     'calc_exp', 'calc_skill_exp',
     'gen_help', 'backupable', 'input_regex',
     'black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white',
     'BLACK', 'RED', 'GREEN', 'YELLOW', 'BLUE', 'MAGENTA', 'CYAN', 'WHITE',
 ]
-
-
-Number = Union[float, int]
 
 
 def get(ls: List[Any], name: str, *, default: Optional[Any] = None) -> Any:

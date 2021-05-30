@@ -4,7 +4,8 @@ from math import dist, inf
 from typing import Dict, List, Optional, Tuple
 
 from .function import display_name
-from .item import Item, Resource, get_item
+from .item.items import get_item
+from .item.object import Item, Resource
 
 
 __all__ = [

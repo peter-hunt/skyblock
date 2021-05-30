@@ -1,4 +1,8 @@
+from typing import Union
+
 __all__ = [
+    'Number',
+
     'CLN',
     'BLACK', 'RED', 'GREEN', 'YELLOW', 'BLUE', 'MAGENTA', 'CYAN', 'WHITE',
 
@@ -11,6 +15,9 @@ __all__ = [
     'ROMAN_NUM', 'NUMBER_SCALES', 'EXP_LIMITS', 'SKILL_EXP', 'DUNGEON_EXP',
     'INTEREST_TABLE', 'RARITY_COLORS', 'menu_doc', 'profile_doc',
 ]
+
+
+Number = Union[float, int]
 
 CLN = '\x1b[0m'
 BOLD = '\x1b[1m'

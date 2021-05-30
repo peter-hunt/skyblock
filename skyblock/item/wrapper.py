@@ -1,8 +1,8 @@
-from .constant import (
+from ..constant import (
     RARITY_COLORS,
     CLN, BOLD, F_DARK_RED, F_GOLD, F_GRAY, F_DARK_GRAY, F_GREEN, F_RED, F_WHITE,
 )
-from .function import display_name, roman, dung_stat
+from ..function import display_name, roman, dung_stat
 
 
 def item_type(cls: type, /) -> type:
