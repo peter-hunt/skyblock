@@ -902,15 +902,15 @@ class Profile:
                 self.talkto_npc(get(region.npcs, name))
 
             elif words[0] == 'test':
-                item = get_item('livid_dagger')
-                item.stars = 3
-                self.recieve(item)
-                item = get_item('dreadlord_sword')
-                item.stars = 6
-                self.recieve(item)
-                item = get_item('aspect_of_the_dragons')
-                item.stars = 10
-                self.recieve(item)
+                # item = get_item('livid_dagger')
+                # item.stars = 3
+                # self.recieve(item)
+                # item = get_item('dreadlord_sword')
+                # item.stars = 6
+                # self.recieve(item)
+                # item = get_item('aspect_of_the_dragons')
+                # item.stars = 10
+                # self.recieve(item)
 
             else:
                 red(f'Unknown command: {words[0]!r}')
