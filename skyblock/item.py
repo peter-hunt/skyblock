@@ -1,6 +1,9 @@
 from typing import Any, Dict, Optional
 
-from .constant import RARITY_COLORS
+from .constant import (
+    RARITY_COLORS,
+    CLN, BOLD, F_DARK_RED, F_GOLD, F_GRAY, F_DARK_GRAY, F_GREEN, F_RED, F_WHITE,
+)
 from .function import Number, roman, get
 
 __all__ = [
@@ -32,7 +35,8 @@ def item_type(cls: type, /) -> type:
     for key in anno:
         init_str += f'setattr(self, {key!r}, {key}), '
     init_str += 'None,)[-1]'
-    setattr(cls, '__init__', eval(init_str))
+
+    cls.__init__ = eval(init_str)
 
     if cls.__name__ == 'Empty':
         to_obj_str = 'lambda self: {}'
@@ -41,7 +45,8 @@ def item_type(cls: type, /) -> type:
         for key in anno:
             to_obj_str += f'{key!r}: self.{key}, '
         to_obj_str += f"'type': {cls.__name__.lower()!r}}}"
-    setattr(cls, 'to_obj', eval(to_obj_str))
+
+    cls.to_obj = eval(to_obj_str)
 
     from_obj_str = 'lambda cls, obj: cls('
     from_obj_str += ', '.join(
@@ -49,99 +54,96 @@ def item_type(cls: type, /) -> type:
         else f'obj[{key!r}]' for key in anno
     )
     from_obj_str += ')'
-    setattr(cls, 'from_obj', classmethod(eval(from_obj_str)))
+
+    cls.from_obj = classmethod(eval(from_obj_str))
 
     copy_str = 'lambda self: self.__class__('
     copy_str += ', '.join(f'self.{key}' for key in anno)
     copy_str += ')'
-    setattr(cls, 'copy', eval(copy_str))
 
-    display_str = """
-    lambda self: (
-        rarity_color := RARITY_COLORS[self.rarity],
-        name := ' '.join(word.capitalize() for word in self.name.split('_')),
-        count := f' x {self.count}' if getattr(self, 'count', 1) != 1 else '',
-        (
-            stars := '',
-        ) if (not hasattr(self, 'dungeon_stars')
-              or self.dungeon_stars is None) else (
-            stars := (' \\x1b[38;2;255;170;0m'
-                      + self.dungeon_stars * '✪' + rarity_color),
-        ) if (self.dungeon_stars <= 5) else (
-            stars := (' \\x1b[38;2;255;85;850m' + (self.dungeon_stars - 5) * '✪'
-                      + '\\x1b[38;2;255;170;0m' + (10 - self.dungeon_stars) * '✪'
-                      + rarity_color),
-        ),
-        display := f'{rarity_color}{name}{stars}{count}\\x1b[0m'
-    )[-1] if (not isinstance(self, Empty)) else (
-        '\x1b[1;38;2;255;255;255mEmpty\x1b[0m'
-    )
-    """.replace('\n', '')
-    setattr(cls, 'display', eval(display_str))
+    cls.copy = eval(copy_str)
+
+    def display(self):
+        if isinstance(self, Empty):
+            return f'{BOLD}{F_WHITE}Empty{CLN}'
+
+        color = RARITY_COLORS[self.rarity]
+
+        if getattr(self, 'modifer', None) is not None:
+            modifier = f'{self.modifier.capitalize()} '
+        else:
+            modifier = ''
+
+        name = ' '.join(word.capitalize() for word in self.name.split('_'))
+        count = f' x {self.count}' if getattr(self, 'count', 1) != 1 else ''
+
+        if getattr(self, 'stars', None) is None:
+            stars = ''
+        elif self.stars <= 5:
+            stars = f' {F_GOLD}' + self.stars * '✪'
+        else:
+            stars = (f' {F_RED}' + (self.stars - 5) * '✪'
+                     + F_GOLD + (10 - self.stars) * '✪')
+
+        return f'{color}{modifier}{name}{stars}{color}{count}{CLN}'
+
+    cls.display = display
 
     # 0;0;170 for enchantments
-    info_str = """
-    lambda self: (
-        rarity_color := RARITY_COLORS[self.rarity],
-        display_name := ' '.join(word.capitalize()
-                                 for word in self.name.split('_')),
-        info := f'{rarity_color}{display_name}',
-        (
-            info := info + '\\x1b[0m',
-        ) if (not hasattr(self, 'dungeon_stars')
-              or self.dungeon_stars is None) else (
-            info := (info + ' \\x1b[38;2;255;170;0m'
-                     + self.dungeon_stars * '✪' + '\\x1b[0m'),
-        ) if (self.dungeon_stars <= 5) else (
-            info := (info + ' \\x1b[38;2;255;85;850m'
-                     + (self.dungeon_stars - 5) * '✪' + '\\x1b[38;2;255;170;0m'
-                     + (10 - self.dungeon_stars) * '✪' + '\\x1b[0m'),
-        ),
-        type_name := self.__class__.__name__.upper(),
-        (
-            info := (info + f'\\n\\x1b[38;2;85;85;85m'
-                     f'Breaking Power: \\x1b[38;2;255;85;85m+'
-                     f'{self.breaking_power}\\x1b[0m\\n'),
-        ) if (hasattr(self, 'breaking_power')) else (),
-        (
-            info := (info + f'\\n\\n\\x1b[38;2;170;170;170m'
-                     f'Mining Speed: \\x1b[38;2;255;85;85m+'
-                     f'{self.mining_speed}\\x1b[0m\\n'),
-        ) if (hasattr(self, 'mining_speed')) else (),
-        (
-            info := (info + f'\\n\\x1b[38;2;170;170;170m'
-                     f'Damage: \\x1b[38;2;255;85;85m+{self.damage}\\x1b[0m'),
-        ) if (hasattr(self, 'damage')) else (),
-        (
-            info := (info + '\\n\\n\\x1b[38;2;85;85;85m'
-                     'This item can be reforged!\\x1b[0m'),
-        ) if (hasattr(self, 'modifier')) else (),
-        (
-            info := (info + f'\\n\\x1b[38;2;170;0;0m❣ '
-                     f'\\x1b[38;2;255;85;85mRequires '
-                     f'\\x1b[38;2;85;255;85mCombat Skill '
-                     f'{self.combat_skill_req}\\x1b[0m'),
-        ) if (hasattr(self, 'combat_skill_req') and
-              self.combat_skill_req is not None) else (
-            info := (info + f'\\n\\x1b[38;2;170;0;0m❣ '
-                     f'\\x1b[38;2;255;85;85mRequires '
-                     f'\\x1b[38;2;85;255;85mCatacombs Skill '
-                     f'{self.dungeon_skill_req}\\x1b[0m'),
-        ) if (hasattr(self, 'dungeon_skill_req') and
-              self.dungeon_skill_req is not None) else (
-            info := (info + f'\\n\\x1b[38;2;170;0;0m❣ '
-                     f'\\x1b[38;2;255;85;85mRequires '
-                     f'\\x1b[38;2;85;255;85mCatacombs Floor '
-                     f'{roman(self.dungeon_completion_req)} Completion\\x1b[0m'),
-        ) if (hasattr(self, 'dungeon_completion_req') and
-              self.dungeon_completion_req is not None) else (),
-        info := (info + f'\\n{rarity_color}{self.rarity.upper()} '
-                 f'{type_name}\\x1b[0m'),
-        info := info.replace('\\n\\n', '\\n'),
-        info,
-    )[-1]
-    """.replace('\n', '')
-    setattr(cls, 'info', eval(info_str))
+
+    def info(self):
+        color = RARITY_COLORS[self.rarity]
+
+        if getattr(self, 'modifer', None) is not None:
+            modifier = f'{self.modifier.capitalize()} '
+        else:
+            modifier = ''
+
+        display_name = ' '.join(word.capitalize()
+                                for word in self.name.split('_'))
+
+        if getattr(self, 'stars', None) is None:
+            stars = ''
+        elif self.stars <= 5:
+            stars = f' {F_GOLD}' + self.stars * '✪'
+        else:
+            stars = (f' {F_RED}' + (self.stars - 5) * '✪'
+                     + F_GOLD + (10 - self.stars) * '✪')
+
+        info = f'{color}{modifier}{display_name}{stars}{color}'
+
+        if hasattr(self, 'breaking_power'):
+            info += (f'\n{F_DARK_GRAY}Breaking Power: {F_RED}+'
+                     f'{self.breaking_power}{CLN}\n')
+
+        if hasattr(self, 'mining_speed'):
+            info += (f'\n\n{F_GRAY}'
+                     f'Mining Speed: {F_GREEN}+{self.mining_speed}{CLN}\n')
+
+        if hasattr(self, 'damage'):
+            info += (f'\n{F_GRAY}Damage: {F_RED}+{self.damage}{CLN}')
+
+        if hasattr(self, 'modifier'):
+            info += (f'\n\n{F_DARK_GRAY}'
+                     f'This item can be reforged!{CLN}')
+
+        if getattr(self, 'combat_skill_req', None) is not None:
+            info += (f'\n{F_DARK_RED}❣ {F_RED}Requires '
+                     f'{F_GREEN}Combat Skill {self.combat_skill_req}{CLN}')
+        if getattr(self, 'dungeon_skill_req', None) is not None:
+            info += (f'\n{F_DARK_RED}❣ {F_RED}Requires '
+                     f'{F_GREEN}Catacombs Skill {self.dungeon_skill_req}{CLN}')
+        if getattr(self, 'dungeon_completion_req', None) is not None:
+            info += (f'\n{F_DARK_RED}❣ {F_RED}Requires {F_GREEN}Catacombs Floor '
+                     f'{roman(self.dungeon_completion_req)} Completion{CLN}')
+
+        type_name = self.__class__.__name__.upper()
+        if getattr(self, 'stars', None) is not None:
+            type_name = f'DUNGEON {type_name}'
+        info += f'\n{color}{self.rarity.upper()} {type_name}{CLN}'
+        return info.replace('\n\n', '\n')
+
+    cls.info = info
 
     ITEM_OBJS.append(cls)
 
@@ -152,7 +154,7 @@ class ItemType:
     pass
 
 
-@item_type
+@ item_type
 class Item(ItemType):
     name: str
     count: int = 1
@@ -161,12 +163,12 @@ class Item(ItemType):
     rarity: str = 'common'
 
 
-@item_type
+@ item_type
 class Empty(ItemType):
     pass
 
 
-@item_type
+@ item_type
 class Pickaxe(ItemType):
     name: str
     rarity: str
@@ -176,7 +178,7 @@ class Pickaxe(ItemType):
     enchantments: Dict[str, int] = {}
 
 
-@item_type
+@ item_type
 class Axe(ItemType):
     name: str
     rarity: str
@@ -185,33 +187,33 @@ class Axe(ItemType):
     enchantments: Dict[str, int] = {}
 
 
-@item_type
+@ item_type
 class Sword(ItemType):
     name: str
     rarity: str
     damage: int
     modifier: Optional[str] = None
     enchantments: Dict[str, int] = {}
-    dungeon_stars: Optional[int] = None
+    stars: Optional[int] = None
     combat_skill_req: Optional[int] = None
     dungeon_skill_req: Optional[int] = None
     dungeon_completion_req: Optional[int] = None
 
 
-@item_type
+@ item_type
 class Bow(ItemType):
     name: str
     rarity: str
     damage: int
     modifier: Optional[str] = None
     enchantments: Dict[str, int] = {}
-    dungeon_stars: Optional[int] = None
+    stars: Optional[int] = None
     combat_skill_req: Optional[int] = None
     dungeon_skill_req: Optional[int] = None
     dungeon_completion_req: Optional[int] = None
 
 
-@item_type
+@ item_type
 class Armor(ItemType):
     name: str
     rarity: str
@@ -219,12 +221,12 @@ class Armor(ItemType):
     part: str
     modifier: Optional[str] = None
     enchantments: Dict[str, int] = {}
-    dungeon_stars: Optional[int] = None
+    stars: Optional[int] = None
     combat_skill_req: Optional[int] = None
     dungeon_skill_req: Optional[int] = None
 
 
-@item_type
+@ item_type
 class Potion(ItemType):
     name: str
     rarity: str
@@ -233,7 +235,7 @@ class Potion(ItemType):
     level: int
 
 
-@item_type
+@ item_type
 class Pet(ItemType):
     name: str
     rarity: str
@@ -247,7 +249,7 @@ class Resource:
         return type(self).__name__
 
 
-@item_type
+@ item_type
 class Mineral(Resource):
     name: str
     drop: str
@@ -258,7 +260,7 @@ class Mineral(Resource):
     mining_exp: Number = 1
 
 
-@item_type
+@ item_type
 class TreeType(Resource):
     name: str
     drop: str

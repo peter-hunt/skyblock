@@ -1,7 +1,43 @@
 __all__ = [
+    'CLN',
+    'BLACK', 'RED', 'GREEN', 'YELLOW', 'BLUE', 'MAGENTA', 'CYAN', 'WHITE',
+
+    'F_BLACK', 'F_DARK_BLUE', 'F_DARK_GREEN', 'F_DARK_AQUA', 'F_DARK_RED',
+    'F_DARK_PURPLE', 'F_GOLD', 'F_GRAY', 'F_DARK_GRAY',
+    'F_BLUE', 'F_GREEN', 'F_AQUA', 'F_RED', 'F_LIGHT_PURPLE',
+    'F_YELLOW', 'F_WHITE',
+
     'ROMAN_NUM', 'NUMBER_SCALES', 'EXP_LIMITS', 'SKILL_EXP', 'DUNGEON_EXP',
     'INTEREST_TABLE', 'RARITY_COLORS', 'menu_doc', 'profile_doc',
 ]
+
+CLN = '\x1b[0m'
+BOLD = '\x1b[1m'
+BLACK = '\x1b[0;90m'
+RED = '\x1b[0;91m'
+GREEN = '\x1b[0;92m'
+YELLOW = '\x1b[0;93m'
+BLUE = '\x1b[0;94m'
+MAGENTA = '\x1b[0;95m'
+CYAN = '\x1b[0;96m'
+WHITE = '\x1b[0;97m'
+
+F_BLACK = '\x1b[38;2;0;0;0m'
+F_DARK_BLUE = '\x1b[38;2;0;0;170m'
+F_DARK_GREEN = '\x1b[38;2;0;170;0m'
+F_DARK_AQUA = '\x1b[38;2;0;170;170m'
+F_DARK_RED = '\x1b[38;2;170;0;0m'
+F_DARK_PURPLE = '\x1b[38;2;170;0;170m'
+F_GOLD = '\x1b[38;2;255;170;0m'
+F_GRAY = '\x1b[38;2;170;170;170m'
+F_DARK_GRAY = '\x1b[38;2;85;85;85m'
+F_BLUE = '\x1b[38;2;85;85;255m'
+F_GREEN = '\x1b[38;2;85;255;85m'
+F_AQUA = '\x1b[38;2;85;255;255m'
+F_RED = '\x1b[38;2;255;85;85m'
+F_LIGHT_PURPLE = '\x1b[38;2;255;85;255m'
+F_YELLOW = '\x1b[38;2;255;255;85m'
+F_WHITE = '\x1b[38;2;255;255;255m'
 
 ROMAN_NUM = [
     ('I', 1), ('IV', 4), ('V', 5), ('IX', 9), ('X', 10),
@@ -175,15 +211,15 @@ INTEREST_TABLE = {
 }
 
 RARITY_COLORS = {
-    'common': f'\x1b[1;38;2;255;255;255m',
-    'uncommon': f'\x1b[1;38;2;85;255;85m',
-    'rare': f'\x1b[1;38;2;85;85;255m',
-    'epic': f'\x1b[1;38;2;170;0;170m',
-    'legendary': f'\x1b[1;38;2;255;170;0m',
-    'mythic': f'\x1b[1;38;2;255;85;255m',
-    'supreme': f'\x1b[1;38;2;170;0;0m',
-    'special': f'\x1b[1;38;2;255;85;85m',
-    'very_special': f'\x1b[1;38;2;255;85;85m',
+    'common': f'{BOLD}{F_WHITE}',
+    'uncommon': f'{BOLD}{F_GREEN}',
+    'rare': f'{BOLD}{F_BLUE}',
+    'epic': f'{BOLD}{F_DARK_PURPLE}',
+    'legendary': f'{BOLD}{F_GOLD}',
+    'mythic': f'{BOLD}{F_LIGHT_PURPLE}',
+    'supreme': f'{BOLD}{F_DARK_RED}',
+    'special': f'{BOLD}{F_RED}',
+    'very_special': f'{BOLD}{F_RED}',
 }
 
 menu_doc = """

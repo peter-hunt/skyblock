@@ -177,13 +177,3 @@ def cyan(*args, sep=' ', end='\n') -> None:
 def white(*args, sep=' ', end='\n') -> None:
     string = sep.join(f'{arg}' for arg in args)
     stdout.write(f'\x1b[0;97m{string}{end}\x1b[0m')
-
-
-BLACK = '\x1b[0;90m'
-RED = '\x1b[0;91m'
-GREEN = '\x1b[0;92m'
-YELLOW = '\x1b[0;93m'
-BLUE = '\x1b[0;94m'
-MAGENTA = '\x1b[0;95m'
-CYAN = '\x1b[0;96m'
-WHITE = '\x1b[0;97m'

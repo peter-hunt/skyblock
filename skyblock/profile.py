@@ -10,17 +10,20 @@ from re import fullmatch
 from time import sleep, time
 from typing import Dict, Iterable, List, Optional
 
-from .constant import SKILL_EXP, INTEREST_TABLE, profile_doc
+from .constant import (
+    SKILL_EXP, INTEREST_TABLE, profile_doc,
+    CLN, BOLD, GREEN, YELLOW, CYAN, F_YELLOW,
+)
 from .function import (
     Number, calc_skill_exp, calc_exp, is_dir, is_file, includes,
     get, backupable, gen_help, random_int, display_money, shorten_money,
-    red, green, blue, yellow, cyan, GREEN, YELLOW, CYAN,
+    red, green, blue, yellow, cyan,
 )
 from .item import (
     COLLECTIONS, SELL_PRICE, get_item, from_obj, ItemType,
     Item, Empty, Pickaxe, Pickaxe, Axe, Mineral, TreeType,
 )
-from .map import Island, Region, Npc, ISLANDS, calc_dist, path_find
+from .map import Npc, ISLANDS, calc_dist, path_find
 
 __all__ = ['Profile']
 
@@ -411,9 +414,9 @@ class Profile:
             return
         width, _ = get_terminal_size()
         width = ceil(width * 0.85)
-        print(f"\x1b[1;38;2;255;255;85m{'':-^{width}}\x1b[0m")
+        print(f"{CLN}{BOLD}{F_YELLOW}{'':-^{width}}{CLN}")
         print(item.info())
-        print(f"\x1b[1;38;2;255;255;85m{'':-^{width}}\x1b[0m")
+        print(f"{CLN}{BOLD}{F_YELLOW}{'':-^{width}}{CLN}")
 
     def collect(self, name: str, amount: int, /):
         if name not in self.collection:
@@ -898,10 +901,16 @@ class Profile:
                     continue
                 self.talkto_npc(get(region.npcs, name))
 
-            # elif words[0] == 'test':
-            #     item = get_item('aspect_of_the_dragons')
-            #     item.dungeon_stars = 10
-            #     self.recieve(item)
+            elif words[0] == 'test':
+                item = get_item('livid_dagger')
+                item.stars = 3
+                self.recieve(item)
+                item = get_item('dreadlord_sword')
+                item.stars = 6
+                self.recieve(item)
+                item = get_item('aspect_of_the_dragons')
+                item.stars = 10
+                self.recieve(item)
 
             else:
                 red(f'Unknown command: {words[0]!r}')
