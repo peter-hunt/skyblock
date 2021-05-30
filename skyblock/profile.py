@@ -15,7 +15,7 @@ from .constant import (
     CLN, BOLD, GREEN, YELLOW, CYAN, F_YELLOW,
 )
 from .function import (
-    Number, calc_skill_exp, calc_exp, is_dir, is_file, includes,
+    Number, display_name, calc_skill_exp, calc_exp, is_dir, is_file, includes,
     get, backupable, gen_help, random_int, display_money, shorten_money,
     red, green, blue, yellow, cyan,
 )
@@ -51,7 +51,7 @@ class Profile:
     base_strength: int = 0
     base_speed: int = 100
     base_crit_chance: int = 0
-    base_crit_damage: int = 0
+    base_crit_damage: int = 50
     base_attack_speed: int = 0
     base_intelligence: int = 0
     base_sea_creature_chance: int = 0
@@ -62,6 +62,7 @@ class Profile:
 
     skill_xp_alchemy: float = 0.0
     skill_xp_carpentry: float = 0.0
+    skill_xp_catacombs: float = 0.0
     skill_xp_combat: float = 0.0
     skill_xp_enchanting: float = 0.0
     skill_xp_farming: float = 0.0
@@ -133,6 +134,7 @@ class Profile:
             collection=data.get('collection', {}),
             skill_xp_alchemy=data.get('skill_xp_alchemy', 0.0),
             skill_xp_carpentry=data.get('skill_xp_carpentry', 0.0),
+            skill_xp_catacombs=data.get('skill_xp_catacombs', 0.0),
             skill_xp_combat=data.get('skill_xp_combat', 0.0),
             skill_xp_enchanting=data.get('skill_xp_enchanting', 0.0),
             skill_xp_farming=data.get('skill_xp_farming', 0.0),
@@ -194,6 +196,7 @@ class Profile:
                 'collection': self.collection,
                 'skill_xp_alchemy': self.skill_xp_alchemy,
                 'skill_xp_carpentry': self.skill_xp_carpentry,
+                'skill_xp_catacombs': self.skill_xp_catacombs,
                 'skill_xp_combat': self.skill_xp_combat,
                 'skill_xp_enchanting': self.skill_xp_enchanting,
                 'skill_xp_farming': self.skill_xp_farming,
@@ -279,7 +282,7 @@ class Profile:
         if current_lvl > original_lvl:
             for lvl in range(original_lvl + 1, current_lvl + 1):
                 green(f'Reached {name.capitalize()} XP level {lvl} level!')
-                if name != 'dungeoneering':
+                if name != 'catacombs':
                     green(f'Reward: {SKILL_EXP[lvl][3]} coins')
                     self.purse += SKILL_EXP[lvl][3]
 
@@ -323,9 +326,7 @@ class Profile:
              f' {CYAN}({YELLOW}{shorten_money(self.purse)}{CYAN})')
         cyan(f'Balance: {YELLOW}{display_money(self.balance)} coins'
              f' {CYAN}({YELLOW}{shorten_money(self.balance)}{CYAN})')
-        bank_level = ' '.join(word.capitalize()
-                              for word in self.bank_level.split('_'))
-        cyan(f'Bank Level: {bank_level}')
+        cyan(f'Bank Level: {display_name(self.bank_level)}')
 
     @backupable
     def talkto_npc(self, npc: Npc, /):
@@ -409,13 +410,17 @@ class Profile:
 
     def info(self, index: int, /):
         item = self.inventory[index]
+
         if isinstance(item, Empty):
             cyan('Empty')
             return
+
+        cata_lvl = calc_skill_exp('catacombs', self.skill_xp_catacombs)
+
         width, _ = get_terminal_size()
         width = ceil(width * 0.85)
         print(f"{CLN}{BOLD}{F_YELLOW}{'':-^{width}}{CLN}")
-        print(item.info())
+        print(item.info(cata_lvl=cata_lvl))
         print(f"{CLN}{BOLD}{F_YELLOW}{'':-^{width}}{CLN}")
 
     def collect(self, name: str, amount: int, /):
@@ -902,15 +907,19 @@ class Profile:
                 self.talkto_npc(get(region.npcs, name))
 
             # elif words[0] == 'test':
-                # item = get_item('livid_dagger')
-                # item.stars = 3
-                # self.recieve(item)
-                # item = get_item('dreadlord_sword')
-                # item.stars = 6
-                # self.recieve(item)
-                # item = get_item('aspect_of_the_dragons')
-                # item.stars = 10
-                # self.recieve(item)
+            #     item = get_item('aspect_of_the_dragons')
+            #     item.stars = 3
+            #     self.recieve(item)
+            #     item = get_item('livid_dagger')
+            #     item.stars = 6
+            #     self.recieve(item)
+            #     item = get_item('hyperion')
+            #     item.stars = 10
+            #     self.recieve(item)
+            #     item = get_item('iron_pickaxe')
+            #     self.recieve(item)
+            #     item = get_item('diamond_pickaxe')
+            #     self.recieve(item)
 
             else:
                 red(f'Unknown command: {words[0]!r}')

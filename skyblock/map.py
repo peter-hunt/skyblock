@@ -1,8 +1,9 @@
 from decimal import Decimal
 from dataclasses import dataclass, field
 from math import dist, inf
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Dict, List, Optional, Tuple
 
+from .function import display_name
 from .item import Item, Resource, get_item
 
 
@@ -21,7 +22,7 @@ class Npc:
     claim_item: Optional[Item] = None  # price, item, amount
 
     def __repr__(self):
-        return ' '.join(word.capitalize() for word in self.name.split('_'))
+        return display_name(self.name)
 
 
 @dataclass(order=True)
@@ -33,7 +34,7 @@ class Region:
     resources: List[Resource] = field(default_factory=list)
 
     def __repr__(self):
-        return ' '.join(word.capitalize() for word in self.name.split('_'))
+        return display_name(self.name)
 
     def __hash__(self):
         return hash(self.name)
@@ -118,7 +119,7 @@ class Island:
     dists: Dict[Tuple[Region, Region], Decimal]
 
     def __repr__(self):
-        return ' '.join(word.capitalize() for word in self.name.split('_'))
+        return display_name(self.name)
 
 
 AUCTION_HOUSE = Region('auction_house', -18, -90)

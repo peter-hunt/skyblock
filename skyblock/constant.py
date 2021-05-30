@@ -7,6 +7,7 @@ __all__ = [
     'F_BLUE', 'F_GREEN', 'F_AQUA', 'F_RED', 'F_LIGHT_PURPLE',
     'F_YELLOW', 'F_WHITE',
 
+    'SPECIAL_NAMES',
     'ROMAN_NUM', 'NUMBER_SCALES', 'EXP_LIMITS', 'SKILL_EXP', 'DUNGEON_EXP',
     'INTEREST_TABLE', 'RARITY_COLORS', 'menu_doc', 'profile_doc',
 ]
@@ -22,22 +23,28 @@ MAGENTA = '\x1b[0;95m'
 CYAN = '\x1b[0;96m'
 WHITE = '\x1b[0;97m'
 
-F_BLACK = '\x1b[38;2;0;0;0m'
-F_DARK_BLUE = '\x1b[38;2;0;0;170m'
-F_DARK_GREEN = '\x1b[38;2;0;170;0m'
-F_DARK_AQUA = '\x1b[38;2;0;170;170m'
-F_DARK_RED = '\x1b[38;2;170;0;0m'
-F_DARK_PURPLE = '\x1b[38;2;170;0;170m'
-F_GOLD = '\x1b[38;2;255;170;0m'
-F_GRAY = '\x1b[38;2;170;170;170m'
-F_DARK_GRAY = '\x1b[38;2;85;85;85m'
-F_BLUE = '\x1b[38;2;85;85;255m'
-F_GREEN = '\x1b[38;2;85;255;85m'
-F_AQUA = '\x1b[38;2;85;255;255m'
-F_RED = '\x1b[38;2;255;85;85m'
-F_LIGHT_PURPLE = '\x1b[38;2;255;85;255m'
-F_YELLOW = '\x1b[38;2;255;255;85m'
-F_WHITE = '\x1b[38;2;255;255;255m'
+F_BLACK = '\x1b[0;38;2;0;0;0m'
+F_DARK_BLUE = '\x1b[0;38;2;0;0;170m'
+F_DARK_GREEN = '\x1b[0;38;2;0;170;0m'
+F_DARK_AQUA = '\x1b[0;38;2;0;170;170m'
+F_DARK_RED = '\x1b[0;38;2;170;0;0m'
+F_DARK_PURPLE = '\x1b[0;38;2;170;0;170m'
+F_GOLD = '\x1b[0;38;2;255;170;0m'
+F_GRAY = '\x1b[0;38;2;170;170;170m'
+F_DARK_GRAY = '\x1b[0;38;2;85;85;85m'
+F_BLUE = '\x1b[0;38;2;85;85;255m'
+F_GREEN = '\x1b[0;38;2;85;255;85m'
+F_AQUA = '\x1b[0;38;2;85;255;255m'
+F_RED = '\x1b[0;38;2;255;85;85m'
+F_LIGHT_PURPLE = '\x1b[0;38;2;255;85;255m'
+F_YELLOW = '\x1b[0;38;2;255;255;85m'
+F_WHITE = '\x1b[0;38;2;255;255;255m'
+
+SPECIAL_NAMES = {
+    'attack_speed': 'Bonus Attack Speed',
+    'builders_house': "Builder's House",
+    'necrons_blade': "Necron's Blade",
+}
 
 ROMAN_NUM = [
     ('I', 1), ('IV', 4), ('V', 5), ('IX', 9), ('X', 10),

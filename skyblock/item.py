@@ -38,6 +38,17 @@ class Sword(ItemType):
     name: str
     rarity: str
     damage: int
+    strength: int = 0
+    crit_chance: int = 0
+    crit_damage: int = 0
+    attack_speed: int = 0
+
+    defense: int = 0
+    intelligence: int = 0
+    true_denfense: int = 0
+    ferocity: int = 0
+    speed: int = 0
+
     modifier: Optional[str] = None
     enchantments: Dict[str, int] = {}
     stars: Optional[int] = None
@@ -215,12 +226,38 @@ TREES = [
 RESOURCES = MINERALS + TREES
 
 WEAPONS = [
-    Sword('aspect_of_the_dragons', 'legendary', damage=225,
+    Sword('raider_axe', 'rare',
+          damage=80, strength=50),
+
+    Sword('aspect_of_the_dragons', 'legendary',
+          damage=225, strength=100,
           combat_skill_req=18),
-    Sword('dreadlord_sword', 'rare', damage=120,
-          dungeon_skill_req=5),
-    Sword('livid_dagger', 'legendary', damage=210,
+
+    Sword('livid_dagger', 'legendary',
+          damage=210, strength=60, crit_chance=100, crit_damage=50,
+          attack_speed=50,
           dungeon_completion_req=5),
+
+    Sword('necrons_blade', 'legendary',
+          damage=210, strength=60,
+          defense=250, intelligence=50, true_denfense=20, ferocity=30,
+          dungeon_completion_req=7, stars=0),
+    Sword('astraea', 'legendary',
+          damage=210, strength=60,
+          defense=250, intelligence=50, true_denfense=20, ferocity=30,
+          dungeon_completion_req=7, stars=0),
+    Sword('hyperion', 'legendary',
+          damage=260, strength=150,
+          intelligence=350, ferocity=30,
+          dungeon_completion_req=7, stars=0),
+    Sword('scylla', 'legendary',
+          damage=270, strength=150, crit_chance=12, crit_damage=35,
+          intelligence=50, ferocity=30,
+          dungeon_completion_req=7, stars=0),
+    Sword('valkyrie', 'legendary',
+          damage=270, strength=145,
+          intelligence=60, ferocity=60,
+          dungeon_completion_req=7, stars=0),
 ]
 
 TOOLS = [

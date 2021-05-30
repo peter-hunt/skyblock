@@ -9,12 +9,13 @@ from typing import Any, Dict, List, Optional, Union
 from types import FunctionType
 
 from .constant import (
-    SKILL_EXP, DUNGEON_EXP, EXP_LIMITS, ROMAN_NUM, NUMBER_SCALES,
+    SKILL_EXP, DUNGEON_EXP, EXP_LIMITS, ROMAN_NUM, NUMBER_SCALES, SPECIAL_NAMES,
 )
 
 __all__ = [
     'Number', 'get', 'includes', 'is_dir', 'is_file', 'roman', 'random_int',
-    'display_money', 'shorten_money', 'calc_exp', 'calc_skill_exp',
+    'display_name', 'display_money', 'shorten_money',
+    'calc_exp', 'calc_skill_exp',
     'gen_help', 'backupable', 'input_regex',
     'black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white',
     'BLACK', 'RED', 'GREEN', 'YELLOW', 'BLUE', 'MAGENTA', 'CYAN', 'WHITE',
@@ -70,6 +71,13 @@ def random_int(num: float, /) -> int:
     return int(int_part + (float_part > random()))
 
 
+def display_name(name: str, /) -> str:
+    if name in SPECIAL_NAMES:
+        return SPECIAL_NAMES[name]
+    else:
+        return ' '.join(word.capitalize() for word in name.split('_'))
+
+
 def display_money(money: Union[int, float], /) -> str:
     string = f'{money:.1f}'
     integer, floating = string.split('.')
@@ -102,12 +110,27 @@ def calc_exp(amount: Number, /) -> int:
 
 
 def calc_skill_exp(name: str, amount: Number, /) -> int:
-    exp_table = DUNGEON_EXP if name == 'dungeoneering' else SKILL_EXP
-    for lvl, _, cumulative, _ in exp_table:
+    exp_table = DUNGEON_EXP if name == 'catacombs' else SKILL_EXP
+    for line in exp_table:
+        lvl, _, cumulative = line[:3]
         if amount < cumulative:
             return lvl - 1
     else:
         return EXP_LIMITS[name]
+
+
+# 5l*4% + 5l*5% + 5l*6% + 5l*7% + 5l*8% + 5l*9% +
+# 5l*10% + 5l*12% + 5l*14% + 16% + 17% + 18% + 19% + 20%
+def dung_stat(num: int, lvl: int, stars: int) -> Number:
+    mult = 1 + 0.1 * stars
+    for i in range(lvl):
+        if i < 35:
+            mult += 0.01 * (4 + (i // 5))
+        elif i < 45:
+            mult += 0.01 * (10 + 2 * ((i - 35) // 5))
+        else:
+            mult += 0.01 * ((i - 45) + 16)
+    return num * mult
 
 
 def gen_help(doc: str, /) -> Dict[str, str]:

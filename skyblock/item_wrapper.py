@@ -2,7 +2,7 @@ from .constant import (
     RARITY_COLORS,
     CLN, BOLD, F_DARK_RED, F_GOLD, F_GRAY, F_DARK_GRAY, F_GREEN, F_RED, F_WHITE,
 )
-from .function import roman
+from .function import display_name, roman, dung_stat
 
 
 def item_type(cls: type, /) -> type:
@@ -61,7 +61,7 @@ def item_type(cls: type, /) -> type:
         else:
             modifier = ''
 
-        name = ' '.join(word.capitalize() for word in self.name.split('_'))
+        name = display_name(self.name)
         count = f' x {self.count}' if getattr(self, 'count', 1) != 1 else ''
 
         if getattr(self, 'stars', None) is None:
@@ -76,9 +76,7 @@ def item_type(cls: type, /) -> type:
 
     cls.display = display
 
-    # 0;0;170 for enchantments
-
-    def info(self):
+    def info(self, cata_lvl=0):
         color = RARITY_COLORS[self.rarity]
 
         if getattr(self, 'modifer', None) is not None:
@@ -86,8 +84,7 @@ def item_type(cls: type, /) -> type:
         else:
             modifier = ''
 
-        display_name = ' '.join(word.capitalize()
-                                for word in self.name.split('_'))
+        name = display_name(self.name)
 
         if getattr(self, 'stars', None) is None:
             stars = ''
@@ -97,18 +94,62 @@ def item_type(cls: type, /) -> type:
             stars = (f' {F_RED}' + (self.stars - 5) * '✪'
                      + F_GOLD + (10 - self.stars) * '✪')
 
-        info = f'{color}{modifier}{display_name}{stars}{color}'
+        info = f'{color}{modifier}{name}{stars}{color}'
 
-        if hasattr(self, 'breaking_power'):
-            info += (f'\n{F_DARK_GRAY}Breaking Power: {F_RED}+'
-                     f'{self.breaking_power}{CLN}\n')
+        if self.__class__.__name__ == 'Pickaxe':
+            info += (f'\n{F_DARK_GRAY}Breaking Power '
+                     f"{getattr(self, 'breaking_power')}{CLN}\n")
+            info += (f'\n{F_GRAY}Mining Speed: {F_GREEN}+'
+                     f"{getattr(self, 'mining_speed')}{CLN}\n")
 
-        if hasattr(self, 'mining_speed'):
-            info += (f'\n\n{F_GRAY}'
-                     f'Mining Speed: {F_GREEN}+{self.mining_speed}{CLN}\n')
+        if self.__class__.__name__ in {'Sword', 'Bow'}:
+            is_dungeon = self.stars is not None
+            basic_stats = []
+            for stat_name in ('damage', 'strength', 'crit_chance',
+                              'crit_damage', 'attack_speed'):
+                if getattr(self, stat_name, 0) == 0:
+                    continue
+                display_stat = display_name(stat_name)
+                perc = '%' if stat_name[0] in 'ac' else ''
+                value = getattr(self, stat_name)
+                dung = ''
+                if is_dungeon:
+                    dungeon_value = dung_stat(value, cata_lvl, self.stars)
+                    if stat_name in {'crit_chance', 'attack_speed'}:
+                        dungeon_value = min(dungeon_value, 100)
+                    if value != dungeon_value:
+                        value_str = f'{dungeon_value:.1f}'
+                        if value_str.endswith('.0'):
+                            value_str = value_str[:-2]
+                        dung = f' {F_DARK_GRAY}(+{value_str}{perc})'
+                basic_stats.append(f'{display_stat}: {F_RED}'
+                                   f'+{value}{perc}{dung}')
 
-        if hasattr(self, 'damage'):
-            info += (f'\n{F_GRAY}Damage: {F_RED}+{self.damage}{CLN}')
+            info += '\n' + '\n'.join(f'{F_GRAY}{stat}{CLN}'
+                                     for stat in basic_stats)
+
+            bonus_stats = []
+            for stat_name in ('defense', 'intelligence', 'true_denfense',
+                              'ferocity', 'speed'):
+                if getattr(self, stat_name, 0) == 0:
+                    continue
+                display_stat = display_name(stat_name)
+                value = getattr(self, stat_name)
+                dung = ''
+                if is_dungeon:
+                    dungeon_value = dung_stat(value, cata_lvl, self.stars)
+                    if stat_name in {'crit_chance', 'attack_speed'}:
+                        dungeon_value = min(dungeon_value, 100)
+                    if value != dungeon_value:
+                        value_str = f'{dungeon_value:.1f}'
+                        if value_str.endswith('.0'):
+                            value_str = value_str[:-2]
+                        dung = f' {F_DARK_GRAY}(+{value_str}{perc})'
+                bonus_stats.append(f'{display_stat}: {F_GREEN}'
+                                   f'+{value}{dung}')
+
+            info += '\n\n' + '\n'.join(f'{F_GRAY}{stat}{CLN}'
+                                       for stat in bonus_stats)
 
         if hasattr(self, 'modifier'):
             info += (f'\n\n{F_DARK_GRAY}'
