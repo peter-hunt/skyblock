@@ -971,8 +971,17 @@ class Profile:
                 self.talkto_npc(get(region.npcs, name))
 
             # elif words[0] == 'test':
+            #     item = get_item('aspect_of_the_dragons')
+            #     item.stars = 5
+            #     item.hot_potato = 20
+            #     self.recieve(item)
             #     item = get_item('hyperion')
             #     item.stars = 10
+            #     item.hot_potato = 30
+            #     self.recieve(item)
+            #     item = get_item('souls_rebound')
+            #     item.stars = 10
+            #     item.hot_potato = 30
             #     self.recieve(item)
             #     item = get_item('diamond_pickaxe')
             #     self.recieve(item)

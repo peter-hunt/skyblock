@@ -38,6 +38,7 @@ class Bow(ItemType):
     damage: int
     modifier: Optional[str] = None
     enchantments: Dict[str, int] = {}
+    hot_potato: int = 0
     stars: Optional[int] = None
     combat_skill_req: Optional[int] = None
     dungeon_skill_req: Optional[int] = None
@@ -62,6 +63,7 @@ class Sword(ItemType):
 
     modifier: Optional[str] = None
     enchantments: Dict[str, int] = {}
+    hot_potato: int = 0
     stars: Optional[int] = None
     combat_skill_req: Optional[int] = None
     dungeon_skill_req: Optional[int] = None

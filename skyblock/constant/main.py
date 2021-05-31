@@ -178,4 +178,5 @@ SPECIAL_NAMES = {
     'attack_speed': 'Bonus Attack Speed',
     'builders_house': "Builder's House",
     'necrons_blade': "Necron's Blade",
+    'runaans_bow': "Nunaan's Bow",
 }

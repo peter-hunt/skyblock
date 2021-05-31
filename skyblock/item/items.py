@@ -96,6 +96,13 @@ WEAPONS = [
           damage=270, strength=145,
           intelligence=60, ferocity=60,
           dungeon_completion_req=7, stars=0),
+
+    Sword('runaans_bow', 'legendary',
+          damage=160, strength=50),
+    Sword('mosquito_bow', 'legendary',
+          damage=251, strength=151, crit_damage=39),
+    Sword('souls_rebound', 'epic',
+          damage=450),
 ]
 
 TOOLS = [

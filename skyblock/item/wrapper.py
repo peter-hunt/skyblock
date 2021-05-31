@@ -1,6 +1,6 @@
 from ..constant.colors import (
     RARITY_COLORS,
-    CLN, BOLD, DARK_RED, GOLD, GRAY, DARK_GRAY, GREEN, RED, WHITE,
+    CLN, BOLD, DARK_RED, GOLD, GRAY, DARK_GRAY, GREEN, RED, YELLOW, WHITE,
 )
 from ..function.math import dung_stat
 from ..function.util import display_name, roman
@@ -111,10 +111,17 @@ def item_type(cls: type, /) -> type:
             for stat_name in ('damage', 'strength', 'crit_chance',
                               'crit_damage', 'attack_speed'):
                 if getattr(self, stat_name, 0) == 0:
-                    continue
+                    if stat_name[0] not in 'ds' or self.hot_potato == 0:
+                        continue
                 display_stat = display_name(stat_name)
                 perc = '%' if stat_name[0] in 'ac' else ''
                 value = getattr(self, stat_name)
+
+                hot_potato = ''
+                if stat_name[0] in 'ds' and self.hot_potato != 0:
+                    value += self.hot_potato
+                    hot_potato = f' {YELLOW}(+{self.hot_potato})'
+
                 dung = ''
                 if is_dungeon:
                     dungeon_value = dung_stat(value, cata_lvl, self.stars)
@@ -125,8 +132,9 @@ def item_type(cls: type, /) -> type:
                         if value_str.endswith('.0'):
                             value_str = value_str[:-2]
                         dung = f' {DARK_GRAY}(+{value_str}{perc})'
+
                 basic_stats.append(f'{display_stat}: {RED}'
-                                   f'+{value}{perc}{dung}')
+                                   f'+{value}{perc}{hot_potato}{dung}')
 
             info += '\n' + '\n'.join(f'{GRAY}{stat}{CLN}'
                                      for stat in basic_stats)

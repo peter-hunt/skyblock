@@ -10,7 +10,7 @@ from .item.object import Item, Resource
 
 __all__ = [
     'Npc', 'Region', 'Island',
-    'HUB_ISLAND', 'path_find',
+    'ISLANDS', 'path_find',
 ]
 
 
