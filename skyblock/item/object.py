@@ -1,6 +1,6 @@
 from typing import Dict, Optional
 
-from ..constant import Number
+from ..constant.util import Number
 
 from .wrapper import item_type
 

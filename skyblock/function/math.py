@@ -1,7 +1,8 @@
 from itertools import count
 from random import random
 
-from ..constant import Number, DUNGEON_EXP, SKILL_EXP, SKILL_LIMITS
+from ..constant.main import DUNGEON_EXP, SKILL_EXP, SKILL_LIMITS
+from ..constant.util import Number
 
 __all__ = ['calc_exp', 'calc_skill_exp', 'dung_stat', 'random_int']
 

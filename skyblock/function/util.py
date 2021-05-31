@@ -2,13 +2,14 @@ from textwrap import wrap
 from typing import Any, Dict, List, Optional, Union
 from types import FunctionType
 
-from ..constant import ROMAN_NUM, NUMBER_SCALES, SPECIAL_NAMES
+from ..constant.main import SPECIAL_NAMES
+from ..constant.util import NUMBER_SCALES, ROMAN_NUM
 
 from .io import yellow
 
 __all__ = [
-    'backupable', 'display_money', 'display_name', 'get', 'generate_help',
-    'includes', 'roman', 'shorten_money',
+    'backupable', 'display_money', 'display_name', 'display_number', 'get',
+    'generate_help', 'includes', 'roman', 'shorten_money',
 ]
 
 
@@ -34,6 +35,12 @@ def display_name(name: str, /) -> str:
         return SPECIAL_NAMES[name]
     else:
         return ' '.join(word.capitalize() for word in name.split('_'))
+
+
+def display_number(number: int, /) -> str:
+    string = f'{number}'
+    string = ','.join(part[::-1] for part in wrap(string[::-1], 3)[::-1])
+    return string
 
 
 def generate_help(doc: str, /) -> Dict[str, str]:

@@ -2,7 +2,7 @@ from os import walk
 from os.path import join
 from pathlib import Path
 
-from .constant import menu_doc
+from .constant.doc import menu_doc
 from .function.io import gray, red, green, yellow, aqua, white, input_regex
 from .function.path import is_dir
 from .function.util import backupable, generate_help

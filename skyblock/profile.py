@@ -10,16 +10,16 @@ from re import fullmatch
 from time import sleep, time
 from typing import Dict, Iterable, List, Optional
 
-from .constant import (
-    Number, SKILL_EXP, INTEREST_TABLE, profile_doc,
-    BOLD, F_GOLD, F_GRAY, F_GREEN, F_AQUA, F_WHITE, SELL_PRICE,
-)
+from .constant.colors import BOLD, GOLD, GRAY, GREEN, AQUA, YELLOW, WHITE
+from .constant.doc import profile_doc
+from .constant.main import INTEREST_TABLE, SELL_PRICE, SKILL_EXP
+from .constant.util import Number
 from .function.item import get_item, load_item
 from .function.io import gray, red, green, yellow, aqua, white
 from .function.math import calc_exp, calc_skill_exp, random_int
 from .function.path import is_dir, is_file
 from .function.util import (
-    backupable, display_money, display_name, generate_help,
+    backupable, display_money, display_number, display_name, generate_help,
     get, includes, shorten_money,
 )
 from .item.items import COLLECTIONS
@@ -39,7 +39,6 @@ class Profile:
     name: str
     last_update: Optional[int] = None
 
-    # starter | gold | deluxe | super_deluxe | premier
     bank_level: str = 'starter'
     balance: Number = 0.0
     purse: Number = 0.0
@@ -149,13 +148,13 @@ class Profile:
             crafted_minions=data.get('crafted_minions', []),
 
             armor=[load_item(item) for item in data.get(
-                'armor', [{'type': 'empty'} for _ in range(4)],
+                'armor', [{} for _ in range(4)],
             )],
             pets=[load_item(item) for item in data.get('pets', [])],
             ender_chest=[load_item(item)
                          for item in data.get('ender_chest', [])],
             inventory=[load_item(item) for item in data.get(
-                'inventory', [{'type': 'empty'} for _ in range(36)],
+                'inventory', [{} for _ in range(36)],
             )],
             potion_bag=[load_item(item)
                         for item in data.get('potion_bag', [])],
@@ -236,9 +235,17 @@ class Profile:
                 self.stash[index].count += item.count
                 return
         self.stash.append(item)
+        materials = sum(getattr(item, 'count', 1) for item in self.stash)
+        items = 0
+        for item in self.stash:
+            stack_count = getattr(get_item(item.name), 'count', 1)
+            items += ceil(getattr(item, 'count', 1) / stack_count)
+        yellow(f'You have {GREEN}{display_number(materials)} materials{YELLOW}'
+               f' totalling {AQUA}{display_number(items)} items{YELLOW}'
+               f' stashed away!!')
+        yellow(f'Use {GOLD}`pickupstash`{YELLOW} to pick it all up!')
 
     def recieve(self, item: ItemType, /):
-        gray(f'+ {item.display()}')
         if isinstance(item, Item):
             item_type = get_item(item.name)
             count = item.count
@@ -256,6 +263,7 @@ class Profile:
                     count -= delta
                     self.inventory[index].count += delta
                 if count == 0:
+                    gray(f'+ {item.display()}')
                     break
             else:
                 self.put_stash(Item(item.name, count, item.rarity))
@@ -263,9 +271,19 @@ class Profile:
             for index, slot in enumerate(self.inventory):
                 if isinstance(slot, Empty):
                     self.inventory[index] = item
+                    gray(f'+ {item.display()}')
                     break
             else:
                 self.put_stash(item)
+
+    def pickupstash(self, /):
+        if len(self.stash) == 0:
+            red('Your stash is already empty!')
+            return
+        stash = [item.copy() for item in self.stash]
+        self.stash.clear()
+        for item in stash:
+            self.recieve(item)
 
     def add_exp(self, amount: Number, /):
         original_lvl = calc_exp(self.experience)
@@ -313,42 +331,45 @@ class Profile:
                     direc += 'South' if dz > 0 else 'North'
                 if dz / dx < tan(radians(60)):
                     direc += 'East' if dx > 0 else 'West'
-            gray(f'  {other.name} on the {F_AQUA}{direc}')
+            gray(f'  {other.name} on the {AQUA}{direc}')
 
         if len(region.resources) > 0:
             gray('Resources:')
             for resource in region.resources:
-                gray(f'  {F_GREEN}{resource.name}{F_GRAY} ({resource.type()})')
+                gray(f'  {GREEN}{resource.name}{GRAY} ({resource.type()})')
 
         if len(region.npcs) > 0:
             gray('NPCs:')
             for npc in region.npcs:
-                gray(f'  {F_GREEN}{npc}{F_GRAY} ({npc.name})')
+                gray(f'  {GREEN}{npc}{GRAY} ({npc.name})')
 
     def money(self):
         if self.region != 'bank':
             if self.purse < 1000:
                 shortened_purse = ''
             else:
-                shortened_purse = f' {F_GRAY}({shorten_money(self.purse)})'
+                shortened_purse = f' {GRAY}({shorten_money(self.purse)})'
 
-            white(f'Purse: {F_GOLD}{display_money(self.purse)}{shortened_purse}')
+            white(f'Purse: {GOLD}{display_money(self.purse)}'
+                  f'{shortened_purse}')
             return
 
         if self.balance < 1000:
             shortened_balance = ''
         else:
-            shortened_balance = f' {F_GRAY}({shorten_money(self.balance)})'
+            shortened_balance = f' {GRAY}({shorten_money(self.balance)})'
 
         if self.purse < 1000:
             shortened_purse = ''
         else:
-            shortened_purse = f' {F_GRAY}({shorten_money(self.purse)})'
+            shortened_purse = f' {GRAY}({shorten_money(self.purse)})'
 
         green('Bank Account')
-        gray(f'Balance: {F_GOLD}{display_money(self.balance)}{shortened_balance}')
-        white(f'Purse: {F_GOLD}{display_money(self.purse)}{shortened_purse}')
-        gray(f'Bank Level: {F_GREEN}{display_name(self.bank_level)}')
+        gray(f'Balance: {GOLD}{display_money(self.balance)}'
+             f'{shortened_balance}')
+        white(f'Purse: {GOLD}{display_money(self.purse)}'
+              f'{shortened_purse}')
+        gray(f'Bank Level: {GREEN}{display_name(self.bank_level)}')
 
     @backupable
     def talkto_npc(self, npc: Npc, /):
@@ -368,15 +389,16 @@ class Profile:
                     f"{npc} made a strange noise.",
                     f"{npc} spoke a strange language you've never heard before.",
                 ), (20, 25, 20, 18, 10, 4, 2, 1))[0]
-                yellow(f'[NPC] {display_name(npc.name)}{F_WHITE}: ({sentence})')
+                yellow(f'[NPC] {display_name(npc.name)}'
+                       f'{WHITE}: ({sentence})')
             self.npc_talked.append(npc.name)
             return
         if npc.trades is not None:
             gray(f"{npc}'s shop:")
             digits = len(f'{len(npc.trades)}')
             for index, (price, item) in enumerate(npc.trades):
-                gray(f'  {index:>{digits}} {item.display()}{F_GRAY} for '
-                     f'{F_GOLD}{display_money(price)} coins{F_GRAY}.')
+                gray(f'  {index:>{digits}} {item.display()}{GRAY} for '
+                     f'{GOLD}{display_money(price)} coins{GRAY}.')
         elif npc.dialog is not None:
             self.npc_talk(choice(npc.dialog))
         else:
@@ -390,7 +412,7 @@ class Profile:
                 f"{npc} made a strange noise.",
                 f"{npc} spoke a strange language you've never heard before.",
             ), (20, 25, 20, 18, 10, 4, 2, 1))[0]
-            yellow(f'[NPC] {display_name(npc.name)}{F_WHITE}: ({sentence})')
+            yellow(f'[NPC] {display_name(npc.name)}{WHITE}: ({sentence})')
 
     @backupable
     def goto(self, dest: str, /):
@@ -467,8 +489,8 @@ class Profile:
 
         delta = SELL_PRICE[item.name] * getattr(item, 'count', 1)
         self.purse += delta
-        green(f"You sold {item.display()}{F_GREEN} for "
-              f"{F_GOLD}{shorten_money(delta)} Coins{F_GREEN}!")
+        green(f"You sold {item.display()}{GREEN} for "
+              f"{GOLD}{shorten_money(delta)} Coins{GREEN}!")
         self.inventory[index] = Empty()
 
     def get(self, name: str, tool_index: Optional[int], amount: int, /):
@@ -556,10 +578,10 @@ class Profile:
     @staticmethod
     def npc_talk(name: str, dialog: Iterable):
         iterator = iter(dialog)
-        yellow(f'[NPC] {display_name(name)}{F_WHITE}: {next(iterator)}')
+        yellow(f'[NPC] {display_name(name)}{WHITE}: {next(iterator)}')
         for sentence in iterator:
             sleep(1.5)
-            yellow(f'[NPC] {display_name(name)}{F_WHITE}: {sentence}')
+            yellow(f'[NPC] {display_name(name)}{WHITE}: {sentence}')
 
     def update(self):
         now = int(time())
@@ -581,7 +603,7 @@ class Profile:
             interest *= now_cp - last_cp
             self.balance += interest
             green(f"Since you've been away you earned "
-                  f"{F_GOLD}{display_money(interest)} coins{F_GREEN} "
+                  f"{GOLD}{display_money(interest)} coins{GREEN} "
                   f"as interest in your personal bank account!")
 
         self.last_update = now
@@ -628,30 +650,34 @@ class Profile:
                 coins = eval(coins_str) * mult
 
                 if words[0] == 'deposit':
-                    if self.purse < coins:
-                        red('Not enough coins to deposit.')
+                    if self.purse == 0:
+                        red("You don't have any coins!")
                         continue
+                    if self.purse < coins:
+                        coins = self.purse
 
                     self.purse -= coins
                     self.balance += coins
 
-                    green(f'You have deposited {F_GOLD}'
-                          f'{display_money(coins)} Coins{F_GREEN}! '
-                          f'You now have {F_GOLD}'
-                          f'{display_money(self.balance)} Coins{F_GREEN} '
+                    green(f'You have deposited {GOLD}'
+                          f'{display_money(coins)} Coins{GREEN}! '
+                          f'You now have {GOLD}'
+                          f'{display_money(self.balance)} Coins{GREEN} '
                           'in your account!')
                 else:
-                    if self.balance < coins:
-                        red('Not enough coins to withdraw.')
+                    if self.balance == 0:
+                        red("You don't have any coins in your bank account!")
                         continue
+                    if self.balance < coins:
+                        coins = self.balance
 
                     self.balance -= coins
                     self.purse += coins
 
-                    green(f'You have withdrawn {F_GOLD}'
-                          f'{display_money(coins)} Coins{F_GREEN}! '
-                          f'You now have {F_GOLD}'
-                          f'{display_money(self.balance)} Coins{F_GREEN} '
+                    green(f'You have withdrawn {GOLD}'
+                          f'{display_money(coins)} Coins{GREEN}! '
+                          f'You now have {GOLD}'
+                          f'{display_money(self.balance)} Coins{GREEN} '
                           'in your account!')
 
             elif words[0] == 'help':
@@ -837,7 +863,7 @@ class Profile:
 
                 self.inventory[index_1], self.inventory[index_2] = (
                     self.inventory[index_2], self.inventory[index_1])
-                gray(f'Switched {self.inventory[index_2].display()}{F_GRAY}'
+                gray(f'Switched {self.inventory[index_2].display()}{GRAY}'
                      f' and {self.inventory[index_1].display()}')
 
             elif words[0] == 'sell':
@@ -925,6 +951,13 @@ class Profile:
                 gray(f'Splitted {delta} item from '
                      f'slot {index_1 + 1} to slot {index_2 + 1}.')
 
+            elif words[0] == 'pickupstash':
+                if len(words) != 1:
+                    red(f'Invalid usage of command {words[0]!r}.')
+                    continue
+
+                self.pickupstash()
+
             elif words[0] == 'talkto':
                 if len(words) != 2:
                     red(f'Invalid usage of command {words[0]!r}.')
@@ -934,19 +967,12 @@ class Profile:
                 if not includes(region.npcs, name):
                     red(f'Npc not found: {name!r}')
                     continue
+
                 self.talkto_npc(get(region.npcs, name))
 
             # elif words[0] == 'test':
-            #     item = get_item('aspect_of_the_dragons')
-            #     item.stars = 3
-            #     self.recieve(item)
-            #     item = get_item('livid_dagger')
-            #     item.stars = 6
-            #     self.recieve(item)
             #     item = get_item('hyperion')
             #     item.stars = 10
-            #     self.recieve(item)
-            #     item = get_item('iron_pickaxe')
             #     self.recieve(item)
             #     item = get_item('diamond_pickaxe')
             #     self.recieve(item)

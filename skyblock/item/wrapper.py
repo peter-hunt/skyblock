@@ -1,6 +1,6 @@
-from ..constant import (
+from ..constant.colors import (
     RARITY_COLORS,
-    CLN, BOLD, F_DARK_RED, F_GOLD, F_GRAY, F_DARK_GRAY, F_GREEN, F_RED, F_WHITE,
+    CLN, BOLD, DARK_RED, GOLD, GRAY, DARK_GRAY, GREEN, RED, WHITE,
 )
 from ..function.math import dung_stat
 from ..function.util import display_name, roman
@@ -55,7 +55,7 @@ def item_type(cls: type, /) -> type:
 
     def display(self):
         if self.__class__.__name__ == 'Empty':
-            return f'{BOLD}{F_WHITE}Empty{CLN}'
+            return f'{BOLD}{WHITE}Empty{CLN}'
 
         color = RARITY_COLORS[self.rarity]
 
@@ -70,12 +70,12 @@ def item_type(cls: type, /) -> type:
         if getattr(self, 'stars', None) is None:
             stars = ''
         elif self.stars <= 5:
-            stars = f' {F_GOLD}' + self.stars * '✪'
+            stars = f' {GOLD}' + self.stars * '✪'
         else:
-            stars = (f' {F_RED}' + (self.stars - 5) * '✪'
-                     + F_GOLD + (10 - self.stars) * '✪')
+            stars = (f' {RED}' + (self.stars - 5) * '✪'
+                     + GOLD + (10 - self.stars) * '✪')
 
-        return f'{color}{modifier}{name}{stars}{F_DARK_GRAY}{count}{CLN}'
+        return f'{color}{modifier}{name}{stars}{DARK_GRAY}{count}{CLN}'
 
     cls.display = display
 
@@ -92,17 +92,17 @@ def item_type(cls: type, /) -> type:
         if getattr(self, 'stars', None) is None:
             stars = ''
         elif self.stars <= 5:
-            stars = f' {F_GOLD}' + self.stars * '✪'
+            stars = f' {GOLD}' + self.stars * '✪'
         else:
-            stars = (f' {F_RED}' + (self.stars - 5) * '✪'
-                     + F_GOLD + (10 - self.stars) * '✪')
+            stars = (f' {RED}' + (self.stars - 5) * '✪'
+                     + GOLD + (10 - self.stars) * '✪')
 
         info = f'{color}{modifier}{name}{stars}{color}'
 
         if self.__class__.__name__ == 'Pickaxe':
-            info += (f'\n{F_DARK_GRAY}Breaking Power '
+            info += (f'\n{DARK_GRAY}Breaking Power '
                      f"{getattr(self, 'breaking_power')}{CLN}\n")
-            info += (f'\n{F_GRAY}Mining Speed: {F_GREEN}+'
+            info += (f'\n{GRAY}Mining Speed: {GREEN}+'
                      f"{getattr(self, 'mining_speed')}{CLN}\n")
 
         if self.__class__.__name__ in {'Sword', 'Bow'}:
@@ -124,11 +124,11 @@ def item_type(cls: type, /) -> type:
                         value_str = f'{dungeon_value:.1f}'
                         if value_str.endswith('.0'):
                             value_str = value_str[:-2]
-                        dung = f' {F_DARK_GRAY}(+{value_str}{perc})'
-                basic_stats.append(f'{display_stat}: {F_RED}'
+                        dung = f' {DARK_GRAY}(+{value_str}{perc})'
+                basic_stats.append(f'{display_stat}: {RED}'
                                    f'+{value}{perc}{dung}')
 
-            info += '\n' + '\n'.join(f'{F_GRAY}{stat}{CLN}'
+            info += '\n' + '\n'.join(f'{GRAY}{stat}{CLN}'
                                      for stat in basic_stats)
 
             bonus_stats = []
@@ -147,25 +147,25 @@ def item_type(cls: type, /) -> type:
                         value_str = f'{dungeon_value:.1f}'
                         if value_str.endswith('.0'):
                             value_str = value_str[:-2]
-                        dung = f' {F_DARK_GRAY}(+{value_str}{perc})'
-                bonus_stats.append(f'{display_stat}: {F_GREEN}'
+                        dung = f' {DARK_GRAY}(+{value_str}{perc})'
+                bonus_stats.append(f'{display_stat}: {GREEN}'
                                    f'+{value}{dung}')
 
-            info += '\n\n' + '\n'.join(f'{F_GRAY}{stat}{CLN}'
+            info += '\n\n' + '\n'.join(f'{GRAY}{stat}{CLN}'
                                        for stat in bonus_stats)
 
         if hasattr(self, 'modifier'):
-            info += (f'\n\n{F_DARK_GRAY}'
+            info += (f'\n\n{DARK_GRAY}'
                      f'This item can be reforged!{CLN}')
 
         if getattr(self, 'combat_skill_req', None) is not None:
-            info += (f'\n{F_DARK_RED}❣ {F_RED}Requires '
-                     f'{F_GREEN}Combat Skill {self.combat_skill_req}{CLN}')
+            info += (f'\n{DARK_RED}❣ {RED}Requires '
+                     f'{GREEN}Combat Skill {self.combat_skill_req}{CLN}')
         if getattr(self, 'dungeon_skill_req', None) is not None:
-            info += (f'\n{F_DARK_RED}❣ {F_RED}Requires '
-                     f'{F_GREEN}Catacombs Skill {self.dungeon_skill_req}{CLN}')
+            info += (f'\n{DARK_RED}❣ {RED}Requires '
+                     f'{GREEN}Catacombs Skill {self.dungeon_skill_req}{CLN}')
         if getattr(self, 'dungeon_completion_req', None) is not None:
-            info += (f'\n{F_DARK_RED}❣ {F_RED}Requires {F_GREEN}Catacombs Floor '
+            info += (f'\n{DARK_RED}❣ {RED}Requires {GREEN}Catacombs Floor '
                      f'{roman(self.dungeon_completion_req)} Completion{CLN}')
 
         type_name = self.__class__.__name__.upper()
