@@ -4,7 +4,7 @@ from os import get_terminal_size
 from random import choice, choices
 from re import fullmatch
 from time import sleep, time
-from typing import Dict, Iterable, List, Optional
+from typing import Dict, Iterable, List, Optional, Tuple
 
 from ..constant.color import (
     RARITY_COLORS, BOLD, DARK_AQUA,
@@ -12,6 +12,7 @@ from ..constant.color import (
 )
 from ..constant.doc import profile_doc
 from ..constant.main import INTEREST_TABLE, SELL_PRICE, SKILL_EXP
+from ..constant.mob import ENDER_SLAYER_EFFECTIVE
 from ..constant.util import Number
 from ..function.io import dark_aqua, gray, red, green, yellow, aqua, white
 from ..function.math import (
@@ -24,7 +25,8 @@ from ..function.util import (
 from ..item.item import COLLECTION_ITEMS, get_item
 from ..item.mob import get_mob
 from ..item.object import (
-    ItemType, Item, Empty, Pickaxe, Axe, Bow, Armor, Sword, Mineral, Tree, Mob,
+    ItemType, Item, Empty, Pickaxe, Axe,
+    Bow, Sword, Armor, Pet, Mineral, Tree, Mob,
 )
 from ..item.resource import get_resource
 from ..map.island import ISLANDS
@@ -96,16 +98,19 @@ class Profile:
         red(f'You died and lost {display_number(lost_coins)} coins!')
         self.region = get(ISLANDS, self.island).spawn
 
-    def put_stash(self, item: ItemType, /):
+    def put_stash(self, item: ItemType, count: int, /):
         if isinstance(item, Item):
             for index, slot in enumerate(self.stash):
                 if not isinstance(slot, Item):
                     continue
                 if slot.name != item.name or slot.rarity != item.rarity:
                     continue
-                self.stash[index].count += item.count
-                return
-        self.stash.append(item)
+                self.stash[index].count += count
+                break
+        else:
+            for i in range(count):
+                self.stash.append(item)
+
         materials = sum(getattr(item, 'count', 1) for item in self.stash)
         items = 0
         for item in self.stash:
@@ -116,38 +121,40 @@ class Profile:
                f' stashed away!!')
         yellow(f'Use {GOLD}`pickupstash`{YELLOW} to pick it all up!')
 
-    def recieve(self, item: ItemType, /, *, log: bool = True):
-        if isinstance(item, Item):
-            item_type = get_item(item.name)
-            count = item.count
-            for index, slot in enumerate(self.inventory):
-                if isinstance(slot, Empty):
-                    delta = min(count, item_type.count)
-                    self.inventory[index] = Item(item.name, delta, item.rarity)
-                    count -= delta
-                elif not isinstance(slot, Item):
-                    continue
-                elif slot.name != item.name or slot.rarity != item.rarity:
-                    continue
+    def recieve(self, item: ItemType, count: int, /, *, log: bool = True):
+        item = item.copy()
+        item_object = get_item(item.name)
+        stack_count = getattr(item_object, 'count', 1)
+
+        for index, slot in enumerate(self.inventory):
+            if isinstance(slot, Empty):
+                if hasattr(item_object, 'count'):
+                    delta = min(count, stack_count)
+                    item.count = delta
                 else:
-                    delta = min(count, item_type.count - slot.count)
-                    count -= delta
-                    self.inventory[index].count += delta
-                if count == 0:
-                    break
+                    delta = 1
+                self.inventory[index] = item
+                count -= delta
+            elif not isinstance(slot, Item) or not isinstance(item, Item):
+                continue
+            elif slot.name != item.name or slot.rarity != item.rarity:
+                continue
             else:
-                self.put_stash(Item(item.name, count, item.rarity))
-                return
+                delta = min(count, item_object.count - slot.count)
+                count -= delta
+                self.inventory[index].count += delta
+            if count == 0:
+                break
         else:
-            for index, slot in enumerate(self.inventory):
-                if isinstance(slot, Empty):
-                    self.inventory[index] = item
-                    break
-            else:
-                self.put_stash(item)
-                return
+            self.put_stash(item, count)
+            return
+
         if log:
-            gray(f'+ {item.display()}')
+            if count != 0:
+                count_str = f' {GRAY}x {display_int(count)}'
+            else:
+                count_str = ''
+            gray(f'+ {item.display()}{count_str}')
 
     def pickupstash(self, /):
         if len(self.stash) == 0:
@@ -291,7 +298,7 @@ class Profile:
             else:
                 shortened_purse = f' {GRAY}({shorten_number(self.purse)})'
 
-            white(f'Purse: {GOLD}{display_number(self.purse)}'
+            white(f'Purse: {GOLD}{display_number(self.purse)} Coins'
                   f'{shortened_purse}')
             return
         if self.balance < 1000:
@@ -305,14 +312,14 @@ class Profile:
             shortened_purse = f' {GRAY}({shorten_number(self.purse)})'
 
         green('Bank Account')
-        gray(f'Balance: {GOLD}{display_number(self.balance)}'
+        gray(f'Balance: {GOLD}{display_number(self.balance)} Coins'
              f'{shortened_balance}')
-        white(f'Purse: {GOLD}{display_number(self.purse)}'
+        white(f'Purse: {GOLD}{display_number(self.purse)} Coins'
               f'{shortened_purse}')
         gray(f'Bank Level: {GREEN}{display_name(self.bank_level)}')
 
     @backupable
-    def talkto_npc(self, npc: Npc, /):
+    def talkto_npc(self, npc: Npc, /) -> Optional[str]:
         if npc.name not in self.npc_talked:
             if npc.init_dialog is not None:
                 self.npc_talk(npc.name, npc.init_dialog)
@@ -337,8 +344,9 @@ class Profile:
             gray(f"{npc}'s shop:")
             digits = len(f'{len(npc.trades)}')
             for index, (price, item) in enumerate(npc.trades):
-                gray(f'  {index:>{digits}} {item.display()}{GRAY} for '
+                gray(f'  {(index + 1):>{digits}} {item.display()}{GRAY} for '
                      f'{GOLD}{display_number(price)} coins{GRAY}.')
+            return npc.name
         elif npc.dialog is not None:
             self.npc_talk(choice(npc.dialog))
         else:
@@ -460,6 +468,20 @@ class Profile:
             self.collection[name] = 0
         self.collection[name] += amount
 
+    def buy(self, trade: Tuple[Number, ItemType], amount: int):
+        price = trade[0] * amount
+        if self.purse < price:
+            red('Not enough coins!')
+            return
+
+        item = trade[1]
+
+        self.purse -= price
+        self.recieve(item, amount)
+
+        green(f"You bought {item.display()}{GREEN} for "
+              f"{GOLD}{shorten_number(price)} Coins{GREEN}!")
+
     def sell(self, index: int, /):
         island = get(ISLANDS, self.island)
         region = get(island.regions, self.region)
@@ -502,9 +524,10 @@ class Profile:
             time_cost = 30 * resource.hardness / mining_speed
 
             mining_lvl = calc_skill_exp('mining', self.skill_xp_mining)
-            drop_mult = (1 + 0.1 * tool.enchantments.get('fortune', 0)
-                         + 0.04 * mining_lvl)
-            exp_mult = 1 + 0.125 * tool.enchantments.get('experience', 0)
+
+            mining_fortune = (1 + 0.1 * tool.enchantments.get('fortune', 0)
+                              + 0.04 * mining_lvl)
+            experience = 1 + 0.125 * tool.enchantments.get('experience', 0)
             drop_item = resource.drop
             default_amount = resource.amount
 
@@ -513,12 +536,12 @@ class Profile:
             is_collection = includes(COLLECTION_ITEMS, drop_item)
             for count in range(1, amount + 1):
                 sleep(time_cost)
-                drop_pool = random_int(drop_mult)
-                self.recieve(Item(drop_item, default_amount * drop_pool))
+                drop_pool = random_int(mining_fortune)
+                self.recieve(Item(drop_item), default_amount * drop_pool)
                 if is_collection:
                     self.collect(drop_item, default_amount * drop_pool)
 
-                self.add_exp(resource.exp * random_int(exp_mult))
+                self.add_exp(resource.exp * random_int(experience))
                 self.add_skill_exp('mining', resource.mining_exp)
                 if count >= (last_cp + cp_step) * amount:
                     while count >= (last_cp + cp_step) * amount:
@@ -537,7 +560,7 @@ class Profile:
             time_cost = ceil(time_cost * 20) / 20
 
             foraging_lvl = calc_skill_exp('foraging', self.skill_xp_foraging)
-            drop_mult = 1 + 0.04 * foraging_lvl
+            foraging_fortune = 1 + 0.04 * foraging_lvl
 
             drop_item = resource.drop
 
@@ -546,8 +569,8 @@ class Profile:
             is_collection = includes(COLLECTION_ITEMS, drop_item)
             for count in range(1, amount + 1):
                 sleep(time_cost)
-                drop_pool = random_int(drop_mult)
-                self.recieve(Item(drop_item, drop_pool))
+                drop_pool = random_int(foraging_fortune)
+                self.recieve(Item(drop_item), drop_pool)
                 if is_collection:
                     self.collect(drop_item, drop_pool)
 
@@ -574,6 +597,7 @@ class Profile:
 
         health = self.base_health
         defense = self.base_defense
+        # true_defense = 0
         strength = self.base_strength
         speed = self.base_speed
         crit_chance = 30
@@ -582,6 +606,8 @@ class Profile:
         # intelligence = self.base_intelligence
         magic_find = self.base_magic_find
         ferocity = 0
+
+        thorns = 0
 
         combat_lvl = calc_skill_exp('combat', self.skill_xp_combat)
         farming_lvl = calc_skill_exp('farming', self.skill_xp_farming)
@@ -599,9 +625,14 @@ class Profile:
 
             damage *= 1 + 0.08 * enchantments.get('power', 0)
             damage *= 1 + 0.05 * enchantments.get('sharpness', 0)
+            if name in ENDER_SLAYER_EFFECTIVE:
+                damage *= 1 + 0.12 * enchantments.get('ender_slayer', 0)
             crit_damage += 10 * enchantments.get('critical', 0)
+            ferocity += enchantments.get('vicious', 0)
         else:
             damage = 5
+
+        rejuvenate = 0
 
         for piece in self.armor:
             if not isinstance(piece, Armor):
@@ -610,6 +641,14 @@ class Profile:
             health += piece.health
             defense += piece.health
             speed += piece.health
+
+            # intelligence += ench.get('big_brain', 0) * 5
+            ench = getattr(piece, 'enchantments', {})
+            health += ench.get('growth', 0) * 15
+            rejuvenate += ench.get('rejuvenate', 0) * 2
+            defense += ench.get('protection', 0) * 8
+            thorns += ench.get('thorns', 0) * 3
+            # true_defense += ench.get('true_protection', 0) * 5
 
         strength += min(foraging_lvl, 14) * 1
         strength += max(min(foraging_lvl - 14, 36), 0) * 2
@@ -626,10 +665,30 @@ class Profile:
 
         time_cost = 2 / (speed / 100)
 
-        looting = 1 + 0.15 * enchantments.get('looting', 0)
+        execute = 0.2 * enchantments.get('execute', 0)
+        experience = 1 + 0.125 * enchantments.get('experience', 0)
+        first_strike = 1 + 0.25 * enchantments.get('first_strike', 0)
+        giant_killer = enchantments.get('giant_killer', 0)
+        life_steal = 0.5 * enchantments.get('life_steal', 0)
+        if isinstance(weapon, Bow):
+            looting = 1 + 0.15 * enchantments.get('chance', 0)
+        elif isinstance(weapon, Sword):
+            looting = 1 + 0.15 * enchantments.get('looting', 0)
+        else:
+            looting = 1
         luck = 1 + 0.05 * enchantments.get('luck', 0)
+        overload = enchantments.get('overload', 0)
+        prosecute = 0.1 * enchantments.get('prosecute', 0)
         scavenger = 0.3 * enchantments.get('scavenger', 0)
-        exp_mult = 1 + 0.125 * enchantments.get('experience', 0)
+        if 'syphon' in enchantments:
+            syphon = 0.1 + 0.1 * enchantments['syphon']
+        else:
+            syphon = 0
+        triple_strike = 1 + 0.10 * enchantments.get('triple_strike', 0)
+        vampirism = enchantments.get('vampirism', 0)
+
+        crit_chance += overload
+        crit_damage += overload
 
         hp = health
 
@@ -644,6 +703,7 @@ class Profile:
         for count in range(1, amount + 1):
             sleep(time_cost)
             healed = round((time_cost // 2) * (1.5 + health / 100), 1)
+            healed *= 1 + (rejuvenate / 100)
             healed = max(health - hp, healed)
             if healed != 0:
                 hp += healed
@@ -652,38 +712,97 @@ class Profile:
 
             mob_hp = mob.health
             while True:
+                strike_count = 0
+
                 for _ in range(random_int(1 + ferocity / 100)):
                     crit = ''
                     if random_bool(crit_chance / 100):
                         damage_delt = damage * (1 + crit_damage / 100)
+                        if crit_chance >= 100 and random_bool(overload * 0.1):
+                            damage_delt *= 1.1
                         crit = 'crit '
                     else:
                         damage_delt = damage
+
+                    damage_delt *= (
+                        1 + giant_killer * (min(0.1 * (mob_hp - hp), 5) / 100)
+                    )
+
+                    if strike_count == 0:
+                        damage_delt *= first_strike
+                    if strike_count < 3:
+                        damage_delt *= triple_strike
+
+                    damage_delt *= 1 + min(prosecute * (mob_hp / mob.health),
+                                           0.35)
+                    damage_delt += (execute / 100) * (mob.health - mob_hp)
+
                     mob_hp -= damage_delt
                     gray(f"You delt {YELLOW}{shorten_number(damage_delt)}{GRAY}"
-                         f" {crit}damage to the {display_name(mob.name)}!")
+                         f" {crit}damage to the {display_name(mob.name)}!\n")
+
+                    if life_steal != 0:
+                        delta = min(health - hp, life_steal * health)
+                        hp += delta
+
+                        gray(f"Your {BLUE}Life Steal{GRAY} "
+                             f"enchantment healed you for {AQUA}"
+                             f"{shorten_number(delta)}{RED}♥{GRAY}!\n")
+
+                    if syphon != 0:
+                        delta = min(health - hp,
+                                    syphon * health * (crit_damage // 100))
+                        if delta != 0:
+                            hp += delta
+
+                            gray(f"Your {BLUE}Syphon{GRAY} "
+                                 f"enchantment healed you for {AQUA}"
+                                 f"{shorten_number(delta)}{RED}♥{GRAY}!\n")
 
                 if mob_hp <= 0:
                     a_an = 'an' if mob.name[0] in 'aeiou' else 'a'
-                    green(f"You've killed {a_an} {display_name(mob.name)}!\n")
+                    green(
+                        f"You've killed {a_an} {display_name(mob.name)}!\n\n")
                     break
 
                 damage_recieved = mob.damage * (1 + defense / 100)
                 hp -= damage_recieved
                 gray(f"You recieved {YELLOW}"
                      f"{shorten_number(damage_recieved)}{GRAY}"
-                     f" damage from the {display_name(mob.name)}!")
+                     f" damage from the {display_name(mob.name)}!\n")
 
                 if hp <= 0:
                     self.die()
                     return
 
+                if random_bool(0.5) and thorns != 0:
+                    thorns_damage = (thorns / 100) * damage_recieved
+                    mob_hp -= thorns_damage
+                    gray(f"Your {BLUE}Thorns{GRAY} enchantment delt {YELLOW}"
+                         f"{shorten_number(damage_delt)}{GRAY}"
+                         f" {crit}damage to the {display_name(mob.name)}!\n")
+
+                    if mob_hp <= 0:
+                        a_an = 'an' if mob.name[0] in 'aeiou' else 'a'
+                        green(f"You've killed {a_an} "
+                              f"{display_name(mob.name)}!\n")
+                        break
+
                 gray(f'Your HP: {AQUA}{shorten_number(hp)}{RED}♥')
                 gray(f"{display_name(mob.name)}'s HP: "
-                     f"{AQUA}{shorten_number(hp)}{RED}♥\n")
+                     f"{AQUA}{shorten_number(hp)}{RED}♥\n\n")
+
+                strike_count += 1
+
+            if vampirism != 0 and hp != health:
+                delta = (health - hp) * (vampirism / 100)
+                hp += delta
+
+                gray(f"Your {BLUE}Vampirism{GRAY} enchantment healed you for "
+                     f"{AQUA}{shorten_number(delta)}{RED}♥{GRAY}!\n")
 
             self.purse += mob.coins + scavenger
-            self.add_exp(mob.exp * random_int(exp_mult))
+            self.add_exp(mob.exp * random_int(experience))
             self.add_skill_exp('combat', mob.combat_xp)
 
             for item, count, rarity, drop_chance in mob.drops:
@@ -696,9 +815,8 @@ class Profile:
                     continue
 
                 loot = item.copy()
-                loot.count = random_amount(count)
 
-                self.recieve(loot)
+                self.recieve(loot, random_amount(count))
 
                 if is_collection[loot.name]:
                     self.collect(loot.name, loot.count)
@@ -747,6 +865,8 @@ class Profile:
         self.last_update = now
 
     def mainloop(self):
+        last_shop: Optional[str] = None
+
         while True:
             island = get(ISLANDS, self.island)
             if island is None:
@@ -756,6 +876,10 @@ class Profile:
             if region is None:
                 yellow('Invalid region. Using island spawn as default.')
                 region = get(island.regions, island.spawn)
+
+            if last_shop is not None:
+                if not includes(region.npcs, last_shop):
+                    last_shop = None
 
             self.update()
 
@@ -980,7 +1104,7 @@ class Profile:
                     red(f'Invalid usage of command {words[0]!r}.')
                     continue
 
-                if len(words) == 0:
+                if len(words) == 1:
                     self.display_skills()
                     continue
 
@@ -1085,6 +1209,42 @@ class Profile:
                 gray(f'Switched {self.inventory[index_2].display()}{GRAY}'
                      f' and {self.inventory[index_1].display()}')
 
+            elif words[0] == 'buy':
+                if len(words) < 2 or len(words) > 3:
+                    red(f'Invalid usage of command {words[0]!r}.')
+                    continue
+
+                if last_shop is None:
+                    red("You haven't talked to an NPC "
+                        "with trades in this region yet!")
+                    continue
+
+                trades = get(region.npcs, last_shop).trades
+
+                trade_str = words[1]
+                if not fullmatch(r'\d+', trade_str):
+                    red(f'Invalid number for trade index: {trade_str}')
+                    continue
+                trade_index = int(trade_str)
+                if trade_index <= 0 or trade_index > len(trades):
+                    red(f'Trade index out of bound: {trade_index}')
+                    continue
+                chosen_trade = trades[trade_index - 1]
+
+                if len(words) == 3:
+                    amount_str = words[2]
+                    if not fullmatch(r'\d+', amount_str):
+                        red(f'Invalid number for trade index: {amount_str}')
+                        continue
+                    amount = int(amount_str)
+                    if amount <= 0:
+                        red('Can only buy positive amount of item')
+                        continue
+                else:
+                    amount = 1
+
+                self.buy(chosen_trade, amount)
+
             elif words[0] == 'sell':
                 if len(words) != 2:
                     red(f'Invalid usage of command {words[0]!r}.')
@@ -1136,7 +1296,8 @@ class Profile:
                 item_1 = self.inventory[index_1]
                 item_2 = self.inventory[index_2]
 
-                if not hasattr(item_1, 'count'):
+                if (not hasattr(item_1, 'count')
+                        or isinstance(item_1, (Bow, Sword, Armor, Axe, Pickaxe, Pet))):
                     red('Cannot split unstackable items.')
                     continue
 
@@ -1187,7 +1348,9 @@ class Profile:
                     red(f'Npc not found: {name!r}')
                     continue
 
-                self.talkto_npc(get(region.npcs, name))
+                result = self.talkto_npc(get(region.npcs, name))
+                if result is not None:
+                    last_shop = result
 
             elif words[0] == 'cheat':
                 # item = get_item('aspect_of_the_dragons')

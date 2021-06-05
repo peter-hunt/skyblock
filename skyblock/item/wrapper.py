@@ -4,7 +4,7 @@ from ..constant.color import (
 )
 from ..function.io import white
 from ..function.math import dung_stat
-from ..function.util import display_name, roman
+from ..function.util import display_int, display_name, roman
 
 __all__ = ['item_type', 'mob_type']
 
@@ -66,7 +66,8 @@ def item_type(cls: type, /) -> type:
             modifier = ''
 
         name = display_name(self.name)
-        count = f' x {self.count}' if getattr(self, 'count', 1) != 1 else ''
+        count = (f' x {display_int(self.count)}'
+                 if getattr(self, 'count', 1) != 1 else '')
 
         if getattr(self, 'stars', None) is None:
             stars = ''

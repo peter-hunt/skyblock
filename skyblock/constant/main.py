@@ -92,6 +92,12 @@ INTEREST_TABLE = {
 SELL_PRICE = {
     'cobblestone': 1,
     'coal': 2,
+    'iron_ingot': 3,
+    'gold_ingot': 4,
+    'redstone': 1,
+    'lapis_lazuli': 4,
+    'diamond': 8,
+    'emerald': 6,
 
     'rotten_flesh': 2,
     'bone': 2,
@@ -113,6 +119,10 @@ SELL_PRICE = {
 
     'enchanted_ender_pearl': 140,
     'enchanted_eye_of_ender': 3_520,
+
+    'rookie_axe': 6,
+    'sweet_axe': 25,
+    'efficient_axe': 25,
 
     'ender_helmet': 10_000,
     'ender_chestplate': 10_000,
@@ -203,5 +213,6 @@ SPECIAL_NAMES = {
     'builders_house': "Builder's House",
     'necrons_blade': "Necron's Blade",
     'rngesus': 'RNGesus',
-    'runaans_bow': "Nunaan's Bow",
+    'runaans_bow': "Runaan's Bow",
+    'tacticians_sword': "Tactician's Sword"
 }

@@ -1,3 +1,4 @@
+from ..item.item import get_item
 from ..item.mob import get_mob
 from ..item.object import Item
 from ..item.resource import get_resource
@@ -9,9 +10,61 @@ __all__ = ['ISLANDS']
 
 AUCTION_HOUSE = Region('auction_house', -18, -90)
 BANK = Region('bank', -20, -65)
-BAZAAR_ALLEY = Region('bazaar_alley', -32, -76)
+BAZAAR_ALLEY = Region(
+    'bazaar_alley', -32, -76,
+    npcs=[
+        Npc('adventurer',
+            init_dialog=[
+                ("I've seen it all - every island"
+                 " from here to the edge of the world!"),
+                ("Over the years I've acquired"
+                 " a variety of Talismans and Artifacts."),
+                'For a price, you can have it all!',
+                'Talk to me again to open the Adventurer Shop!',
+            ],
+            trades=[
+                (8, Item('rotten_flesh')),
+                (8, Item('bone')),
+                (10, Item('string')),
+                (14, Item('slime_ball')),
+                (10, Item('gunpowder')),
+            ]),
+        Npc('lumber_merchant',
+            init_dialog=[
+                'Buy and sell wood and axes with me!',
+                'Talk to me again to open the Lumberjack Shop!',
+            ],
+            trades=[
+                (5, Item('oak_wood')),
+                (5, Item('birch_wood')),
+                (5, Item('spruce_wood')),
+                (5, Item('dark_oak_wood')),
+                (5, Item('acacia_wood')),
+                (5, Item('jungle_wood')),
+                (12, Item('rookie_axe')),
+                (35, Item('promising_axe')),
+                (100, Item('sweet_axe')),
+                (100, Item('efficient_axe')),
+            ]),
+    ],
+)
 BLACKSMITH = Region('blacksmith', -28, -125)
-BUILDERS_HOUSE = Region('builders_house', -50, -36)
+BUILDERS_HOUSE = Region(
+    'builders_house', -50, -36,
+    npcs=[
+        Npc('builder',
+            init_dialog=[
+                'If you build, they will come!',
+                'Talk to me again to open the Builder Shop!',
+            ],
+            trades=[
+                (22, Item('gravel')),
+                (69, Item('obsidian')),
+                (1, Item('cobblestone')),
+                (1, Item('sand')),
+            ]),
+    ]
+)
 COAL_MINE = Region(
     'coal_mine', -20, -160,
     resources=[get_resource('stone'), get_resource('coal_ore')],
@@ -74,7 +127,63 @@ PETS_BUILDING = Region('pets_building', 24, -90)
 POTION_SHOP = Region('potion_shop', 41, -63)
 RUINS = Region('ruins', -250, -80)
 TAVERN = Region('tavern', -85, -69)
-VILLAGE = Region('village', -3, -85)
+VILLAGE = Region(
+    'village', -3, -85,
+    npcs=[
+        Npc('armorsmith',
+            init_dialog=[
+                'A great warrior is nothing without their armor!',
+                'Talk to me again to open the Armorsmith Shop!',
+            ],
+            trades=[
+                (8, get_item('leather_helmet')),
+                (14, get_item('leather_chestplate')),
+                (16, get_item('leather_leggings')),
+                (10, get_item('leather_boots')),
+                (15, get_item('iron_helmet')),
+                (20, get_item('iron_chestplate')),
+                (30, get_item('iron_leggings')),
+                (20, get_item('iron_boots')),
+                (350, get_item('diamond_helmet',
+                               enchantments={'growth': 1})),
+                (440, get_item('diamond_chestplate',
+                               enchantments={'growth': 1})),
+                (400, get_item('diamond_leggings',
+                               enchantments={'growth': 1})),
+                (320, get_item('diamond_boots',
+                               enchantments={'growth': 1})),
+            ]),
+        Npc('mine_merchant',
+            init_dialog=[
+                'My specialties are ores, stone, and mining equipment.',
+                'Talk to me again to open the Miner Shop!',
+            ],
+            trades=[
+                (4, Item('coal')),
+                (5.5, Item('iron_ingot')),
+                (6, Item('gold_ingot')),
+                (12, get_item('rookie_pickaxe')),
+                (35, get_item('promising_pickaxe')),
+                (6, Item('gravel')),
+                (3, Item('cobblestone')),
+            ]),
+        Npc('weaponsmith',
+            init_dialog=[
+                ("You'll need some strong weapons to survive out in the wild! "
+                 "Lucky for you, I've got some!"),
+                'Talk to me again to open the Weaponsmith Shop!',
+            ],
+            trades=[
+                (100, get_item('undead_sword')),
+                (150, get_item('end_sword')),
+                (100, get_item('spider_sword')),
+                (60, get_item('diamond_sword')),
+                (25, get_item('bow')),
+                (10/3, Item('arrow')),
+                (250, get_item('wither_bow')),
+            ]),
+    ],
+)
 WILDERNESS = Region('wilderness', 75, -11)
 WIZARD_TOWER = Region('wizard_tower', 40, 70)
 
@@ -145,6 +254,35 @@ HUB_ISLAND = Island('hub', 'village', HUB_JOINTS, HUB_CONNS, HUB_DISTS)
 
 GOLD_GATE = Region(
     'gold_gate', 0, -300,
+    npcs=[
+        Npc('gold_forger',
+            init_dialog=[
+                'I love goooold!',
+                'Talk to me again to open the Gold Forger Shop!',
+            ],
+            trades=[
+                (5.5, Item('gold_ingot')),
+                (10, get_item('golden_helmet')),
+                (16, get_item('golden_chestplate')),
+                (14, get_item('golden_leggings')),
+                (9, get_item('golden_boots')),
+                (80, get_item('fancy_sword')),
+            ]),
+        Npc('iron_forger',
+            init_dialog=[
+                "For my wares, you'll have to pay the iron price!",
+                'Seriously though, I accept Coins',
+                'Talk to me again to open the Iron Forger Shop!',
+            ],
+            trades=[
+                (60, get_item('iron_pickaxe')),
+                (5, Item('iron_ingot')),
+                (50, get_item('chainmail_helmet')),
+                (100, get_item('chainmail_chestplate')),
+                (75, get_item('chainmail_leggings')),
+                (100, get_item('chainmail_boots')),
+            ]),
+    ],
     portal='hub',
 )
 GOLD_MINE = Region(
@@ -178,6 +316,17 @@ BIRCH_PARK = Region(
 SPRUCE_WOOD = Region(
     'spruce_wood', -325, 0,
     resources=[get_resource('spruce')],
+    npcs=[
+        Npc('melancholic_viking',
+            init_dialog=[
+                "For my wares, you'll have to pay the iron price!",
+                'Seriously though, I accept Coins',
+                'Talk to me again to open the Iron Forger Shop!',
+            ],
+            trades=[
+                (130_000, get_item('raider_axe')),
+            ]),
+    ],
     skill_req=('foraging', 2),
 )
 DARK_THICKET = Region(
@@ -188,6 +337,12 @@ DARK_THICKET = Region(
 SAVANNA_WOODLAND = Region(
     'savanna_woodland', -350, -15,
     resources=[get_resource('acacia')],
+    npcs=[
+        Npc('master_tactician_funk',
+            trades=[
+                (35_000, get_item('tacticians_sword')),
+            ]),
+    ],
     skill_req=('foraging', 4),
 )
 JUNGLE_ISLAND = Region(

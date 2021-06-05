@@ -62,14 +62,23 @@ def generate_help(doc: str, /) -> Dict[str, str]:
 
 def get(ls: List[Any], name: Optional[str] = None,
         default: Optional[Any] = None, **kwargs) -> Any:
+    attrs = {}
+
     for item in ls:
         if name is not None and item.name != name:
             continue
         for kwarg in kwargs:
+            if kwarg in {'enchantments', 'hot_potato'}:
+                attrs[kwarg] = kwargs[kwarg]
+                continue
             if getattr(item, kwarg, None) != kwargs[kwarg]:
                 break
         else:
-            return item.copy() if hasattr(item, 'copy') else item
+            result = item.copy() if hasattr(item, 'copy') else item
+            for attr, value in attrs.items():
+                setattr(result, attr, value)
+            return result
+
     return default.copy() if hasattr(default, 'copy') else default
 
 
@@ -102,6 +111,6 @@ def roman(num: int, /) -> str:
 
 def shorten_number(number: Union[int, float], /) -> str:
     for letter, amount in reversed(NUMBER_SCALES):
-        if number > amount:
+        if number >= amount:
             return f'{number / amount:.1f}{letter}'
     return f'{number / amount:.1f}'
