@@ -34,6 +34,30 @@ This project requires Python 3.8+
 python -m skyblock
 ```
 
+# Content
+## Added Features:
+* Swords, pickaxes, axes, and bows that don't consume arrows
+* Mining, foraging, and killing mobs
+* NPC buying and selling items
+* Unused items stats
+* Simple combat system which is not balanced
+* Partially built skill system
+* Enchantments (mostly unobtainable)
+* Islands partially added
+* Unused pets
+* Armor pieces that are not equipable
+
+## Features Planned:
+* More islands
+* Collections
+* Crafting
+* Minions
+* Functional pets
+* Reforging
+* Enchanting
+* Farming
+* Combat while mining
+
 # Furthur information
 This project is a clone of [Hypixel Skyblock](https://hypixel-skyblock.fandom.com/wiki/Hypixel_SkyBlock_Wiki)
 
