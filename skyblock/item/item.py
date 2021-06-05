@@ -5,7 +5,8 @@ from ..function.util import get
 from .object import ItemType, Item, Pickaxe, Axe, Sword, Armor, Pet
 
 __all__ = [
-    'COLLECTION_ITEMS', 'WEAPONS', 'TOOLS', 'ITEMS', 'get_item',
+    'COLLECTION_ITEMS', 'WEAPONS', 'TOOLS', 'ITEMS',
+    'get_item', 'get_stack_size',
 ]
 
 
@@ -258,3 +259,7 @@ ITEMS = (COLLECTION_ITEMS + COMPACT_ITEMS + OTHER_ITEMS
 
 def get_item(name: str, default: Any = None, **kwargs) -> ItemType:
     return get(ITEMS, name, default, **kwargs)
+
+
+def get_stack_size(name: str, /) -> int:
+    return getattr(get_item(name), 'count', 1)

@@ -1,11 +1,17 @@
 from json import dump, load
 from os.path import join
 from pathlib import Path
+from random import choices
 from re import sub
+from time import sleep
+from typing import Iterable, Optional
 
+from ..constant.color import WHITE
 from ..function.item import load_item
-from ..function.io import red
+from ..function.io import red, yellow
 from ..function.path import is_profile
+from ..function.util import display_name, parse_int
+from ..map.object import Npc
 
 __all__ = ['profile_type']
 
@@ -85,5 +91,46 @@ def profile_type(cls):
     load_str = sub(r'\n\s+', '', load_str)
 
     cls.load = classmethod(eval(load_str))
+
+    @staticmethod
+    def npc_silent(npc: Npc, /):
+        sentence = choices((
+            "%s doesn't seem to want to talk to you.",
+            "%s has got nothing to say to you.",
+            "%s is in his peace.",
+            "%s seems tired and sleepy.",
+            "%s stared at you and didn't talk.",
+            "%s smiled mysteriously.",
+            "%s made a strange noise.",
+            "%s spoke a strange language you've never heard before.",
+        ), (20, 25, 20, 18, 10, 4, 2, 1))[0]
+        sentence = sentence.replace('%s', display_name(npc.name))
+        yellow(f'[NPC] {display_name(npc.name)}'
+               f'{WHITE}: ({sentence})')
+
+    cls.npc_silent = npc_silent
+
+    @staticmethod
+    def npc_talk(name: str, dialog: Iterable):
+        iterator = iter(dialog)
+        yellow(f'[NPC] {display_name(name)}{WHITE}: {next(iterator)}')
+        for sentence in iterator:
+            sleep(1.5)
+            yellow(f'[NPC] {display_name(name)}{WHITE}: {sentence}')
+
+    cls.npc_talk = npc_talk
+
+    def parse_index(self, word: str, length: Optional[int] = None, /) -> Optional[int]:
+        index = parse_int(word)
+        if index is None:
+            return
+        if length is None:
+            length = len(self.inventory)
+        if index <= 0 or index > length:
+            red(f'Index out of bound: {index}')
+            return
+        return index - 1
+
+    cls.parse_index = parse_index
 
     return cls

@@ -4,7 +4,7 @@ from ..constant.color import (
 )
 from ..function.io import white
 from ..function.math import dung_stat
-from ..function.util import display_int, display_name, roman
+from ..function.util import display_int, display_name, roman, shorten_number
 
 __all__ = ['item_type', 'mob_type']
 
@@ -309,5 +309,11 @@ def mob_type(cls):
     copy_str += ')'
 
     cls.copy = eval(copy_str)
+
+    def display(self):
+        return (f'{GRAY}Lv{self.level} {RED}{display_name(self.name)}'
+                f' {GREEN}{shorten_number(self.health)}{RED}♥{GREEN}')
+
+    cls.display = display
 
     return cls

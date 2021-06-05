@@ -1,17 +1,16 @@
-from random import randint, random
+from re import fullmatch
 from textwrap import wrap
 from typing import Any, Dict, List, Optional, Union
 from types import FunctionType
 
 from ..constant.main import SPECIAL_NAMES
-from ..constant.util import NUMBER_SCALES, ROMAN_NUM, Amount
+from ..constant.util import NUMBER_SCALES, ROMAN_NUM
 
-from .io import yellow
+from .io import red, yellow
 
 __all__ = [
     'backupable', 'display_int', 'display_name', 'display_number', 'get',
-    'generate_help', 'includes', 'random_amount', 'random_bool', 'roman',
-    'shorten_number',
+    'generate_help', 'includes', 'roman', 'shorten_number',
 ]
 
 
@@ -82,22 +81,19 @@ def get(ls: List[Any], name: Optional[str] = None,
     return default.copy() if hasattr(default, 'copy') else default
 
 
-def includes(ls: List[Any], name: str) -> bool:
+def includes(ls: List[Any], name: str, /) -> bool:
     for item in ls:
         if item.name == name:
             return True
     return False
 
 
-def random_amount(amount: Amount = 1, /) -> int:
-    if isinstance(amount, int):
-        return amount
+def parse_int(string: str, /) -> Optional[int]:
+    if fullmatch(r'\d+', string):
+        return int(string)
     else:
-        return randint(amount[0], amount[1])
-
-
-def random_bool(chance: float = 0.5, /) -> bool:
-    return random() < chance
+        red(f'Invalid Number: {string!r}')
+        return
 
 
 def roman(num: int, /) -> str:

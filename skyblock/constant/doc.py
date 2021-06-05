@@ -88,6 +88,9 @@ Switch items slot in the inventory.
 > split <from-index> <to-index> <amount>
 Split items to another slot.
 
+> clearstash
+Removes all items currently in the Stash.
+
 > pickupstash
 Takes all items currently in the Stash.
 

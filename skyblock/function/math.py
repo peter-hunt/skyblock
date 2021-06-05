@@ -1,12 +1,12 @@
 from itertools import count
-from random import random
+from random import randint, random
 from typing import Optional, Tuple
 
 from ..constant.main import DUNGEON_EXP, SKILL_EXP, SKILL_LIMITS
-from ..constant.util import Number
+from ..constant.util import Amount, Number
 
 __all__ = ['calc_exp', 'calc_skill_exp', 'calc_skill_exp_info',
-           'dung_stat', 'random_int']
+           'dung_stat', 'random_amount', 'random_bool', 'random_int']
 
 
 def calc_exp(amount: Number, /) -> int:
@@ -66,6 +66,17 @@ def dung_stat(num: int, lvl: int, stars: int) -> Number:
         else:
             mult += 0.01 * ((i - 45) + 16)
     return num * mult
+
+
+def random_amount(amount: Amount = 1, /) -> int:
+    if isinstance(amount, int):
+        return amount
+    else:
+        return randint(amount[0], amount[1])
+
+
+def random_bool(chance: float = 0.5, /) -> bool:
+    return random() < chance
 
 
 def random_int(num: float, /) -> int:
