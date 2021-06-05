@@ -1,12 +1,21 @@
 from re import escape, fullmatch
 from sys import stdout
 
-from ..constant.colors import GRAY, RED, GREEN, YELLOW, BLUE, AQUA, WHITE
+from ..constant.color import (
+    DARK_AQUA,
+    GRAY, RED, GREEN, YELLOW, BLUE, AQUA, WHITE,
+)
 
 __all__ = [
+    'dark_aqua',
     'gray', 'red', 'green', 'yellow', 'blue', 'aqua', 'white',
     'input_regex',
 ]
+
+
+def dark_aqua(*args, sep=' ', end='\n') -> None:
+    string = sep.join(f'{arg}' for arg in args)
+    stdout.write(f'{DARK_AQUA}{string}{end}\x1b[0m')
 
 
 def gray(*args, sep=' ', end='\n') -> None:

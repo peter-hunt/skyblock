@@ -1,4 +1,4 @@
-from ..constant.colors import (
+from ..constant.color import (
     RARITY_COLORS,
     CLN, BOLD, DARK_RED, GOLD, GRAY, DARK_GRAY, GREEN, RED, YELLOW, WHITE,
 )

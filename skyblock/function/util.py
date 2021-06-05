@@ -9,8 +9,9 @@ from ..constant.util import NUMBER_SCALES, ROMAN_NUM, Amount
 from .io import yellow
 
 __all__ = [
-    'backupable', 'display_name', 'display_number', 'get', 'generate_help',
-    'includes', 'random_amount', 'random_bool', 'roman', 'shorten_number',
+    'backupable', 'display_int', 'display_name', 'display_number', 'get',
+    'generate_help', 'includes', 'random_amount', 'random_bool', 'roman',
+    'shorten_number',
 ]
 
 
@@ -22,6 +23,15 @@ def backupable(func: FunctionType, /) -> FunctionType:
             yellow('\nKeyboardInterruption')
     result.__name__ = func.__name__
     return result
+
+
+def display_int(number: Union[int, float], /) -> str:
+    if number % 1 == 0:
+        string = f'{number:.0f}'
+        string = ','.join(part[::-1] for part in wrap(string[::-1], 3)[::-1])
+        return string
+    else:
+        return display_number(number)
 
 
 def display_number(number: Union[int, float], /) -> str:
@@ -50,9 +60,15 @@ def generate_help(doc: str, /) -> Dict[str, str]:
     return description
 
 
-def get(ls: List[Any], name: str, *, default: Optional[Any] = None) -> Any:
+def get(ls: List[Any], name: Optional[str] = None,
+        default: Optional[Any] = None, **kwargs) -> Any:
     for item in ls:
-        if item.name == name:
+        if name is not None and item.name != name:
+            continue
+        for kwarg in kwargs:
+            if getattr(item, kwarg, None) != kwargs[kwarg]:
+                break
+        else:
             return item.copy() if hasattr(item, 'copy') else item
     return default.copy() if hasattr(default, 'copy') else default
 

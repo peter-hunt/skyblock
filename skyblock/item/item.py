@@ -5,11 +5,11 @@ from ..function.util import get
 from .object import ItemType, Item, Pickaxe, Axe, Sword, Armor, Pet
 
 __all__ = [
-    'COLLECTIONS', 'WEAPONS', 'TOOLS', 'ALL_ITEM', 'get_item',
+    'COLLECTION_ITEMS', 'WEAPONS', 'TOOLS', 'ITEMS', 'get_item',
 ]
 
 
-COLLECTIONS = [
+COLLECTION_ITEMS = [
     Item('wheat', 64, 'common'),
     Item('carrot', 64, 'common'),
     Item('potato', 64, 'common'),
@@ -160,15 +160,8 @@ PETS = [
         crit_damage=75),
 ]
 
-ALL_ITEM = COLLECTIONS + WEAPONS + ARMOR_PIECES + TOOLS + PETS
+ITEMS = COLLECTION_ITEMS + WEAPONS + ARMOR_PIECES + TOOLS + PETS
 
 
 def get_item(name: str, default: Any = None, **kwargs) -> ItemType:
-    for item in ALL_ITEM:
-        if item.name == name:
-            for kwarg in kwargs:
-                if getattr(item, kwarg, None) != kwargs[kwarg]:
-                    break
-            else:
-                return item.copy()
-    return default.copy() if hasattr(default, 'copy') else default
+    return get(ITEMS, name, default, **kwargs)

@@ -6,25 +6,29 @@ from re import fullmatch
 from time import sleep, time
 from typing import Dict, Iterable, List, Optional
 
-from ..constant.colors import (
-    RARITY_COLORS, BOLD, GOLD, GRAY, BLUE, GREEN, AQUA, RED, YELLOW, WHITE,
+from ..constant.color import (
+    RARITY_COLORS, BOLD, DARK_AQUA,
+    GOLD, GRAY, BLUE, GREEN, AQUA, RED, YELLOW, WHITE,
 )
 from ..constant.doc import profile_doc
 from ..constant.main import INTEREST_TABLE, SELL_PRICE, SKILL_EXP
 from ..constant.util import Number
-from ..function.io import gray, red, green, yellow, aqua, white
-from ..function.math import calc_exp, calc_skill_exp, random_int
-from ..function.util import (
-    backupable, display_number, display_name, generate_help,
-    get, includes, random_amount, random_bool, shorten_number,
+from ..function.io import dark_aqua, gray, red, green, yellow, aqua, white
+from ..function.math import (
+    calc_exp, calc_skill_exp, calc_skill_exp_info, random_int,
 )
-from ..item.items import COLLECTIONS, get_item
-from ..item.mobs import get_mob
+from ..function.util import (
+    backupable, display_int, display_number, display_name, generate_help,
+    get, includes, random_amount, random_bool, roman, shorten_number,
+)
+from ..item.item import COLLECTION_ITEMS, get_item
+from ..item.mob import get_mob
 from ..item.object import (
     ItemType, Item, Empty, Pickaxe, Axe, Bow, Armor, Sword, Mineral, Tree, Mob,
 )
-from ..item.resources import get_resource
-from ..map import Npc, ISLANDS, calc_dist, path_find
+from ..item.resource import get_resource
+from ..map.island import ISLANDS
+from ..map.object import Npc, calc_dist, path_find
 
 from .wrapper import profile_type
 
@@ -52,15 +56,9 @@ class Profile:
     base_defense: int = 0
     base_strength: int = 0
     base_speed: int = 100
-    base_crit_chance: int = 0
     base_crit_damage: int = 50
-    base_attack_speed: int = 0
     base_intelligence: int = 100
-    base_sea_creature_chance: int = 0
-    base_magic_find: int = 0
-    base_pet_luck: int = 0
-    base_ferocity: int = 0
-    base_ability_damage: int = 0
+    base_sea_creature_chance: int = 20
 
     skill_xp_alchemy: float = 0.0
     skill_xp_carpentry: float = 0.0
@@ -113,8 +111,8 @@ class Profile:
         for item in self.stash:
             stack_count = getattr(get_item(item.name), 'count', 1)
             items += ceil(getattr(item, 'count', 1) / stack_count)
-        yellow(f'You have {GREEN}{display_number(materials)} materials{YELLOW}'
-               f' totalling {AQUA}{display_number(items)} items{YELLOW}'
+        yellow(f'You have {GREEN}{display_int(materials)} materials{YELLOW}'
+               f' totalling {AQUA}{display_int(items)} items{YELLOW}'
                f' stashed away!!')
         yellow(f'Use {GOLD}`pickupstash`{YELLOW} to pick it all up!')
 
@@ -175,13 +173,27 @@ class Profile:
         original_lvl = calc_skill_exp(name, exp)
         exp += amount
         setattr(self, f'skill_xp_{name}', exp)
-        current_lvl = calc_skill_exp(name, original_lvl)
+        current_lvl = calc_skill_exp(name, exp)
         if current_lvl > original_lvl:
+            coins_reward = 0
             for lvl in range(original_lvl + 1, current_lvl + 1):
-                green(f'Reached {name.capitalize()} XP level {lvl} level!')
                 if name != 'catacombs':
-                    green(f'Reward: {SKILL_EXP[lvl][3]} coins')
-                    self.purse += SKILL_EXP[lvl][3]
+                    coins_reward += SKILL_EXP[lvl][3]
+
+            self.purse += coins_reward
+
+            width, _ = get_terminal_size()
+            width = ceil(width * 0.85)
+
+            dark_aqua(f"{BOLD}{'':-^{width}}")
+            original = roman(original_lvl) if original_lvl != 0 else '0'
+            aqua(f' {BOLD}SKILL LEVEL UP {DARK_AQUA}{display_name(name)} '
+                 f'{GRAY}{original}->'
+                 f'{DARK_AQUA}{roman(current_lvl)}')
+            if name != 'catacombs':
+                green(f' {BOLD}REWARDS')
+                gray(f'  +{GOLD}{display_int(coins_reward)}{GRAY} Coins')
+            dark_aqua(f"{BOLD}{'':-^{width}}")
 
     def look(self):
         island = get(ISLANDS, self.island)
@@ -195,7 +207,7 @@ class Profile:
 
         gray('Location:')
         gray(f"  You're at {AQUA}{region}{GRAY} of {AQUA}{island}{GRAY}.")
-        gray('Nearby places:')
+        gray('\nNearby places:')
         for conn in island.conns:
             if region not in conn:
                 continue
@@ -212,23 +224,65 @@ class Profile:
                     direc += 'South' if dz > 0 else 'North'
                 if dz / dx < tan(radians(60)):
                     direc += 'East' if dx > 0 else 'West'
-            gray(f'  {other.name} on the {AQUA}{direc}')
+            gray(f'  {AQUA}{other.name}{GRAY} on the {AQUA}{direc}{GRAY}.')
 
         if len(region.resources) > 0:
-            gray('Resources:')
+            gray('\nResources:')
             for resource in region.resources:
                 gray(f'  {GREEN}{resource.name}{GRAY} ({resource.type()})')
 
         if len(region.mobs) > 0:
-            gray('Mobs:')
+            gray('\nMobs:')
             for mob in region.mobs:
                 green(f'  {GRAY}Lv{mob.level} {RED}{display_name(mob.name)}'
                       f' {GREEN}{shorten_number(mob.health)}{RED}♥{GREEN}.')
 
         if len(region.npcs) > 0:
-            gray('NPCs:')
+            gray('\nNPCs:')
             for npc in region.npcs:
                 gray(f'  {GREEN}{npc}{GRAY} ({npc.name})')
+
+        if region.portal is not None:
+            gray(f'\nPortal to {AQUA}{display_name(region.portal)}{GRAY}.')
+
+    def display_skill(self, name, end=True):
+        width, _ = get_terminal_size()
+        width = ceil(width * 0.85)
+
+        yellow(f"{BOLD}{'':-^{width}}")
+
+        exp = getattr(self, f'skill_xp_{name}')
+        lvl, exp_left, exp_to_next, coins = calc_skill_exp_info(name, exp)
+        if lvl == 0:
+            green(display_name(name))
+        else:
+            green(f'{display_name(name)} {roman(lvl)}')
+
+        if exp_left < exp_to_next:
+            perc = int(exp_left / exp_to_next * 100)
+            gray(f'Progress to level {roman(lvl + 1)}: {YELLOW}{perc}%')
+
+        bar = min(int(exp_left / exp_to_next * 20), 20)
+        left, right = '-' * bar, '-' * (20 - bar)
+        green(f'{left}{GRAY}{right} {YELLOW}{display_int(exp_left)}'
+              f'{GOLD}/{YELLOW}{display_int(exp_to_next)}')
+
+        if exp_left < exp_to_next and name != 'catacombs':
+            gray(f'\nLevel {roman(lvl + 1)} Rewards:')
+            gray(f' +{GOLD}{display_int(coins)}{GRAY} Coins')
+
+        if end:
+            yellow(f"{BOLD}{'':-^{width}}")
+
+    def display_skills(self):
+        width, _ = get_terminal_size()
+        width = ceil(width * 0.85)
+
+        for skill in {'farming', 'mining', 'combat', 'foraging', 'fishing',
+                      'enchanting', 'alchemy', 'taming', 'catacombs'}:
+            self.display_skill(skill, end=False)
+
+        yellow(f"{BOLD}{'':-^{width}}")
 
     def money(self):
         if self.region != 'bank':
@@ -317,6 +371,15 @@ class Profile:
         route = ' -> '.join(f'{region}' for region in path)
         aqua(f'Route: {route} ({float(accum_dist):.2f}m)')
         for target in path[1:]:
+            if target.skill_req is not None:
+                name, level = target.skill_req
+                skill_exp = getattr(self, f'skill_xp_{name}')
+                exp_lvl = calc_skill_exp(name, skill_exp)
+                if exp_lvl < level:
+                    red(f'Cannot warp to {dest}!')
+                    red(f'Requires {name.capitalize()} level {roman(level)}')
+                    return
+
             dist = calc_dist(region, target)
             time_cost = float(dist) / (5 * (self.base_speed / 100))
             green(f'Going from {region} to {target}...')
@@ -325,8 +388,45 @@ class Profile:
             self.region = target.name
             region = get(island.regions, target.name)
 
+    @backupable
+    def warp(self, dest: str, /):
+        island = get(ISLANDS, self.island)
+        region = get(island.regions, self.region)
+
+        if not includes(ISLANDS, dest):
+            red(f'Island not found: {dest!r}')
+            return
+        if dest == self.island:
+            yellow(f'Already at island: {dest!r}')
+            return
+
+        if region.portal != dest:
+            yellow(f'Cannot warp to {dest}')
+            return
+
+        last = self.island
+        island = get(ISLANDS, dest)
+
+        if island.skill_req is not None:
+            name, level = island.skill_req
+            skill_exp = getattr(self, f'skill_xp_{name}')
+            exp_lvl = calc_skill_exp(name, skill_exp)
+            if exp_lvl < level:
+                red(f'Cannot warp to {dest}!')
+                red(f'Requires {name.capitalize()} level {roman(level)}')
+                return
+
+        self.island = dest
+        region = get(island.regions, portal=last)
+        self.region = region.name
+        gray(f'Warped to {AQUA}{region}{GRAY} of {AQUA}{island}{GRAY}.')
+
     def ls(self):
         length = len(self.inventory)
+        if length == 0:
+            gray('Your inventory is empty.')
+            return
+
         digits = len(f'{length}')
         index = 0
         while index < length:
@@ -386,15 +486,14 @@ class Profile:
         if not isinstance(tool, (Empty, Axe, Pickaxe)):
             tool = Empty()
 
+        enchantments = getattr(tool, 'enchantments', {})
+
         if isinstance(resource, Mineral):
-            if isinstance(tool, Pickaxe):
-                breaking_power = tool.breaking_power
-                mining_speed = tool.mining_speed
-                if 'efficiency' in tool.enchantments:
-                    mining_speed += 10 + 20 * tool.enchantments['efficiency']
-            else:
-                breaking_power = 0
-                mining_speed = 50
+            breaking_power = getattr(tool, 'breaking_power', 0)
+            mining_speed = getattr(tool, 'mining_speed', 50)
+            mining_speed = tool.mining_speed
+            if 'efficiency' in enchantments:
+                mining_speed += 10 + 20 * enchantments['efficiency']
 
             if resource.breaking_power > breaking_power:
                 red(f'Insufficient breaking power for {resource.name}.')
@@ -402,7 +501,7 @@ class Profile:
 
             time_cost = 30 * resource.hardness / mining_speed
 
-            mining_lvl = calc_skill_exp('mining', self.skill_xp_mining,)
+            mining_lvl = calc_skill_exp('mining', self.skill_xp_mining)
             drop_mult = (1 + 0.1 * tool.enchantments.get('fortune', 0)
                          + 0.04 * mining_lvl)
             exp_mult = 1 + 0.125 * tool.enchantments.get('experience', 0)
@@ -411,7 +510,7 @@ class Profile:
 
             last_cp = Decimal()
             cp_step = Decimal('0.1')
-            is_collection = includes(COLLECTIONS, drop_item)
+            is_collection = includes(COLLECTION_ITEMS, drop_item)
             for count in range(1, amount + 1):
                 sleep(time_cost)
                 drop_pool = random_int(drop_mult)
@@ -424,27 +523,27 @@ class Profile:
                 if count >= (last_cp + cp_step) * amount:
                     while count >= (last_cp + cp_step) * amount:
                         last_cp += cp_step
-                    print(f'{count} / {amount} ({(last_cp * 100):.0f}%) done')
+                    gray(f'{count} / {amount} ({(last_cp * 100):.0f}%) done')
 
         elif isinstance(resource, Tree):
             if isinstance(tool, Axe):
                 tool_speed = tool.tool_speed
                 if 'efficiency' in tool.enchantments:
                     tool_speed += tool.enchantments['efficiency'] ** 2 + 1
-                time_cost = ceil(1.5 * resource.hardness / tool_speed)
+                time_cost = 1.5 * resource.hardness / tool_speed
             else:
                 tool_speed = 1
-                time_cost = ceil(5 * resource.hardness / tool_speed)
+                time_cost = 5 * resource.hardness / tool_speed
+            time_cost = ceil(time_cost * 20) / 20
 
             foraging_lvl = calc_skill_exp('foraging', self.skill_xp_foraging)
-            drop_mult = (1 + 0.01 * foraging_lvl
-                         + 0.01 * max(0, foraging_lvl - 14))
+            drop_mult = 1 + 0.04 * foraging_lvl
 
             drop_item = resource.drop
 
             last_cp = Decimal()
             cp_step = Decimal('0.1')
-            is_collection = includes(COLLECTIONS, drop_item)
+            is_collection = includes(COLLECTION_ITEMS, drop_item)
             for count in range(1, amount + 1):
                 sleep(time_cost)
                 drop_pool = random_int(drop_mult)
@@ -456,7 +555,7 @@ class Profile:
                 if count >= (last_cp + cp_step) * amount:
                     while count >= (last_cp + cp_step) * amount:
                         last_cp += cp_step
-                    print(f'{count} / {amount} ({(last_cp * 100):.0f}%) done')
+                    gray(f'{count} / {amount} ({(last_cp * 100):.0f}%) done')
 
         else:
             red('Unknown resource type.')
@@ -474,42 +573,58 @@ class Profile:
             return
 
         health = self.base_health
-        defense = self.base_defense / 100
-        strength = self.base_strength / 100
-        speed = self.base_speed / 100
-        crit_chance = self.base_crit_chance / 100
-        crit_damage = self.base_crit_damage / 100
+        defense = self.base_defense
+        strength = self.base_strength
+        speed = self.base_speed
+        crit_chance = 30
+        crit_damage = self.base_crit_damage
         attack_speed = self.base_attack_speed
         # intelligence = self.base_intelligence
-        magic_find = self.base_magic_find / 100
-        ferocity = self.base_ferocity / 100
+        magic_find = self.base_magic_find
+        ferocity = 0
+
+        combat_lvl = calc_skill_exp('combat', self.skill_xp_combat)
+        farming_lvl = calc_skill_exp('farming', self.skill_xp_farming)
+        foraging_lvl = calc_skill_exp('foraging', self.skill_xp_foraging)
+        mining_lvl = calc_skill_exp('mining', self.skill_xp_mining)
 
         enchantments = getattr(weapon, 'enchantments', {})
 
         if isinstance(weapon, (Bow, Sword)):
             damage = weapon.damage + 5 + weapon.hot_potato
-            strength += 0.01 * weapon.hot_potato
-            crit_chance += 0.01 * weapon.crit_chance
-            crit_damage += 0.01 * weapon.crit_damage
-            ferocity += 0.01 * weapon.ferocity
+            strength += weapon.hot_potato
+            crit_chance += weapon.crit_chance
+            crit_damage += weapon.crit_damage
+            ferocity += weapon.ferocity
 
             damage *= 1 + 0.08 * enchantments.get('power', 0)
             damage *= 1 + 0.05 * enchantments.get('sharpness', 0)
-            crit_damage += 0.1 * enchantments.get('critical', 0)
+            crit_damage += 10 * enchantments.get('critical', 0)
         else:
             damage = 5
 
         for piece in self.armor:
             if not isinstance(piece, Armor):
                 continue
+            strength += piece.strength
             health += piece.health
-            defense += 0.01 * piece.health
-            speed += 0.01 * piece.health
+            defense += piece.health
+            speed += piece.health
 
-        damage *= 1 + strength
-        damage *= 1 + 0.04 * calc_skill_exp('combat', self.skill_xp_combat)
+        strength += min(foraging_lvl, 14) * 1
+        strength += max(min(foraging_lvl - 14, 36), 0) * 2
+        crit_chance += combat_lvl * 0.5
+        defense += min(mining_lvl, 14) * 1
+        defense += max(min(mining_lvl - 14, 46), 0) * 2
+        health += min(foraging_lvl, 14) * 2
+        health += max(min(farming_lvl - 14, 5), 0) * 3
+        health += max(min(farming_lvl - 19, 6), 0) * 4
+        health += max(min(farming_lvl - 25, 35), 0) * 5
 
-        time_cost = 2 / speed
+        damage *= 1 + (strength / 100)
+        damage *= 1 + 0.04 * combat_lvl
+
+        time_cost = 2 / (speed / 100)
 
         looting = 1 + 0.15 * enchantments.get('looting', 0)
         luck = 1 + 0.05 * enchantments.get('luck', 0)
@@ -521,7 +636,7 @@ class Profile:
         last_cp = Decimal()
         cp_step = Decimal('0.1')
         is_collection = {
-            row[0].name: includes(COLLECTIONS, row[0].name)
+            row[0].name: includes(COLLECTION_ITEMS, row[0].name)
             for row in mob.drops
         }
         green(f'Slaying {GRAY}Lv{mob.level} {RED}{display_name(mob.name)}'
@@ -537,10 +652,10 @@ class Profile:
 
             mob_hp = mob.health
             while True:
-                for _ in range(random_int(1 + ferocity)):
+                for _ in range(random_int(1 + ferocity / 100)):
                     crit = ''
-                    if random_bool(crit_chance):
-                        damage_delt = damage * (1 + crit_damage)
+                    if random_bool(crit_chance / 100):
+                        damage_delt = damage * (1 + crit_damage / 100)
                         crit = 'crit '
                     else:
                         damage_delt = damage
@@ -553,7 +668,7 @@ class Profile:
                     green(f"You've killed {a_an} {display_name(mob.name)}!\n")
                     break
 
-                damage_recieved = mob.damage * (1 + defense)
+                damage_recieved = mob.damage * (1 + defense / 100)
                 hp -= damage_recieved
                 gray(f"You recieved {YELLOW}"
                      f"{shorten_number(damage_recieved)}{GRAY}"
@@ -568,12 +683,12 @@ class Profile:
                      f"{AQUA}{shorten_number(hp)}{RED}♥\n")
 
             self.purse += mob.coins + scavenger
+            self.add_exp(mob.exp * random_int(exp_mult))
             self.add_skill_exp('combat', mob.combat_xp)
-            self.add_exp(mob.xp_orb)
 
             for item, count, rarity, drop_chance in mob.drops:
                 drop_chance *= looting
-                drop_chance *= 1 + magic_find
+                drop_chance *= 1 + magic_find / 100
                 if isinstance(item, Armor):
                     drop_chance *= luck
 
@@ -593,12 +708,10 @@ class Profile:
                     white(f'{RARITY_COLORS[rarity]}{rarity_str} DROP! '
                           f'({item.display()}{WHITE})')
 
-            # self.add_exp(resource.exp * random_int(exp_mult))
-            # self.add_skill_exp('mining', resource.mining_exp)
             if count >= (last_cp + cp_step) * amount:
                 while count >= (last_cp + cp_step) * amount:
                     last_cp += cp_step
-                print(f'{count} / {amount} ({(last_cp * 100):.0f}%) killed')
+                gray(f'{count} / {amount} ({(last_cp * 100):.0f}%) killed')
 
     @staticmethod
     def npc_talk(name: str, dialog: Iterable):
@@ -824,6 +937,13 @@ class Profile:
 
                 self.goto(words[1])
 
+            elif words[0] == 'warp':
+                if len(words) != 2:
+                    red(f'Invalid usage of command {words[0]!r}.')
+                    continue
+
+                self.warp(words[1])
+
             elif words[0] in {'inv', 'inventory', 'list', 'ls'}:
                 if len(words) != 1:
                     red(f'Invalid usage of command {words[0]!r}.')
@@ -854,6 +974,24 @@ class Profile:
                     continue
 
                 self.look()
+
+            elif words[0] == 'skills':
+                if len(words) > 2:
+                    red(f'Invalid usage of command {words[0]!r}.')
+                    continue
+
+                if len(words) == 0:
+                    self.display_skills()
+                    continue
+
+                skill = words[1]
+                if skill not in {'farming', 'mining', 'combat', 'foraging',
+                                 'fishing', 'enchanting', 'alchemy', 'taming',
+                                 'catacombs'}:
+                    red(f'Invalid skill: {skill!r}')
+                    continue
+
+                self.display_skill(skill)
 
             elif words[0] == 'money':
                 if len(words) != 1:
@@ -1056,12 +1194,14 @@ class Profile:
                 # item.stars = 5
                 # item.hot_potato = 20
                 # self.recieve(item)
-                item = get_item('hyperion')
-                item.stars = 10
-                item.hot_potato = 30
-                self.recieve(item)
+                # item = get_item('hyperion')
+                # item.stars = 10
+                # item.hot_potato = 30
+                # self.recieve(item)
                 # item = get_item('diamond_pickaxe')
                 # self.recieve(item)
+                item = get_item('golden_axe')
+                self.recieve(item)
                 # item = get_item('enderman_pet')
                 # self.recieve(item)
                 # item = get_item('ender_helmet')

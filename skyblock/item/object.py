@@ -164,8 +164,8 @@ class Mineral(Resource):
     drop: str
     amount: int = 1
     breaking_power: int = 0
-    exp: Number = 1
     hardness: int = 2
+    exp: Number = 1
     mining_exp: Number = 1
 
 
@@ -191,5 +191,5 @@ class Mob:
     damage: int
     coins: int
     combat_xp: int
-    xp_orb: int
+    exp: int
     drops: List[Tuple[ItemType, Amount, str, Number]]

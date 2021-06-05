@@ -51,6 +51,9 @@ Display detailed informatioon about the item.
 > look
 Get information about the region.
 
+> skills [skill=all]
+Get information about your skills.
+
 > money
 Display information about your money.
 
@@ -60,8 +63,11 @@ Deposit coins from the purse to the bank.
 > withdraw <coins>
 Withdraw coins from the bank to the purse.
 
-> goto <location>
+> goto <region>
 Go to a region.
+
+> warp <island>
+Warp to an island using portal or consumed travel scroll.
 
 > get <resource> [amount=1] [tool=hand]
 Get resources.

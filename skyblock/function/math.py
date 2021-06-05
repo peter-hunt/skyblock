@@ -1,10 +1,12 @@
 from itertools import count
 from random import random
+from typing import Optional, Tuple
 
 from ..constant.main import DUNGEON_EXP, SKILL_EXP, SKILL_LIMITS
 from ..constant.util import Number
 
-__all__ = ['calc_exp', 'calc_skill_exp', 'dung_stat', 'random_int']
+__all__ = ['calc_exp', 'calc_skill_exp', 'calc_skill_exp_info',
+           'dung_stat', 'random_int']
 
 
 def calc_exp(amount: Number, /) -> int:
@@ -32,6 +34,24 @@ def calc_skill_exp(name: str, amount: Number, /) -> int:
             return lvl - 1
     else:
         return SKILL_LIMITS[name]
+
+
+def calc_skill_exp_info(
+    name: str, amount: Number, /
+) -> Tuple[int, int, Optional[int]]:
+    exp_table = DUNGEON_EXP if name == 'catacombs' else SKILL_EXP
+    for line in exp_table:
+        lvl, _, cumulative = line[:3]
+        if amount < cumulative:
+            # current, left, next_required, coins
+            exp_left = amount - exp_table[lvl - 1][2]
+            if name == 'catacombs':
+                return lvl - 1, exp_left, line[1], None
+            else:
+                return lvl - 1, exp_left, line[1], line[3]
+    else:
+        exp_left = amount - exp_table[-2][2]
+        return SKILL_LIMITS[name], exp_left, line[1], None
 
 
 # 5l*4% + 5l*5% + 5l*6% + 5l*7% + 5l*8% + 5l*9% +

@@ -52,7 +52,6 @@ def ls():
 
 @backupable
 def main():
-    gray('Checking environment...')
     init_env()
 
     while True:
