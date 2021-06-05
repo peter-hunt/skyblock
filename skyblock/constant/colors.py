@@ -36,4 +36,6 @@ RARITY_COLORS = {
     'supreme': f'{BOLD}{DARK_RED}',
     'special': f'{BOLD}{RED}',
     'very_special': f'{BOLD}{RED}',
+
+    'rngesus': f'{BOLD}{LIGHT_PURPLE}',
 }

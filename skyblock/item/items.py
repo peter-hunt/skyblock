@@ -1,7 +1,11 @@
-from .object import Item, Mineral, Tree, Pickaxe, Axe, Sword
+from typing import Any
+
+from ..function.util import get
+
+from .object import ItemType, Item, Pickaxe, Axe, Sword, Armor, Pet
 
 __all__ = [
-    'COLLECTIONS', 'RESOURCES', 'WEAPONS', 'TOOLS', 'ALL_ITEM',
+    'COLLECTIONS', 'WEAPONS', 'TOOLS', 'ALL_ITEM', 'get_item',
 ]
 
 
@@ -43,6 +47,17 @@ COLLECTIONS = [
     Item('endstone', 64, 'common'),
     Item('mithril', 64, 'common'),
 
+    Item('rotten_flesh', 64, 'common'),
+    Item('bone', 64, 'common'),
+    Item('string', 64, 'common'),
+    Item('spider_eye', 64, 'common'),
+    Item('gunpowder', 64, 'common'),
+    Item('ender_pearl', 16, 'common'),
+    Item('ghast_tear', 64, 'common'),
+    Item('slime_ball', 64, 'common'),
+    Item('blaze_rod', 64, 'common'),
+    Item('magma_cream', 64, 'common'),
+
     Item('oak_wood', 64, 'common'),
     Item('birch_wood', 64, 'common'),
     Item('spruce_wood', 64, 'common'),
@@ -51,16 +66,9 @@ COLLECTIONS = [
     Item('jungle_wood', 64, 'common'),
 ]
 
-RESOURCES = [
-    Mineral('stone', 'cobblestone', 1, 1, 0, 1.5, 1),
-    Mineral('coal_ore', 'coal', 1, 1, 1, 3, 5),
-
-    Tree('oak', 'oak_wood', 2, 6),
-    Tree('birch', 'birch_wood', 2, 6),
-    Tree('spruce', 'spruce_wood', 2, 6),
-    Tree('dark_oak', 'dark_oak_wood', 2, 6),
-    Tree('acacia', 'acacia_wood', 2, 6),
-    Tree('jungle', 'jungle_wood', 2, 6),
+COMPACT = [
+    Item('enchanted_ender_pearl', 16, 'uncommon'),
+    Item('enchanted_eye_of_ender', 64, 'uncommon'),
 ]
 
 WEAPONS = [
@@ -105,6 +113,17 @@ WEAPONS = [
           damage=450),
 ]
 
+ARMOR_PIECES = [
+    Armor('ender_helmet', rarity='epic', part='helmet',
+          health=20, defense=35),
+    Armor('ender_chestplate', rarity='epic', part='chestplate',
+          health=30, defense=60),
+    Armor('ender_leggings', rarity='epic', part='leggings',
+          health=25, defense=50),
+    Armor('ender_boots', rarity='epic', part='boots',
+          health=15, defense=25),
+]
+
 TOOLS = [
     Pickaxe('wooden_pickaxe', rarity='common',
             breaking_power=1, mining_speed=70),
@@ -124,4 +143,30 @@ TOOLS = [
     Axe('wooden_axe', rarity='uncommon', tool_speed=8),
 ]
 
-ALL_ITEM = COLLECTIONS + RESOURCES + WEAPONS + TOOLS
+PETS = [
+    Pet('enderman_pet', rarity='common',
+        crit_damage=75),
+    Pet('enderman_pet', rarity='uncommon',
+        crit_damage=75),
+    Pet('enderman_pet', rarity='rare',
+        crit_damage=75),
+    Pet('enderman_pet', rarity='epic',
+        crit_damage=75),
+    Pet('enderman_pet', rarity='legendary',
+        crit_damage=75),
+    Pet('enderman_pet', rarity='mythic',
+        crit_damage=75),
+]
+
+ALL_ITEM = COLLECTIONS + WEAPONS + ARMOR_PIECES + TOOLS + PETS
+
+
+def get_item(name: str, default: Any = None, **kwargs) -> ItemType:
+    for item in ALL_ITEM:
+        if item.name == name:
+            for kwarg in kwargs:
+                if getattr(item, kwarg, None) != kwargs[kwarg]:
+                    break
+            else:
+                return item.copy()
+    return default.copy() if hasattr(default, 'copy') else default

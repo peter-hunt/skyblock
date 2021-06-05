@@ -61,7 +61,10 @@ Withdraw coins from the bank to the purse.
 Go to a region.
 
 > get <resource> [amount=1] [tool=hand]
-Get resources for an amount with chosen tool or hand by default.
+Get resources.
+
+> slay <mob> [amount=1] [weapon=hand]
+Slay mobs.
 
 > sell <index>
 Sell the item.

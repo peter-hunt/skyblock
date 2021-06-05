@@ -1,15 +1,6 @@
-from typing import Any
-
 from ..item.object import ItemType, Empty, ITEM_OBJS
-from ..item.items import ALL_ITEM
 
-from .util import get
-
-__all__ = ['get_item', 'load_item']
-
-
-def get_item(name: str, *, default: Any = None) -> ItemType:
-    return get(ALL_ITEM, name, default=default).copy()
+__all__ = ['load_item']
 
 
 def load_item(obj):

@@ -3,7 +3,7 @@ from pathlib import Path
 
 from .io import yellow
 
-__all__ = ['is_dir', 'is_file']
+__all__ = ['is_dir', 'is_file', 'is_profile']
 
 
 def is_dir(*names, warn: bool = False):
@@ -22,3 +22,8 @@ def is_file(*names, warn: bool = False):
             yellow(f'Warning: file {path} not found.')
         return False
     return True
+
+
+def is_profile(name: str, /):
+    return (is_dir() and is_dir('saves')
+            and is_file('saves', f'{name}.json'))

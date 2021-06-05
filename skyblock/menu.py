@@ -4,9 +4,9 @@ from pathlib import Path
 
 from .constant.doc import menu_doc
 from .function.io import gray, red, green, yellow, aqua, white, input_regex
-from .function.path import is_dir
+from .function.path import is_dir, is_profile
 from .function.util import backupable, generate_help
-from .profile import Profile
+from .profile.object import Profile
 
 __all__ = ['main']
 
@@ -44,7 +44,7 @@ def ls():
     else:
         gray('Avaliable profiles:')
         for name in names:
-            if Profile.is_valid(name):
+            if is_profile(name):
                 aqua(f' {name}')
             else:
                 yellow(f' {name}')

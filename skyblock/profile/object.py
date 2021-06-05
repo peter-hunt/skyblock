@@ -1,32 +1,30 @@
-from dataclasses import dataclass, field
 from decimal import Decimal
-from json import dump, load
 from math import ceil, radians, tan
 from os import get_terminal_size
-from os.path import join
-from pathlib import Path
 from random import choice, choices
 from re import fullmatch
 from time import sleep, time
 from typing import Dict, Iterable, List, Optional
 
-from .constant.colors import BOLD, GOLD, GRAY, GREEN, AQUA, YELLOW, WHITE
-from .constant.doc import profile_doc
-from .constant.main import INTEREST_TABLE, SELL_PRICE, SKILL_EXP
-from .constant.util import Number
-from .function.item import get_item, load_item
-from .function.io import gray, red, green, yellow, aqua, white
-from .function.math import calc_exp, calc_skill_exp, random_int
-from .function.path import is_dir, is_file
-from .function.util import (
+from ..constant.colors import BOLD, GOLD, GRAY, GREEN, AQUA, YELLOW, WHITE
+from ..constant.doc import profile_doc
+from ..constant.main import INTEREST_TABLE, SELL_PRICE, SKILL_EXP
+from ..constant.util import Number
+from ..function.io import gray, red, green, yellow, aqua, white
+from ..function.math import calc_exp, calc_skill_exp, random_int
+from ..function.util import (
     backupable, display_money, display_number, display_name, generate_help,
     get, includes, shorten_money,
 )
-from .item.items import COLLECTIONS
-from .item.object import (
-    ItemType, Item, Empty, Pickaxe, Pickaxe, Axe, Mineral, Tree,
+from ..item.items import COLLECTIONS, get_item
+from ..item.mobs import get_mob
+from ..item.object import (
+    ItemType, Item, Empty, Pickaxe, Axe, Mineral, Tree, Mob,
 )
-from .map import Npc, ISLANDS, calc_dist, path_find
+from ..item.resources import get_resource
+from ..map import Npc, ISLANDS, calc_dist, path_find
+
+from .wrapper import profile_type
 
 __all__ = ['Profile']
 
@@ -34,10 +32,10 @@ __all__ = ['Profile']
 profile_help = generate_help(profile_doc)
 
 
-@dataclass
+@profile_type
 class Profile:
     name: str
-    last_update: Optional[int] = None
+    last_update: int = 0
 
     bank_level: str = 'starter'
     balance: Number = 0.0
@@ -55,7 +53,7 @@ class Profile:
     base_crit_chance: int = 0
     base_crit_damage: int = 50
     base_attack_speed: int = 0
-    base_intelligence: int = 0
+    base_intelligence: int = 100
     base_sea_creature_chance: int = 0
     base_magic_find: int = 0
     base_pet_luck: int = 0
@@ -72,158 +70,22 @@ class Profile:
     skill_xp_foraging: float = 0.0
     skill_xp_mining: float = 0.0
     skill_xp_taming: float = 0.0
-    collection: Dict[str, int] = field(default_factory=dict)
+    collection: Dict[str, int] = {}
 
-    crafted_minions: List[str] = field(default_factory=list)
+    crafted_minions: List[str] = []
 
-    armor: List[Item] = field(
-        default_factory=lambda: [Empty() for _ in range(4)]
-    )
-    pets: List[Item] = field(default_factory=list)
-    ender_chest: List[Item] = field(default_factory=list)
-    inventory: List[Item] = field(
-        default_factory=lambda: [Empty() for _ in range(36)]
-    )
-    potion_bag: List[Item] = field(default_factory=list)
-    quiver: List[Item] = field(default_factory=list)
-    stash: List[Item] = field(default_factory=list)
-    talisman_bag: List[Item] = field(default_factory=list)
-    wardrobe: List[Item] = field(default_factory=list)
+    armor: List[Item] = [Empty() for _ in range(4)]
+    pets: List[Item] = []
+    ender_chest: List[Item] = []
+    inventory: List[Item] = [Empty() for _ in range(36)]
+    potion_bag: List[Item] = []
+    quiver: List[Item] = []
+    stash: List[Item] = []
+    talisman_bag: List[Item] = []
+    wardrobe: List[Item] = []
     wardrobe_slot: Optional[int] = None
 
-    npc_talked: List[str] = field(default_factory=list)
-
-    @staticmethod
-    def is_valid(name, *, warn=False) -> bool:
-        return (is_dir(warn=warn) and is_dir('saves', warn=warn)
-                and is_file('saves', f'{name}.json', warn=warn))
-
-    @classmethod
-    def load(cls, name: str):
-        if not cls.is_valid(name, warn=True):
-            red('Error: Profile not found.')
-            return
-
-        with open(join(Path.home(), 'skyblock',
-                       'saves', f'{name}.json')) as file:
-            data = load(file)
-
-        return cls(
-            name=name, last_update=data.get('last_update'),
-            bank_level=data.get('bank_level', 'starter'),
-            balance=data.get('balance', 0),
-            purse=data.get('purse', 0),
-
-            experience=data.get('experience', 0),
-
-            island=data.get('island', 'hub'),
-            region=data.get('region', 'village'),
-
-            base_health=data.get('base_health', 100),
-            base_defense=data.get('base_defense', 0),
-            base_strength=data.get('base_strength', 0),
-            base_speed=data.get('base_speed', 100),
-            base_crit_chance=data.get('base_crit_chance', 0),
-            base_crit_damage=data.get('base_crit_damage', 0),
-            base_attack_speed=data.get('base_attack_speed', 0),
-            base_intelligence=data.get('base_intelligence', 0),
-            base_sea_creature_chance=data.get('base_sea_creature_chance', 0),
-            base_magic_find=data.get('base_magic_find', 0),
-            base_pet_luck=data.get('base_pet_luck', 0),
-            base_ferocity=data.get('base_ferocity', 0),
-            base_ability_damage=data.get('base_ability_damage', 0),
-
-            collection=data.get('collection', {}),
-            skill_xp_alchemy=data.get('skill_xp_alchemy', 0.0),
-            skill_xp_carpentry=data.get('skill_xp_carpentry', 0.0),
-            skill_xp_catacombs=data.get('skill_xp_catacombs', 0.0),
-            skill_xp_combat=data.get('skill_xp_combat', 0.0),
-            skill_xp_enchanting=data.get('skill_xp_enchanting', 0.0),
-            skill_xp_farming=data.get('skill_xp_farming', 0.0),
-            skill_xp_fishing=data.get('skill_xp_fishing', 0.0),
-            skill_xp_foraging=data.get('skill_xp_foraging', 0.0),
-            skill_xp_mining=data.get('skill_xp_mining', 0.0),
-            skill_xp_taming=data.get('skill_xp_taming', 0.0),
-
-            crafted_minions=data.get('crafted_minions', []),
-
-            armor=[load_item(item) for item in data.get(
-                'armor', [{} for _ in range(4)],
-            )],
-            pets=[load_item(item) for item in data.get('pets', [])],
-            ender_chest=[load_item(item)
-                         for item in data.get('ender_chest', [])],
-            inventory=[load_item(item) for item in data.get(
-                'inventory', [{} for _ in range(36)],
-            )],
-            potion_bag=[load_item(item)
-                        for item in data.get('potion_bag', [])],
-            quiver=[load_item(item) for item in data.get('quiver', [])],
-            stash=[load_item(item) for item in data.get('stash', [])],
-            talisman_bag=[load_item(item)
-                          for item in data.get('talisman_bag', [])],
-            wardrobe=[load_item(item) for item in data.get('wardrobe', [])],
-            wardrobe_slot=data.get('wardrobe_slot', 0),
-
-            npc_talked=data.get('npc_talked', []),
-        )
-
-    def dump(self):
-        with open(join(Path.home(), 'skyblock',
-                       'saves', f'{self.name}.json'), 'w') as file:
-            dump({
-                'last_update': self.last_update,
-                'bank_level': self.bank_level,
-                'balance': self.balance,
-                'purse': self.purse,
-
-                'experience': self.experience,
-
-                'island': self.island,
-                'region': self.region,
-
-                'base_health': self.base_health,
-                'base_defense': self.base_defense,
-                'base_strength': self.base_strength,
-                'base_speed': self.base_speed,
-                'base_crit_chance': self.base_crit_chance,
-                'base_crit_damage': self.base_crit_damage,
-                'base_attack_speed': self.base_attack_speed,
-                'base_intelligence': self.base_intelligence,
-                'base_sea_creature_chance': self.base_sea_creature_chance,
-                'base_magic_find': self.base_magic_find,
-                'base_pet_luck': self.base_pet_luck,
-                'base_ferocity': self.base_ferocity,
-                'base_ability_damage': self.base_ability_damage,
-
-                'collection': self.collection,
-                'skill_xp_alchemy': self.skill_xp_alchemy,
-                'skill_xp_carpentry': self.skill_xp_carpentry,
-                'skill_xp_catacombs': self.skill_xp_catacombs,
-                'skill_xp_combat': self.skill_xp_combat,
-                'skill_xp_enchanting': self.skill_xp_enchanting,
-                'skill_xp_farming': self.skill_xp_farming,
-                'skill_xp_fishing': self.skill_xp_fishing,
-                'skill_xp_foraging': self.skill_xp_foraging,
-                'skill_xp_mining': self.skill_xp_mining,
-                'skill_xp_taming': self.skill_xp_taming,
-
-                'crafted_minions': self.crafted_minions,
-
-                'armor': [item.to_obj() for item in self.armor],
-                'pets': [item.to_obj() for item in self.pets],
-                'ender_chest': [item.to_obj() for item in self.ender_chest],
-                'inventory': [item.to_obj() for item in self.inventory],
-                'potion_bag': [item.to_obj() for item in self.potion_bag],
-                'quiver': [item.to_obj() for item in self.quiver],
-                'stash': [item.to_obj() for item in self.stash],
-                'talisman_bag': [item.to_obj() for item in self.talisman_bag],
-                'wardrobe': [item.to_obj() for item in self.wardrobe],
-                'wardrobe': [item.to_obj() for item in self.wardrobe],
-                'wardrobe_slot': self.wardrobe_slot,
-
-                'npc_talked': self.npc_talked,
-            }, file, indent=2, sort_keys=True)
+    npc_talked: List[str] = []
 
     def put_stash(self, item: ItemType, /):
         if isinstance(item, Item):
@@ -245,7 +107,7 @@ class Profile:
                f' stashed away!!')
         yellow(f'Use {GOLD}`pickupstash`{YELLOW} to pick it all up!')
 
-    def recieve(self, item: ItemType, /):
+    def recieve(self, item: ItemType, /, *, log: bool = True):
         if isinstance(item, Item):
             item_type = get_item(item.name)
             count = item.count
@@ -263,18 +125,20 @@ class Profile:
                     count -= delta
                     self.inventory[index].count += delta
                 if count == 0:
-                    gray(f'+ {item.display()}')
                     break
             else:
                 self.put_stash(Item(item.name, count, item.rarity))
+                return
         else:
             for index, slot in enumerate(self.inventory):
                 if isinstance(slot, Empty):
                     self.inventory[index] = item
-                    gray(f'+ {item.display()}')
                     break
             else:
                 self.put_stash(item)
+                return
+        if log:
+            gray(f'+ {item.display()}')
 
     def pickupstash(self, /):
         if len(self.stash) == 0:
@@ -310,7 +174,13 @@ class Profile:
 
     def look(self):
         island = get(ISLANDS, self.island)
+        if island is None:
+            yellow('Invalid island. Using hub as default.')
+            island = get(ISLANDS, 'hub')
         region = get(island.regions, self.region)
+        if region is None:
+            yellow('Invalid region. Using island spawn as default.')
+            region = get(island.regions, island.spawn)
 
         gray('Location:')
         gray(f"  You're at {region} of {island}.")
@@ -494,7 +364,7 @@ class Profile:
         self.inventory[index] = Empty()
 
     def get(self, name: str, tool_index: Optional[int], amount: int, /):
-        resource = get_item(name)
+        resource = get_resource(name)
         tool = Empty() if tool_index is None else self.inventory[tool_index]
 
         if not isinstance(tool, (Empty, Axe, Pickaxe)):
@@ -575,6 +445,63 @@ class Profile:
         else:
             red('Unknown resource type.')
 
+    def slay(self, name: str, weapon_index: Optional[int], amount: int, /):
+        mob = get_mob(name)
+        tool = Empty(
+        ) if weapon_index is None else self.inventory[weapon_index]
+
+        if not isinstance(tool, (Empty, Bow, Sword)):
+            tool = Empty()
+
+        if isinstance(mob, Mob):
+            red('Unknown mob type.')
+            return
+
+        health = self.base_health
+        defense = self.base_defense
+        strength = self.base_strength
+        crit_chance = self.base_crit_chance
+        crit_damage = self.base_crit_damage
+        attack_speed = self.base_attack_speed
+        intelligence = self.base_intelligence
+        magic_find = self.magic_find
+        ferocity = self.ferocity
+
+        # if isinstance(tool, Pickaxe):
+        #     breaking_power = tool.breaking_power
+        #     mining_speed = tool.mining_speed
+        #     if 'efficiency' in tool.enchantments:
+        #         mining_speed += 10 + 20 * tool.enchantments['efficiency']
+        # else:
+        #     breaking_power = 0
+        #     mining_speed = 50
+
+        # time_cost = 30 * resource.hardness / mining_speed
+
+        # mining_lvl = calc_skill_exp('mining', self.skill_xp_mining,)
+        # drop_mult = (1 + 0.1 * tool.enchantments.get('fortune', 0)
+        #              + 0.04 * mining_lvl)
+        # exp_mult = 1 + 0.125 * tool.enchantments.get('experience', 0)
+        # drop_item = resource.drop
+        # default_amount = resource.amount
+
+        # last_cp = Decimal()
+        # cp_step = Decimal('0.1')
+        # is_collection = includes(COLLECTIONS, drop_item)
+        # for count in range(1, amount + 1):
+        #     sleep(time_cost)
+        #     drop_pool = random_int(drop_mult)
+        #     self.recieve(Item(drop_item, default_amount * drop_pool))
+        #     if is_collection:
+        #         self.collect(drop_item, default_amount * drop_pool)
+
+        #     self.add_exp(resource.exp * random_int(exp_mult))
+        #     self.add_skill_exp('mining', resource.mining_exp)
+        #     if count >= (last_cp + cp_step) * amount:
+        #         while count >= (last_cp + cp_step) * amount:
+        #             last_cp += cp_step
+        #         print(f'{count} / {amount} ({(last_cp * 100):.0f}%) done')
+
     @staticmethod
     def npc_talk(name: str, dialog: Iterable):
         iterator = iter(dialog)
@@ -585,7 +512,7 @@ class Profile:
 
     def update(self):
         now = int(time())
-        last = now if self.last_update is None else self.last_update
+        last = now if self.last_update == 0 else self.last_update
         # dt = now - last
 
         last_cp = last // (31 * 3600)
@@ -611,7 +538,13 @@ class Profile:
     def mainloop(self):
         while True:
             island = get(ISLANDS, self.island)
+            if island is None:
+                yellow('Invalid island. Using hub as default.')
+                island = get(ISLANDS, 'hub')
             region = get(island.regions, self.region)
+            if region is None:
+                yellow('Invalid region. Using island spawn as default.')
+                region = get(island.regions, island.spawn)
 
             self.update()
 
@@ -697,11 +630,56 @@ class Profile:
                     continue
 
                 name = words[1]
-                if get_item(name) is None:
+                if get_resource(name) is None:
                     red(f'Resource not found: {name!r}')
                     continue
                 if get(region.resources, name) is None:
                     red(f'Resource not avaliable at {region}: {name!r}')
+                    continue
+
+                tool_index = None
+
+                if len(words) >= 3:
+                    tool_str = words[2]
+                    if not fullmatch(r'\d+', tool_str):
+                        red(f'Invalid number for item index: {tool_str}')
+                        continue
+                    tool_index = int(tool_str)
+                    if tool_index <= 0 or tool_index > len(self.inventory):
+                        red(f'Item index out of bound: {tool_index}')
+                        continue
+                    tool_index -= 1
+                    tool_item = self.inventory[tool_index]
+                    if not isinstance(tool_item, (Empty, Pickaxe, Axe)):
+                        yellow(f'{tool_item.name} item is not tool.\n'
+                               f'Using barehand by default.')
+                        tool_index = None
+
+                amount = None
+
+                if len(words) == 4:
+                    amount_str = words[3]
+                    if not fullmatch(r'\d+', amount_str):
+                        red(f'Invalid number for amount: {amount_str}')
+                        continue
+                    amount = int(amount_str)
+                    if amount == 0:
+                        red(f'Amount must be a positive integer.')
+                        continue
+
+                self.get(name, tool_index, amount)
+
+            elif words[0] == 'slay':
+                if len(words) < 2 or len(words) > 4:
+                    red(f'Invalid usage of command {words[0]!r}.')
+                    continue
+
+                name = words[1]
+                if get_mob(name) is None:
+                    red(f'Mob not found: {name!r}')
+                    continue
+                if get(region.mobs, name) is None:
+                    red(f'Mob not avaliable at {region}: {name!r}')
                     continue
 
                 tool_index = None
@@ -970,21 +948,21 @@ class Profile:
 
                 self.talkto_npc(get(region.npcs, name))
 
-            # elif words[0] == 'test':
-            #     item = get_item('aspect_of_the_dragons')
-            #     item.stars = 5
-            #     item.hot_potato = 20
-            #     self.recieve(item)
-            #     item = get_item('hyperion')
-            #     item.stars = 10
-            #     item.hot_potato = 30
-            #     self.recieve(item)
-            #     item = get_item('souls_rebound')
-            #     item.stars = 10
-            #     item.hot_potato = 30
-            #     self.recieve(item)
-            #     item = get_item('diamond_pickaxe')
-            #     self.recieve(item)
+            elif words[0] == 'test':
+                # item = get_item('aspect_of_the_dragons')
+                # item.stars = 5
+                # item.hot_potato = 20
+                # self.recieve(item)
+                # item = get_item('hyperion')
+                # item.stars = 10
+                # item.hot_potato = 30
+                # self.recieve(item)
+                # item = get_item('diamond_pickaxe')
+                # self.recieve(item)
+                item = get_item('enderman_pet')
+                self.recieve(item)
+                item = get_item('ender_helmet')
+                self.recieve(item)
 
             else:
                 red(f'Unknown command: {words[0]!r}')

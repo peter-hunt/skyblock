@@ -1,15 +1,17 @@
+from random import randint, random
 from textwrap import wrap
 from typing import Any, Dict, List, Optional, Union
 from types import FunctionType
 
 from ..constant.main import SPECIAL_NAMES
-from ..constant.util import NUMBER_SCALES, ROMAN_NUM
+from ..constant.util import NUMBER_SCALES, ROMAN_NUM, Amount
 
 from .io import yellow
 
 __all__ = [
     'backupable', 'display_money', 'display_name', 'display_number', 'get',
-    'generate_help', 'includes', 'roman', 'shorten_money',
+    'generate_help', 'includes', 'random_amount', 'random_bool', 'roman',
+    'shorten_money',
 ]
 
 
@@ -65,6 +67,17 @@ def includes(ls: List[Any], name: str) -> bool:
         if item.name == name:
             return True
     return False
+
+
+def random_amount(amount: Amount = 1, /) -> int:
+    if isinstance(amount, int):
+        return amount
+    else:
+        return randint(amount[0], amount[1])
+
+
+def random_bool(chance: float = 0.5, /) -> bool:
+    return random() < chance
 
 
 def roman(num: int, /) -> str:

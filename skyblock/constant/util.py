@@ -1,7 +1,8 @@
-from typing import Union
+from typing import Tuple, Union
 
-__all__ = ['Number', 'NUMBER_SCALES', 'ROMAN_NUM']
+__all__ = ['Amount', 'Number', 'NUMBER_SCALES', 'ROMAN_NUM']
 
+Amount = Union[Tuple[int, int], int]
 Number = Union[float, int]
 
 NUMBER_SCALES = [

@@ -58,6 +58,7 @@ DUNGEON_EXP = [
     (50, 116250000, 569809640),
 ]
 
+
 INTEREST_TABLE = {
     'starter': [
         (0, 10_000_000, 0.02),
@@ -87,9 +88,21 @@ INTEREST_TABLE = {
     ],
 }
 
+
 SELL_PRICE = {
     'cobblestone': 1,
     'coal': 2,
+
+    'rotten_flesh': 2,
+    'bone': 2,
+    'string': 3,
+    'spider_eye': 3,
+    'gunpowder': 4,
+    'ender_pearl': 10,
+    'ghast_tear': 16,
+    'slime_ball': 5,
+    'blaze_rod': 9,
+    'magma_cream': 9,
 
     'oak_wood': 2,
     'birch_wood': 2,
@@ -97,7 +110,16 @@ SELL_PRICE = {
     'dark_oak_wood': 2,
     'acacia_wood': 2,
     'jungle_wood': 2,
+
+    'enchanted_ender_pearl': 200,
+    'enchanted_eye_of_ender': 3_520,
+
+    'ender_helmet': 10_000,
+    'ender_chestplate': 10_000,
+    'ender_leggings': 10_000,
+    'ender_boots': 10_000,
 }
+
 
 SKILL_EXP = [
     (0, 0, 0, 0),
@@ -163,6 +185,7 @@ SKILL_EXP = [
     (60, 7_000_000, 111_672_425, 1_000_000),
 ]
 
+
 SKILL_LIMITS = {
     'farming': 60,
     'mining': 60,
@@ -174,9 +197,11 @@ SKILL_LIMITS = {
     'taming': 50,
     'dungeoneering': 50,
 }
+
 SPECIAL_NAMES = {
     'attack_speed': 'Bonus Attack Speed',
     'builders_house': "Builder's House",
     'necrons_blade': "Necron's Blade",
+    'rngesus': 'RNGesus',
     'runaans_bow': "Nunaan's Bow",
 }

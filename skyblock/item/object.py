@@ -1,16 +1,13 @@
-from typing import Dict, Optional
+from typing import Dict, List, Optional, Tuple
 
-from ..constant.util import Number
+from ..constant.util import Amount, Number
 
-from .wrapper import item_type
+from .wrapper import item_type, mob_type
 
 __all__ = [
     'ItemType', 'Item', 'Empty', 'Bow', 'Sword', 'Axe', 'Pickaxe',
-    'Armor', 'Potion', 'Pet', 'Resource', 'Mineral', 'Tree', 'ITEM_OBJS'
+    'Armor', 'Potion', 'Pet', 'Resource', 'Mineral', 'Tree', 'ITEM_OBJS', 'Mob',
 ]
-
-
-ITEM_OBJS = []
 
 
 class ItemType:
@@ -28,7 +25,8 @@ class Item(ItemType):
 
 @item_type
 class Empty(ItemType):
-    pass
+    def __repr__(self):
+        return '{}'
 
 
 @item_type
@@ -50,6 +48,7 @@ class Sword(ItemType):
     name: str
     rarity: str
     damage: int
+
     strength: int = 0
     crit_chance: int = 0
     crit_damage: int = 0
@@ -95,11 +94,29 @@ class Armor(ItemType):
     rarity: str
     # helmet | chestplate | leggings | boots
     part: str
+
+    strength: int = 0
+    crit_chance: int = 0
+    crit_damage: int = 0
+
+    health: int = 0
+    defense: int = 0
+    intelligence: int = 0
+    speed: int = 0
+    magic_find: int = 0
+    mining_speed: int = 0
+    mining_fortune: int = 0
+    true_denfense: int = 0
+    ferocity: int = 0
+    sea_creature_chance: int = 0
+
     modifier: Optional[str] = None
     enchantments: Dict[str, int] = {}
+    hot_potato: int = 0
     stars: Optional[int] = None
     combat_skill_req: Optional[int] = None
     dungeon_skill_req: Optional[int] = None
+    dungeon_completion_req: Optional[int] = None
 
 
 @item_type
@@ -118,6 +135,22 @@ class Pet(ItemType):
     active: bool = False
     exp: float = 0.0
     candy_used: int = 0
+
+    damage: int = 0
+    health: int = 0
+    defense: int = 0
+    speed: int = 0
+    true_defense: int = 0
+
+    intelligence: int = 0
+    strength: int = 0
+    crit_chance: int = 0
+    crit_damage: int = 0
+    magic_find: int = 0
+    attack_speed: int = 0
+    ferocity: int = 0
+
+    abilities: List = []
 
 
 class Resource:
@@ -148,3 +181,15 @@ ITEM_OBJS = [
     Item, Empty, Sword, Bow, Axe, Pickaxe, Armor,
     Potion, Pet, Mineral, Tree,
 ]
+
+
+@mob_type
+class Mob:
+    name: str
+    level: int
+    health: int
+    damage: int
+    coins: int
+    combat_xp: int
+    xp_orb: int
+    drops: List[Tuple[ItemType, Amount, str, Number]]
