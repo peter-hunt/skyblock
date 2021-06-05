@@ -32,6 +32,9 @@ profile_doc = """
 > quit
 Exit to the menu.
 
+> deathcount
+Displays how many times you have died.
+
 > help [command]
 Show this message or get command description.
 
@@ -80,7 +83,7 @@ Switch items slot in the inventory.
 Split items to another slot.
 
 > pickupstash
-Pick up items from stash.
+Takes all items currently in the Stash.
 
 > talkto <npc>
 Talk to an npc.

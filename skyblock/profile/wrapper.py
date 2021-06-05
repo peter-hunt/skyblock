@@ -39,7 +39,7 @@ def profile_type(cls):
     lambda self: (
         file := open(join(Path.home(), 'skyblock',
                      'saves', f'{self.name}.json'), 'w'),
-        dump({'name': self.name, %s}, file),
+        dump({'name': self.name, %s}, file, indent=4),
         file.close(),
         None,
     )[-1]

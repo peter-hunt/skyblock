@@ -9,9 +9,8 @@ from ..constant.util import NUMBER_SCALES, ROMAN_NUM, Amount
 from .io import yellow
 
 __all__ = [
-    'backupable', 'display_money', 'display_name', 'display_number', 'get',
-    'generate_help', 'includes', 'random_amount', 'random_bool', 'roman',
-    'shorten_money',
+    'backupable', 'display_name', 'display_number', 'get', 'generate_help',
+    'includes', 'random_amount', 'random_bool', 'roman', 'shorten_number',
 ]
 
 
@@ -25,8 +24,8 @@ def backupable(func: FunctionType, /) -> FunctionType:
     return result
 
 
-def display_money(money: Union[int, float], /) -> str:
-    string = f'{money:.1f}'
+def display_number(number: Union[int, float], /) -> str:
+    string = f'{number:.1f}'
     integer, floating = string.split('.')
     integer = ','.join(part[::-1] for part in wrap(integer[::-1], 3)[::-1])
     return f'{integer}.{floating}'
@@ -39,19 +38,15 @@ def display_name(name: str, /) -> str:
         return ' '.join(word.capitalize() for word in name.split('_'))
 
 
-def display_number(number: int, /) -> str:
-    string = f'{number}'
-    string = ','.join(part[::-1] for part in wrap(string[::-1], 3)[::-1])
-    return string
-
-
 def generate_help(doc: str, /) -> Dict[str, str]:
     description = {}
     for para in doc.split('\n\n'):
         desc = para.split('\n')[-1]
         for _cmd in para.split('\n')[:-1]:
-            description[' '.join(part for part in _cmd[2:].split()
-                                 if not part.startswith(('[', '<')))] = desc
+            description[
+                ' '.join(part for part in _cmd[2:].split()
+                         if not part.startswith(('[', '<')))
+            ] = (_cmd, desc)
     return description
 
 
@@ -89,8 +84,8 @@ def roman(num: int, /) -> str:
     return result
 
 
-def shorten_money(money: Union[int, float], /) -> str:
+def shorten_number(number: Union[int, float], /) -> str:
     for letter, amount in reversed(NUMBER_SCALES):
-        if money > amount:
-            return f'{money / amount:.1f}{letter}'
-    return f'{money / amount:.1f}'
+        if number > amount:
+            return f'{number / amount:.1f}{letter}'
+    return f'{number / amount:.1f}'

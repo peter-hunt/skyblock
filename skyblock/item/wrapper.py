@@ -4,7 +4,7 @@ from ..constant.colors import (
 )
 from ..function.io import white
 from ..function.math import dung_stat
-from ..function.util import display_name, random_amount, random_bool, roman
+from ..function.util import display_name, roman
 
 __all__ = ['item_type', 'mob_type']
 
@@ -303,24 +303,10 @@ def mob_type(cls):
 
     cls.from_obj = classmethod(eval(from_obj_str))
 
-    def drop(self, player):
-        player.purse += self.coins
-        player.add_skill_exp('combat', self.combat_xp)
-        player.add_exp(self.xp_orb)
+    copy_str = 'lambda self: self.__class__('
+    copy_str += ', '.join(f'self.{key}' for key in anno)
+    copy_str += ')'
 
-        for item, amount, rarity, drop_chance in self.drops:
-            if not random_bool(drop_chance):
-                continue
-
-            loot = item.copy()
-            loot.amount = random_amount(amount)
-            if rarity == 'common':
-                player.recieve(loot)
-            else:
-                rarity_str = rarity.upper()
-                white(f'{RARITY_COLORS[rarity]}{rarity_str} DROP! '
-                      f'({item.display()}{WHITE})')
-
-    cls.drop = drop
+    cls.copy = eval(copy_str)
 
     return cls

@@ -98,7 +98,7 @@ SELL_PRICE = {
     'string': 3,
     'spider_eye': 3,
     'gunpowder': 4,
-    'ender_pearl': 10,
+    'ender_pearl': 7,
     'ghast_tear': 16,
     'slime_ball': 5,
     'blaze_rod': 9,
@@ -111,7 +111,7 @@ SELL_PRICE = {
     'acacia_wood': 2,
     'jungle_wood': 2,
 
-    'enchanted_ender_pearl': 200,
+    'enchanted_ender_pearl': 140,
     'enchanted_eye_of_ender': 3_520,
 
     'ender_helmet': 10_000,

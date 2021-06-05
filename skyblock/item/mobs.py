@@ -7,6 +7,14 @@ __all__ = ['MOBS', 'get_mob']
 
 
 MOBS = [
+    Mob('zombie', level=1, health=100, damage=20,
+        coins=1, combat_xp=6, xp_orb=1,
+        drops=[
+            (get_item('rotten_flesh'), 1, 'common', 1),
+            (get_item('poisonous_potato'), 1, 'uncommon', 0.02),
+            (get_item('potato'), 1, 'rare', 0.01),
+            (get_item('carrot'), 1, 'rare', 0.01),
+        ]),
     Mob('enderman', level=42, health=4_500, damage=500,
         coins=10, combat_xp=40.8, xp_orb=8,
         drops=[

@@ -5,7 +5,8 @@ from typing import Dict, List, Optional, Tuple
 
 from .function.util import display_name
 from .item.items import get_item
-from .item.object import Item, Resource
+from .item.mobs import get_mob
+from .item.object import Item, Resource, Mob
 
 
 __all__ = [
@@ -33,6 +34,7 @@ class Region:
     z: int
     npcs: List[Npc] = field(default_factory=list)
     resources: List[Resource] = field(default_factory=list)
+    mobs: List[Mob] = field(default_factory=list)
 
     def __repr__(self):
         return display_name(self.name)
@@ -172,7 +174,10 @@ FOREST = Region(
     'forest', -95, -40,
     resources=[get_item('oak')],
 )
-GRAVEYARD = Region('graveyard', -99, -54)
+GRAVEYARD = Region(
+    'graveyard', -99, -54,
+    mobs=[get_mob('zombie', level=1)],
+)
 HIGH_LEVEL = Region('high_level', 0, 150)
 HUB_CRYPTS = Region('hub_crypts', -120, -100)
 LIBRARY = Region('library', 37, -111)

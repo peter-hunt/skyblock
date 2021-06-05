@@ -29,6 +29,8 @@ COLLECTIONS = [
     Item('rabbit', 64, 'common'),
     Item('nether_wart', 64, 'common'),
 
+    Item('poisonous_potato', 64, 'common'),
+
     Item('cobblestone', 64, 'common'),
     Item('coal', 64, 'common'),
     Item('iron_ingot', 64, 'common'),

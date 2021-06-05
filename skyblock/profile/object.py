@@ -6,20 +6,22 @@ from re import fullmatch
 from time import sleep, time
 from typing import Dict, Iterable, List, Optional
 
-from ..constant.colors import BOLD, GOLD, GRAY, GREEN, AQUA, YELLOW, WHITE
+from ..constant.colors import (
+    RARITY_COLORS, BOLD, GOLD, GRAY, BLUE, GREEN, AQUA, RED, YELLOW, WHITE,
+)
 from ..constant.doc import profile_doc
 from ..constant.main import INTEREST_TABLE, SELL_PRICE, SKILL_EXP
 from ..constant.util import Number
 from ..function.io import gray, red, green, yellow, aqua, white
 from ..function.math import calc_exp, calc_skill_exp, random_int
 from ..function.util import (
-    backupable, display_money, display_number, display_name, generate_help,
-    get, includes, shorten_money,
+    backupable, display_number, display_name, generate_help,
+    get, includes, random_amount, random_bool, shorten_number,
 )
 from ..item.items import COLLECTIONS, get_item
 from ..item.mobs import get_mob
 from ..item.object import (
-    ItemType, Item, Empty, Pickaxe, Axe, Mineral, Tree, Mob,
+    ItemType, Item, Empty, Pickaxe, Axe, Bow, Armor, Sword, Mineral, Tree, Mob,
 )
 from ..item.resources import get_resource
 from ..map import Npc, ISLANDS, calc_dist, path_find
@@ -74,6 +76,8 @@ class Profile:
 
     crafted_minions: List[str] = []
 
+    death_count: int = 0
+
     armor: List[Item] = [Empty() for _ in range(4)]
     pets: List[Item] = []
     ender_chest: List[Item] = []
@@ -86,6 +90,13 @@ class Profile:
     wardrobe_slot: Optional[int] = None
 
     npc_talked: List[str] = []
+
+    def die(self, /):
+        lost_coins = self.purse / 2
+        self.purse -= lost_coins
+        self.death_count += 1
+        red(f'You died and lost {display_number(lost_coins)} coins!')
+        self.region = get(ISLANDS, self.island).spawn
 
     def put_stash(self, item: ItemType, /):
         if isinstance(item, Item):
@@ -183,7 +194,7 @@ class Profile:
             region = get(island.regions, island.spawn)
 
         gray('Location:')
-        gray(f"  You're at {region} of {island}.")
+        gray(f"  You're at {AQUA}{region}{GRAY} of {AQUA}{island}{GRAY}.")
         gray('Nearby places:')
         for conn in island.conns:
             if region not in conn:
@@ -208,6 +219,12 @@ class Profile:
             for resource in region.resources:
                 gray(f'  {GREEN}{resource.name}{GRAY} ({resource.type()})')
 
+        if len(region.mobs) > 0:
+            gray('Mobs:')
+            for mob in region.mobs:
+                green(f'  {GRAY}Lv{mob.level} {RED}{display_name(mob.name)}'
+                      f' {GREEN}{shorten_number(mob.health)}{RED}♥{GREEN}.')
+
         if len(region.npcs) > 0:
             gray('NPCs:')
             for npc in region.npcs:
@@ -218,26 +235,25 @@ class Profile:
             if self.purse < 1000:
                 shortened_purse = ''
             else:
-                shortened_purse = f' {GRAY}({shorten_money(self.purse)})'
+                shortened_purse = f' {GRAY}({shorten_number(self.purse)})'
 
-            white(f'Purse: {GOLD}{display_money(self.purse)}'
+            white(f'Purse: {GOLD}{display_number(self.purse)}'
                   f'{shortened_purse}')
             return
-
         if self.balance < 1000:
             shortened_balance = ''
         else:
-            shortened_balance = f' {GRAY}({shorten_money(self.balance)})'
+            shortened_balance = f' {GRAY}({shorten_number(self.balance)})'
 
         if self.purse < 1000:
             shortened_purse = ''
         else:
-            shortened_purse = f' {GRAY}({shorten_money(self.purse)})'
+            shortened_purse = f' {GRAY}({shorten_number(self.purse)})'
 
         green('Bank Account')
-        gray(f'Balance: {GOLD}{display_money(self.balance)}'
+        gray(f'Balance: {GOLD}{display_number(self.balance)}'
              f'{shortened_balance}')
-        white(f'Purse: {GOLD}{display_money(self.purse)}'
+        white(f'Purse: {GOLD}{display_number(self.purse)}'
               f'{shortened_purse}')
         gray(f'Bank Level: {GREEN}{display_name(self.bank_level)}')
 
@@ -268,7 +284,7 @@ class Profile:
             digits = len(f'{len(npc.trades)}')
             for index, (price, item) in enumerate(npc.trades):
                 gray(f'  {index:>{digits}} {item.display()}{GRAY} for '
-                     f'{GOLD}{display_money(price)} coins{GRAY}.')
+                     f'{GOLD}{display_number(price)} coins{GRAY}.')
         elif npc.dialog is not None:
             self.npc_talk(choice(npc.dialog))
         else:
@@ -360,7 +376,7 @@ class Profile:
         delta = SELL_PRICE[item.name] * getattr(item, 'count', 1)
         self.purse += delta
         green(f"You sold {item.display()}{GREEN} for "
-              f"{GOLD}{shorten_money(delta)} Coins{GREEN}!")
+              f"{GOLD}{shorten_number(delta)} Coins{GREEN}!")
         self.inventory[index] = Empty()
 
     def get(self, name: str, tool_index: Optional[int], amount: int, /):
@@ -447,60 +463,142 @@ class Profile:
 
     def slay(self, name: str, weapon_index: Optional[int], amount: int, /):
         mob = get_mob(name)
-        tool = Empty(
-        ) if weapon_index is None else self.inventory[weapon_index]
+        weapon = (Empty() if weapon_index is None
+                  else self.inventory[weapon_index])
 
-        if not isinstance(tool, (Empty, Bow, Sword)):
-            tool = Empty()
+        if not isinstance(weapon, (Empty, Bow, Sword)):
+            weapon = Empty()
 
-        if isinstance(mob, Mob):
+        if not isinstance(mob, Mob):
             red('Unknown mob type.')
             return
 
         health = self.base_health
-        defense = self.base_defense
-        strength = self.base_strength
-        crit_chance = self.base_crit_chance
-        crit_damage = self.base_crit_damage
+        defense = self.base_defense / 100
+        strength = self.base_strength / 100
+        speed = self.base_speed / 100
+        crit_chance = self.base_crit_chance / 100
+        crit_damage = self.base_crit_damage / 100
         attack_speed = self.base_attack_speed
-        intelligence = self.base_intelligence
-        magic_find = self.magic_find
-        ferocity = self.ferocity
+        # intelligence = self.base_intelligence
+        magic_find = self.base_magic_find / 100
+        ferocity = self.base_ferocity / 100
 
-        # if isinstance(tool, Pickaxe):
-        #     breaking_power = tool.breaking_power
-        #     mining_speed = tool.mining_speed
-        #     if 'efficiency' in tool.enchantments:
-        #         mining_speed += 10 + 20 * tool.enchantments['efficiency']
-        # else:
-        #     breaking_power = 0
-        #     mining_speed = 50
+        enchantments = getattr(weapon, 'enchantments', {})
 
-        # time_cost = 30 * resource.hardness / mining_speed
+        if isinstance(weapon, (Bow, Sword)):
+            damage = weapon.damage + 5 + weapon.hot_potato
+            strength += 0.01 * weapon.hot_potato
+            crit_chance += 0.01 * weapon.crit_chance
+            crit_damage += 0.01 * weapon.crit_damage
+            ferocity += 0.01 * weapon.ferocity
 
-        # mining_lvl = calc_skill_exp('mining', self.skill_xp_mining,)
-        # drop_mult = (1 + 0.1 * tool.enchantments.get('fortune', 0)
-        #              + 0.04 * mining_lvl)
-        # exp_mult = 1 + 0.125 * tool.enchantments.get('experience', 0)
-        # drop_item = resource.drop
-        # default_amount = resource.amount
+            damage *= 1 + 0.08 * enchantments.get('power', 0)
+            damage *= 1 + 0.05 * enchantments.get('sharpness', 0)
+            crit_damage += 0.1 * enchantments.get('critical', 0)
+        else:
+            damage = 5
 
-        # last_cp = Decimal()
-        # cp_step = Decimal('0.1')
-        # is_collection = includes(COLLECTIONS, drop_item)
-        # for count in range(1, amount + 1):
-        #     sleep(time_cost)
-        #     drop_pool = random_int(drop_mult)
-        #     self.recieve(Item(drop_item, default_amount * drop_pool))
-        #     if is_collection:
-        #         self.collect(drop_item, default_amount * drop_pool)
+        for piece in self.armor:
+            if not isinstance(piece, Armor):
+                continue
+            health += piece.health
+            defense += 0.01 * piece.health
+            speed += 0.01 * piece.health
 
-        #     self.add_exp(resource.exp * random_int(exp_mult))
-        #     self.add_skill_exp('mining', resource.mining_exp)
-        #     if count >= (last_cp + cp_step) * amount:
-        #         while count >= (last_cp + cp_step) * amount:
-        #             last_cp += cp_step
-        #         print(f'{count} / {amount} ({(last_cp * 100):.0f}%) done')
+        damage *= 1 + strength
+        damage *= 1 + 0.04 * calc_skill_exp('combat', self.skill_xp_combat)
+
+        time_cost = 2 / speed
+
+        looting = 1 + 0.15 * enchantments.get('looting', 0)
+        luck = 1 + 0.05 * enchantments.get('luck', 0)
+        scavenger = 0.3 * enchantments.get('scavenger', 0)
+        exp_mult = 1 + 0.125 * enchantments.get('experience', 0)
+
+        hp = health
+
+        last_cp = Decimal()
+        cp_step = Decimal('0.1')
+        is_collection = {
+            row[0].name: includes(COLLECTIONS, row[0].name)
+            for row in mob.drops
+        }
+        green(f'Slaying {GRAY}Lv{mob.level} {RED}{display_name(mob.name)}'
+              f' {GREEN}{shorten_number(mob.health)}{RED}♥{GREEN}.')
+        for count in range(1, amount + 1):
+            sleep(time_cost)
+            healed = round((time_cost // 2) * (1.5 + health / 100), 1)
+            healed = max(health - hp, healed)
+            if healed != 0:
+                hp += healed
+                gray(f'You healed for {GREEN}{shorten_number(healed)}'
+                     f'{RED}♥{GRAY}.')
+
+            mob_hp = mob.health
+            while True:
+                for _ in range(random_int(1 + ferocity)):
+                    crit = ''
+                    if random_bool(crit_chance):
+                        damage_delt = damage * (1 + crit_damage)
+                        crit = 'crit '
+                    else:
+                        damage_delt = damage
+                    mob_hp -= damage_delt
+                    gray(f"You delt {YELLOW}{shorten_number(damage_delt)}{GRAY}"
+                         f" {crit}damage to the {display_name(mob.name)}!")
+
+                if mob_hp <= 0:
+                    a_an = 'an' if mob.name[0] in 'aeiou' else 'a'
+                    green(f"You've killed {a_an} {display_name(mob.name)}!\n")
+                    break
+
+                damage_recieved = mob.damage * (1 + defense)
+                hp -= damage_recieved
+                gray(f"You recieved {YELLOW}"
+                     f"{shorten_number(damage_recieved)}{GRAY}"
+                     f" damage from the {display_name(mob.name)}!")
+
+                if hp <= 0:
+                    self.die()
+                    return
+
+                gray(f'Your HP: {AQUA}{shorten_number(hp)}{RED}♥')
+                gray(f"{display_name(mob.name)}'s HP: "
+                     f"{AQUA}{shorten_number(hp)}{RED}♥\n")
+
+            self.purse += mob.coins + scavenger
+            self.add_skill_exp('combat', mob.combat_xp)
+            self.add_exp(mob.xp_orb)
+
+            for item, count, rarity, drop_chance in mob.drops:
+                drop_chance *= looting
+                drop_chance *= 1 + magic_find
+                if isinstance(item, Armor):
+                    drop_chance *= luck
+
+                if not random_bool(drop_chance):
+                    continue
+
+                loot = item.copy()
+                loot.count = random_amount(count)
+
+                self.recieve(loot)
+
+                if is_collection[loot.name]:
+                    self.collect(loot.name, loot.count)
+
+                if rarity not in {'common', 'uncommon'}:
+                    rarity_str = rarity.upper()
+                    white(f'{RARITY_COLORS[rarity]}{rarity_str} DROP! '
+                          f'({item.display()}{WHITE})')
+
+            # self.add_exp(resource.exp * random_int(exp_mult))
+            # self.add_skill_exp('mining', resource.mining_exp)
+            if count >= (last_cp + cp_step) * amount:
+                while count >= (last_cp + cp_step) * amount:
+                    last_cp += cp_step
+                print(f'{count} / {amount} ({(last_cp * 100):.0f}%) killed')
 
     @staticmethod
     def npc_talk(name: str, dialog: Iterable):
@@ -530,7 +628,7 @@ class Profile:
             interest *= now_cp - last_cp
             self.balance += interest
             green(f"Since you've been away you earned "
-                  f"{GOLD}{display_money(interest)} coins{GREEN} "
+                  f"{GOLD}{display_number(interest)} coins{GREEN} "
                   f"as interest in your personal bank account!")
 
         self.last_update = now
@@ -561,6 +659,10 @@ class Profile:
                 self.dump()
                 green('Saved!')
                 break
+
+            elif words[0] == 'deathcount':
+                yellow(f'Death Counts: {BLUE}'
+                       f'{display_number(self.death_count)}')
 
             elif words[0] in {'deposit', 'withdraw'}:
                 if len(words) != 2:
@@ -593,9 +695,9 @@ class Profile:
                     self.balance += coins
 
                     green(f'You have deposited {GOLD}'
-                          f'{display_money(coins)} Coins{GREEN}! '
+                          f'{display_number(coins)} Coins{GREEN}! '
                           f'You now have {GOLD}'
-                          f'{display_money(self.balance)} Coins{GREEN} '
+                          f'{display_number(self.balance)} Coins{GREEN} '
                           'in your account!')
                 else:
                     if self.balance == 0:
@@ -608,19 +710,20 @@ class Profile:
                     self.purse += coins
 
                     green(f'You have withdrawn {GOLD}'
-                          f'{display_money(coins)} Coins{GREEN}! '
+                          f'{display_number(coins)} Coins{GREEN}! '
                           f'You now have {GOLD}'
-                          f'{display_money(self.balance)} Coins{GREEN} '
+                          f'{display_number(self.balance)} Coins{GREEN} '
                           'in your account!')
 
             elif words[0] == 'help':
                 if len(words) == 1:
-                    print(profile_doc)
+                    aqua(profile_doc)
                 else:
                     phrase = ' '.join(words[1:])
                     if phrase in profile_help:
-                        print(f'> {phrase}')
-                        print(profile_help[phrase])
+                        usage, description = profile_help[phrase]
+                        aqua(usage)
+                        aqua(description)
                     else:
                         red(f'Command not found: {phrase!r}.')
 
@@ -682,23 +785,23 @@ class Profile:
                     red(f'Mob not avaliable at {region}: {name!r}')
                     continue
 
-                tool_index = None
+                weapon_index = None
 
                 if len(words) >= 3:
-                    tool_str = words[2]
-                    if not fullmatch(r'\d+', tool_str):
-                        red(f'Invalid number for item index: {tool_str}')
+                    weapon_str = words[2]
+                    if not fullmatch(r'\d+', weapon_str):
+                        red(f'Invalid number for item index: {weapon_str}')
                         continue
-                    tool_index = int(tool_str)
-                    if tool_index <= 0 or tool_index > len(self.inventory):
-                        red(f'Item index out of bound: {tool_index}')
+                    weapon_index = int(weapon_str)
+                    if weapon_index <= 0 or weapon_index > len(self.inventory):
+                        red(f'Item index out of bound: {weapon_index}')
                         continue
-                    tool_index -= 1
-                    tool_item = self.inventory[tool_index]
-                    if not isinstance(tool_item, (Empty, Pickaxe, Axe)):
-                        yellow(f'{tool_item.name} item is not tool.\n'
+                    weapon_index -= 1
+                    tool_item = self.inventory[weapon_index]
+                    if not isinstance(tool_item, (Empty, Bow, Sword)):
+                        yellow(f'{tool_item.name} item is not weapon.\n'
                                f'Using barehand by default.')
-                        tool_index = None
+                        weapon_index = None
 
                 amount = None
 
@@ -712,7 +815,7 @@ class Profile:
                         red(f'Amount must be a positive integer.')
                         continue
 
-                self.get(name, tool_index, amount)
+                self.slay(name, weapon_index, amount)
 
             elif words[0] == 'goto':
                 if len(words) != 2:
@@ -948,21 +1051,21 @@ class Profile:
 
                 self.talkto_npc(get(region.npcs, name))
 
-            elif words[0] == 'test':
+            elif words[0] == 'cheat':
                 # item = get_item('aspect_of_the_dragons')
                 # item.stars = 5
                 # item.hot_potato = 20
                 # self.recieve(item)
-                # item = get_item('hyperion')
-                # item.stars = 10
-                # item.hot_potato = 30
-                # self.recieve(item)
+                item = get_item('hyperion')
+                item.stars = 10
+                item.hot_potato = 30
+                self.recieve(item)
                 # item = get_item('diamond_pickaxe')
                 # self.recieve(item)
-                item = get_item('enderman_pet')
-                self.recieve(item)
-                item = get_item('ender_helmet')
-                self.recieve(item)
+                # item = get_item('enderman_pet')
+                # self.recieve(item)
+                # item = get_item('ender_helmet')
+                # self.recieve(item)
 
             else:
                 red(f'Unknown command: {words[0]!r}')

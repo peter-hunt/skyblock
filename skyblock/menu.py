@@ -70,15 +70,16 @@ def main():
 
         elif words[0] == 'help':
             if len(words) == 1:
-                white(menu_doc)
+                aqua(menu_doc)
             else:
                 phrase = ' '.join(words[1:])
                 if phrase not in menu_help:
                     red(f'Command not found: {phrase!r}.')
                     continue
 
-                white(f'> {phrase}')
-                white(menu_help[phrase])
+                usage, description = menu_help[phrase]
+                aqua(usage)
+                aqua(description)
 
         elif words[0] in {'create', 'new', 'touch'}:
             if len(words) != 1:
