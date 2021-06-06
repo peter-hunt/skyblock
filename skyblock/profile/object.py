@@ -6,18 +6,18 @@ from typing import Dict, List, Optional
 
 from ..constant.color import BOLD, DARK_AQUA, GOLD, GRAY, BLUE, GREEN
 from ..constant.doc import profile_doc
-from ..constant.main import SELL_PRICE, SKILL_EXP
+from ..constant.main import ARMOR_PARTS, SKILL_EXP
 from ..constant.util import Number
 from ..function.io import dark_aqua, gray, red, green, yellow, aqua
 from ..function.math import calc_exp, calc_skill_exp
 from ..function.util import (
     backupable, display_int, display_number, display_name, generate_help,
-    get, includes, parse_int, roman, shorten_number,
+    get, includes, parse_int, roman,
 )
 from ..item.item import get_item
 from ..item.mob import get_mob
 from ..item.object import (
-    Item, Empty, Bow, Sword, Armor, Axe, Hoe, Pickaxe, Pet,
+    Item, Empty, Bow, Sword, Armor, Axe, Hoe, Pickaxe,
 )
 from ..item.resource import get_resource
 from ..map.island import ISLANDS
@@ -151,25 +151,6 @@ class Profile:
         if name not in self.collection:
             self.collection[name] = 0
         self.collection[name] += amount
-
-    def sell(self, index: int, /):
-        island = get(ISLANDS, self.island)
-        region = get(island.regions, self.region)
-
-        if len(region.npcs) == 0:
-            red('No NPCs around to sell the item.')
-            return
-
-        item = self.inventory[index]
-        if item.name not in SELL_PRICE:
-            red(f"Can't sell {item.display()}.")
-            return
-
-        delta = SELL_PRICE[item.name] * getattr(item, 'count', 1)
-        self.purse += delta
-        green(f"You sold {item.display()}{GREEN} for "
-              f"{GOLD}{shorten_number(delta)} Coins{GREEN}!")
-        self.inventory[index] = Empty()
 
     def mainloop(self):
         last_shop: Optional[str] = None
@@ -335,7 +316,7 @@ class Profile:
                                f'Using barehand by default.')
                         weapon_index = None
 
-                amount = None
+                amount = 1
 
                 if len(words) == 4:
                     amount = parse_int(words[3])
@@ -373,15 +354,11 @@ class Profile:
                     red(f'Invalid usage of command {words[0]!r}.')
                     continue
 
-                item_index = parse_int(words[1])
-                if item_index is None:
+                index = self.parse_index(words[1])
+                if index is None:
                     continue
-                if item_index <= 0 or item_index > len(self.inventory):
-                    red(f'Item index out of bound: {item_index}')
-                    continue
-                item_index -= 1
 
-                self.info(item_index)
+                self.info(self.inventory[index])
 
             elif words[0] == 'look':
                 if len(words) != 1:
@@ -400,8 +377,8 @@ class Profile:
                     continue
 
                 part = words[1]
-                if part not in {'helmet', 'chestplate', 'leggings', 'boots'}:
-                    red(f'Invalid armor part: {part}')
+                if part not in ARMOR_PARTS:
+                    red('Please input a valid armor part!')
                     continue
                 self.display_armor(part)
 
@@ -451,27 +428,7 @@ class Profile:
                 if index_2 is None:
                     continue
 
-                item_from = self.inventory[index_1]
-                item_to = self.inventory[index_2]
-                if not hasattr(item_from, 'count') or not hasattr(item_to, 'count'):
-                    red('Cannot merge unstackable items.')
-                    continue
-                if item_from.name != item_to.name:
-                    red('Cannot merge different items.')
-                    continue
-
-                item_type = get_item(item_from.name)
-                if item_to.count == item_type.count:
-                    yellow('Target item is already full as a stack.')
-                    continue
-
-                delta = max(item_from.count, item_to.count - item_type.count)
-                self.inventory[index_1].count -= delta
-                if self.inventory[index_1].count == 0:
-                    self.inventory[index_1] = Empty()
-                self.inventory[index_2].count += delta
-
-                green(f'Merged {item_type.display()}')
+                self.merge(index_1, index_2)
 
             elif words[0] in {'move', 'switch'}:
                 if len(words) != 3:
@@ -548,49 +505,49 @@ class Profile:
                 if amount is None:
                     continue
 
-                item_1 = self.inventory[index_1]
-                item_2 = self.inventory[index_2]
-
-                if (not hasattr(item_1, 'count')
-                        or isinstance(item_1, (Bow, Sword, Armor, Axe, Pickaxe, Pet))):
-                    red('Cannot split unstackable items.')
-                    continue
-
-                if item_1.count < amount:
-                    red('Cannot split more than the original amount.')
-                    continue
-
-                if isinstance(item_2, Empty):
-                    self.inventory[index_1].count -= amount
-                    self.inventory[index_2] = item_1
-                    self.inventory[index_2].count = amount
-                    gray(f'Splitted {amount} item from '
-                         f'slot {index_1 + 1} to slot {index_2 + 1}.')
-                    continue
-
-                if item_1.name != item_2.name:
-                    red('Cannot split to a slot with different item.')
-                    continue
-
-                item_type = get_item(item_1.name)
-                if item_2.count == item_type.count:
-                    red('Targeted slot is already full as a stack.')
-                    continue
-
-                delta = min(amount, item_type.count - item_2.count)
-                if amount > delta:
-                    yellow(f'Splitting {delta} istead of {amount} item.')
-
-                self.inventory[index_1].count -= delta
-                self.inventory[index_2].count += delta
-                gray(f'Splitted {delta} item from '
-                     f'slot {index_1 + 1} to slot {index_2 + 1}.')
+                self.split(index_1, index_2, amount)
 
             elif words[0] == 'equip':
-                pass
+                if len(words) != 2:
+                    red(f'Invalid usage of command {words[0]!r}.')
+                    continue
+
+                index = self.parse_index(words[1])
+                if index is None:
+                    continue
+
+                armor_piece = self.inventory[index]
+                if not isinstance(armor_piece, Armor):
+                    red('Cannot equip non-armor item.')
+                    continue
+
+                slot_index = ARMOR_PARTS.index(armor_piece.part)
+                self.inventory[index] = self.armor[slot_index]
+                self.armor[slot_index] = armor_piece
+
+                green(f'Equipped {armor_piece.display()}{GREEN}!')
 
             elif words[0] == 'unequip':
-                pass
+                if len(words) != 2:
+                    red(f'Invalid usage of command {words[0]!r}.')
+                    continue
+
+                part = words[1]
+                if part not in ARMOR_PARTS:
+                    red('Please input a valid armor part!')
+                    continue
+
+                slot_index = ARMOR_PARTS.index(part)
+                armor_piece = self.armor[slot_index]
+
+                if isinstance(armor_piece, Empty):
+                    red(f'You are not wearing a {part}!')
+                    continue
+
+                self.recieve(armor_piece)
+                self.armor[slot_index] = Empty()
+
+                green(f'Unequipped {armor_piece.display()}{GREEN}!')
 
             elif words[0] == 'clearstash':
                 if len(words) != 1:
@@ -631,12 +588,14 @@ class Profile:
                 # self.recieve(item)
                 # item = get_item('diamond_pickaxe')
                 # self.recieve(item)
-                item = get_item('golden_axe')
-                self.recieve(item)
+                # item = get_item('golden_axe')
+                # self.recieve(item)
                 # item = get_item('enderman_pet')
                 # self.recieve(item)
                 # item = get_item('ender_helmet')
                 # self.recieve(item)
+                ...
 
             else:
                 red(f'Unknown command: {words[0]!r}')
+                yellow("Use 'help' for help.")

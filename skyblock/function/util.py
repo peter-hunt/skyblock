@@ -92,7 +92,7 @@ def parse_int(string: str, /) -> Optional[int]:
     if fullmatch(r'\d+', string):
         return int(string)
     else:
-        red(f'Invalid Number: {string!r}')
+        red('Please input a valid number!')
         return
 
 

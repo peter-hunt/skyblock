@@ -1,8 +1,10 @@
 __all__ = [
-    'DUNGEON_EXP', 'INTEREST_TABLE', 'SELL_PRICE',
+    'ARMOR_PARTS', 'DUNGEON_EXP', 'INTEREST_TABLE', 'SELL_PRICE',
     'SKILL_EXP', 'SKILL_LIMITS', 'SPECIAL_NAMES',
 ]
 
+
+ARMOR_PARTS = ['helmet', 'chestplate', 'leggings', 'boots']
 
 DUNGEON_EXP = [
     (0, 0, 0),

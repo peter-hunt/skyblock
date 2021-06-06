@@ -75,8 +75,17 @@ Get resources.
 > slay <mob> [amount=1] [weapon=hand]
 Slay mobs.
 
+> buy <index> [amount=1]
+Buy item from the shop.
+
 > sell <index>
-Sell the item.
+Sell item.
+
+> equip <index>
+Equip armor.
+
+> unequip <part>
+Unequip armor.
 
 > merge <from-index> <to-index>
 Merge stackable items in the inventory.

@@ -3,23 +3,22 @@ from os import get_terminal_size
 from typing import Optional
 
 from ..constant.color import BOLD, GOLD, GRAY, GREEN, AQUA, YELLOW
+from ..constant.main import ARMOR_PARTS
 from ..function.io import gray, green, yellow, white
 from ..function.math import calc_skill_exp, calc_skill_exp_info
 from ..function.util import (
     display_int, display_name, display_number, get, roman, shorten_number,
 )
-from ..item.object import Empty
+from ..item.object import Empty, ItemType
 from ..map.island import ISLANDS
 
 __all__ = ['profile_display']
 
 
 def profile_display(cls):
-    def display_armor(self, part: Optional[str], /):
+    def display_armor(self, part: Optional[str] = None, /):
         if part:
-            index = ['helmet', 'chestplate', 'leggings', 'boots'].index(part)
-            item = self.armor[index]
-            gray(f'{display_name(part)}:')
+            item = self.armor[ARMOR_PARTS.index(part)]
             self.info(item)
             return
 
@@ -105,9 +104,7 @@ def profile_display(cls):
 
     cls.display_money = display_money
 
-    def info(self, index: int, /):
-        item = self.inventory[index]
-
+    def info(self, item: ItemType, /):
         if isinstance(item, Empty):
             gray('Empty')
             return
@@ -175,6 +172,7 @@ def profile_display(cls):
             return
 
         digits = len(f'{length}')
+        empty_slots = []
         index = 0
         while index < length:
             item = self.inventory[index]
@@ -182,8 +180,14 @@ def profile_display(cls):
                 while index < length:
                     if not isinstance(self.inventory[index], Empty):
                         break
+                    empty_slots.append(index)
                     index += 1
                 continue
+
+            if empty_slots:
+                for index in empty_slots:
+                    gray(f'{(index + 1):>{digits * 2 + 1}}')
+                empty_slots.clear()
             gray(f'{(index + 1):>{digits * 2 + 1}} {item.display()}')
             index += 1
 

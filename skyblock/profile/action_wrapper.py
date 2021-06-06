@@ -4,9 +4,10 @@ from time import sleep, time
 from typing import Optional, Tuple
 
 from ..constant.color import (
-    RARITY_COLORS, GOLD, GRAY, BLUE, GREEN, AQUA, RED, YELLOW, WHITE,
+    RARITY_COLORS, BOLD, GOLD, GRAY, BLUE, GREEN,
+    AQUA, RED, LIGHT_PURPLE, YELLOW, WHITE,
 )
-from ..constant.main import INTEREST_TABLE
+from ..constant.main import INTEREST_TABLE, SELL_PRICE
 from ..constant.mob import ENDER_SLAYER_EFFECTIVE
 from ..constant.util import Number
 from ..function.io import gray, red, green, yellow, aqua, white
@@ -48,9 +49,25 @@ def profile_action(cls):
     cls.buy = buy
 
     def die(self, /):
-        lost_coins = self.purse / 2
+        bank = 0
+
+        for piece in self.armor:
+            if not isinstance(piece, Armor):
+                continue
+
+            ench = getattr(piece, 'enchantments', {})
+            bank += ench.get('bank', 0) * 10
+
+        original = self.purse / 2
+        saved = original * min(bank / 100, 1)
+        lost_coins = original - saved
         self.purse -= lost_coins
         self.death_count += 1
+
+        if bank != 0:
+            gray(f"Your {BLUE}Bank{GRAY} enchantment saved {GOLD}"
+                 f"{shorten_number(saved)} coins{GRAY} for you!")
+
         red(f'You died and lost {display_number(lost_coins)} coins!')
         self.region = get(ISLANDS, self.island).spawn
 
@@ -203,8 +220,29 @@ def profile_action(cls):
 
     cls.goto = goto
 
+    def sell(self, index: int, /):
+        island = get(ISLANDS, self.island)
+        region = get(island.regions, self.region)
+
+        if len(region.npcs) == 0:
+            red('No NPCs around to sell the item.')
+            return
+
+        item = self.inventory[index]
+        if item.name not in SELL_PRICE:
+            red(f"Can't sell {item.display()}.")
+            return
+
+        delta = SELL_PRICE[item.name] * getattr(item, 'count', 1)
+        self.purse += delta
+        green(f"You sold {item.display()}{GREEN} for "
+              f"{GOLD}{shorten_number(delta)} Coins{GREEN}!")
+        self.inventory[index] = Empty()
+
+    cls.sell = sell
+
     @backupable
-    def slay(self, name: str, weapon_index: Optional[int], amount: int, /):
+    def slay(self, name: str, weapon_index: Optional[int], amount: int = 1, /):
         mob = get_mob(name)
         weapon = (Empty() if weapon_index is None
                   else self.inventory[weapon_index])
@@ -230,6 +268,9 @@ def profile_action(cls):
 
         thorns = 0
 
+        last_stand = 0
+        no_pain_no_gain = []
+
         combat_lvl = calc_skill_exp('combat', self.skill_xp_combat)
         farming_lvl = calc_skill_exp('farming', self.skill_xp_farming)
         foraging_lvl = calc_skill_exp('foraging', self.skill_xp_foraging)
@@ -238,7 +279,20 @@ def profile_action(cls):
         enchantments = getattr(weapon, 'enchantments', {})
 
         if isinstance(weapon, (Bow, Sword)):
-            damage = weapon.damage + 5 + weapon.hot_potato
+            ultimate_jerry = enchantments.get('ultimate_jerry', 0) * 50
+            damage = weapon.damage + ultimate_jerry + 5
+            if ultimate_jerry != 0:
+                gray(f"Your {LIGHT_PURPLE}{BOLD}Ultimate Jerry{GRAY} "
+                     f"enchantment granted {GREEN}+ {ultimate_jerry}"
+                     f" {GRAY}additional weapon base damage!\n")
+            additional_damage = damage * \
+                enchantments.get('one_for_all', 0) * 2.1
+            if additional_damage != 0:
+                gray(f"Your {LIGHT_PURPLE}{BOLD}One For All{GRAY} "
+                     f"enchantment granted {GREEN}+ {additional_damage}"
+                     f" {GRAY}additional weapon base damage!\n")
+            damage += additional_damage + weapon.hot_potato
+
             strength += weapon.hot_potato
             crit_chance += weapon.crit_chance
             crit_damage += weapon.crit_damage
@@ -258,6 +312,7 @@ def profile_action(cls):
         for piece in self.armor:
             if not isinstance(piece, Armor):
                 continue
+
             strength += piece.strength
             health += piece.health
             defense += piece.health
@@ -270,18 +325,19 @@ def profile_action(cls):
             defense += ench.get('protection', 0) * 8
             thorns += ench.get('thorns', 0) * 3
             # true_defense += ench.get('true_protection', 0) * 5
+            last_stand += ench.get('last_stand', 0) * 5
+            no_pain_no_gain.append(ench.get('no_pain_no_gain', 0) * 25)
 
         strength += min(foraging_lvl, 14) * 1
         strength += max(min(foraging_lvl - 14, 36), 0) * 2
         crit_chance += combat_lvl * 0.5
         defense += min(mining_lvl, 14) * 1
         defense += max(min(mining_lvl - 14, 46), 0) * 2
-        health += min(foraging_lvl, 14) * 2
+        health += min(farming_lvl, 14) * 2
         health += max(min(farming_lvl - 14, 5), 0) * 3
         health += max(min(farming_lvl - 19, 6), 0) * 4
         health += max(min(farming_lvl - 25, 35), 0) * 5
 
-        damage *= 1 + (strength / 100)
         damage *= 1 + 0.04 * combat_lvl
 
         time_cost = 2 / (speed / 100)
@@ -307,6 +363,9 @@ def profile_action(cls):
             syphon = 0
         triple_strike = 1 + 0.10 * enchantments.get('triple_strike', 0)
         vampirism = enchantments.get('vampirism', 0)
+
+        soul_eater = enchantments.get('soul_eater', 0) * 2
+        soul_eater_strength = 0
 
         crit_chance += overload
         crit_damage += overload
@@ -343,6 +402,15 @@ def profile_action(cls):
                         crit = 'crit '
                     else:
                         damage_delt = damage
+
+                    damage_delt *= 1 + (strength + soul_eater_strength) / 100
+
+                    if soul_eater_strength != 0:
+                        gray(f"Your {LIGHT_PURPLE}{BOLD}Soul Eater{GRAY}"
+                             f" enchantment applied {RED}+"
+                             f" {soul_eater_strength} ❁ Strength{GRAY}"
+                             f" on your hit!\n")
+                        soul_eater_strength = 0
 
                     damage_delt *= (
                         1 + giant_killer * (min(0.1 * (mob_hp - hp), 5) / 100)
@@ -381,15 +449,34 @@ def profile_action(cls):
 
                 if mob_hp <= 0:
                     a_an = 'an' if mob.name[0] in 'aeiou' else 'a'
-                    green(
-                        f"You've killed {a_an} {display_name(mob.name)}!\n\n")
+                    green(f"You've killed {a_an} "
+                          f"{display_name(mob.name)}!\n\n")
+                    soul_eater_strength = mob.damage * soul_eater
                     break
 
-                damage_recieved = mob.damage * (1 + defense / 100)
+                actual_defense = defense
+                if last_stand != 0 and hp / health < 0.4:
+                    additional_defense = actual_defense * (last_stand / 100)
+                    actual_defense += additional_defense
+                    gray(f"Your {LIGHT_PURPLE}{BOLD}Last Stand{GRAY}"
+                         f" enchantment granted you {GREEN}+"
+                         f" {additional_defense} ☘ Defense{GRAY}!\n")
+
+                damage_recieved = mob.damage / (1 + defense / 100)
                 hp -= damage_recieved
                 gray(f"You recieved {YELLOW}"
                      f"{shorten_number(damage_recieved)}{GRAY}"
-                     f" damage from the {display_name(mob.name)}!\n")
+                     f" damage from the {display_name(mob.name)}{GRAY}!\n")
+
+                exp_npng = 0
+                for npng_chance in no_pain_no_gain:
+                    if random_bool(npng_chance / 100):
+                        exp_npng += 10
+                if exp_npng != 0:
+                    gray(f"Your {LIGHT_PURPLE}{BOLD}No Pain No Gain{GRAY}"
+                         f" enchantment granted you {GREEN}{exp_npng}"
+                         f" experience point{GRAY}!\n")
+                    self.add_exp(exp_npng)
 
                 if hp <= 0:
                     self.die()
@@ -399,18 +486,19 @@ def profile_action(cls):
                     thorns_damage = (thorns / 100) * damage_recieved
                     mob_hp -= thorns_damage
                     gray(f"Your {BLUE}Thorns{GRAY} enchantment delt {YELLOW}"
-                         f"{shorten_number(damage_delt)}{GRAY}"
-                         f" {crit}damage to the {display_name(mob.name)}!\n")
+                         f"{shorten_number(damage_delt)}{GRAY} {crit}damage"
+                         f" to the {display_name(mob.name)}{GRAY}!\n")
 
                     if mob_hp <= 0:
                         a_an = 'an' if mob.name[0] in 'aeiou' else 'a'
                         green(f"You've killed {a_an} "
-                              f"{display_name(mob.name)}!\n")
+                              f"{display_name(mob.name)}{GRAY}!")
+                        gray(f'Your HP: {AQUA}{shorten_number(hp)}{RED}♥')
                         break
 
                 gray(f'Your HP: {AQUA}{shorten_number(hp)}{RED}♥')
                 gray(f"{display_name(mob.name)}'s HP: "
-                     f"{AQUA}{shorten_number(hp)}{RED}♥\n\n")
+                     f"{AQUA}{shorten_number(mob_hp)}{RED}♥\n\n")
 
                 strike_count += 1
 
@@ -435,6 +523,8 @@ def profile_action(cls):
                     continue
 
                 loot = item.copy()
+                if hasattr(loot, 'count'):
+                    loot.count = 1
 
                 self.recieve(loot, random_amount(count))
 
@@ -451,7 +541,7 @@ def profile_action(cls):
                     last_cp += cp_step
                 gray(f'{count} / {amount} ({(last_cp * 100):.0f}%) killed')
 
-            print()
+            gray('\n')
 
     cls.slay = slay
 

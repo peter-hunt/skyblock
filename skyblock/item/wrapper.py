@@ -1,8 +1,9 @@
 from ..constant.color import (
     RARITY_COLORS,
-    CLN, BOLD, DARK_RED, GOLD, GRAY, DARK_GRAY, GREEN, RED, YELLOW, WHITE,
+    CLN, BOLD, DARK_RED, GOLD, GRAY, DARK_GRAY,
+    BLUE, GREEN, RED, LIGHT_PURPLE, YELLOW, WHITE,
 )
-from ..function.io import white
+from ..constant.enchantment import ULTIMATE_ENCHANTMENTS
 from ..function.math import dung_stat
 from ..function.util import display_int, display_name, roman, shorten_number
 
@@ -82,7 +83,7 @@ def item_type(cls: type, /) -> type:
     cls.display = display
 
     def info(self, cata_lvl=0):
-        color = RARITY_COLORS[self.rarity]
+        rarity_color = RARITY_COLORS[self.rarity]
 
         if getattr(self, 'modifer', None) is not None:
             modifier = f'{self.modifier.capitalize()} '
@@ -99,7 +100,7 @@ def item_type(cls: type, /) -> type:
             stars = (f' {RED}' + (self.stars - 5) * '✪'
                      + GOLD + (10 - self.stars) * '✪')
 
-        info = f'{color}{modifier}{name}{stars}{color}'
+        info = f'{rarity_color}{modifier}{name}{stars}{rarity_color}'
 
         if self.__class__.__name__ == 'Pickaxe':
             info += (f'\n{DARK_GRAY}Breaking Power '
@@ -169,6 +170,8 @@ def item_type(cls: type, /) -> type:
                                        for stat in bonus_stats)
 
         elif self.__class__.__name__ == 'Armor':
+            enchantments = getattr(self, 'enchantments', {})
+
             is_dungeon = self.stars is not None
             basic_stats = []
             for stat_name in ('strength', 'crit_chance', 'crit_damage'):
@@ -201,17 +204,22 @@ def item_type(cls: type, /) -> type:
                               'magic_find', 'mining_speed', 'mining_fortune',
                               'true_denfense', 'ferocity',
                               'sea_creature_chance'):
-                if getattr(self, stat_name, 0) == 0:
-                    if stat_name[0] not in 'dh' or self.hot_potato == 0:
-                        continue
 
                 display_stat = display_name(stat_name)
-                value = getattr(self, stat_name)
+                value = getattr(self, stat_name, 0)
+
+                if stat_name == 'health':
+                    value += enchantments.get('growth', 0) * 15
+                elif stat_name == 'protection':
+                    value += enchantments.get('protection', 0) * 3
 
                 hot_potato = ''
                 if stat_name[0] in 'dh' and self.hot_potato != 0:
                     value += self.hot_potato
                     hot_potato = f' {YELLOW}(+{self.hot_potato})'
+
+                if value == 0:
+                    continue
 
                 hp = ''
                 if stat_name == 'health':
@@ -232,8 +240,54 @@ def item_type(cls: type, /) -> type:
             info += '\n\n' + '\n'.join(f'{GRAY}{stat}{CLN}'
                                        for stat in bonus_stats)
 
+        while '\n' in info and info.split('\n')[1] == '':
+            info = '\n'.join([info.split('\n')[0]] + info.split('\n')[2:])
+
+        if getattr(self, 'enchantments', {}) != {}:
+            ench_str_list = []
+
+            enchs = self.enchantments
+            ench_names = [*enchs.keys()]
+            ult_ench = []
+
+            for name in ench_names:
+                if name in ULTIMATE_ENCHANTMENTS:
+                    ult_ench = [name]
+                    ench_names.remove(name)
+                    break
+
+            ench_names = ult_ench + sorted(ench_names)
+
+            while len(ench_names) != 0:
+                if len(ench_names) == 1:
+                    name = ench_names[0]
+                    ench_color = (f'{LIGHT_PURPLE}{BOLD}'
+                                  if name in ULTIMATE_ENCHANTMENTS else BLUE)
+                    lvl = enchs[name]
+                    lvl_str = '' if lvl == 0 else f' {roman(lvl)}'
+                    ench_str_list.append(
+                        f'{ench_color}{display_name(name)}{lvl_str}{CLN}'
+                    )
+                    break
+                name = ench_names[0]
+                ench_color = (f'{LIGHT_PURPLE}{BOLD}'
+                              if name in ULTIMATE_ENCHANTMENTS else BLUE)
+                lvl = enchs[name]
+                lvl_str = '' if lvl == 0 else f' {roman(lvl)}'
+                ench_str = f'{ench_color}{display_name(name)}{lvl_str}, '
+
+                name = ench_names[1]
+                lvl = enchs[name]
+                lvl_str = '' if lvl == 0 else f' {roman(lvl)}'
+                ench_str += f'{BLUE}{display_name(name)}{lvl_str}{CLN}'
+                ench_str_list.append(ench_str)
+
+                ench_names = ench_names[2:]
+
+            info += '\n\n' + '\n'.join(ench_str_list)
+
         info += '\n'
-        if hasattr(self, 'modifier'):
+        if hasattr(self, 'modifier') and self.modifier is None:
             info += (f'\n{DARK_GRAY}This item can be reforged!{CLN}')
 
         if getattr(self, 'combat_skill_req', None) is not None:
@@ -253,10 +307,8 @@ def item_type(cls: type, /) -> type:
         if getattr(self, 'stars', None) is not None:
             type_name = f'DUNGEON {type_name}'
 
-        info += f'\n{color}{self.rarity.upper()} {type_name}{CLN}'
-
-        while info.split('\n')[1] == '':
-            info = '\n'.join([info.split('\n')[0]] + info.split('\n')[2:])
+        info = info.rstrip('\n')
+        info += f'\n{rarity_color}{self.rarity.upper()} {type_name}{CLN}'
 
         while '\n\n\n' in info:
             info = info.replace('\n\n\n', '\n\n')
