@@ -29,7 +29,8 @@ def profile_display(cls):
 
     cls.display_armor = display_armor
 
-    def display_skill(self, name: str, /, *, end: bool = True):
+    def display_skill(self, name: str, /, *,
+                      reward: bool = True, end: bool = True):
         width, _ = get_terminal_size()
         width = ceil(width * 0.85)
 
@@ -51,7 +52,7 @@ def profile_display(cls):
         green(f'{left}{GRAY}{right} {YELLOW}{display_int(exp_left)}'
               f'{GOLD}/{YELLOW}{display_int(exp_to_next)}')
 
-        if exp_left < exp_to_next and name != 'catacombs':
+        if reward and exp_left < exp_to_next and name != 'catacombs':
             gray(f'\nLevel {roman(lvl + 1)} Rewards:')
             gray(f' +{GOLD}{display_int(coins)}{GRAY} Coins')
 
@@ -64,9 +65,9 @@ def profile_display(cls):
         width, _ = get_terminal_size()
         width = ceil(width * 0.85)
 
-        for skill in {'farming', 'mining', 'combat', 'foraging', 'fishing',
-                      'enchanting', 'alchemy', 'taming', 'catacombs'}:
-            self.display_skill(skill, end=False)
+        for skill in ('farming', 'mining', 'combat', 'foraging', 'fishing',
+                      'enchanting', 'alchemy', 'taming', 'catacombs'):
+            self.display_skill(skill, reward=False, end=False)
 
         yellow(f"{BOLD}{'':-^{width}}")
 
@@ -81,6 +82,7 @@ def profile_display(cls):
 
             white(f'Purse: {GOLD}{display_number(self.purse)} Coins'
                   f'{shortened_purse}')
+            return
 
         shortened_balance = ''
         if self.balance >= 1000:
@@ -90,10 +92,14 @@ def profile_display(cls):
         if self.purse >= 1000:
             shortened_purse = f' {GRAY}({shorten_number(self.purse)})'
 
+        balance_str = display_number(self.balance)
+        purse_str = display_number(self.purse)
+        length = max(len(balance_str), len(purse_str))
+
         green('Bank Account')
-        gray(f'Balance: {GOLD}{display_number(self.balance)} Coins'
+        gray(f'Balance: {GOLD}{balance_str:>{length}} Coins'
              f'{shortened_balance}')
-        white(f'Purse: {GOLD}{display_number(self.purse)} Coins'
+        white(f'Purse:   {GOLD}{purse_str:>{length}} Coins'
               f'{shortened_purse}')
         gray(f'Bank Level: {GREEN}{display_name(self.bank_level)}')
 
@@ -139,12 +145,13 @@ def profile_display(cls):
                     direc += 'South' if dz > 0 else 'North'
                 if dz / dx < tan(radians(60)):
                     direc += 'East' if dx > 0 else 'West'
-            gray(f'  {AQUA}{other.name}{GRAY} on the {AQUA}{direc}{GRAY}.')
+            gray(f'  {AQUA}{display_name(other.name)}{GRAY} '
+                 f'on the {AQUA}{direc}{GRAY}.')
 
         if len(region.resources) > 0:
             gray('\nResources:')
             for resource in region.resources:
-                gray(f'  {GREEN}{resource.name}{GRAY} ({resource.type()})')
+                gray(f'  {GREEN}{display_name(resource.name)}{GRAY}')
 
         if len(region.mobs) > 0:
             gray('\nMobs:')
@@ -154,7 +161,7 @@ def profile_display(cls):
         if len(region.npcs) > 0:
             gray('\nNPCs:')
             for npc in region.npcs:
-                gray(f'  {GREEN}{npc}{GRAY} ({npc.name})')
+                gray(f'  {GREEN}{npc}{GRAY}')
 
         if region.portal is not None:
             gray(f'\nPortal to {AQUA}{display_name(region.portal)}{GRAY}.')

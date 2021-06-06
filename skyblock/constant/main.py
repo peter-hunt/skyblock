@@ -117,6 +117,12 @@ SELL_PRICE = {
     'acacia_wood': 2,
     'jungle_wood': 2,
 
+    'wheat': 1,
+    'carrot': 1,
+    'potato': 1,
+    'melon': 0.5,
+    'pumpkin': 4,
+
     'enchanted_ender_pearl': 140,
     'enchanted_eye_of_ender': 3_520,
 

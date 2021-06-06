@@ -1,6 +1,6 @@
 from math import ceil
 
-from ..constant.color import GOLD, GRAY, GREEN, AQUA, YELLOW
+from ..constant.color import GOLD, DARK_GRAY, GREEN, AQUA, YELLOW
 from ..function.io import gray, red, green, yellow
 from ..function.util import display_int
 from ..item.item import get_stack_size
@@ -53,35 +53,35 @@ def profile_item(cls):
     cls.put_stash = put_stash
 
     def recieve(self, item: ItemType, count: int, /, *, log: bool = True):
-        item = item.copy()
-        stack_count = get_stack_size(item.name)
+        item_copy = item.copy()
+        stack_count = get_stack_size(item_copy.name)
+        counter = count
 
         for index, slot in enumerate(self.inventory):
             if isinstance(slot, Empty):
+                delta = min(counter, stack_count)
                 if stack_count != 1:
-                    delta = min(count, stack_count)
-                    item.count = delta
-                else:
-                    delta = 1
-                self.inventory[index] = item
-                count -= delta
+                    item_copy.count = delta
+                self.inventory[index] = item_copy
+                counter -= delta
             elif not isinstance(slot, Item) or not isinstance(item, Item):
                 continue
             elif slot.name != item.name or slot.rarity != item.rarity:
                 continue
             else:
-                delta = min(count, stack_count - slot.count)
-                count -= delta
+                delta = min(counter, stack_count - slot.count)
+                counter -= delta
                 self.inventory[index].count += delta
-            if count == 0:
+            if counter == 0:
                 break
         else:
-            self.put_stash(item, count)
+            self.put_stash(item_copy, counter)
             return
 
         if log:
-            count_str = '' if count == 0 else f' {GRAY}x {display_int(count)}'
-            gray(f'+ {item.display()}{count_str}')
+            count_str = ('' if count <= 1
+                         else f' {DARK_GRAY}x {display_int(count)}')
+            gray(f'+ {item_copy.display()}{count_str}')
 
     cls.recieve = recieve
 

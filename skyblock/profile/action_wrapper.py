@@ -20,7 +20,8 @@ from ..function.util import (
 from ..item.item import COLLECTION_ITEMS
 from ..item.mob import get_mob
 from ..item.object import (
-    ItemType, Item, Empty, Bow, Sword, Axe, Pickaxe, Mineral, Tree, Armor, Mob,
+    ItemType, Item, Empty, Bow, Sword, Armor,
+    Axe, Hoe, Pickaxe, Crop, Mineral, Tree, Mob,
 )
 from ..item.resource import get_resource
 from ..map.island import ISLANDS
@@ -60,12 +61,38 @@ def profile_action(cls):
         resource = get_resource(name)
         tool = Empty() if tool_index is None else self.inventory[tool_index]
 
-        if not isinstance(tool, (Empty, Axe, Pickaxe)):
+        if not isinstance(tool, (Empty, Axe, Hoe, Pickaxe)):
             tool = Empty()
 
         enchantments = getattr(tool, 'enchantments', {})
 
-        if isinstance(resource, Mineral):
+        if isinstance(resource, Crop):
+            time_cost = 0.4
+
+            farming_lvl = calc_skill_exp('farming', self.skill_xp_farming)
+
+            farming_fortune = (1 + 0.125 * enchantments.get('harvesting', 0)
+                               + 0.04 * farming_lvl)
+            drop_item = resource.drop
+            default_amount = resource.amount
+
+            last_cp = Decimal()
+            cp_step = Decimal('0.1')
+            is_collection = includes(COLLECTION_ITEMS, drop_item)
+            for count in range(1, amount + 1):
+                sleep(time_cost)
+                drop_pool = random_int(farming_fortune)
+                self.recieve(Item(drop_item), default_amount * drop_pool)
+                if is_collection:
+                    self.collect(drop_item, default_amount * drop_pool)
+
+                self.add_skill_exp('farming', resource.farming_exp)
+                if count >= (last_cp + cp_step) * amount:
+                    while count >= (last_cp + cp_step) * amount:
+                        last_cp += cp_step
+                    gray(f'{count} / {amount} ({(last_cp * 100):.0f}%) done')
+
+        elif isinstance(resource, Mineral):
             breaking_power = getattr(tool, 'breaking_power', 0)
             mining_speed = getattr(tool, 'mining_speed', 50)
             mining_speed = tool.mining_speed
@@ -80,9 +107,9 @@ def profile_action(cls):
 
             mining_lvl = calc_skill_exp('mining', self.skill_xp_mining)
 
-            mining_fortune = (1 + 0.1 * tool.enchantments.get('fortune', 0)
+            mining_fortune = (1 + 0.1 * enchantments.get('fortune', 0)
                               + 0.04 * mining_lvl)
-            experience = 1 + 0.125 * tool.enchantments.get('experience', 0)
+            experience = 1 + 0.125 * enchantments.get('experience', 0)
             drop_item = resource.drop
             default_amount = resource.amount
 
@@ -106,8 +133,8 @@ def profile_action(cls):
         elif isinstance(resource, Tree):
             if isinstance(tool, Axe):
                 tool_speed = tool.tool_speed
-                if 'efficiency' in tool.enchantments:
-                    tool_speed += tool.enchantments['efficiency'] ** 2 + 1
+                if 'efficiency' in enchantments:
+                    tool_speed += enchantments['efficiency'] ** 2 + 1
                 time_cost = 1.5 * resource.hardness / tool_speed
             else:
                 tool_speed = 1

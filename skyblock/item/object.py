@@ -5,7 +5,7 @@ from ..constant.util import Amount, Number
 from .wrapper import item_type, mob_type
 
 __all__ = [
-    'ItemType', 'Item', 'Empty', 'Bow', 'Sword', 'Axe', 'Pickaxe',
+    'ItemType', 'Item', 'Empty', 'Bow', 'Sword', 'Axe', 'Pickaxe', 'Hoe',
     'Armor', 'Potion', 'Pet', 'Resource', 'Mineral', 'Tree', 'ITEM_OBJS', 'Mob',
 ]
 
@@ -89,6 +89,14 @@ class Pickaxe(ItemType):
 
 
 @item_type
+class Hoe(ItemType):
+    name: str
+    rarity: str
+    modifier: Optional[str] = None
+    enchantments: Dict[str, int] = {}
+
+
+@item_type
 class Armor(ItemType):
     name: str
     rarity: str
@@ -159,6 +167,14 @@ class Resource:
 
 
 @item_type
+class Crop(Resource):
+    name: str
+    drop: str
+    amount: int = 1
+    farming_exp: Number = 1
+
+
+@item_type
 class Mineral(Resource):
     name: str
     drop: str
@@ -178,8 +194,8 @@ class Tree(Resource):
 
 
 ITEM_OBJS = [
-    Item, Empty, Sword, Bow, Axe, Pickaxe, Armor,
-    Potion, Pet, Mineral, Tree,
+    Item, Empty, Sword, Bow, Axe, Hoe, Pickaxe, Armor,
+    Potion, Pet, Crop, Mineral, Tree,
 ]
 
 

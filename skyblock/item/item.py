@@ -2,7 +2,7 @@ from typing import Any
 
 from ..function.util import get
 
-from .object import ItemType, Item, Pickaxe, Axe, Sword, Armor, Pet
+from .object import ItemType, Item, Axe, Hoe, Pickaxe, Sword, Armor, Pet
 
 __all__ = [
     'COLLECTION_ITEMS', 'WEAPONS', 'TOOLS', 'ITEMS',
@@ -29,8 +29,6 @@ COLLECTION_ITEMS = [
     Item('mutton', 64, 'common'),
     Item('rabbit', 64, 'common'),
     Item('nether_wart', 64, 'common'),
-
-    Item('poisonous_potato', 64, 'common'),
 
     Item('cobblestone', 64, 'common'),
     Item('coal', 64, 'common'),
@@ -76,6 +74,7 @@ COMPACT_ITEMS = [
 
 OTHER_ITEMS = [
     Item('arrow', 64, 'common'),
+    Item('poisonous_potato', 64, 'common'),
     Item('summoning_eye', 1, 'epic'),
 ]
 
@@ -208,6 +207,26 @@ ARMOR_PIECES = [
 ]
 
 TOOLS = [
+    Axe('wooden_axe', rarity='common', tool_speed=2),
+    Axe('stone_axe', rarity='common', tool_speed=4),
+    Axe('golden_axe', rarity='common', tool_speed=12),
+    Axe('iron_axe', rarity='common', tool_speed=6),
+    Axe('diamond_axe', rarity='uncommon', tool_speed=8),
+
+    Axe('rookie_axe', rarity='common', tool_speed=4,
+        enchantments={'efficiency': 1}),
+    Axe('promising_axe', rarity='uncommon', tool_speed=6),
+    Axe('sweet_axe', rarity='uncommon', tool_speed=6),
+    Axe('efficient_axe', rarity='uncommon', tool_speed=6),
+
+    Hoe('wooden_hoe', rarity='common'),
+    Hoe('golden_hoe', rarity='common'),
+    Hoe('stone_hoe', rarity='common'),
+    Hoe('iron_hoe', rarity='common'),
+    Hoe('diamond_hoe', rarity='uncommon'),
+
+    Hoe('rookie_hoe', rarity='common'),
+
     Pickaxe('wooden_pickaxe', rarity='common',
             breaking_power=1, mining_speed=70),
     Pickaxe('golden_pickaxe', rarity='common',
@@ -224,18 +243,6 @@ TOOLS = [
             enchantments={'efficiency': 1}),
     Pickaxe('promising_pickaxe', rarity='uncommon',
             breaking_power=2, mining_speed=190),
-
-    Axe('wooden_axe', rarity='common', tool_speed=2),
-    Axe('stone_axe', rarity='common', tool_speed=4),
-    Axe('golden_axe', rarity='common', tool_speed=12),
-    Axe('iron_axe', rarity='common', tool_speed=6),
-    Axe('diamond_axe', rarity='uncommon', tool_speed=8),
-
-    Axe('rookie_axe', rarity='common', tool_speed=4,
-        enchantments={'efficiency': 1}),
-    Axe('promising_axe', rarity='uncommon', tool_speed=6),
-    Axe('sweet_axe', rarity='uncommon', tool_speed=6),
-    Axe('efficient_axe', rarity='uncommon', tool_speed=6),
 ]
 
 PETS = [

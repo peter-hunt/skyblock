@@ -74,6 +74,7 @@ COLOSSEUM = Region('colosseum', -58, -58)
 COMMUNITY_CENTER = Region('community_center', 0, -100)
 FARM = Region(
     'farm', 41, -137,
+    resources=[get_resource('wheat')],
     portal='barn',
 )
 FARMHOUSE = Region(
@@ -96,7 +97,7 @@ FARMHOUSE = Region(
                 (5, Item('cocoa_beans')),
                 (5, Item('sugar_cane')),
                 (4, Item('sand')),
-                # (10, get_item('rookie_hoe')),
+                (10, get_item('rookie_hoe')),
             ]),
         Npc('jacob',
             dialog=[[
@@ -372,14 +373,30 @@ PARK_ISLAND = Island(
 )
 
 
-PUMPKIN_FIELD = Region('pumpkin_field', 190, -225)
+POTATO_FIELD = Region(
+    'potato_field', 150, -245,
+    resources=[
+        get_resource('carrot'),
+        get_resource('potato'),
+    ],
+)
+PUMPKIN_FIELD = Region(
+    'pumpkin_field', 190, -225,
+    resources=[
+        get_resource('melon'),
+        get_resource('pumpkin'),
+    ],
+)
 WHEAT_FIELD = Region(
     'wheat_field', 105, -220,
+    resources=[get_resource('wheat')],
     portal='hub',
 )
 
-BARN_JOINTS = [PUMPKIN_FIELD, WHEAT_FIELD]
+BARN_JOINTS = [POTATO_FIELD, PUMPKIN_FIELD, WHEAT_FIELD]
 BARN_CONNS = [
+    (POTATO_FIELD, WHEAT_FIELD),
+    (POTATO_FIELD, PUMPKIN_FIELD),
     (PUMPKIN_FIELD, WHEAT_FIELD),
 ]
 

@@ -17,7 +17,7 @@ from ..function.util import (
 from ..item.item import get_item
 from ..item.mob import get_mob
 from ..item.object import (
-    Item, Empty, Pickaxe, Axe, Bow, Sword, Armor, Pet,
+    Item, Empty, Bow, Sword, Armor, Axe, Hoe, Pickaxe, Pet,
 )
 from ..item.resource import get_resource
 from ..map.island import ISLANDS
@@ -292,7 +292,7 @@ class Profile:
                         continue
 
                     tool_item = self.inventory[tool_index]
-                    if not isinstance(tool_item, (Empty, Pickaxe, Axe)):
+                    if not isinstance(tool_item, (Empty, Axe, Hoe, Pickaxe)):
                         yellow(f'{tool_item.name} item is not tool.\n'
                                f'Using barehand by default.')
                         tool_index = None
@@ -506,7 +506,7 @@ class Profile:
                 trade_index = self.parse_index(words[1], len(trades))
                 if trade_index is None:
                     continue
-                chosen_trade = trades[trade_index - 1]
+                chosen_trade = trades[trade_index]
 
                 if len(words) == 3:
                     amount = parse_int(words[2])
