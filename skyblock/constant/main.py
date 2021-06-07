@@ -132,10 +132,17 @@ SELL_PRICE = {
     'sweet_axe': 25,
     'efficient_axe': 25,
 
+    'lapis_helmet': 1_000,
+    'lapis_chestplate': 1_000,
+    'lapis_leggings': 1_000,
+    'lapis_boots': 1_000,
+
     'ender_helmet': 10_000,
     'ender_chestplate': 10_000,
     'ender_leggings': 10_000,
     'ender_boots': 10_000,
+
+    'flaming_sword': 20,
 }
 
 
@@ -222,5 +229,6 @@ SPECIAL_NAMES = {
     'necrons_blade': "Necron's Blade",
     'rngesus': 'RNGesus',
     'runaans_bow': "Runaan's Bow",
-    'tacticians_sword': "Tactician's Sword"
+    'pigmans_den': "Pigman's Den",
+    'tacticians_sword': "Tactician's Sword",
 }

@@ -108,6 +108,12 @@ def roman(num: int, /) -> str:
 def shorten_number(number: Union[int, float], /) -> str:
     for letter, amount in reversed(NUMBER_SCALES):
         if number >= amount:
-            string = f'{number / amount:.1f}'.rstrip('.0')
-            return f'{string}{letter}'
-    return f'{number / amount:.1f}'.rstrip('.0')
+            break
+    else:
+        amount = 1
+        letter = ''
+
+    string = f'{number / amount:.1f}'
+    if string.endswith('.0'):
+        string = string[:-2]
+    return f'{string}{letter}'

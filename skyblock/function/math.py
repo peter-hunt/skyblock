@@ -223,10 +223,10 @@ def dung_stat(num: int, lvl: int, stars: int) -> Number:
 
 
 def random_amount(amount: Amount = 1, /) -> int:
-    if isinstance(amount, int):
-        return amount
-    else:
+    if isinstance(amount, tuple):
         return randint(amount[0], amount[1])
+    else:
+        return amount
 
 
 def random_bool(chance: float = 0.5, /) -> bool:

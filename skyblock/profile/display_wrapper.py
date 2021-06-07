@@ -186,8 +186,8 @@ def profile_display(cls):
                 continue
 
             if empty_slots:
-                for index in empty_slots:
-                    gray(f'{(index + 1):>{digits * 2 + 1}}')
+                for empty_index in empty_slots:
+                    gray(f'{(empty_index + 1):>{digits * 2 + 1}}')
                 empty_slots.clear()
             gray(f'{(index + 1):>{digits * 2 + 1}} {item.display()}')
             index += 1

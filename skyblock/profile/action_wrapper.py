@@ -140,7 +140,7 @@ def profile_action(cls):
                 if is_collection:
                     self.collect(drop_item, default_amount * drop_pool)
 
-                self.add_exp(resource.exp * random_int(experience))
+                self.add_exp(resource.exp * random_amount(experience))
                 self.add_skill_exp('mining', resource.mining_exp)
                 if count >= (last_cp + cp_step) * amount:
                     while count >= (last_cp + cp_step) * amount:
@@ -538,7 +538,7 @@ def profile_action(cls):
                 if rarity not in {'common', 'uncommon'}:
                     rarity_str = rarity.upper()
                     white(f'{RARITY_COLORS[rarity]}{rarity_str} DROP! '
-                          f'({item.display()}{WHITE})')
+                          f'{WHITE}({item.display()}{WHITE})')
 
             if count >= (last_cp + cp_step) * amount:
                 while count >= (last_cp + cp_step) * amount:

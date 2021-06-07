@@ -1,6 +1,7 @@
 from typing import Any
 
-from ..function.util import get
+from ..function.io import red
+from ..function.util import get, includes
 
 from .object import ItemType, Item, Axe, Hoe, Pickaxe, Sword, Armor, Pet
 
@@ -74,6 +75,9 @@ COMPACT_ITEMS = [
 
 OTHER_ITEMS = [
     Item('arrow', 64, 'common'),
+    Item('exp_share_core', 1, 'epic'),
+    Item('gold_nugget', 64, 'common'),
+    Item('lapis_crystal', 1, 'rare'),
     Item('poisonous_potato', 64, 'common'),
     Item('summoning_eye', 1, 'epic'),
 ]
@@ -96,6 +100,9 @@ WEAPONS = [
           damage=35),
     Sword('spider_sword', 'common',
           damage=30),
+
+    Sword('flaming_sword', 'uncommon',
+          damage=50, strength=20),
 
     Sword('fancy_sword', 'common',
           damage=30,
@@ -160,13 +167,13 @@ ARMOR_PIECES = [
     Armor('leather_boots', rarity='common', part='boots',
           defense=5),
 
-    Armor('gold_helmet', rarity='common', part='helmet',
+    Armor('golden_helmet', rarity='common', part='helmet',
           defense=10),
-    Armor('gold_chestplate', rarity='common', part='chestplate',
+    Armor('golden_chestplate', rarity='common', part='chestplate',
           defense=25),
-    Armor('gold_leggings', rarity='common', part='leggings',
+    Armor('golden_leggings', rarity='common', part='leggings',
           defense=15),
-    Armor('gold_boots', rarity='common', part='boots',
+    Armor('golden_boots', rarity='common', part='boots',
           defense=5),
 
     Armor('chainmail_helmet', rarity='uncommon', part='helmet',
@@ -195,6 +202,24 @@ ARMOR_PIECES = [
           defense=30),
     Armor('diamond_boots', rarity='uncommon', part='boots',
           defense=15),
+
+    Armor('lapis_helmet', rarity='uncommon', part='helmet',
+          defense=25),
+    Armor('lapis_chestplate', rarity='uncommon', part='chestplate',
+          defense=40),
+    Armor('lapis_leggings', rarity='uncommon', part='leggings',
+          defense=35),
+    Armor('lapis_boots', rarity='uncommon', part='boots',
+          defense=20),
+
+    Armor('miner_helmet', rarity='uncommon', part='helmet',
+          defense=45),
+    Armor('miner_chestplate', rarity='uncommon', part='chestplate',
+          defense=95),
+    Armor('miner_leggings', rarity='uncommon', part='leggings',
+          defense=70),
+    Armor('miner_boots', rarity='uncommon', part='boots',
+          defense=45),
 
     Armor('ender_helmet', rarity='epic', part='helmet',
           health=20, defense=35),
@@ -265,6 +290,9 @@ ITEMS = (COLLECTION_ITEMS + COMPACT_ITEMS + OTHER_ITEMS
 
 
 def get_item(name: str, default: Any = None, **kwargs) -> ItemType:
+    if not includes(ITEMS, name):
+        red(f'Invalid item: {name!r}')
+        exit()
     return get(ITEMS, name, default, **kwargs)
 
 

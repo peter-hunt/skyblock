@@ -106,6 +106,8 @@ def profile_item(cls):
             return
 
         if log:
+            if hasattr(item_copy, 'count') and item_copy.count != 1:
+                item_copy.count = 1
             count_str = ('' if count <= 1
                          else f' {DARK_GRAY}x {display_int(count)}')
             gray(f'+ {item_copy.display()}{count_str}')
@@ -131,7 +133,7 @@ def profile_item(cls):
             self.inventory[index_2] = item_1
             self.inventory[index_2].count = amount
             gray(f'Splitted {amount} item from '
-                    f'slot {index_1 + 1} to slot {index_2 + 1}.')
+                 f'slot {index_1 + 1} to slot {index_2 + 1}.')
             return
 
         if item_1.name != item_2.name:
@@ -150,7 +152,7 @@ def profile_item(cls):
         self.inventory[index_1].count -= delta
         self.inventory[index_2].count += delta
         gray(f'Splitted {delta} item from '
-                f'slot {index_1 + 1} to slot {index_2 + 1}.')
+             f'slot {index_1 + 1} to slot {index_2 + 1}.')
 
     cls.split = split
 

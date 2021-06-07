@@ -181,7 +181,7 @@ class Mineral(Resource):
     amount: int = 1
     breaking_power: int = 0
     hardness: int = 2
-    exp: Number = 1
+    exp: Amount = 1
     mining_exp: Number = 1
 
 
