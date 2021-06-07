@@ -38,9 +38,6 @@ def profile_type(cls):
 
     cls.__init__ = eval(init_str)
 
-    # with open(join(Path.home(), 'skyblock',
-    #             'saves', f'{self.name}.json'), 'w') as file:
-
     dump_str = '''
     lambda self: (
         file := open(join(Path.home(), 'skyblock',

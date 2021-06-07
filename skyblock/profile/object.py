@@ -1,20 +1,15 @@
-from math import ceil
-from os import get_terminal_size
 from random import choice
 from re import fullmatch
 from typing import Dict, List, Optional
 
-from ..constant.color import BOLD, DARK_AQUA, GOLD, GRAY, BLUE, GREEN
+from ..constant.color import GOLD, GRAY, BLUE, GREEN
 from ..constant.doc import profile_doc
-from ..constant.main import ARMOR_PARTS, SKILL_EXP
+from ..constant.main import ARMOR_PARTS
 from ..constant.util import Number
-from ..function.io import dark_aqua, gray, red, green, yellow, aqua
-from ..function.math import calc_exp, calc_skill_exp
+from ..function.io import gray, red, green, yellow, aqua
 from ..function.util import (
-    backupable, display_int, display_number, display_name, generate_help,
-    get, includes, parse_int, roman,
+    backupable, display_number, generate_help, get, includes, parse_int,
 )
-from ..item.item import get_item
 from ..item.mob import get_mob
 from ..item.object import (
     Item, Empty, Bow, Sword, Armor, Axe, Hoe, Pickaxe,
@@ -26,6 +21,7 @@ from ..map.object import Npc
 from .action_wrapper import profile_action
 from .display_wrapper import profile_display
 from .item_wrapper import profile_item
+from .math_wrapper import profile_math
 from .wrapper import profile_type
 
 __all__ = ['Profile']
@@ -35,8 +31,9 @@ profile_help = generate_help(profile_doc)
 
 
 @profile_action
-@profile_item
 @profile_display
+@profile_item
+@profile_math
 @profile_type
 class Profile:
     name: str
@@ -87,42 +84,6 @@ class Profile:
     wardrobe_slot: Optional[int] = None
 
     npc_talked: List[str] = []
-
-    def add_exp(self, amount: Number, /):
-        original_lvl = calc_exp(self.experience)
-        self.experience += amount
-        current_lvl = calc_exp(self.experience)
-        if current_lvl > original_lvl:
-            green(f'Reached XP level {current_lvl}.')
-
-    def add_skill_exp(self, name: str, amount: Number, /):
-        if not hasattr(self, f'skill_xp_{name}'):
-            red(f'Skill not found: {name}')
-            return
-        exp = getattr(self, f'skill_xp_{name}')
-        original_lvl = calc_skill_exp(name, exp)
-        exp += amount
-        setattr(self, f'skill_xp_{name}', exp)
-        current_lvl = calc_skill_exp(name, exp)
-        if current_lvl > original_lvl:
-            coins_reward = 0
-            if name != 'catacombs':
-                for lvl in range(original_lvl + 1, current_lvl + 1):
-                    coins_reward += SKILL_EXP[lvl][3]
-
-            self.purse += coins_reward
-
-            width, _ = get_terminal_size()
-            width = ceil(width * 0.85)
-
-            dark_aqua(f"{BOLD}{'':-^{width}}")
-            original = roman(original_lvl) if original_lvl != 0 else '0'
-            aqua(f' {BOLD}SKILL LEVEL UP {DARK_AQUA}{display_name(name)} '
-                 f'{GRAY}{original}->{DARK_AQUA}{roman(current_lvl)}')
-            if name != 'catacombs':
-                green(f' {BOLD}REWARDS')
-                gray(f'  +{GOLD}{display_int(coins_reward)}{GRAY} Coins')
-            dark_aqua(f"{BOLD}{'':-^{width}}")
 
     @backupable
     def talkto_npc(self, npc: Npc, /) -> Optional[str]:
@@ -578,10 +539,6 @@ class Profile:
                     last_shop = result
 
             elif words[0] == 'cheat':
-                # item = get_item('aspect_of_the_dragons')
-                # item.stars = 5
-                # item.hot_potato = 20
-                # self.recieve(item)
                 # item = get_item('hyperion')
                 # item.stars = 10
                 # item.hot_potato = 30
@@ -591,8 +548,6 @@ class Profile:
                 # item = get_item('golden_axe')
                 # self.recieve(item)
                 # item = get_item('enderman_pet')
-                # self.recieve(item)
-                # item = get_item('ender_helmet')
                 # self.recieve(item)
                 ...
 

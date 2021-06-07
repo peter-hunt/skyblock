@@ -5,7 +5,9 @@ from typing import Optional
 from ..constant.color import BOLD, GOLD, GRAY, GREEN, AQUA, YELLOW
 from ..constant.main import ARMOR_PARTS
 from ..function.io import gray, green, yellow, white
-from ..function.math import calc_skill_exp, calc_skill_exp_info
+from ..function.math import (
+    calc_skill_exp, calc_skill_exp_info, display_skill_reward,
+)
 from ..function.util import (
     display_int, display_name, display_number, get, roman, shorten_number,
 )
@@ -22,8 +24,7 @@ def profile_display(cls):
             self.info(item)
             return
 
-        for piece, name in zip(self.armor, ('helmet', 'chestplate',
-                                            'leggings', 'boots')):
+        for piece, name in zip(self.armor, ARMOR_PARTS):
             gray(f'{display_name(name)}: {piece.display()}')
 
     cls.display_armor = display_armor
@@ -36,7 +37,7 @@ def profile_display(cls):
         yellow(f"{BOLD}{'':-^{width}}")
 
         exp = getattr(self, f'skill_xp_{name}')
-        lvl, exp_left, exp_to_next, coins = calc_skill_exp_info(name, exp)
+        lvl, exp_left, exp_to_next = calc_skill_exp_info(name, exp)
         if lvl == 0:
             green(display_name(name))
         else:
@@ -49,11 +50,11 @@ def profile_display(cls):
         bar = min(int(exp_left / exp_to_next * 20), 20)
         left, right = '-' * bar, '-' * (20 - bar)
         green(f'{left}{GRAY}{right} {YELLOW}{display_int(exp_left)}'
-              f'{GOLD}/{YELLOW}{display_int(exp_to_next)}')
+              f'{GOLD}/{YELLOW}{shorten_number(exp_to_next)}')
 
-        if reward and exp_left < exp_to_next and name != 'catacombs':
+        if reward and exp_left < exp_to_next:
             gray(f'\nLevel {roman(lvl + 1)} Rewards:')
-            gray(f' +{GOLD}{display_int(coins)}{GRAY} Coins')
+            display_skill_reward(name, lvl, lvl + 1)
 
         if end:
             yellow(f"{BOLD}{'':-^{width}}")

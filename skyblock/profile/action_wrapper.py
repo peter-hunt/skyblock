@@ -330,6 +330,8 @@ def profile_action(cls):
 
         strength += min(foraging_lvl, 14) * 1
         strength += max(min(foraging_lvl - 14, 36), 0) * 2
+        # intelligence += min(enchanting_lvl, 14) * 1
+        # intelligence += max(min(foraging_lvl - 14, 46), 0) * 2
         crit_chance += combat_lvl * 0.5
         defense += min(mining_lvl, 14) * 1
         defense += max(min(mining_lvl - 14, 46), 0) * 2
@@ -338,7 +340,9 @@ def profile_action(cls):
         health += max(min(farming_lvl - 19, 6), 0) * 4
         health += max(min(farming_lvl - 25, 35), 0) * 5
 
-        damage *= 1 + 0.04 * combat_lvl
+        warrior = 0.04 * min(combat_lvl, 50)
+        warrior += 0.01 * max(min(combat_lvl - 50, 10), 0)
+        damage *= 1 + warrior
 
         time_cost = 2 / (speed / 100)
 
