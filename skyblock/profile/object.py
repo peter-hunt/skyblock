@@ -8,7 +8,8 @@ from ..constant.main import ARMOR_PARTS
 from ..constant.util import Number
 from ..function.io import gray, red, green, yellow, aqua
 from ..function.util import (
-    backupable, display_number, generate_help, get, includes, parse_int,
+    backupable, display_int, display_number, generate_help,
+    get, includes, parse_int,
 )
 from ..item.mob import get_mob
 from ..item.object import (
@@ -63,6 +64,7 @@ class Profile:
     crafted_minions: List[str] = []
 
     death_count: int = 0
+    play_time: int = 0
 
     armor: List[Armor] = [Empty() for _ in range(4)]
     pets: List[Item] = []
@@ -134,8 +136,18 @@ class Profile:
                 break
 
             elif words[0] == 'deathcount':
-                yellow(f'Death Counts: {BLUE}'
-                       f'{display_number(self.death_count)}')
+                if len(words) != 1:
+                    red(f'Invalid usage of command {words[0]!r}.')
+                    continue
+
+                yellow(f'Death Count: {BLUE}{display_int(self.death_count)}')
+
+            elif words[0] in {'playtime', 'pt'}:
+                if len(words) != 1:
+                    red(f'Invalid usage of command {words[0]!r}.')
+                    continue
+
+                self.display_playtime()
 
             elif words[0] in {'deposit', 'withdraw'}:
                 if len(words) != 2:
@@ -295,9 +307,9 @@ class Profile:
                     red(f'Invalid usage of command {words[0]!r}.')
                     continue
 
-                self.ls()
+                self.display_inv()
 
-            elif words[0] in {'info', 'information'}:
+            elif words[0] in {'info', 'information', 'item'}:
                 if len(words) != 2:
                     red(f'Invalid usage of command {words[0]!r}.')
                     continue
@@ -306,7 +318,7 @@ class Profile:
                 if index is None:
                     continue
 
-                self.info(self.inventory[index])
+                self.display_item(self.inventory[index])
 
             elif words[0] == 'stats':
                 if len(words) != 1:

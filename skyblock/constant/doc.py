@@ -46,6 +46,7 @@ List all the items in the inventory.
 
 > info <index>
 > information <index>
+> item <index>
 Display detailed informatioon about the item.
 
 > shop [index=all]
@@ -62,6 +63,10 @@ Get information about your skills.
 
 > money
 Display information about your money.
+
+> playtime
+> pt
+Shows your current playtime.
 
 > deposit <coins>
 Deposit coins from the purse to the bank.

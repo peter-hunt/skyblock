@@ -538,7 +538,7 @@ def profile_action(cls):
     def update(self, /):
         now = int(time())
         last = now if self.last_update == 0 else self.last_update
-        # dt = now - last
+        dt = now - last
 
         last_cp = last // (31 * 3600)
         now_cp = now // (31 * 3600)
@@ -547,6 +547,7 @@ def profile_action(cls):
             if self.bank_level not in INTEREST_TABLE:
                 red(f'Invalid bank level: {self.bank_level!r}.')
                 return
+
             table = INTEREST_TABLE[self.bank_level]
             for start, end, ratio in table:
                 if self.balance > start:
@@ -557,6 +558,8 @@ def profile_action(cls):
             green(f"Since you've been away you earned "
                   f"{GOLD}{display_number(interest)} coins{GREEN} "
                   f"as interest in your personal bank account!")
+
+        self.play_time += dt
 
         self.last_update = now
 
@@ -574,7 +577,9 @@ def profile_action(cls):
             yellow(f'Already at island: {dest!r}')
             return
 
-        if getattr(region, 'portal', None) != dest:
+        if dest == 'hub':
+            pass
+        elif getattr(region, 'portal', None) != dest:
             yellow(f'Cannot warp to {dest}')
             return
 
@@ -591,7 +596,7 @@ def profile_action(cls):
                 return
 
         self.island = dest
-        region = get(island.regions, portal=last)
+        region = get(island.regions, portal=last, default=island.spawn)
         self.region = region.name
         gray(f'Warped to {AQUA}{region}{GRAY} of {AQUA}{island}{GRAY}.')
 
