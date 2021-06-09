@@ -48,8 +48,14 @@ List all the items in the inventory.
 > information <index>
 Display detailed informatioon about the item.
 
+> shop [index=all]
+Show goods in recently opened shop.
+
 > look
 Get information about the region.
+
+> stats
+Get information about your stats.
 
 > skills [skill=all]
 Get information about your skills.

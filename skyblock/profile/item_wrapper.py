@@ -18,6 +18,13 @@ def profile_item(cls):
 
     cls.clearstash = clearstash
 
+    def collect(self, name: str, amount: int, /):
+        if name not in self.collection:
+            self.collection[name] = 0
+        self.collection[name] += amount
+
+    cls.collect = collect
+
     def merge(self, index_1: int, index_2: int, /):
         item_from = self.inventory[index_1]
         item_to = self.inventory[index_2]

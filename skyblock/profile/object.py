@@ -48,14 +48,6 @@ class Profile:
     island: str = 'hub'
     region: str = 'village'
 
-    base_health: int = 100
-    base_defense: int = 0
-    base_strength: int = 0
-    base_speed: int = 100
-    base_crit_damage: int = 50
-    base_intelligence: int = 100
-    base_sea_creature_chance: int = 20
-
     skill_xp_alchemy: float = 0.0
     skill_xp_carpentry: float = 0.0
     skill_xp_catacombs: float = 0.0
@@ -107,11 +99,6 @@ class Profile:
             self.npc_talk(choice(npc.dialog))
         else:
             self.npc_silent(npc)
-
-    def collect(self, name: str, amount: int, /):
-        if name not in self.collection:
-            self.collection[name] = 0
-        self.collection[name] += amount
 
     def mainloop(self):
         last_shop: Optional[str] = None
@@ -321,6 +308,13 @@ class Profile:
 
                 self.info(self.inventory[index])
 
+            elif words[0] == 'stats':
+                if len(words) != 1:
+                    red(f'Invalid usage of command {words[0]!r}.')
+                    continue
+
+                self.display_stats()
+
             elif words[0] == 'look':
                 if len(words) != 1:
                     red(f'Invalid usage of command {words[0]!r}.')
@@ -408,6 +402,27 @@ class Profile:
                     self.inventory[index_2], self.inventory[index_1])
                 gray(f'Switched {self.inventory[index_2].display()}{GRAY}'
                      f' and {self.inventory[index_1].display()}')
+
+            elif words[0] == 'shop':
+                if len(words) > 2:
+                    red(f'Invalid usage of command {words[0]!r}.')
+                    continue
+
+                if last_shop is None:
+                    red("You haven't talked to an NPC "
+                        "with trades in this region yet!")
+                    continue
+
+                npc = get(region.npcs, last_shop)
+
+                if len(words) == 2:
+                    trade_index = self.parse_index(words[1], len(npc.trades))
+                    if trade_index is None:
+                        continue
+                else:
+                    trade_index = None
+
+                self.display_shop(npc, trade_index)
 
             elif words[0] == 'buy':
                 if len(words) not in {2, 3}:

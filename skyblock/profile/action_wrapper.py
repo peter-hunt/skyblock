@@ -8,7 +8,7 @@ from ..constant.color import (
     AQUA, RED, LIGHT_PURPLE, YELLOW, WHITE,
 )
 from ..constant.main import INTEREST_TABLE, SELL_PRICE
-from ..constant.mob import ENDER_SLAYER_EFFECTIVE
+from ..constant.mob import CUBISM_EFT, ENDER_SLAYER_EFT, SMITE_EFT
 from ..constant.util import Number
 from ..function.io import gray, red, green, yellow, aqua, white
 from ..function.math import (
@@ -88,8 +88,8 @@ def profile_action(cls):
 
             farming_lvl = calc_skill_exp('farming', self.skill_xp_farming)
 
-            farming_fortune = (1 + 0.125 * enchantments.get('harvesting', 0)
-                               + 0.04 * farming_lvl)
+            farming_fortune = self.get_stat('farming_fortune', tool_index)
+            fortune_mult = 1 + farming_fortune / 100
             drop_item = resource.drop
             default_amount = resource.amount
 
@@ -98,10 +98,11 @@ def profile_action(cls):
             is_collection = includes(COLLECTION_ITEMS, drop_item)
             for count in range(1, amount + 1):
                 sleep(time_cost)
-                drop_pool = random_int(farming_fortune)
-                self.recieve(Item(drop_item), default_amount * drop_pool)
+                amount_pool = random_amount(default_amount)
+                drop_pool = random_int(fortune_mult)
+                self.recieve(Item(drop_item), amount_pool * drop_pool)
                 if is_collection:
-                    self.collect(drop_item, default_amount * drop_pool)
+                    self.collect(drop_item, amount_pool * drop_pool)
 
                 self.add_skill_exp('farming', resource.farming_exp)
                 if count >= (last_cp + cp_step) * amount:
@@ -122,10 +123,8 @@ def profile_action(cls):
 
             time_cost = 30 * resource.hardness / mining_speed
 
-            mining_lvl = calc_skill_exp('mining', self.skill_xp_mining)
-
-            mining_fortune = (1 + 0.1 * enchantments.get('fortune', 0)
-                              + 0.04 * mining_lvl)
+            mining_fortune = self.get_stat('mining_fortune', tool_index)
+            fortune_mult = 1 + mining_fortune / 100
             experience = 1 + 0.125 * enchantments.get('experience', 0)
             drop_item = resource.drop
             default_amount = resource.amount
@@ -135,10 +134,11 @@ def profile_action(cls):
             is_collection = includes(COLLECTION_ITEMS, drop_item)
             for count in range(1, amount + 1):
                 sleep(time_cost)
+                amount_pool = random_amount(default_amount)
                 drop_pool = random_int(mining_fortune)
-                self.recieve(Item(drop_item), default_amount * drop_pool)
+                self.recieve(Item(drop_item), amount_pool * drop_pool)
                 if is_collection:
-                    self.collect(drop_item, default_amount * drop_pool)
+                    self.collect(drop_item, amount_pool * drop_pool)
 
                 self.add_exp(resource.exp * random_amount(experience))
                 self.add_skill_exp('mining', resource.mining_exp)
@@ -158,8 +158,8 @@ def profile_action(cls):
                 time_cost = 5 * resource.hardness / tool_speed
             time_cost = ceil(time_cost * 20) / 20
 
-            foraging_lvl = calc_skill_exp('foraging', self.skill_xp_foraging)
-            foraging_fortune = 1 + 0.04 * foraging_lvl
+            foraging_fortune = self.get_stat('foraging_fortune', tool_index)
+            fortune_mult = 1 + foraging_fortune / 100
 
             drop_item = resource.drop
 
@@ -198,6 +198,12 @@ def profile_action(cls):
         path, accum_dist = path_find(region, get(island.regions, dest),
                                      island.conns, island.dists)
 
+        speed = 100
+
+        for piece in self.armor:
+            if isinstance(piece, Armor):
+                speed += piece.speed
+
         route = ' -> '.join(f'{region}' for region in path)
         aqua(f'Route: {route} ({float(accum_dist):.2f}m)')
         for target in path[1:]:
@@ -211,7 +217,7 @@ def profile_action(cls):
                     return
 
             dist = calc_dist(region, target)
-            time_cost = float(dist) / (5 * (self.base_speed / 100))
+            time_cost = float(dist) / (5 * (speed / 100))
             green(f'Going from {region} to {target}...')
             gray(f'(time cost: {time_cost:.2f}s)')
             sleep(time_cost)
@@ -254,17 +260,17 @@ def profile_action(cls):
             red('Unknown mob type.')
             return
 
-        health = self.base_health
-        defense = self.base_defense
-        # true_defense = 0
-        strength = self.base_strength
-        speed = self.base_speed
-        crit_chance = 30
-        crit_damage = self.base_crit_damage
+        health = self.get_stat('health', weapon_index)
+        defense = self.get_stat('defense', weapon_index)
+        # true_defense = self.get_stat('true_defense', weapon_index)
+        strength = self.get_stat('strength', weapon_index)
+        speed = self.get_stat('speed', weapon_index)
+        crit_chance = self.get_stat('crit_chance', weapon_index)
+        crit_damage = self.get_stat('crit_damage', weapon_index)
         # attack_speed = 0
-        # intelligence = self.base_intelligence
-        magic_find = 0
-        ferocity = 0
+        # intelligence = self.get_stat('intelligence', weapon_index)
+        magic_find = self.get_stat('magic_find', weapon_index)
+        ferocity = self.get_stat('ferocity', weapon_index)
 
         thorns = 0
 
@@ -272,9 +278,6 @@ def profile_action(cls):
         no_pain_no_gain = []
 
         combat_lvl = calc_skill_exp('combat', self.skill_xp_combat)
-        farming_lvl = calc_skill_exp('farming', self.skill_xp_farming)
-        foraging_lvl = calc_skill_exp('foraging', self.skill_xp_foraging)
-        mining_lvl = calc_skill_exp('mining', self.skill_xp_mining)
 
         enchantments = getattr(weapon, 'enchantments', {})
 
@@ -300,8 +303,12 @@ def profile_action(cls):
 
             damage *= 1 + 0.08 * enchantments.get('power', 0)
             damage *= 1 + 0.05 * enchantments.get('sharpness', 0)
-            if name in ENDER_SLAYER_EFFECTIVE:
+            if name in CUBISM_EFT:
+                damage *= 1 + 0.1 * enchantments.get('cubism', 0)
+            if name in ENDER_SLAYER_EFT:
                 damage *= 1 + 0.12 * enchantments.get('ender_slayer', 0)
+            if name in SMITE_EFT:
+                damage *= 1 + 0.08 * enchantments.get('ender_slayer', 0)
             crit_damage += 10 * enchantments.get('critical', 0)
             ferocity += enchantments.get('vicious', 0)
         else:
@@ -313,32 +320,11 @@ def profile_action(cls):
             if not isinstance(piece, Armor):
                 continue
 
-            strength += piece.strength
-            health += piece.health
-            defense += piece.health
-            speed += piece.health
-
-            # intelligence += ench.get('big_brain', 0) * 5
             ench = getattr(piece, 'enchantments', {})
-            health += ench.get('growth', 0) * 15
             rejuvenate += ench.get('rejuvenate', 0) * 2
-            defense += ench.get('protection', 0) * 8
             thorns += ench.get('thorns', 0) * 3
-            # true_defense += ench.get('true_protection', 0) * 5
             last_stand += ench.get('last_stand', 0) * 5
             no_pain_no_gain.append(ench.get('no_pain_no_gain', 0) * 25)
-
-        strength += min(foraging_lvl, 14) * 1
-        strength += max(min(foraging_lvl - 14, 36), 0) * 2
-        # intelligence += min(enchanting_lvl, 14) * 1
-        # intelligence += max(min(foraging_lvl - 14, 46), 0) * 2
-        crit_chance += combat_lvl * 0.5
-        defense += min(mining_lvl, 14) * 1
-        defense += max(min(mining_lvl - 14, 46), 0) * 2
-        health += min(farming_lvl, 14) * 2
-        health += max(min(farming_lvl - 14, 5), 0) * 3
-        health += max(min(farming_lvl - 19, 6), 0) * 4
-        health += max(min(farming_lvl - 25, 35), 0) * 5
 
         warrior = 0.04 * min(combat_lvl, 50)
         warrior += 0.01 * max(min(combat_lvl - 50, 10), 0)
@@ -391,7 +377,7 @@ def profile_action(cls):
             if healed != 0:
                 hp += healed
                 gray(f'You healed for {GREEN}{shorten_number(healed)}'
-                     f'{RED}♥{GRAY}.')
+                     f'{RED}❤{GRAY}.')
 
             mob_hp = mob.health
             while True:
@@ -439,7 +425,7 @@ def profile_action(cls):
 
                         gray(f"Your {BLUE}Life Steal{GRAY} "
                              f"enchantment healed you for {AQUA}"
-                             f"{shorten_number(delta)}{RED}♥{GRAY}!\n")
+                             f"{shorten_number(delta)}{RED}❤{GRAY}!\n")
 
                     if syphon != 0:
                         delta = min(health - hp,
@@ -449,7 +435,7 @@ def profile_action(cls):
 
                             gray(f"Your {BLUE}Syphon{GRAY} "
                                  f"enchantment healed you for {AQUA}"
-                                 f"{shorten_number(delta)}{RED}♥{GRAY}!\n")
+                                 f"{shorten_number(delta)}{RED}❤{GRAY}!\n")
 
                 if mob_hp <= 0:
                     a_an = 'an' if mob.name[0] in 'aeiou' else 'a'
@@ -464,7 +450,7 @@ def profile_action(cls):
                     actual_defense += additional_defense
                     gray(f"Your {LIGHT_PURPLE}{BOLD}Last Stand{GRAY}"
                          f" enchantment granted you {GREEN}+"
-                         f" {additional_defense} ☘ Defense{GRAY}!\n")
+                         f" {additional_defense} ❈ Defense{GRAY}!\n")
 
                 damage_recieved = mob.damage / (1 + defense / 100)
                 hp -= damage_recieved
@@ -497,12 +483,12 @@ def profile_action(cls):
                         a_an = 'an' if mob.name[0] in 'aeiou' else 'a'
                         green(f"You've killed {a_an} "
                               f"{display_name(mob.name)}{GRAY}!")
-                        gray(f'Your HP: {AQUA}{shorten_number(hp)}{RED}♥')
+                        gray(f'Your HP: {AQUA}{shorten_number(hp)}{RED}❤')
                         break
 
-                gray(f'Your HP: {AQUA}{shorten_number(hp)}{RED}♥')
+                gray(f'Your HP: {AQUA}{shorten_number(hp)}{RED}❤')
                 gray(f"{display_name(mob.name)}'s HP: "
-                     f"{AQUA}{shorten_number(mob_hp)}{RED}♥\n\n")
+                     f"{AQUA}{shorten_number(mob_hp)}{RED}❤\n\n")
 
                 strike_count += 1
 
@@ -511,7 +497,7 @@ def profile_action(cls):
                 hp += delta
 
                 gray(f"Your {BLUE}Vampirism{GRAY} enchantment healed you for "
-                     f"{AQUA}{shorten_number(delta)}{RED}♥{GRAY}!")
+                     f"{AQUA}{shorten_number(delta)}{RED}❤{GRAY}!")
 
             self.purse += mob.coins + scavenger
             self.add_exp(mob.exp * random_int(experience))

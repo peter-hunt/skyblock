@@ -364,7 +364,7 @@ def mob_type(cls):
 
     def display(self):
         return (f'{GRAY}Lv{self.level} {RED}{display_name(self.name)}'
-                f' {GREEN}{shorten_number(self.health)}{RED}♥{GREEN}')
+                f' {GREEN}{shorten_number(self.health)}{RED}❤{GREEN}')
 
     cls.display = display
 

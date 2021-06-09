@@ -3,7 +3,7 @@ __all__ = [
     'BLACK', 'DARK_BLUE', 'DARK_GREEN', 'DARK_AQUA', 'DARK_RED', 'DARK_PURPLE',
     'GOLD', 'GRAY', 'DARK_GRAY', 'BLUE', 'GREEN', 'AQUA', 'RED', 'LIGHT_PURPLE',
     'YELLOW', 'WHITE',
-    'RARITY_COLORS',
+    'RARITY_COLORS', 'STAT_COLORS',
 ]
 
 CLN = '\x1b[0m'
@@ -38,4 +38,24 @@ RARITY_COLORS = {
     'very_special': f'{BOLD}{RED}',
 
     'rngesus': f'{BOLD}{LIGHT_PURPLE}',
+}
+
+STAT_COLORS = {
+    'health': f'{RED}❤',
+    'defense': f'{RED}❈',
+    'true_defense': f'{WHITE}❂',
+    'strength': f'{RED}❁',
+    'speed': f'{WHITE}✦',
+    'crit_chance': f'{BLUE}☣',
+    'crit_damage': f'{BLUE}☠',
+    'intelligence': f'{AQUA}✎',
+    'mining_speed': f'{GOLD}⸕',
+    'sea_creature_chance': f'{DARK_AQUA}α',
+    'magic_find': f'{AQUA}✯',
+    'pet_luck': f'{LIGHT_PURPLE}♣',
+    'ability_damage': f'{RED}๑',
+    'ferocity': f'{RED}⫽',
+    'mining_fortune': f'{GOLD}☘',
+    'farming_fortune': f'{GOLD}☘',
+    'foraging_fortune': f'{GOLD}☘',
 }

@@ -1,9 +1,12 @@
-from math import ceil, radians, tan
+from math import ceil, floor, radians, tan
 from os import get_terminal_size
-from typing import Optional
+from typing import List, Optional, Tuple
 
-from ..constant.color import BOLD, GOLD, GRAY, GREEN, AQUA, YELLOW
+from ..constant.color import (
+    BOLD, GOLD, GRAY, GREEN, AQUA, YELLOW, WHITE, STAT_COLORS,
+)
 from ..constant.main import ARMOR_PARTS
+from ..constant.stat import ALL_STAT, HIDDEN_STATS, PERC_STATS
 from ..function.io import gray, green, yellow, white
 from ..function.math import (
     calc_skill_exp, calc_skill_exp_info, display_skill_reward,
@@ -13,6 +16,7 @@ from ..function.util import (
 )
 from ..item.object import Empty, ItemType
 from ..map.island import ISLANDS
+from ..map.object import Npc
 
 __all__ = ['profile_display']
 
@@ -28,6 +32,34 @@ def profile_display(cls):
             gray(f'{display_name(name)}: {piece.display()}')
 
     cls.display_armor = display_armor
+
+    def display_shop(self, npc: Npc, trade_index: Optional[int] = None, /):
+        if trade_index is None:
+            gray(f"{npc}'s shop:")
+            digits = len(f'{len(npc.trades)}')
+            for index, (price, item) in enumerate(npc.trades):
+                gray(f'  {(index + 1):>{digits}} {item.display()}{GRAY} for '
+                     f'{GOLD}{display_number(price)} coins{GRAY}.')
+        else:
+            self.info(npc.trades[trade_index][1])
+
+    cls.display_shop = display_shop
+
+    def display_stats(self, /):
+        green('Your SkyBlock Profile')
+        for stat_name in ALL_STAT:
+            value = self.get_stat(stat_name)
+            if value == 0 and stat_name in HIDDEN_STATS:
+                continue
+            color = STAT_COLORS[stat_name]
+            if stat_name == 'health':
+                ext = ' HP'
+            else:
+                ext = '%' if stat_name in PERC_STATS else ''
+            white(f'  {color} {display_name(stat_name)}'
+                  f' {WHITE}{floor(value)}{ext}')
+
+    cls.display_stats = display_stats
 
     def display_skill(self, name: str, /, *,
                       reward: bool = True, end: bool = True):

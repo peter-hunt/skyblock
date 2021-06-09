@@ -4,7 +4,7 @@ from math import dist, inf
 from typing import Dict, List, Optional, Tuple
 
 from ..function.util import display_name
-from ..item.object import Item, Resource, Mob
+from ..item.object import ItemType, Resource, Mob
 
 
 __all__ = [
@@ -17,8 +17,8 @@ class Npc:
     name: str
     init_dialog: Optional[List[str]] = None
     dialog: Optional[List[List[str]]] = None
-    trades: Optional[List[Tuple[int, Item]]] = None  # price, item
-    claim_item: Optional[Item] = None  # price, item, amount
+    trades: Optional[List[Tuple[int, ItemType]]] = None  # price, item
+    claim_item: Optional[ItemType] = None  # price, item, amount
 
     def __repr__(self):
         return display_name(self.name)
