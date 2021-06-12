@@ -1,10 +1,12 @@
 from re import fullmatch
 from textwrap import wrap
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 from types import FunctionType
 
-from ..constant.main import SPECIAL_NAMES
-from ..constant.util import NUMBER_SCALES, ROMAN_NUM
+from ..constant.enchanting import ENCHS
+from ..constant.util import (
+    NUMBER_SCALES, ROMAN_NUM, SPECIAL_NAMES, IGNORED_WORDS,
+)
 
 from .io import red, yellow
 
@@ -44,7 +46,11 @@ def display_name(name: str, /) -> str:
     if name in SPECIAL_NAMES:
         return SPECIAL_NAMES[name]
     else:
-        return ' '.join(word.capitalize() for word in name.split('_'))
+        return ' '.join(_display_word(word) for word in name.split('_'))
+
+
+def _display_word(word: str, /) -> str:
+    return word.lower() if word in IGNORED_WORDS else word.capitalize()
 
 
 def generate_help(doc: str, /) -> Dict[str, str]:
@@ -79,6 +85,18 @@ def get(ls: List[Any], name: Optional[str] = None,
             return result
 
     return default.copy() if hasattr(default, 'copy') else default
+
+
+def get_ench(name: str, /) -> Tuple[str, Tuple[int]]:
+    for row in ENCHS:
+        if row[0] == name:
+            if isinstance(row[2], tuple):
+                return row[2]
+            exp_lvls = tuple(lvl * row[2] + row[3]
+                             for lvl in range(1, row[1] + 1))
+            return exp_lvls
+    else:
+        red(f'Enchantment not fonud: {name!r}')
 
 
 def includes(ls: List[Any], name: str, /) -> bool:

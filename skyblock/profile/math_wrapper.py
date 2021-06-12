@@ -75,6 +75,8 @@ def profile_math(cls):
             elif name == 'mining_speed':
                 if item_ench.get('efficiency', 0) != 0:
                     value += 10 + item_ench['efficiency'] * 20
+            elif name == 'sea_creature_chance':
+                value += item_ench.get('expertise', 0) * 0.6
             elif name == 'mining_fortune':
                 value += item_ench.get('fortune', 0) * 10
             elif name == 'ferocity':

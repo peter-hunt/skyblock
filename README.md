@@ -37,7 +37,7 @@ python -m skyblock
 # Content
 ## Added Features:
 * Swords, pickaxes, axes, and bows that don't consume arrows
-* Farming, combat, mining, and foraging.
+* Farming, combat, mining, enchanting, and foraging.
 * NPC buying and selling items
 * Unused items stats
 * Simple combat system which is not balanced
@@ -54,7 +54,6 @@ python -m skyblock
 * Minions
 * Functional pets
 * Reforging
-* Enchanting
 * Combat while mining
 
 # Furthur information

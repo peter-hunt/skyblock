@@ -3,7 +3,7 @@ from os.path import join
 from pathlib import Path
 
 from .constant.doc import menu_doc
-from .function.io import gray, red, green, yellow, aqua, white, input_regex
+from .function.io import gray, red, green, yellow, aqua, input_regex
 from .function.path import is_dir, is_profile
 from .function.util import backupable, generate_help
 from .profile.object import Profile

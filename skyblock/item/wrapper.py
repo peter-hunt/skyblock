@@ -3,7 +3,7 @@ from ..constant.color import (
     CLN, BOLD, DARK_RED, GOLD, GRAY, DARK_GRAY,
     BLUE, GREEN, RED, LIGHT_PURPLE, YELLOW, WHITE,
 )
-from ..constant.enchantment import ULTIMATE_ENCHANTMENTS
+from ..constant.enchanting import ULTIMATE_ENCHS
 from ..function.math import dung_stat
 from ..function.util import display_int, display_name, roman, shorten_number
 
@@ -251,7 +251,7 @@ def item_type(cls: type, /) -> type:
             ult_ench = []
 
             for name in ench_names:
-                if name in ULTIMATE_ENCHANTMENTS:
+                if name in ULTIMATE_ENCHS:
                     ult_ench = [name]
                     ench_names.remove(name)
                     break
@@ -262,7 +262,7 @@ def item_type(cls: type, /) -> type:
                 if len(ench_names) == 1:
                     name = ench_names[0]
                     ench_color = (f'{LIGHT_PURPLE}{BOLD}'
-                                  if name in ULTIMATE_ENCHANTMENTS else BLUE)
+                                  if name in ULTIMATE_ENCHS else BLUE)
                     lvl = enchs[name]
                     lvl_str = '' if lvl == 0 else f' {roman(lvl)}'
                     ench_str_list.append(
@@ -271,7 +271,7 @@ def item_type(cls: type, /) -> type:
                     break
                 name = ench_names[0]
                 ench_color = (f'{LIGHT_PURPLE}{BOLD}'
-                              if name in ULTIMATE_ENCHANTMENTS else BLUE)
+                              if name in ULTIMATE_ENCHS else BLUE)
                 lvl = enchs[name]
                 lvl_str = '' if lvl == 0 else f' {roman(lvl)}'
                 ench_str = f'{ench_color}{display_name(name)}{lvl_str}, '

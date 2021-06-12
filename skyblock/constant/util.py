@@ -1,6 +1,9 @@
 from typing import Tuple, Union
 
-__all__ = ['Amount', 'Number', 'NUMBER_SCALES', 'ROMAN_NUM']
+__all__ = [
+    'Amount', 'Number', 'NUMBER_SCALES', 'ROMAN_NUM',
+    'SPECIAL_NAMES', 'IGNORED_WORDS',
+]
 
 Amount = Union[Tuple[int, int], int]
 Number = Union[float, int]
@@ -14,3 +17,18 @@ ROMAN_NUM = [
     ('XL', 40), ('L', 50), ('XC', 90), ('C', 100),
     ('CD', 400), ('D', 500), ('CM', 900), ('M', 1000),
 ]
+
+SPECIAL_NAMES = {
+    'attack_speed': 'Bonus Attack Speed',
+    'builders_house': "Builder's House",
+    'counter_strike': "Counter-Strike",
+    'first_strike': "First-Strike",
+    'necrons_blade': "Necron's Blade",
+    'pigmans_den': "Pigman's Den",
+    'rngesus': 'RNGesus',
+    'runaans_bow': "Runaan's Bow",
+    'triple_strike': "Triple-Strike",
+    'tacticians_sword': "Tactician's Sword",
+}
+
+IGNORED_WORDS = ('of', 'the')

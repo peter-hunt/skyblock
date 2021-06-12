@@ -91,19 +91,8 @@ def profile_type(cls):
 
     @staticmethod
     def npc_silent(npc: Npc, /):
-        sentence = choices((
-            "%s doesn't seem to want to talk to you.",
-            "%s has got nothing to say to you.",
-            "%s is in his peace.",
-            "%s seems tired and sleepy.",
-            "%s stared at you and didn't talk.",
-            "%s smiled mysteriously.",
-            "%s made a strange noise.",
-            "%s spoke a strange language you've never heard before.",
-        ), (20, 25, 20, 18, 10, 4, 2, 1))[0]
-        sentence = sentence.replace('%s', display_name(npc.name))
         yellow(f'[NPC] {display_name(npc.name)}'
-               f'{WHITE}: ({sentence})')
+               f"{WHITE}: One day I'll be useful!")
 
     cls.npc_silent = npc_silent
 

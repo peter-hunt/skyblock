@@ -1,6 +1,6 @@
 from math import ceil, floor, radians, tan
 from os import get_terminal_size
-from typing import List, Optional, Tuple
+from typing import Optional
 
 from ..constant.color import (
     BOLD, GOLD, GRAY, GREEN, AQUA, YELLOW, WHITE, STAT_COLORS,

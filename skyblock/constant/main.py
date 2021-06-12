@@ -1,6 +1,6 @@
 __all__ = [
     'ARMOR_PARTS', 'DUNGEON_EXP', 'INTEREST_TABLE', 'SELL_PRICE',
-    'SKILL_EXP', 'SKILL_LIMITS', 'SPECIAL_NAMES',
+    'SKILL_EXP', 'SKILL_LIMITS',
 ]
 
 
@@ -223,12 +223,4 @@ SKILL_LIMITS = {
     'dungeoneering': 50,
 }
 
-SPECIAL_NAMES = {
-    'attack_speed': 'Bonus Attack Speed',
-    'builders_house': "Builder's House",
-    'necrons_blade': "Necron's Blade",
-    'rngesus': 'RNGesus',
-    'runaans_bow': "Runaan's Bow",
-    'pigmans_den': "Pigman's Den",
-    'tacticians_sword': "Tactician's Sword",
-}
+

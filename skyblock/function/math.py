@@ -10,8 +10,9 @@ from .io import gray, yellow, white
 from .util import display_int, roman
 
 __all__ = [
-    'calc_exp', 'calc_skill_exp', 'calc_skill_exp_info', 'display_skill_reward',
-    'dung_stat', 'random_amount', 'random_bool', 'random_int',
+    'calc_exp', 'calc_lvl', 'calc_skill_exp', 'calc_skill_exp_info',
+    'display_skill_reward', 'dung_stat', 'random_amount', 'random_bool',
+    'random_int',
 ]
 
 
@@ -23,13 +24,24 @@ def calc_exp(amount: Number, /) -> int:
 
     elif amount <= 1507:
         for lvl in range(17, 32):
-            if 2.5 ** (lvl + 1) ** 2 - 40.5 * (lvl + 1) + 360 > amount:
+            if 2.5 * (lvl + 1) ** 2 - 40.5 * (lvl + 1) + 360 > amount:
                 return lvl
 
     else:
         for lvl in count(32):
-            if 4.5 ** (lvl + 1) ** 2 - 162.5 * (lvl + 1) + 2220 > amount:
+            if 4.5 * (lvl + 1) ** 2 - 162.5 * (lvl + 1) + 2220 > amount:
                 return lvl
+
+
+def calc_lvl(lvl: int, /) -> int:
+    if lvl <= 16:
+        return lvl ** 2 + 6 * lvl
+
+    elif lvl <= 31:
+        return 2.5 * lvl ** 2 - 40.5 * lvl + 360
+
+    else:
+        return 4.5 * lvl ** 2 - 162.5 * lvl + 2220
 
 
 def calc_skill_exp(name: str, amount: Number, /) -> int:

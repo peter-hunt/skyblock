@@ -4,18 +4,23 @@ from time import sleep, time
 from typing import Optional, Tuple
 
 from ..constant.color import (
-    RARITY_COLORS, BOLD, GOLD, GRAY, BLUE, GREEN,
+    RARITY_COLORS, BOLD, DARK_AQUA, GOLD, GRAY, BLUE, GREEN,
     AQUA, RED, LIGHT_PURPLE, YELLOW, WHITE,
+)
+from ..constant.enchanting import (
+    ULTIMATE_ENCHS, CONFLICTS, ENCH_REQUIREMENTS,
+    SWORD_ENCHS, BOW_ENCHS, ARMOR_ENCHS,
+    AXE_ENCHS, HOE_ENCHS, PICKAXE_ENCHS,
 )
 from ..constant.main import INTEREST_TABLE, SELL_PRICE
 from ..constant.mob import CUBISM_EFT, ENDER_SLAYER_EFT, SMITE_EFT
 from ..constant.util import Number
-from ..function.io import gray, red, green, yellow, aqua, white
+from ..function.io import gray, red, green, yellow, blue, aqua, white
 from ..function.math import (
-    calc_skill_exp, random_amount, random_bool, random_int,
+    calc_exp, calc_lvl, calc_skill_exp, random_amount, random_bool, random_int,
 )
 from ..function.util import (
-    backupable, display_name, display_number, get, includes,
+    backupable, display_name, display_number, get, get_ench, includes,
     roman, shorten_number,
 )
 from ..item.item import COLLECTION_ITEMS
@@ -74,6 +79,124 @@ def profile_action(cls):
     cls.die = die
 
     @backupable
+    def enchant(self, item_index: int, /):
+        enchanting_lvl = calc_skill_exp('enchanting', self.skill_xp_enchanting)
+        exp_lvl = calc_exp(self.experience)
+
+        item = self.inventory[item_index]
+
+        if isinstance(item, Sword):
+            table = SWORD_ENCHS
+        elif isinstance(item, Bow):
+            table = BOW_ENCHS
+        elif isinstance(item, Armor):
+            table = ARMOR_ENCHS
+        elif isinstance(item, Axe):
+            table = AXE_ENCHS
+        elif isinstance(item, Hoe):
+            table = HOE_ENCHS
+        elif isinstance(item, Pickaxe):
+            table = PICKAXE_ENCHS
+        else:
+            red('This item cannot be enchanted!')
+            return
+
+        avaliable = []
+
+        gray('Avaliable enchantments and xp level needed:')
+        for name in table:
+            if name in ULTIMATE_ENCHS:
+                continue
+
+            for _ench, req in ENCH_REQUIREMENTS:
+                if name == _ench and req > enchanting_lvl:
+                    break
+            else:
+                current = item.enchantments.get(name, 0)
+                xps = get_ench(name)
+                if current != 0:
+                    current_xp = calc_lvl(xps[min(current - 1, len(xps) - 1)])
+                else:
+                    current_xp = 0
+                discounted = [
+                    calc_lvl(xp) if lvl + 1 == current else
+                    calc_lvl(xp) - current_xp
+                    for lvl, xp in enumerate(xps)
+                ]
+                discounted_lvl = [calc_exp(xp) for xp in discounted]
+                avaliable.append((name, discounted_lvl))
+
+                blue(f'{len(avaliable):>2} {name}')
+                if current > 0:
+                    xp_str = ', '.join(
+                        f'{GRAY}{xp}' if lvl + 1 < current
+                        else f'{RED}{xp}' if lvl + 1 == current
+                        else f'{DARK_AQUA}{xp}{AQUA}➜{AQUA}{dxp}'
+                        if xp != dxp else f'{AQUA}{xp}'
+                        for lvl, (xp, dxp) in enumerate(
+                            zip(xps, discounted_lvl)))
+                else:
+                    xp_str = ', '.join(
+                        f'{AQUA}{xp}' if xp <= exp_lvl
+                        else f'{YELLOW}{xp}' for xp in xps)
+                aqua(f'   {xp_str}')
+
+        while True:
+            green('Please enter the enchantment index and level.')
+            cmd = input(']> ').split()
+
+            if len(cmd) != 2:
+                red('Invalid format. Please try again.')
+                continue
+
+            index = self.parse_index(cmd[0], len(avaliable))
+            level = self.parse_index(cmd[1], len(xps))
+            if index is None or level is None:
+                continue
+
+            name, lvls = avaliable[index]
+            current = item.enchantments.get(name, 0)
+            lvl = lvls[level]
+
+            if level + 1 < current:
+                blue('An higher level of the'
+                     ' current enchantment is already applied!')
+                return
+
+            white(f'Cost: {DARK_AQUA}{lvl} Experience Levels')
+
+            if exp_lvl < lvl:
+                red("You don't have enough Experience Levels!")
+                return
+
+            self.experience -= calc_lvl(lvl)
+
+            if current == level + 1:
+                green(f'Removed {BLUE}{display_name(name)} {roman(level + 1)}'
+                      f' from {item.display()}!')
+                item.enchantments.pop(name)
+            else:
+                green(f'Applied {BLUE}{display_name(name)} {roman(level + 1)}'
+                      f' to {item.display()}!')
+                item.enchantments[name] = level + 1
+
+                for conf in CONFLICTS:
+                    if name in conf:
+                        for other in conf:
+                            if other == name:
+                                continue
+                            if other in item.enchantments:
+                                item.enchantments.pop(other)
+
+            self.inventory[item_index] = item
+
+            self.add_skill_exp('enchanting', 3.5 * lvl ** 1.5)
+
+            break
+
+    cls.enchant = enchant
+
+    @backupable
     def get_item(self, name: str, tool_index: Optional[int], amount: int, /):
         resource = get_resource(name)
         tool = Empty() if tool_index is None else self.inventory[tool_index]
@@ -85,8 +208,6 @@ def profile_action(cls):
 
         if isinstance(resource, Crop):
             time_cost = 0.4
-
-            farming_lvl = calc_skill_exp('farming', self.skill_xp_farming)
 
             farming_fortune = self.get_stat('farming_fortune', tool_index)
             fortune_mult = 1 + farming_fortune / 100
@@ -123,9 +244,13 @@ def profile_action(cls):
 
             time_cost = 30 * resource.hardness / mining_speed
 
+            enchanting_lvl = calc_skill_exp('enchanting',
+                                            self.skill_xp_enchanting)
+
             mining_fortune = self.get_stat('mining_fortune', tool_index)
             fortune_mult = 1 + mining_fortune / 100
             experience = 1 + 0.125 * enchantments.get('experience', 0)
+            experience *= 1 + 0.04 * enchanting_lvl
             drop_item = resource.drop
             default_amount = resource.amount
 
@@ -565,7 +690,6 @@ def profile_action(cls):
 
     cls.update = update
 
-    @backupable
     def warp(self, dest: str, /):
         island = get(ISLANDS, self.island)
         region = get(island.regions, self.region)

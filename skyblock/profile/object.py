@@ -2,14 +2,15 @@ from random import choice
 from re import fullmatch
 from typing import Dict, List, Optional
 
-from ..constant.color import GOLD, GRAY, BLUE, GREEN
+from ..constant.color import GOLD, GRAY, BLUE, GREEN, YELLOW
 from ..constant.doc import profile_doc
 from ..constant.main import ARMOR_PARTS
 from ..constant.util import Number
-from ..function.io import gray, red, green, yellow, aqua
+from ..function.math import calc_exp, calc_lvl
+from ..function.io import gray, red, green, yellow, blue, aqua
 from ..function.util import (
     backupable, display_int, display_number, generate_help,
-    get, includes, parse_int,
+    get, includes, parse_int, shorten_number,
 )
 from ..item.mob import get_mob
 from ..item.object import (
@@ -302,7 +303,7 @@ class Profile:
 
                 self.warp(words[1])
 
-            elif words[0] in {'inv', 'inventory', 'list', 'ls'}:
+            elif words[0] in {'inv', 'ls'}:
                 if len(words) != 1:
                     red(f'Invalid usage of command {words[0]!r}.')
                     continue
@@ -367,6 +368,24 @@ class Profile:
 
                 self.display_skill(skill)
 
+            elif words[0] == 'exp':
+                if len(words) != 1:
+                    red(f'Invalid usage of command {words[0]!r}.')
+                    continue
+
+                lvl = calc_exp(self.experience)
+                left = self.experience - calc_lvl(lvl)
+                if lvl <= 15:
+                    gap = 2 * lvl + 7
+                elif lvl <= 30:
+                    gap = 5 * lvl - 3
+                else:
+                    gap = 9 * lvl - 158
+
+                yellow(f'Experience: {BLUE}{display_int(lvl)} Levels')
+                blue(f'{shorten_number(left)}/{shorten_number(gap)}'
+                     f' {YELLOW}to the next level.')
+
             elif words[0] == 'money':
                 if len(words) != 1:
                     red(f'Invalid usage of command {words[0]!r}.')
@@ -381,6 +400,21 @@ class Profile:
 
                 self.dump()
                 green('Saved!')
+
+            elif words[0] == 'enchant':
+                if len(words) != 2:
+                    red(f'Invalid usage of command {words[0]!r}.')
+                    continue
+
+                if self.region != 'library':
+                    red('You can only enchant at the library!')
+                    continue
+
+                index = self.parse_index(words[1])
+                if index is None:
+                    pass
+
+                self.enchant(index)
 
             elif words[0] == 'merge':
                 if len(words) != 3:
@@ -576,6 +610,7 @@ class Profile:
                 # self.recieve(item)
                 # item = get_item('enderman_pet')
                 # self.recieve(item)
+                # self.add_exp(2000)
                 ...
 
             else:
