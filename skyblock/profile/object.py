@@ -86,20 +86,24 @@ class Profile:
             if npc.init_dialog is not None:
                 self.npc_talk(npc.name, npc.init_dialog)
             elif npc.dialog is not None:
-                self.npc_talk(npc.name, choice(npc.dialog))
+                if isinstance(npc.dialog, list):
+                    self.npc_talk(npc.name, npc.dialog)
+                elif isinstance(npc.dialog, tuple):
+                    self.npc_talk(npc.name, choice(npc.dialog))
             else:
                 self.npc_silent(npc)
+            if npc.claim_item is not None:
+                self.recieve_item(npc.claim_item)
             self.npc_talked.append(npc.name)
             return
         if npc.trades is not None:
-            gray(f"{npc}'s shop:")
-            digits = len(f'{len(npc.trades)}')
-            for index, (price, item) in enumerate(npc.trades):
-                gray(f'  {(index + 1):>{digits}} {item.display()}{GRAY} for '
-                     f'{GOLD}{display_number(price)} coins{GRAY}.')
+            self.display_shop(npc, None)
             return npc.name
         elif npc.dialog is not None:
-            self.npc_talk(choice(npc.dialog))
+            if isinstance(npc.dialog, list):
+                self.npc_talk(npc.name, npc.dialog)
+            elif isinstance(npc.dialog, tuple):
+                self.npc_talk(npc.name, choice(npc.dialog))
         else:
             self.npc_silent(npc)
 
@@ -407,7 +411,7 @@ class Profile:
                     continue
 
                 if self.region != 'library':
-                    red('You can only enchant at the library!')
+                    red('You can only enchant items at the library!')
                     continue
 
                 index = self.parse_index(words[1])
@@ -566,7 +570,7 @@ class Profile:
                     red(f'You are not wearing a {part}!')
                     continue
 
-                self.recieve(armor_piece)
+                self.recieve_item(armor_piece)
                 self.armor[slot_index] = Empty()
 
                 green(f'Unequipped {armor_piece.display()}{GREEN}!')
@@ -603,13 +607,13 @@ class Profile:
                 # item = get_item('hyperion')
                 # item.stars = 10
                 # item.hot_potato = 30
-                # self.recieve(item)
+                # self.recieve_item(item)
                 # item = get_item('diamond_pickaxe')
-                # self.recieve(item)
+                # self.recieve_item(item)
                 # item = get_item('golden_axe')
-                # self.recieve(item)
+                # self.recieve_item(item)
                 # item = get_item('enderman_pet')
-                # self.recieve(item)
+                # self.recieve_item(item)
                 # self.add_exp(2000)
                 ...
 

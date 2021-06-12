@@ -94,8 +94,8 @@ INTEREST_TABLE = {
 SELL_PRICE = {
     'cobblestone': 1,
     'coal': 2,
-    'iron_ingot': 3,
-    'gold_ingot': 4,
+    'iron': 3,
+    'gold': 4,
     'redstone': 1,
     'lapis_lazuli': 4,
     'diamond': 8,
@@ -222,5 +222,3 @@ SKILL_LIMITS = {
     'taming': 50,
     'dungeoneering': 50,
 }
-
-

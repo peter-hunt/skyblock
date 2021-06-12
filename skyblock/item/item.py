@@ -33,10 +33,10 @@ COLLECTION_ITEMS = [
 
     Item('cobblestone', 64, 'common'),
     Item('coal', 64, 'common'),
-    Item('iron_ingot', 64, 'common'),
-    Item('gold_ingot', 64, 'common'),
+    Item('iron', 64, 'common'),
+    Item('gold', 64, 'common'),
     Item('diamond', 64, 'common'),
-    Item('lapis_lazuli', 64, 'common'),
+    Item('lapis', 64, 'common'),
     Item('emerald', 64, 'common'),
     Item('redstone', 64, 'common'),
     Item('quartz', 64, 'common'),
@@ -66,9 +66,46 @@ COLLECTION_ITEMS = [
     Item('dark_oak_wood', 64, 'common'),
     Item('acacia_wood', 64, 'common'),
     Item('jungle_wood', 64, 'common'),
+
+    Item('raw_fish', 64, 'common'),
+    Item('raw_salmon', 64, 'common'),
+    Item('clownfish', 64, 'common'),
+    Item('pufferfish', 64, 'common'),
+    Item('prismarine_shard', 64, 'common'),
+    Item('prismarine_crystals', 64, 'common'),
+    Item('clay', 64, 'common'),
+    Item('lily_pad', 64, 'common'),
+    Item('ink_sack', 64, 'common'),
+    Item('sponge', 64, 'common'),
 ]
 
 COMPACT_ITEMS = [
+    Item('coal_block', 64, 'common'),
+    Item('iron_block', 64, 'common'),
+    Item('gold_block', 64, 'common'),
+    Item('diamond_block', 64, 'common'),
+    Item('lapis_block', 64, 'common'),
+    Item('emerald_block', 64, 'common'),
+    Item('redstone_block', 64, 'common'),
+
+    Item('enchanted_cobblestone', 64, 'uncommon'),
+    Item('enchanted_coal', 64, 'uncommon'),
+    Item('enchanted_iron', 64, 'uncommon'),
+    Item('enchanted_gold', 64, 'uncommon'),
+    Item('enchanted_diamond', 64, 'uncommon'),
+    Item('enchanted_lapis', 64, 'uncommon'),
+    Item('enchanted_emerald', 64, 'uncommon'),
+    Item('enchanted_redstone', 64, 'uncommon'),
+
+    Item('enchanted_cobblestone_block', 64, 'rare'),
+    Item('enchanted_coal_block', 64, 'rare'),
+    Item('enchanted_iron_block', 64, 'rare'),
+    Item('enchanted_gold_block', 64, 'rare'),
+    Item('enchanted_diamond_block', 64, 'rare'),
+    Item('enchanted_lapis_block', 64, 'rare'),
+    Item('enchanted_emerald_block', 64, 'rare'),
+    Item('enchanted_redstone_block', 64, 'rare'),
+
     Item('enchanted_ender_pearl', 16, 'uncommon'),
     Item('enchanted_eye_of_ender', 64, 'uncommon'),
 ]
@@ -77,6 +114,7 @@ OTHER_ITEMS = [
     Item('arrow', 64, 'common'),
     Item('exp_share_core', 1, 'epic'),
     Item('gold_nugget', 64, 'common'),
+    Item('golden_powder', 64, 'epic'),
     Item('lapis_crystal', 1, 'rare'),
     Item('poisonous_potato', 64, 'common'),
     Item('summoning_eye', 1, 'epic'),
@@ -96,6 +134,8 @@ WEAPONS = [
 
     Sword('undead_sword', 'common',
           damage=30),
+    Sword('rogue_sword', 'common',
+          damage=20),
     Sword('end_sword', 'uncommon',
           damage=35),
     Sword('spider_sword', 'common',
@@ -271,6 +311,17 @@ TOOLS = [
 ]
 
 PETS = [
+    Pet('bee_pet', rarity='common',
+        speed=10, intelligence=50, strength=30),
+    Pet('bee_pet', rarity='uncommon',
+        speed=10, intelligence=50, strength=30),
+    Pet('bee_pet', rarity='rare',
+        speed=10, intelligence=50, strength=30),
+    Pet('bee_pet', rarity='epic',
+        speed=10, intelligence=50, strength=30),
+    Pet('bee_pet', rarity='legendary',
+        speed=10, intelligence=50, strength=30),
+
     Pet('enderman_pet', rarity='common',
         crit_damage=75),
     Pet('enderman_pet', rarity='uncommon',
@@ -283,6 +334,11 @@ PETS = [
         crit_damage=75),
     Pet('enderman_pet', rarity='mythic',
         crit_damage=75),
+
+    Pet('ghoul_pet', rarity='epic',
+        health=100, intelligence=70, ferocity=5),
+    Pet('ghoul_pet', rarity='legendary',
+        health=100, intelligence=70, ferocity=5),
 ]
 
 ITEMS = (COLLECTION_ITEMS + COMPACT_ITEMS + OTHER_ITEMS

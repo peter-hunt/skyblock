@@ -37,19 +37,51 @@ __all__ = ['profile_action']
 
 
 def profile_action(cls):
-    def buy(self, trade: Tuple[Number, ItemType], amount: int, /):
-        price = trade[0] * amount
-        if self.purse < price:
-            red('Not enough coins!')
-            return
+    def buy(self, trade: Tuple, amount: int, /):
+        cost = trade[0]
 
-        item = trade[1]
+        if isinstance(cost, (int, float)):
+            price = cost * amount
+            if self.purse < price:
+                red('Not enough coins!')
+                return
+            self.purse -= price
+        else:
+            price = None
+            for item in cost:
+                if isinstance(item, (int, float)):
+                    if self.purse < item * amount:
+                        red('Not enough coins!')
+                        return
+                    continue
+                kwargs = {}
+                for attr in ('rarity', ):
+                    if hasattr(item, attr):
+                        kwargs[attr] = getattr(item, attr)
+                if not self.has_item(item[0].name, item[1] * amount, **kwargs):
+                    red("You don't have the required items.")
+                    return
 
-        self.purse -= price
-        self.recieve(item, amount)
+            for item in cost:
+                if isinstance(item, (int, float)):
+                    self.purse -= item * amount
+                    continue
+                kwargs = {}
+                for attr in ('rarity', ):
+                    if hasattr(item, attr):
+                        kwargs[attr] = getattr(item, attr)
+                self.remove_item(item[0].name, item[1] * amount, **kwargs)
 
-        green(f"You bought {item.display()}{GREEN} for "
-              f"{GOLD}{shorten_number(price)} Coins{GREEN}!")
+        good = trade[1]
+
+        self.recieve_item(good, amount)
+        amt_str = '' if amount == 1 else f'{GRAY} x {amount}'
+
+        if price is not None:
+            green(f"You bought {good.display()}{amt_str}{GREEN} for "
+                  f"{GOLD}{shorten_number(price)} Coins{GREEN}!")
+        else:
+            green(f"You bought {good.display()}{amt_str}{GREEN}!")
 
     cls.buy = buy
 
@@ -197,9 +229,11 @@ def profile_action(cls):
     cls.enchant = enchant
 
     @backupable
-    def get_item(self, name: str, tool_index: Optional[int], amount: int, /):
+    def get_item(self, name: str, tool_index: Optional[int],
+                 amount: Optional[int] = 1, /):
         resource = get_resource(name)
         tool = Empty() if tool_index is None else self.inventory[tool_index]
+        amount = 1 if amount is None else amount
 
         if not isinstance(tool, (Empty, Axe, Hoe, Pickaxe)):
             tool = Empty()
@@ -221,7 +255,7 @@ def profile_action(cls):
                 sleep(time_cost)
                 amount_pool = random_amount(default_amount)
                 drop_pool = random_int(fortune_mult)
-                self.recieve(Item(drop_item), amount_pool * drop_pool)
+                self.recieve_item(Item(drop_item), amount_pool * drop_pool)
                 if is_collection:
                     self.collect(drop_item, amount_pool * drop_pool)
 
@@ -234,7 +268,6 @@ def profile_action(cls):
         elif isinstance(resource, Mineral):
             breaking_power = getattr(tool, 'breaking_power', 0)
             mining_speed = getattr(tool, 'mining_speed', 50)
-            mining_speed = tool.mining_speed
             if 'efficiency' in enchantments:
                 mining_speed += 10 + 20 * enchantments['efficiency']
 
@@ -260,8 +293,8 @@ def profile_action(cls):
             for count in range(1, amount + 1):
                 sleep(time_cost)
                 amount_pool = random_amount(default_amount)
-                drop_pool = random_int(mining_fortune)
-                self.recieve(Item(drop_item), amount_pool * drop_pool)
+                drop_pool = random_int(fortune_mult)
+                self.recieve_item(Item(drop_item), amount_pool * drop_pool)
                 if is_collection:
                     self.collect(drop_item, amount_pool * drop_pool)
 
@@ -294,7 +327,7 @@ def profile_action(cls):
             for count in range(1, amount + 1):
                 sleep(time_cost)
                 drop_pool = random_int(foraging_fortune)
-                self.recieve(Item(drop_item), drop_pool)
+                self.recieve_item(Item(drop_item), drop_pool)
                 if is_collection:
                     self.collect(drop_item, drop_pool)
 
@@ -329,7 +362,7 @@ def profile_action(cls):
             if isinstance(piece, Armor):
                 speed += piece.speed
 
-        route = ' -> '.join(f'{region}' for region in path)
+        route = ' ➜ '.join(f'{region}' for region in path)
         aqua(f'Route: {route} ({float(accum_dist):.2f}m)')
         for target in path[1:]:
             if target.skill_req is not None:
@@ -337,7 +370,7 @@ def profile_action(cls):
                 skill_exp = getattr(self, f'skill_xp_{name}')
                 exp_lvl = calc_skill_exp(name, skill_exp)
                 if exp_lvl < level:
-                    red(f'Cannot warp to {dest}!')
+                    red(f'Cannot go to {dest}!')
                     red(f'Requires {name.capitalize()} level {roman(level)}')
                     return
 
@@ -641,7 +674,7 @@ def profile_action(cls):
                 if hasattr(loot, 'count'):
                     loot.count = 1
 
-                self.recieve(loot, random_amount(count))
+                self.recieve_item(loot, random_amount(count))
 
                 if is_collection[loot.name]:
                     self.collect(loot.name, loot.count)
@@ -698,14 +731,25 @@ def profile_action(cls):
             red(f'Island not found: {dest!r}')
             return
         if dest == self.island:
-            yellow(f'Already at island: {dest!r}')
+            if dest in {'hub'}:
+                region = get(island.regions, island.spawn)
+                self.region = island.spawn
+                gray(f'Warped to {AQUA}{region}{GRAY} of {AQUA}{island}{GRAY}.')
+            else:
+                yellow(f'Already at island: {dest!r}')
             return
 
         if dest == 'hub':
             pass
         elif getattr(region, 'portal', None) != dest:
-            yellow(f'Cannot warp to {dest}')
-            return
+            for _region in island.regions:
+                if getattr(_region, 'portal', None) == dest:
+                    self.goto(_region.name)
+                    region = _region
+                    break
+            else:
+                yellow(f'Cannot warp to {dest}')
+                return
 
         last = self.island
         island = get(ISLANDS, dest)

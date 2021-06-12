@@ -1,7 +1,7 @@
 from decimal import Decimal
 from dataclasses import dataclass, field
 from math import dist, inf
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Union
 
 from ..function.util import display_name
 from ..item.object import ItemType, Resource, Mob
@@ -17,7 +17,8 @@ class Npc:
     name: str
     init_dialog: Optional[List[str]] = None
     dialog: Optional[List[List[str]]] = None
-    trades: Optional[List[Tuple[int, ItemType]]] = None  # price, item
+    trades: Optional[List[Tuple[Union[Tuple[int, ItemType],
+                                      int], ItemType]]] = None  # price, item
     claim_item: Optional[ItemType] = None  # price, item, amount
 
     def __repr__(self):

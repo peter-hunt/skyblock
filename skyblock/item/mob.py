@@ -18,6 +18,22 @@ MOBS = [
             (get_item('potato'), 1, 'rare', 0.01),
             (get_item('carrot'), 1, 'rare', 0.01),
         ]),
+    Mob('crypt_ghoul', level=30, health=2_000, damage=200,
+        coins=13, combat_xp=32, exp=30,
+        drops=[
+            (get_item('rotten_flesh'), (1, 2), 'common', 1),
+            (get_item('ghoul_pet', rarity='epic'),
+             1, 'pray_rngesus', 0.00003),
+            (get_item('ghoul_pet', rarity='legendary'),
+             1, 'pray_rngesus', 0.00001),
+        ]),
+    Mob('golden_ghoul', level=60, health=45_000, damage=500,
+        coins=100, combat_xp=50, exp=30,
+        drops=[
+            (get_item('rotten_flesh'), 2, 'common', 1),
+            (get_item('gold'), (1, 12), 'common', 1),
+            (get_item('golden_powder'), 1, 'legendary', 0.0005),
+        ]),
 
     Mob('sneaky_creeper', level=3, health=120, damage=80,
         coins=3, combat_xp=8, exp=3,

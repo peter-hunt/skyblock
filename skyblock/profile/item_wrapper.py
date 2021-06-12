@@ -57,7 +57,7 @@ def profile_item(cls):
         stash = [item.copy() for item in self.stash]
         self.stash.clear()
         for item in stash:
-            self.recieve(item)
+            self.recieve_item(item)
 
     cls.pickupstash = pickupstash
 
@@ -86,7 +86,8 @@ def profile_item(cls):
 
     cls.put_stash = put_stash
 
-    def recieve(self, item: ItemType, count: int = 1, /, *, log: bool = True):
+    def recieve_item(self, item: ItemType, count: int = 1,
+                     /, *, log: bool = True):
         item_copy = item.copy()
         stack_count = get_stack_size(item_copy.name)
         counter = count
@@ -119,7 +120,53 @@ def profile_item(cls):
                          else f' {DARK_GRAY}x {display_int(count)}')
             gray(f'+ {item_copy.display()}{count_str}')
 
-    cls.recieve = recieve
+    cls.recieve_item = recieve_item
+
+    def remove_item(self, name: str, count: int = 1, /, **kwargs):
+        counter = count
+
+        for index, _item in enumerate(self.inventory):
+            if not hasattr(_item, 'name') or _item.name != name:
+                continue
+            for key in kwargs:
+                if (not hasattr(_item, key)
+                        or getattr(_item, key) != kwargs[key]):
+                    break
+            else:
+                if not hasattr(_item, 'count'):
+                    counter -= 1
+                    self.inventory[index] = Empty()
+                else:
+                    delta = min(counter, _item.count)
+                    if delta == _item.count:
+                        self.inventory[index] = Empty()
+                    else:
+                        self.inventory[index].count -= delta
+                    counter -= delta
+
+                if counter == 0:
+                    return
+
+    cls.remove_item = remove_item
+
+    def has_item(self, name: str, count: int = 1, /, **kwargs):
+        counter = 0
+
+        for _item in self.inventory:
+            if not hasattr(_item, 'name') or _item.name != name:
+                continue
+            for key in kwargs:
+                if (not hasattr(_item, key)
+                        or getattr(_item, key) != kwargs[key]):
+                    break
+            else:
+                counter += getattr(_item, 'count', 1)
+                if counter >= count:
+                    return True
+
+        return False
+
+    cls.has_item = has_item
 
     def split(self, index_1: int, index_2: int, amount: int, /):
         item_1 = self.inventory[index_1]

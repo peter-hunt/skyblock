@@ -1,6 +1,7 @@
 from math import ceil, floor, radians, tan
 from os import get_terminal_size
-from typing import Optional
+from time import sleep
+from typing import Iterable, Optional
 
 from ..constant.color import (
     BOLD, GOLD, GRAY, GREEN, AQUA, YELLOW, WHITE, STAT_COLORS,
@@ -165,9 +166,21 @@ def profile_display(cls):
         if trade_index is None:
             gray(f"{npc}'s shop:")
             digits = len(f'{len(npc.trades)}')
-            for index, (price, item) in enumerate(npc.trades):
-                gray(f'  {(index + 1):>{digits}} {item.display()}{GRAY} for '
-                     f'{GOLD}{display_number(price)} coins{GRAY}.')
+            for index, (cost, item) in enumerate(npc.trades):
+                if isinstance(cost, (int, float)):
+                    gray(f'  {(index + 1):>{digits}} {item.display()}{GRAY}'
+                         f' for {GOLD}{display_number(cost)} coins{GRAY}.')
+                else:
+                    gray(f'  {(index + 1):>{digits}} {item.display()}{GRAY}')
+                    for cost_item in cost:
+                        if isinstance(cost_item, int):
+                            gray(f"  {'':>{digits}}   {GOLD}"
+                                 f"{display_number(cost_item)} coins{GRAY}")
+                        else:
+                            count = ('' if cost_item[1] == 1
+                                     else f' {GRAY}x {cost_item[1]}')
+                            gray(f"  {'':>{digits}}   "
+                                 f"{cost_item[0].display()}{count}")
         else:
             self.info(npc.trades[trade_index][1])
 
@@ -232,5 +245,15 @@ def profile_display(cls):
         yellow(f"{BOLD}{'':-^{width}}")
 
     cls.display_skills = display_skills
+
+    @staticmethod
+    def npc_talk(name: str, dialog: Iterable):
+        iterator = iter(dialog)
+        yellow(f'[NPC] {display_name(name)}{WHITE}: {next(iterator)}')
+        for sentence in iterator:
+            sleep(1.5)
+            yellow(f'[NPC] {display_name(name)}{WHITE}: {sentence}')
+
+    cls.npc_talk = npc_talk
 
     return cls

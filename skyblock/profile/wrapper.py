@@ -1,10 +1,8 @@
 from json import dump, load
 from os.path import join
 from pathlib import Path
-from random import choices
 from re import sub
-from time import sleep
-from typing import Iterable, Optional
+from typing import Optional
 
 from ..constant.color import WHITE
 from ..function.item import load_item
@@ -92,19 +90,9 @@ def profile_type(cls):
     @staticmethod
     def npc_silent(npc: Npc, /):
         yellow(f'[NPC] {display_name(npc.name)}'
-               f"{WHITE}: One day I'll be useful!")
+               f"{WHITE}: ({display_name(npc.name)} said nothing)")
 
     cls.npc_silent = npc_silent
-
-    @staticmethod
-    def npc_talk(name: str, dialog: Iterable):
-        iterator = iter(dialog)
-        yellow(f'[NPC] {display_name(name)}{WHITE}: {next(iterator)}')
-        for sentence in iterator:
-            sleep(1.5)
-            yellow(f'[NPC] {display_name(name)}{WHITE}: {sentence}')
-
-    cls.npc_talk = npc_talk
 
     def parse_index(self, word: str, length: Optional[int] = None, /) -> Optional[int]:
         index = parse_int(word)
