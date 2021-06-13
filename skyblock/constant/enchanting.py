@@ -144,6 +144,7 @@ ENCH_REQUIREMENTS = [
     ('thunderbolt', 20),
     ('ultimate_wise', 20),
     ('big_brain', 21),
+    ('smarty_pants', 21),
     ('counter_strike', 22),
     ('respite', 23),
     ('combo', 24),

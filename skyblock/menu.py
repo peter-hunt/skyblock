@@ -2,6 +2,7 @@ from os import walk
 from os.path import join
 from pathlib import Path
 
+from .constant.color import GREEN, AQUA
 from .constant.doc import menu_doc
 from .function.io import gray, red, green, yellow, aqua, input_regex
 from .function.path import is_dir, is_profile
@@ -25,7 +26,7 @@ def init_env():
 
 
 @backupable
-def create():
+def new():
     name = input_regex('Please enter the name of the profile.', r'\w+')
     Profile(name).dump()
     green('New profile created!')
@@ -60,6 +61,26 @@ def main():
         if len(words) == 0:
             continue
 
+        elif words[0] in {'new', 'touch'}:
+            if len(words) != 1:
+                red(f'Invalid usage of command {words[0]!r}.')
+                continue
+
+            new()
+
+        elif words[0] in {'del', 'delete'}:
+            if len(words) != 2:
+                red(f'Invalid usage of command {words[0]!r}.')
+                continue
+
+            path = Path(join(Path.home(), 'skyblock',
+                             'saves', f'{words[1]}.json'))
+            if path.is_file():
+                path.unlink()
+                green(f'Deleted profile {AQUA}{words[1]}{GREEN}!')
+            else:
+                red(f'Profile not found: {words[1]}')
+
         elif words[0] in {'exit', 'quit'}:
             if len(words) != 1:
                 red(f'Invalid usage of command {words[0]!r}.')
@@ -69,7 +90,7 @@ def main():
 
         elif words[0] == 'help':
             if len(words) == 1:
-                aqua(menu_doc)
+                gray(menu_doc)
             else:
                 phrase = ' '.join(words[1:])
                 if phrase not in menu_help:
@@ -77,27 +98,8 @@ def main():
                     continue
 
                 usage, description = menu_help[phrase]
-                aqua(usage)
-                aqua(description)
-
-        elif words[0] in {'create', 'new', 'touch'}:
-            if len(words) != 1:
-                red(f'Invalid usage of command {words[0]!r}.')
-                continue
-
-            create()
-
-        elif words[0] in {'del', 'delete'}:
-            if len(words) != 2:
-                red(f'Invalid usage of command {words[0]!r}.')
-                continue
-
-            path = Path(join(Path.home(), 'saves', f'{words[1]}.json'))
-            if path.is_file():
-                path.unlink()
-                green(f'Deleted profile {words[1]}!')
-            else:
-                red(f'Profile not found: {words[1]}')
+                gray(usage)
+                gray(description)
 
         elif words[0] in {'list', 'ls'}:
             if len(words) != 1:
@@ -106,7 +108,7 @@ def main():
 
             ls()
 
-        elif words[0] in {'load', 'open', 'start'}:
+        elif words[0] in {'load', 'open'}:
             if len(words) != 2:
                 red(f'Invalid usage of command {words[0]!r}.')
                 continue

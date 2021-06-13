@@ -34,6 +34,14 @@ class Bow(ItemType):
     name: str
     rarity: str
     damage: int
+
+    strength: int = 0
+    crit_chance: int = 0
+    crit_damage: int = 0
+    attack_speed: int = 0
+
+    intelligence: int = 0
+
     modifier: Optional[str] = None
     enchantments: Dict[str, int] = {}
     hot_potato: int = 0

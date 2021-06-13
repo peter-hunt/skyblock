@@ -1,7 +1,6 @@
 __all__ = ['menu_doc', 'profile_doc']
 
 menu_doc = """
-> create
 > new
 > touch
 Create a new profile.
@@ -23,7 +22,6 @@ List all the profile avaliable.
 
 > load <name>
 > open <name>
-> start <name>
 Load a profile and run it.
 """.strip()
 
@@ -61,10 +59,8 @@ Go to a region.
 
 > info <index>
 > information <index>
-> item <index>
 Display detailed informatioon about the item.
 
-> inv
 > ls
 List all the items in the inventory.
 

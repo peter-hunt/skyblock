@@ -1,5 +1,5 @@
 __all__ = [
-    'CUBISM_EFT', 'ENDER_SLAYER_EFT', 'SMITE_EFT',
+    'CUBISM_EFT', 'ENDER_SLAYER_EFT', 'BOA_EFT', 'SMITE_EFT',
 ]
 
 CUBISM_EFT = [
@@ -12,9 +12,17 @@ CUBISM_EFT = [
 
 ENDER_SLAYER_EFT = [
     'enderman',
+    'zealot',
     # 'voidling_extremist',
     # 'voidling_fanatic',
-    # 'zealot',
+]
+
+# BANE_OF_ATHROPODS
+BOA_EFT = [
+    'splitter_spider',
+    'weaver_spider',
+    'voracious_spider',
+    'dasher_spider',
 ]
 
 SMITE_EFT = [
@@ -28,8 +36,6 @@ SMITE_EFT = [
 ]
 
 
-# # BANE_OF_ATHROPODS
-# BOA_EFT
 # # DRAGON_HUNTER
 # DH_EFT
 # IMPALING_EFT

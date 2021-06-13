@@ -3,7 +3,7 @@ from typing import Any
 from ..function.io import red
 from ..function.util import get, includes
 
-from .object import ItemType, Item, Axe, Hoe, Pickaxe, Sword, Armor, Pet
+from .object import ItemType, Item, Axe, Hoe, Pickaxe, Sword, Bow, Armor, Pet
 
 __all__ = [
     'COLLECTION_ITEMS', 'WEAPONS', 'TOOLS', 'ITEMS',
@@ -46,7 +46,7 @@ COLLECTION_ITEMS = [
     Item('ice', 64, 'common'),
     Item('netherrack', 64, 'common'),
     Item('sand', 64, 'common'),
-    Item('endstone', 64, 'common'),
+    Item('end_stone', 64, 'common'),
     Item('mithril', 64, 'common'),
 
     Item('rotten_flesh', 64, 'common'),
@@ -87,6 +87,7 @@ COMPACT_ITEMS = [
     Item('lapis_block', 64, 'common'),
     Item('emerald_block', 64, 'common'),
     Item('redstone_block', 64, 'common'),
+    Item('packed_ice', 64, 'common'),
 
     Item('enchanted_cobblestone', 64, 'uncommon'),
     Item('enchanted_coal', 64, 'uncommon'),
@@ -96,6 +97,15 @@ COMPACT_ITEMS = [
     Item('enchanted_lapis', 64, 'uncommon'),
     Item('enchanted_emerald', 64, 'uncommon'),
     Item('enchanted_redstone', 64, 'uncommon'),
+    Item('enchanted_quartz', 64, 'uncommon'),
+    Item('enchanted_obsidian', 64, 'uncommon'),
+    Item('enchanted_glowstone_dust', 64, 'uncommon'),
+    Item('enchanted_flint', 64, 'uncommon'),
+    Item('enchanted_ice', 64, 'uncommon'),
+    Item('enchanted_netherrack', 64, 'uncommon'),
+    Item('enchanted_sand', 64, 'uncommon'),
+    Item('enchanted_end_stone', 64, 'uncommon'),
+    Item('enchanted_mithril', 64, 'uncommon'),
 
     Item('enchanted_cobblestone_block', 64, 'rare'),
     Item('enchanted_coal_block', 64, 'rare'),
@@ -105,9 +115,28 @@ COMPACT_ITEMS = [
     Item('enchanted_lapis_block', 64, 'rare'),
     Item('enchanted_emerald_block', 64, 'rare'),
     Item('enchanted_redstone_block', 64, 'rare'),
+    Item('enchanted_quartz_block', 64, 'rare'),
+    Item('enchanted_glowstone', 64, 'rare'),
+    Item('enchanted_packed_ice', 64, 'rare'),
 
+    Item('enchanted_rotten_flesh', 64, 'uncommon'),
+    Item('enchanted_bone', 64, 'uncommon'),
+    Item('enchanted_string', 64, 'uncommon'),
+    Item('enchanted_spider_eye', 64, 'uncommon'),
+    Item('enchanted_gunpowder', 64, 'uncommon'),
     Item('enchanted_ender_pearl', 16, 'uncommon'),
     Item('enchanted_eye_of_ender', 64, 'uncommon'),
+    Item('enchanted_ghast_tear', 64, 'uncommon'),
+    Item('enchanted_slime_ball', 64, 'uncommon'),
+    Item('enchanted_blaze_rod', 64, 'uncommon'),
+    Item('enchanted_magma_cream', 64, 'uncommon'),
+
+    Item('enchanted_oak_wood', 64, 'uncommon'),
+    Item('enchanted_birch_wood', 64, 'uncommon'),
+    Item('enchanted_spruce_wood', 64, 'uncommon'),
+    Item('enchanted_dark_oak_wood', 64, 'uncommon'),
+    Item('enchanted_acacia_wood', 64, 'uncommon'),
+    Item('enchanted_jungle_wood', 64, 'uncommon'),
 ]
 
 OTHER_ITEMS = [
@@ -121,80 +150,67 @@ OTHER_ITEMS = [
 ]
 
 WEAPONS = [
-    Sword('wooden_sword', 'common',
-          damage=20),
-    Sword('golden_sword', 'common',
-          damage=20),
-    Sword('stone_sword', 'common',
-          damage=25),
-    Sword('iron_sword', 'common',
-          damage=30),
-    Sword('diamond_sword', 'uncommon',
-          damage=35),
+    Sword('wooden_sword', 'common', damage=20),
+    Sword('golden_sword', 'common', damage=20),
+    Sword('stone_sword', 'common', damage=25),
+    Sword('iron_sword', 'common', damage=30),
+    Sword('diamond_sword', 'uncommon', damage=35),
 
-    Sword('undead_sword', 'common',
-          damage=30),
-    Sword('rogue_sword', 'common',
-          damage=20),
-    Sword('end_sword', 'uncommon',
-          damage=35),
-    Sword('spider_sword', 'common',
-          damage=30),
+    Sword('undead_sword', 'common', damage=30),
+    Sword('rogue_sword', 'common', damage=20),
+    Sword('end_sword', 'uncommon', damage=35),
+    Sword('spider_sword', 'common', damage=30),
 
-    Sword('flaming_sword', 'uncommon',
-          damage=50, strength=20),
+    Sword('flaming_sword', 'uncommon', damage=50,
+          strength=20),
 
-    Sword('fancy_sword', 'common',
-          damage=30,
+    Sword('fancy_sword', 'common', damage=30,
           enchantments={'first_strike': 1, 'scavenger': 1,
                         'sharpness': 2, 'vampirism': 1}),
-    Sword('tacticians_sword', 'rare',
-          damage=50, crit_chance=20),
+    Sword('tacticians_sword', 'rare', damage=50,
+          crit_chance=20),
 
-    Sword('raider_axe', 'rare',
-          damage=80, strength=50),
+    Sword('raider_axe', 'rare', damage=80,
+          strength=50),
 
-    Sword('aspect_of_the_dragons', 'legendary',
-          damage=225, strength=100,
+    Sword('aspect_of_the_dragons', 'legendary', damage=225,
+          strength=100,
           combat_skill_req=18),
 
-    Sword('livid_dagger', 'legendary',
-          damage=210, strength=60, crit_chance=100, crit_damage=50,
-          attack_speed=50,
+    Sword('livid_dagger', 'legendary', damage=210,
+          strength=60, crit_chance=100, crit_damage=50, attack_speed=50,
           dungeon_completion_req=5),
 
-    Sword('necrons_blade', 'legendary',
-          damage=210, strength=60,
-          defense=250, intelligence=50, true_denfense=20, ferocity=30,
+    Sword('necrons_blade', 'legendary', damage=210,
+          strength=60, defense=250, intelligence=50,
+          true_denfense=20, ferocity=30,
           dungeon_completion_req=7, stars=0),
-    Sword('astraea', 'legendary',
-          damage=210, strength=60,
-          defense=250, intelligence=50, true_denfense=20, ferocity=30,
+    Sword('astraea', 'legendary', damage=210,
+          strength=60, defense=250, intelligence=50,
+          true_denfense=20, ferocity=30,
           dungeon_completion_req=7, stars=0),
-    Sword('hyperion', 'legendary',
-          damage=260, strength=150,
-          intelligence=350, ferocity=30,
+    Sword('hyperion', 'legendary', damage=260,
+          strength=150, intelligence=350, ferocity=30,
           dungeon_completion_req=7, stars=0),
-    Sword('scylla', 'legendary',
-          damage=270, strength=150, crit_chance=12, crit_damage=35,
+    Sword('scylla', 'legendary', damage=270,
+          strength=150, crit_chance=12, crit_damage=35,
           intelligence=50, ferocity=30,
           dungeon_completion_req=7, stars=0),
-    Sword('valkyrie', 'legendary',
-          damage=270, strength=145,
-          intelligence=60, ferocity=60,
+    Sword('valkyrie', 'legendary', damage=270,
+          strength=145, intelligence=60, ferocity=60,
           dungeon_completion_req=7, stars=0),
 
-    Sword('bow', 'common',
-          damage=30),
-    Sword('wither_bow', 'uncommon',
-          damage=35),
+    Bow('bow', 'common', damage=30),
+    Bow('wither_bow', 'uncommon', damage=35),
 
-    Sword('runaans_bow', 'legendary',
-          damage=160, strength=50),
-    Sword('mosquito_bow', 'legendary',
-          damage=251, strength=151, crit_damage=39),
-    Sword('souls_rebound', 'epic',
-          damage=450),
+    Bow('end_stone_bow', 'epic', damage=140,
+        combat_skill_req=18),
+
+    Bow('runaans_bow', 'legendary', damage=160,
+        strength=50),
+    Bow('mosquito_bow', 'legendary', damage=251,
+        strength=151, crit_damage=39),
+    Bow('souls_rebound', 'epic', damage=450),
 ]
 
 ARMOR_PIECES = [
@@ -269,6 +285,9 @@ ARMOR_PIECES = [
           health=25, defense=50),
     Armor('ender_boots', rarity='epic', part='boots',
           health=15, defense=25),
+    Armor('obsidian_chestplate', rarity='epic', part='chestplate',
+          defense=250,
+          combat_skill_req=14),
 ]
 
 TOOLS = [
@@ -308,6 +327,10 @@ TOOLS = [
             enchantments={'efficiency': 1}),
     Pickaxe('promising_pickaxe', rarity='uncommon',
             breaking_power=2, mining_speed=190),
+
+    Pickaxe('stonk', rarity='epic',
+            breaking_power=1, mining_speed=380,
+            enchantments={'efficiency': 6}),
 ]
 
 PETS = [
@@ -321,6 +344,11 @@ PETS = [
         speed=10, intelligence=50, strength=30),
     Pet('bee_pet', rarity='legendary',
         speed=10, intelligence=50, strength=30),
+
+    Pet('tarantula_pet', rarity='epic',
+        strength=10, crit_chance=10, crit_damage=30),
+    Pet('tarantula_pet', rarity='legendary',
+        strength=10, crit_chance=10, crit_damage=30),
 
     Pet('enderman_pet', rarity='common',
         crit_damage=75),

@@ -26,7 +26,7 @@ def profile_display(cls):
     def display_armor(self, part: Optional[str] = None, /):
         if part:
             item = self.armor[ARMOR_PARTS.index(part)]
-            self.info(item)
+            self.display_item(item)
             return
 
         for piece, name in zip(self.armor, ARMOR_PARTS):
@@ -165,6 +165,10 @@ def profile_display(cls):
     def display_shop(self, npc: Npc, trade_index: Optional[int] = None, /):
         if trade_index is None:
             gray(f"{npc}'s shop:")
+            if len(npc.trades) == 0:
+                gray('  none')
+                return
+
             digits = len(f'{len(npc.trades)}')
             for index, (cost, item) in enumerate(npc.trades):
                 if isinstance(cost, (int, float)):
@@ -211,10 +215,7 @@ def profile_display(cls):
 
         exp = getattr(self, f'skill_xp_{name}')
         lvl, exp_left, exp_to_next = calc_skill_exp_info(name, exp)
-        if lvl == 0:
-            green(display_name(name))
-        else:
-            green(f'{display_name(name)} {roman(lvl)}')
+        green(f'{display_name(name)} {roman(lvl)}')
 
         if exp_left < exp_to_next:
             perc = int(exp_left / exp_to_next * 100)
@@ -222,7 +223,7 @@ def profile_display(cls):
 
         bar = min(int(exp_left / exp_to_next * 20), 20)
         left, right = '-' * bar, '-' * (20 - bar)
-        green(f'{left}{GRAY}{right} {YELLOW}{display_int(exp_left)}'
+        green(f'{BOLD}{left}{GRAY}{BOLD}{right} {YELLOW}{display_int(exp_left)}'
               f'{GOLD}/{YELLOW}{shorten_number(exp_to_next)}')
 
         if reward and exp_left < exp_to_next:

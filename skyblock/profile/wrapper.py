@@ -1,4 +1,4 @@
-from json import dump, load
+from json import dump as json_dump, load
 from os.path import join
 from pathlib import Path
 from re import sub
@@ -9,6 +9,7 @@ from ..function.item import load_item
 from ..function.io import red, yellow
 from ..function.path import is_profile
 from ..function.util import display_name, parse_int
+from ..item.object import Empty
 from ..map.object import Npc
 
 __all__ = ['profile_type']
@@ -36,27 +37,21 @@ def profile_type(cls):
 
     cls.__init__ = eval(init_str)
 
-    dump_str = '''
-    lambda self: (
-        file := open(join(Path.home(), 'skyblock',
-                     'saves', f'{self.name}.json'), 'w'),
-        dump({'name': self.name, %s}, file, indent=4),
-        file.close(),
-        None,
-    )[-1]
-    '''
-    content = ', '.join(
-        f'{key!r}: [item.to_obj() for item in self.{key}]'
-        if key in {'armor', 'pets', 'ender_chest', 'inventory',
-                   'potion_bag', 'quiver', 'stash', 'talisman_bag',
-                   'wardrobe'}
-        else f'{key!r}: self.{key}'
-        for key in anno
-    )
-    dump_str = dump_str.replace('%s', content)
-    dump_str = sub(r'\n\s+', '', dump_str)
+    def dump(self, /):
+        with open(join(Path.home(), 'skyblock',
+                       'saves', f'{self.name}.json'), 'w') as file:
+            obj = {'name': self.name}
+            for key in anno:
+                if key in {'armor', 'pets', 'ender_chest', 'inventory',
+                           'potion_bag', 'quiver', 'stash', 'talisman_bag',
+                           'wardrobe'}:
+                    obj[key] = [item.to_obj() for item in getattr(self, key)]
+                else:
+                    obj[key] = getattr(self, key)
 
-    cls.dump = eval(dump_str)
+            json_dump(obj, file)
+
+    cls.dump = dump
 
     load_str = '''
     lambda cls, name: ((

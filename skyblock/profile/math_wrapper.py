@@ -101,6 +101,8 @@ def profile_math(cls):
             value += 30
         elif name == 'crit_damage':
             value += 50
+        elif name == 'intelligence':
+            value += 100
         elif name == 'sea_creature_chance':
             value += 20
 

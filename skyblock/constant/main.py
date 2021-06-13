@@ -100,6 +100,8 @@ SELL_PRICE = {
     'lapis_lazuli': 4,
     'diamond': 8,
     'emerald': 6,
+    'obsidian': 9,
+    'end_stone': 2,
 
     'rotten_flesh': 2,
     'bone': 2,

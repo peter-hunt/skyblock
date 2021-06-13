@@ -55,6 +55,22 @@ def item_type(cls: type, /) -> type:
 
     cls.copy = eval(copy_str)
 
+    def __repr__(self):
+        string = f'{self.__class__.__name__}('
+        args = []
+        kwargs = []
+
+        for name in anno:
+            if name in default:
+                kwargs.append(f'{name}={getattr(self, name)!r}')
+            else:
+                args.append(f'{getattr(self, name)!r}')
+
+        string += ', '.join(args + kwargs) + ')'
+        return string
+
+    cls.__repr__ = __repr__
+
     def display(self):
         if self.__class__.__name__ == 'Empty':
             return f'{BOLD}{WHITE}Empty{CLN}'
@@ -212,6 +228,9 @@ def item_type(cls: type, /) -> type:
                     value += enchantments.get('growth', 0) * 15
                 elif stat_name == 'protection':
                     value += enchantments.get('protection', 0) * 3
+                elif stat_name == 'mining_speed':
+                    if 'efficiency' in enchantments:
+                        value += 10 + enchantments['efficiency'] * 20
 
                 hot_potato = ''
                 if stat_name[0] in 'dh' and self.hot_potato != 0:

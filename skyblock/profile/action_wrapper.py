@@ -8,12 +8,12 @@ from ..constant.color import (
     AQUA, RED, LIGHT_PURPLE, YELLOW, WHITE,
 )
 from ..constant.enchanting import (
-    ULTIMATE_ENCHS, CONFLICTS, ENCH_REQUIREMENTS,
+    ENCHS, ULTIMATE_ENCHS, CONFLICTS, ENCH_REQUIREMENTS,
     SWORD_ENCHS, BOW_ENCHS, ARMOR_ENCHS,
     AXE_ENCHS, HOE_ENCHS, PICKAXE_ENCHS,
 )
 from ..constant.main import INTEREST_TABLE, SELL_PRICE
-from ..constant.mob import CUBISM_EFT, ENDER_SLAYER_EFT, SMITE_EFT
+from ..constant.mob import CUBISM_EFT, ENDER_SLAYER_EFT, BOA_EFT, SMITE_EFT
 from ..constant.util import Number
 from ..function.io import gray, red, green, yellow, blue, aqua, white
 from ..function.math import (
@@ -135,9 +135,11 @@ def profile_action(cls):
 
         avaliable = []
 
+        all_ench = [row[0] for row in ENCHS]
+
         gray('Avaliable enchantments and xp level needed:')
         for name in table:
-            if name in ULTIMATE_ENCHS:
+            if name not in all_ench:
                 continue
 
             for _ench, req in ENCH_REQUIREMENTS:
@@ -182,11 +184,14 @@ def profile_action(cls):
                 continue
 
             index = self.parse_index(cmd[0], len(avaliable))
-            level = self.parse_index(cmd[1], len(xps))
-            if index is None or level is None:
+            if index is None:
                 continue
 
             name, lvls = avaliable[index]
+            level = self.parse_index(cmd[1], len(lvls))
+            if index is None or level is None:
+                continue
+
             current = item.enchantments.get(name, 0)
             lvl = lvls[level]
 
@@ -362,7 +367,7 @@ def profile_action(cls):
             if isinstance(piece, Armor):
                 speed += piece.speed
 
-        route = ' ➜ '.join(f'{region}' for region in path)
+        route = f'{GRAY} ➜ {AQUA}'.join(f'{region}' for region in path)
         aqua(f'Route: {route} ({float(accum_dist):.2f}m)')
         for target in path[1:]:
             if target.skill_req is not None:
@@ -450,7 +455,7 @@ def profile_action(cls):
                 enchantments.get('one_for_all', 0) * 2.1
             if additional_damage != 0:
                 gray(f"Your {LIGHT_PURPLE}{BOLD}One For All{GRAY} "
-                     f"enchantment granted {GREEN}+ {additional_damage}"
+                     f"enchantment granted {GREEN}+{additional_damage}"
                      f" {GRAY}additional weapon base damage!\n")
             damage += additional_damage + weapon.hot_potato
 
@@ -465,8 +470,11 @@ def profile_action(cls):
                 damage *= 1 + 0.1 * enchantments.get('cubism', 0)
             if name in ENDER_SLAYER_EFT:
                 damage *= 1 + 0.12 * enchantments.get('ender_slayer', 0)
+            if name in BOA_EFT:
+                damage *= 1 + 0.08 * enchantments.get('bane_of_arthropods', 0)
             if name in SMITE_EFT:
-                damage *= 1 + 0.08 * enchantments.get('ender_slayer', 0)
+                damage *= 1 + 0.08 * enchantments.get('smite', 0)
+
             crit_damage += 10 * enchantments.get('critical', 0)
             ferocity += enchantments.get('vicious', 0)
         else:
@@ -488,13 +496,13 @@ def profile_action(cls):
         warrior += 0.01 * max(min(combat_lvl - 50, 10), 0)
         damage *= 1 + warrior
 
-        time_cost = 2 / (speed / 100)
+        time_cost = 10 / (5 * speed / 100)
 
         execute = 0.2 * enchantments.get('execute', 0)
         experience = 1 + 0.125 * enchantments.get('experience', 0)
         first_strike = 1 + 0.25 * enchantments.get('first_strike', 0)
         giant_killer = enchantments.get('giant_killer', 0)
-        life_steal = 0.5 * enchantments.get('life_steal', 0)
+        life_steal = 0.005 * enchantments.get('life_steal', 0)
         if isinstance(weapon, Bow):
             looting = 1 + 0.15 * enchantments.get('chance', 0)
         elif isinstance(weapon, Sword):
@@ -579,18 +587,17 @@ def profile_action(cls):
 
                     if life_steal != 0:
                         delta = min(health - hp, life_steal * health)
-                        hp += delta
-
-                        gray(f"Your {BLUE}Life Steal{GRAY} "
-                             f"enchantment healed you for {AQUA}"
-                             f"{shorten_number(delta)}{RED}❤{GRAY}!\n")
+                        if delta != 0:
+                            hp += delta
+                            gray(f"Your {BLUE}Life Steal{GRAY} "
+                                 f"enchantment healed you for {AQUA}"
+                                 f"{shorten_number(delta)}{RED}❤{GRAY}!\n")
 
                     if syphon != 0:
                         delta = min(health - hp,
                                     syphon * health * (crit_damage // 100))
                         if delta != 0:
                             hp += delta
-
                             gray(f"Your {BLUE}Syphon{GRAY} "
                                  f"enchantment healed you for {AQUA}"
                                  f"{shorten_number(delta)}{RED}❤{GRAY}!\n")
@@ -598,7 +605,7 @@ def profile_action(cls):
                 if mob_hp <= 0:
                     a_an = 'an' if mob.name[0] in 'aeiou' else 'a'
                     green(f"You've killed {a_an} "
-                          f"{display_name(mob.name)}!\n\n")
+                          f"{display_name(mob.name)}!")
                     soul_eater_strength = mob.damage * soul_eater
                     break
 
@@ -621,10 +628,10 @@ def profile_action(cls):
                     if random_bool(npng_chance / 100):
                         exp_npng += 10
                 if exp_npng != 0:
+                    self.add_exp(exp_npng)
                     gray(f"Your {LIGHT_PURPLE}{BOLD}No Pain No Gain{GRAY}"
                          f" enchantment granted you {GREEN}{exp_npng}"
                          f" experience point{GRAY}!\n")
-                    self.add_exp(exp_npng)
 
                 if hp <= 0:
                     self.die()
@@ -730,11 +737,13 @@ def profile_action(cls):
         if not includes(ISLANDS, dest):
             red(f'Island not found: {dest!r}')
             return
+
         if dest == self.island:
-            if dest in {'hub'}:
+            if dest in ['hub']:
                 region = get(island.regions, island.spawn)
                 self.region = island.spawn
-                gray(f'Warped to {AQUA}{region}{GRAY} of {AQUA}{island}{GRAY}.')
+                gray(f'Warped to {AQUA}{region}{GRAY}'
+                     f' of {AQUA}{island}{GRAY}.')
             else:
                 yellow(f'Already at island: {dest!r}')
             return
@@ -745,6 +754,8 @@ def profile_action(cls):
             for _region in island.regions:
                 if getattr(_region, 'portal', None) == dest:
                     self.goto(_region.name)
+                    if self.region != _region.name:
+                        return
                     region = _region
                     break
             else:
@@ -764,7 +775,8 @@ def profile_action(cls):
                 return
 
         self.island = dest
-        region = get(island.regions, portal=last, default=island.spawn)
+        region = get(island.regions, portal=last,
+                     default=get(island.regions, island.spawn))
         self.region = region.name
         gray(f'Warped to {AQUA}{region}{GRAY} of {AQUA}{island}{GRAY}.')
 

@@ -35,6 +35,8 @@ RESOURCES = [
             hardness=5, exp=0, mining_exp=15),
     Mineral('obsidian', drop='obsidian', amount=1, breaking_power=4,
             hardness=50, exp=0, mining_exp=20),
+    Mineral('end_stone', drop='end_stone', amount=1, breaking_power=1,
+            hardness=3, exp=0, mining_exp=3),
 
     Tree('oak', 'oak_wood',
          hardness=2, foraging_exp=6),
