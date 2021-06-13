@@ -3,7 +3,7 @@ from typing import Any
 from ..function.io import red
 from ..function.util import get, includes
 
-from .item import get_item
+from .item import get_item, get_scroll
 from .object import ItemType, Mob
 
 __all__ = ['MOBS', 'get_mob']
@@ -149,7 +149,7 @@ MOBS = [
         drops=[
             (get_item('string'), 1, 'common', 1),
             (get_item('spider_eye'), 1, 'common', 0.5),
-            # scroll to top of nest, legendary, 0.0002
+            (get_scroll('nest'), 1, 'legendary', 0.0002),
             (get_item('tarantula_pet', rarity='epic'),
              1, 'rngesus', 0.0001),
             (get_item('tarantula_pet', rarity='legendary'),

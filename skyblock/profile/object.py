@@ -63,6 +63,7 @@ class Profile:
     collection: Dict[str, int] = {}
 
     crafted_minions: List[str] = []
+    fast_travel: List[str] = [('hub', None)]
 
     death_count: int = 0
     play_time: int = 0
@@ -187,6 +188,8 @@ class Profile:
                 # item = get_item('enderman_pet')
                 # self.recieve_item(item)
                 # self.add_exp(2000)
+                # item = get_scroll('nest')
+                # self.recieve_item(item)
                 ...
 
             elif words[0] == 'clearstash':
@@ -195,6 +198,17 @@ class Profile:
                     continue
 
                 self.clearstash()
+
+            elif words[0] in {'consume', 'use'}:
+                if len(words) != 2:
+                    red(f'Invalid usage of command {words[0]!r}.')
+                    continue
+
+                index = self.parse_index(words[1])
+                if index is None:
+                    continue
+
+                self.consume(index)
 
             elif words[0] == 'deathcount':
                 if len(words) != 1:
@@ -610,11 +624,14 @@ class Profile:
                 green(f'Unequipped {armor_piece.display()}{GREEN}!')
 
             elif words[0] == 'warp':
-                if len(words) != 2:
+                if len(words) > 2:
                     red(f'Invalid usage of command {words[0]!r}.')
                     continue
 
-                self.warp(words[1])
+                if len(words) == 1:
+                    self.display_warp()
+                else:
+                    self.warp(words[1])
 
             else:
                 red(f'Unknown command: {words[0]!r}')

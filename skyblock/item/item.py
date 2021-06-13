@@ -3,11 +3,14 @@ from typing import Any
 from ..function.io import red
 from ..function.util import get, includes
 
-from .object import ItemType, Item, Axe, Hoe, Pickaxe, Sword, Bow, Armor, Pet
+from .object import (
+    ItemType, Item, Axe, Hoe, Pickaxe, Sword, Bow, Armor, TravelScroll, Pet,
+)
 
 __all__ = [
-    'COLLECTION_ITEMS', 'WEAPONS', 'TOOLS', 'ITEMS',
-    'get_item', 'get_stack_size',
+    'COLLECTION_ITEMS', 'COMPACT_ITEMS', 'OTHER_ITEMS',
+    'WEAPONS', 'ARMOR_PIECES', 'TOOLS', 'TRAVEL_SCROLLS', 'PETS', 'ITEMS',
+    'get_item', 'get_scroll', 'get_stack_size',
 ]
 
 
@@ -333,6 +336,16 @@ TOOLS = [
             enchantments={'efficiency': 6}),
 ]
 
+TRAVEL_SCROLLS = [
+    TravelScroll('barn'),
+    TravelScroll('gold'),
+    TravelScroll('deep'),
+    TravelScroll('park'),
+    TravelScroll('spider'),
+    TravelScroll('spider', 'nest', rarity='epic'),
+    TravelScroll('end'),
+]
+
 PETS = [
     Pet('bee_pet', rarity='common',
         speed=10, intelligence=50, strength=30),
@@ -370,7 +383,7 @@ PETS = [
 ]
 
 ITEMS = (COLLECTION_ITEMS + COMPACT_ITEMS + OTHER_ITEMS
-         + WEAPONS + ARMOR_PIECES + TOOLS + PETS)
+         + WEAPONS + ARMOR_PIECES + TOOLS + TRAVEL_SCROLLS + PETS)
 
 
 def get_item(name: str, default: Any = None, **kwargs) -> ItemType:
@@ -378,6 +391,17 @@ def get_item(name: str, default: Any = None, **kwargs) -> ItemType:
         red(f'Invalid item: {name!r}')
         exit()
     return get(ITEMS, name, default, **kwargs)
+
+
+def get_scroll(name: str) -> TravelScroll:
+    for scroll in TRAVEL_SCROLLS:
+        if scroll.region is None:
+            if name == scroll.island:
+                return scroll
+        else:
+            if name == scroll.region:
+                return scroll
+    red(f'Invalid travel scroll: {name!r}')
 
 
 def get_stack_size(name: str, /) -> int:

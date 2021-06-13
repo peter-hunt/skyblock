@@ -82,7 +82,13 @@ def item_type(cls: type, /) -> type:
         else:
             modifier = ''
 
-        name = display_name(self.name)
+        if self.__class__.__name__ == 'TravelScroll':
+            name = f'Travel Scroll to {display_name(self.island)}'
+            if self.region is not None:
+                name += f' {display_name(self.region)}'
+        else:
+            name = display_name(self.name)
+
         count = (f' x {display_int(self.count)}'
                  if getattr(self, 'count', 1) != 1 else '')
 
@@ -106,7 +112,12 @@ def item_type(cls: type, /) -> type:
         else:
             modifier = ''
 
-        name = display_name(self.name)
+        if self.__class__.__name__ == 'TravelScroll':
+            name = f'Travel Scroll to {display_name(self.island)}'
+            if self.region is not None:
+                name += f' {display_name(self.region)}'
+        else:
+            name = display_name(self.name)
 
         if getattr(self, 'stars', None) is None:
             stars = ''
@@ -124,7 +135,7 @@ def item_type(cls: type, /) -> type:
                      f'\n{GRAY}Mining Speed: {GREEN}+'
                      f"{getattr(self, 'mining_speed')}{CLN}\n")
 
-        if self.__class__.__name__ in {'Sword', 'Bow'}:
+        elif self.__class__.__name__ in {'Bow', 'Sword'}:
             is_dungeon = self.stars is not None
             basic_stats = []
             for stat_name in ('damage', 'strength', 'crit_chance',
@@ -259,6 +270,14 @@ def item_type(cls: type, /) -> type:
             info += '\n\n' + '\n'.join(f'{GRAY}{stat}{CLN}'
                                        for stat in bonus_stats)
 
+        elif self.__class__.__name__ == 'TravelScroll':
+            r_name = ('Spawn' if self.region is None
+                      else display_name(self.region))
+            info += (f'\n{GRAY}Consume this item to add its\n'
+                     f'destination to your fast travel\noptions.\n\n'
+                     f'Island: {GREEN}{display_name(self.island)}{GRAY}\n'
+                     f'Teleport: {YELLOW}{r_name}')
+
         while '\n' in info and info.split('\n')[1] == '':
             info = '\n'.join([info.split('\n')[0]] + info.split('\n')[2:])
 
@@ -321,13 +340,18 @@ def item_type(cls: type, /) -> type:
 
         if self.__class__.__name__ == 'Armor':
             type_name = self.part.upper()
+        elif self.__class__.__name__ == 'TravelScroll':
+            type_name = ''
         else:
             type_name = self.__class__.__name__.upper()
         if getattr(self, 'stars', None) is not None:
             type_name = f'DUNGEON {type_name}'
 
         info = info.rstrip('\n')
-        info += f'\n{rarity_color}{self.rarity.upper()} {type_name}{CLN}'
+        if self.__class__.__name__ == 'TravelScroll':
+            info += '\n'
+        info += f'\n{rarity_color}{self.rarity.upper()} {type_name}'.rstrip()
+        info += CLN
 
         while '\n\n\n' in info:
             info = info.replace('\n\n\n', '\n\n')

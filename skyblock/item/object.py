@@ -6,7 +6,8 @@ from .wrapper import item_type, mob_type
 
 __all__ = [
     'ItemType', 'Item', 'Empty', 'Bow', 'Sword', 'Axe', 'Pickaxe', 'Hoe',
-    'Armor', 'Potion', 'Pet', 'Resource', 'Mineral', 'Tree', 'ITEM_OBJS', 'Mob',
+    'Armor', 'TravelScroll', 'Pet',
+    'Resource', 'Mineral', 'Tree', 'ITEM_OBJS', 'Mob',
 ]
 
 
@@ -136,12 +137,11 @@ class Armor(ItemType):
 
 
 @item_type
-class Potion(ItemType):
-    name: str
-    rarity: str
-    potion: str
-    duration: int
-    level: int
+class TravelScroll(ItemType):
+    island: str
+    region: Optional[str] = None
+    rarity: str = 'rare'
+    name: str = 'travel_scroll'
 
 
 @item_type
@@ -202,8 +202,8 @@ class Tree(Resource):
 
 
 ITEM_OBJS = [
-    Item, Empty, Sword, Bow, Axe, Hoe, Pickaxe, Armor,
-    Potion, Pet, Crop, Mineral, Tree,
+    Item, Empty, Sword, Bow, Axe, Hoe, Pickaxe, Armor, TravelScroll,
+    Pet, Crop, Mineral, Tree,
 ]
 
 

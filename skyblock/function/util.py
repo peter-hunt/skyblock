@@ -12,7 +12,7 @@ from .io import red, yellow
 
 __all__ = [
     'backupable', 'display_int', 'display_name', 'display_number', 'get',
-    'generate_help', 'includes', 'roman', 'shorten_number',
+    'generate_help', 'includes', 'index', 'roman', 'shorten_number',
 ]
 
 
@@ -104,6 +104,13 @@ def includes(ls: List[Any], name: str, /) -> bool:
         if item.name == name:
             return True
     return False
+
+
+def index(ls: List[Any], name: str, /) -> bool:
+    for i, item in enumerate(ls):
+        if item.name == name:
+            return i
+    raise ValueError(f'{name!r} is not in list')
 
 
 def parse_int(string: str, /) -> Optional[int]:

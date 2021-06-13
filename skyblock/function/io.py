@@ -3,12 +3,12 @@ from sys import stdout
 
 from ..constant.color import (
     DARK_AQUA,
-    GRAY, RED, GREEN, YELLOW, BLUE, AQUA, WHITE,
+    GRAY, DARK_GRAY, RED, GREEN, YELLOW, BLUE, AQUA, WHITE,
 )
 
 __all__ = [
     'dark_aqua',
-    'gray', 'red', 'green', 'yellow', 'blue', 'aqua', 'white',
+    'gray', 'dark_gray', 'red', 'green', 'yellow', 'blue', 'aqua', 'white',
     'input_regex',
 ]
 
@@ -21,6 +21,11 @@ def dark_aqua(*args, sep=' ', end='\n') -> None:
 def gray(*args, sep=' ', end='\n') -> None:
     string = sep.join(f'{arg}' for arg in args)
     stdout.write(f'{GRAY}{string}{end}\x1b[0m')
+
+
+def dark_gray(*args, sep=' ', end='\n') -> None:
+    string = sep.join(f'{arg}' for arg in args)
+    stdout.write(f'{DARK_GRAY}{string}{end}\x1b[0m')
 
 
 def red(*args, sep=' ', end='\n') -> None:

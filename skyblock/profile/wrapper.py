@@ -49,7 +49,7 @@ def profile_type(cls):
                 else:
                     obj[key] = getattr(self, key)
 
-            json_dump(obj, file)
+            json_dump(obj, file, indent=4)
 
     cls.dump = dump
 

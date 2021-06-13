@@ -8,7 +8,7 @@ from ..constant.color import (
     AQUA, RED, LIGHT_PURPLE, YELLOW, WHITE,
 )
 from ..constant.enchanting import (
-    ENCHS, ULTIMATE_ENCHS, CONFLICTS, ENCH_REQUIREMENTS,
+    ENCHS, CONFLICTS, ENCH_REQUIREMENTS,
     SWORD_ENCHS, BOW_ENCHS, ARMOR_ENCHS,
     AXE_ENCHS, HOE_ENCHS, PICKAXE_ENCHS,
 )
@@ -26,8 +26,8 @@ from ..function.util import (
 from ..item.item import COLLECTION_ITEMS
 from ..item.mob import get_mob
 from ..item.object import (
-    ItemType, Item, Empty, Bow, Sword, Armor,
-    Axe, Hoe, Pickaxe, Crop, Mineral, Tree, Mob,
+    Item, Empty, Bow, Sword, Armor,
+    Axe, Hoe, Pickaxe, TravelScroll, Crop, Mineral, Tree, Mob,
 )
 from ..item.resource import get_resource
 from ..map.island import ISLANDS
@@ -84,6 +84,27 @@ def profile_action(cls):
             green(f"You bought {good.display()}{amt_str}{GREEN}!")
 
     cls.buy = buy
+
+    def consume(self, index: int, /):
+        item = self.inventory[index]
+
+        if isinstance(item, TravelScroll):
+            if [item.island, item.region] in self.fast_travel:
+                red('You already unlocked this fast travel!')
+                return
+
+            self.fast_travel.append([item.island, item.region])
+            self.inventory[index] = Empty()
+            name = display_name(item.island)
+            if item.region is not None:
+                name += f' {display_name(item.region)}'
+            yellow('You consumed the scroll!')
+            yellow(f'You may now fast travel to {GREEN}{name}{YELLOW}!')
+
+        else:
+            red('This item is not consumable!')
+
+    cls.consume = consume
 
     def die(self, /):
         bank = 0
@@ -734,18 +755,24 @@ def profile_action(cls):
         island = get(ISLANDS, self.island)
         region = get(island.regions, self.region)
 
-        if not includes(ISLANDS, dest):
-            red(f'Island not found: {dest!r}')
-            return
-
-        if dest == self.island:
-            if dest in ['hub']:
-                region = get(island.regions, island.spawn)
-                self.region = island.spawn
+        for i_name, r_name in self.fast_travel:
+            name = i_name if r_name is None else r_name
+            if dest == name:
+                island = get(ISLANDS, i_name)
+                region = get(island.regions,
+                             island.spawn if r_name is None else r_name)
+                self.island = i_name
+                self.region = r_name
                 gray(f'Warped to {AQUA}{region}{GRAY}'
                      f' of {AQUA}{island}{GRAY}.')
-            else:
-                yellow(f'Already at island: {dest!r}')
+                return
+
+        if dest == self.island:
+            yellow(f'Already at island: {dest!r}')
+            return
+
+        if not includes(ISLANDS, dest):
+            red(f'Island not found: {dest!r}')
             return
 
         if dest == 'hub':

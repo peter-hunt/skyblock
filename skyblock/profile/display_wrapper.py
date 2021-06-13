@@ -8,12 +8,13 @@ from ..constant.color import (
 )
 from ..constant.main import ARMOR_PARTS
 from ..constant.stat import ALL_STAT, HIDDEN_STATS, PERC_STATS
-from ..function.io import gray, green, yellow, white
+from ..function.io import gray, dark_gray, green, yellow, white
 from ..function.math import (
     calc_skill_exp, calc_skill_exp_info, display_skill_reward,
 )
 from ..function.util import (
-    display_int, display_name, display_number, get, roman, shorten_number,
+    display_int, display_name, display_number,
+    get, index, roman, shorten_number,
 )
 from ..item.object import Empty, ItemType
 from ..map.island import ISLANDS
@@ -72,26 +73,28 @@ def profile_display(cls):
                     direc += 'South' if dz > 0 else 'North'
                 if dz / dx < tan(radians(60)):
                     direc += 'East' if dx > 0 else 'West'
-            gray(f'  {AQUA}{display_name(other.name)}{GRAY} '
-                 f'on the {AQUA}{direc}{GRAY}.')
+            gray(f'  {AQUA}{display_name(other.name)}{GRAY}'
+                 f' on the {AQUA}{direc}{GRAY} ({other.name}).')
 
         if len(region.resources) > 0:
             gray('\nResources:')
             for resource in region.resources:
-                gray(f'  {GREEN}{display_name(resource.name)}{GRAY}')
+                gray(f'  {GREEN}{display_name(resource.name)}{GRAY}'
+                     f' ({resource.name}).')
 
         if len(region.mobs) > 0:
             gray('\nMobs:')
             for mob in region.mobs:
-                green(f'  {mob.display()}')
+                green(f'  {mob.display()}{GRAY} ({mob.name}).')
 
         if len(region.npcs) > 0:
             gray('\nNPCs:')
             for npc in region.npcs:
-                gray(f'  {GREEN}{npc}{GRAY}')
+                gray(f'  {GREEN}{npc}{GRAY} ({npc.name}).')
 
         if region.portal is not None:
-            gray(f'\nPortal to {AQUA}{display_name(region.portal)}{GRAY}.')
+            gray(f'\nPortal to {AQUA}{display_name(region.portal)}{GRAY}'
+                 f' ({region.portal})')
 
     cls.look = look
 
@@ -246,6 +249,28 @@ def profile_display(cls):
         yellow(f"{BOLD}{'':-^{width}}")
 
     cls.display_skills = display_skills
+
+    def display_warp(self, /):
+        gray('Unlocked fast travel destinations:')
+        if len(self.fast_travel) == 0:
+            gray('  none')
+            return
+
+        fast_travel = [scroll.copy() for scroll in self.fast_travel]
+        fast_travel = sorted(fast_travel, key=lambda item: (
+            index(ISLANDS, item[0]),
+            index((island := get(ISLANDS, item[0])).regions,
+                  island.spawn if item[1] is None else item[1]),
+        ))
+
+        for island, region in self.fast_travel:
+            i_name = display_name(island)
+            r_name = 'Spawn' if region is None else display_name(region)
+            warp_name = island if region is None else region
+            green(f'{i_name}{GRAY} - {AQUA}{r_name}')
+            dark_gray(f'/warp {warp_name}')
+
+    cls.display_warp = display_warp
 
     @staticmethod
     def npc_talk(name: str, dialog: Iterable):

@@ -20,16 +20,23 @@ ROMAN_NUM = [
 
 SPECIAL_NAMES = {
     'attack_speed': 'Bonus Attack Speed',
+    'barn': 'The Barn',
     'builders_house': "Builder's House",
-    'counter_strike': "Counter-Strike",
+    'counter_strike': 'Counter-Strike',
+    'crypt': 'Hub Crypts',
+    'deep': 'Deep Caverns',
     'dragons_nest': "Dragon's Nest",
-    'first_strike': "First-Strike",
+    'end': 'The End',
+    'first_strike': 'First-Strike',
+    'gold': 'Gold Mine',
     'necrons_blade': "Necron's Blade",
+    'park': 'The Park',
     'pigmans_den': "Pigman's Den",
     'pray_rngesus': 'Pray RNGesus',
+    'spider': "Spider's Den",
     'rngesus': 'RNGesus',
     'runaans_bow': "Runaan's Bow",
-    'triple_strike': "Triple-Strike",
+    'triple_strike': 'Triple-Strike',
     'tacticians_sword': "Tactician's Sword",
 }
 

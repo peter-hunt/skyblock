@@ -32,6 +32,10 @@ Buy item from the shop.
 > clearstash
 Removes all items currently in the Stash.
 
+> consume
+> use
+Consume items.
+
 > deathcount
 Displays how many times you have died.
 
