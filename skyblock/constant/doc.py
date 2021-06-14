@@ -36,6 +36,9 @@ Removes all items currently in the Stash.
 > use
 Consume items.
 
+> craft <recipe-index> <amount>
+Craft items.
+
 > deathcount
 Displays how many times you have died.
 
@@ -108,6 +111,9 @@ Takes all items currently in the Stash.
 > playtime
 > pt
 Shows your current playtime.
+
+> recipes [category=all]
+Shows all recipes avaliable.
 
 > sell <index>
 Sell the item.

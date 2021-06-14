@@ -8,10 +8,10 @@ from ..constant.color import (
 from ..constant.enchanting import ULTIMATE_ENCHS
 from ..function.math import calc_pet_exp, calc_pet_upgrade_exp, dung_stat
 from ..function.util import (
-    display_int, display_name, display_number, roman, shorten_number,
+    display_int, display_name, roman, shorten_number,
 )
 
-__all__ = ['item_type', 'mob_type']
+__all__ = ['item_type']
 
 
 def item_type(cls: type, /) -> type:
@@ -417,56 +417,5 @@ def item_type(cls: type, /) -> type:
         return info
 
     cls.info = info
-
-    return cls
-
-
-def mob_type(cls):
-    anno = getattr(cls, '__annotations__', {})
-    default = {}
-    for name in anno:
-        if hasattr(cls, name):
-            default[name] = getattr(cls, name)
-
-    init_str = 'lambda self'
-    for key in anno:
-        if key in default:
-            init_str += f', {key}={default[key]!r}'
-        else:
-            init_str += f', {key}'
-    init_str += ': ('
-    for key in anno:
-        init_str += f'setattr(self, {key!r}, {key}), '
-    init_str += 'None,)[-1]'
-
-    cls.__init__ = eval(init_str)
-
-    to_obj_str = 'lambda self: {'
-    for key in anno:
-        to_obj_str += f'{key!r}: self.{key}, '
-    to_obj_str += f"'type': {cls.__name__.lower()!r}}}"
-
-    cls.to_obj = eval(to_obj_str)
-
-    from_obj_str = 'lambda cls, obj: cls('
-    from_obj_str += ', '.join(
-        f'obj.get({key!r}, {default[key]!r})' if key in default
-        else f'obj[{key!r}]' for key in anno
-    )
-    from_obj_str += ')'
-
-    cls.from_obj = classmethod(eval(from_obj_str))
-
-    copy_str = 'lambda self: self.__class__('
-    copy_str += ', '.join(f'self.{key}' for key in anno)
-    copy_str += ')'
-
-    cls.copy = eval(copy_str)
-
-    def display(self):
-        return (f'{GRAY}Lv{self.level} {RED}{display_name(self.name)}'
-                f' {GREEN}{shorten_number(self.health)}{RED}❤{GREEN}')
-
-    cls.display = display
 
     return cls

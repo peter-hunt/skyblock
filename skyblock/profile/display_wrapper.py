@@ -8,7 +8,7 @@ from ..constant.color import (
 )
 from ..constant.main import ARMOR_PARTS
 from ..constant.stat import ALL_STAT, HIDDEN_STATS, PERC_STATS
-from ..function.io import gray, dark_gray, green, yellow, white
+from ..function.io import gray, dark_gray, green, yellow, aqua, white
 from ..function.math import (
     calc_skill_exp, calc_skill_exp_info, display_skill_reward,
 )
@@ -17,6 +17,7 @@ from ..function.util import (
     get, index, roman, shorten_number,
 )
 from ..item.object import Empty, ItemType
+from ..item.recipe import RECIPES
 from ..map.island import ISLANDS
 from ..map.object import Npc
 
@@ -181,6 +182,42 @@ def profile_display(cls):
 
     cls.display_playtime = display_playtime
 
+    def display_recipe(self, category: Optional[str], /, *, end=True):
+        width, _ = get_terminal_size()
+        width = ceil(width * 0.85)
+        yellow(f"{BOLD}{'':-^{width}}")
+
+        green(f'{display_name(category)} Recipes')
+        recipes = [recipe for recipe in RECIPES if recipe.category == category]
+
+        digits = len(f'{len(RECIPES)}')
+
+        if len(recipes) == 0:
+            gray('  none')
+            return
+
+        for recipe in recipes:
+            i = index(RECIPES, recipe.name)
+            gray(f'  {(i + 1):>{digits}} {AQUA}{display_name(recipe.name)}')
+
+        if end:
+            width, _ = get_terminal_size()
+            width = ceil(width * 0.85)
+            yellow(f"{BOLD}{'':-^{width}}")
+
+    cls.display_recipe = display_recipe
+
+    def display_recipes(self, /):
+        for category in ('farming', 'mining', 'combat', 'fishing', 'foraging',
+                         'enchanting', 'alchemy', 'slayer'):
+            self.display_recipe(category, end=False)
+
+        width, _ = get_terminal_size()
+        width = ceil(width * 0.85)
+        yellow(f"{BOLD}{'':-^{width}}")
+
+    cls.display_recipes = display_recipes
+
     def display_shop(self, npc: Npc, trade_index: Optional[int] = None, /):
         if trade_index is None:
             gray(f"{npc}'s shop:")
@@ -283,8 +320,8 @@ def profile_display(cls):
             i_name = display_name(island)
             r_name = 'Spawn' if region is None else display_name(region)
             warp_name = island if region is None else region
-            green(f'{i_name}{GRAY} - {AQUA}{r_name}')
-            dark_gray(f'/warp {warp_name}')
+            green(f'  {i_name}{GRAY} - {AQUA}{r_name}')
+            dark_gray(f'  /warp {warp_name}')
 
     cls.display_warp = display_warp
 

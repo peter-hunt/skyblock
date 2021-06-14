@@ -2,12 +2,14 @@ from typing import Dict, List, Optional, Tuple
 
 from ..constant.util import Amount, Number
 
-from .wrapper import item_type, mob_type
+from .item_wrapper import item_type
+from .mob_wrapper import mob_type
+from .recipe_wrapper import recipe_type
 
 __all__ = [
     'ItemType', 'Item', 'Empty', 'Bow', 'Sword', 'Axe', 'Pickaxe', 'Hoe',
-    'Armor', 'TravelScroll', 'Pet',
-    'Resource', 'Mineral', 'Tree', 'ITEM_OBJS', 'Mob',
+    'Armor', 'TravelScroll', 'Pet', 'OBJECTS',
+    'Resource', 'Mineral', 'Tree', 'Mob', 'Recipe',
 ]
 
 
@@ -168,6 +170,35 @@ class Pet(ItemType):
     abilities: List = []
 
 
+@item_type
+class Pet(ItemType):
+    name: str
+    rarity: str
+    category: str = None
+    exp: float = 0.0
+    candy_used: int = 0
+    active: bool = False
+
+    health: int = 0
+    defense: int = 0
+    speed: int = 0
+    true_defense: int = 0
+    intelligence: int = 0
+    strength: int = 0
+    crit_chance: int = 0
+    crit_damage: int = 0
+    magic_find: int = 0
+    attack_speed: int = 0
+    ferocity: int = 0
+
+    abilities: List = []
+
+
+OBJECTS = [
+    Item, Empty, Sword, Bow, Axe, Hoe, Pickaxe, Armor, TravelScroll, Pet,
+]
+
+
 class Resource:
     def type(self):
         return type(self).__name__
@@ -200,12 +231,6 @@ class Tree(Resource):
     foraging_exp: Number = 1
 
 
-ITEM_OBJS = [
-    Item, Empty, Sword, Bow, Axe, Hoe, Pickaxe, Armor, TravelScroll,
-    Pet, Crop, Mineral, Tree,
-]
-
-
 @mob_type
 class Mob:
     name: str
@@ -216,3 +241,25 @@ class Mob:
     combat_xp: int
     exp: int
     drops: List[Tuple[ItemType, Amount, str, Number]]
+
+
+@recipe_type
+class Mob:
+    name: str
+    level: int
+    health: int
+    damage: int
+    coins: int
+    combat_xp: int
+    exp: int
+    drops: List[Tuple[ItemType, Amount, str, Number]]
+
+
+@recipe_type
+class Recipe:
+    name: str
+    category: str
+    ingredients: List[Tuple[ItemType, Amount]]
+    result: Tuple[ItemType, Amount]
+    # collection_req: Optional[Tuple[str, int]] = None
+    # slayer_req: Optional[Tuple[str, int]] = None

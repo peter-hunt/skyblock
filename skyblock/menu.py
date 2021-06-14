@@ -63,14 +63,14 @@ def main():
 
         elif words[0] in {'new', 'touch'}:
             if len(words) != 1:
-                red(f'Invalid usage of command {words[0]!r}.')
+                red(f'Invalid usage of command {words[0]}.')
                 continue
 
             new()
 
         elif words[0] in {'del', 'delete'}:
             if len(words) != 2:
-                red(f'Invalid usage of command {words[0]!r}.')
+                red(f'Invalid usage of command {words[0]}.')
                 continue
 
             path = Path(join(Path.home(), 'skyblock',
@@ -83,7 +83,7 @@ def main():
 
         elif words[0] in {'exit', 'quit'}:
             if len(words) != 1:
-                red(f'Invalid usage of command {words[0]!r}.')
+                red(f'Invalid usage of command {words[0]}.')
                 continue
 
             break
@@ -103,14 +103,14 @@ def main():
 
         elif words[0] in {'list', 'ls'}:
             if len(words) != 1:
-                red(f'Invalid usage of command {words[0]!r}.')
+                red(f'Invalid usage of command {words[0]}.')
                 continue
 
             ls()
 
         elif words[0] in {'load', 'open'}:
             if len(words) != 2:
-                red(f'Invalid usage of command {words[0]!r}.')
+                red(f'Invalid usage of command {words[0]}.')
                 continue
 
             game = Profile.load(words[1])

@@ -1,5 +1,3 @@
-from typing import Any
-
 from ..function.io import red
 from ..function.util import get, includes
 
@@ -146,12 +144,16 @@ COMPACT_ITEMS = [
 OTHER_ITEMS = [
     Item('arrow', 64, 'common'),
     Item('blaze_powder', 64, 'common'),
+    Item('bread', 64, 'common'),
     Item('exp_share_core', 1, 'epic'),
     Item('flint', 64, 'common'),
     Item('gold_nugget', 64, 'common'),
     Item('golden_powder', 64, 'epic'),
+    Item('iron_nugget', 64, 'common'),
     Item('lapis_crystal', 1, 'rare'),
+    Item('planks', 64, 'common'),
     Item('poisonous_potato', 64, 'common'),
+    Item('stick', 64, 'common'),
     Item('sugar', 64, 'common'),
     Item('summoning_eye', 1, 'epic'),
 ]
@@ -419,11 +421,11 @@ ITEMS = (COLLECTION_ITEMS + COMPACT_ITEMS + OTHER_ITEMS
          + WEAPONS + ARMOR_PIECES + TOOLS + TRAVEL_SCROLLS + PETS)
 
 
-def get_item(name: str, default: Any = None, **kwargs) -> ItemType:
+def get_item(name: str, **kwargs) -> ItemType:
     if not includes(ITEMS, name):
         red(f'Invalid item: {name!r}')
         exit()
-    return get(ITEMS, name, default, **kwargs)
+    return get(ITEMS, name, **kwargs)
 
 
 def get_scroll(name: str) -> TravelScroll:

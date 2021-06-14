@@ -45,4 +45,4 @@ SPECIAL_NAMES = {
     'tacticians_sword': "Tactician's Sword",
 }
 
-IGNORED_WORDS = ('of', 'the')
+IGNORED_WORDS = ('from', 'of', 'the', 'to')

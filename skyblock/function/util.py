@@ -66,7 +66,7 @@ def generate_help(doc: str, /) -> Dict[str, str]:
 
 
 def get(ls: List[Any], name: Optional[str] = None,
-        default: Optional[Any] = None, **kwargs) -> Any:
+        default: Optional[Any] = None, /, **kwargs) -> Any:
     attrs = {}
 
     for item in ls:

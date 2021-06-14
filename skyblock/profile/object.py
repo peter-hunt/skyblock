@@ -17,6 +17,7 @@ from ..item.mob import get_mob
 from ..item.object import (
     Item, Empty, Bow, Sword, Armor, Axe, Hoe, Pickaxe,
 )
+from ..item.recipe import RECIPES
 from ..item.resource import get_resource
 from ..map.island import ISLANDS
 from ..map.object import Npc
@@ -135,7 +136,7 @@ class Profile:
 
             elif words[0] == 'armor':
                 if len(words) > 2:
-                    red(f'Invalid usage of command {words[0]!r}.')
+                    red(f'Invalid usage of command {words[0]}.')
                     continue
 
                 if len(words) == 1:
@@ -150,7 +151,7 @@ class Profile:
 
             elif words[0] == 'buy':
                 if len(words) not in {2, 3}:
-                    red(f'Invalid usage of command {words[0]!r}.')
+                    red(f'Invalid usage of command {words[0]}.')
                     continue
 
                 if last_shop is None:
@@ -196,14 +197,14 @@ class Profile:
 
             elif words[0] == 'clearstash':
                 if len(words) != 1:
-                    red(f'Invalid usage of command {words[0]!r}.')
+                    red(f'Invalid usage of command {words[0]}.')
                     continue
 
                 self.clearstash()
 
             elif words[0] in {'consume', 'use'}:
                 if len(words) != 2:
-                    red(f'Invalid usage of command {words[0]!r}.')
+                    red(f'Invalid usage of command {words[0]}.')
                     continue
 
                 index = self.parse_index(words[1])
@@ -212,16 +213,37 @@ class Profile:
 
                 self.consume(index)
 
+            elif words[0] == 'craft':
+                if len(words) not in {2, 3}:
+                    red(f'Invalid usage of command {words[0]}.')
+                    continue
+
+                index = self.parse_index(words[1], len(RECIPES))
+                if index is None:
+                    continue
+
+                amount = 1
+
+                if len(words) == 3:
+                    amount = parse_int(words[2])
+                    if amount is None:
+                        continue
+                    if amount == 0:
+                        red(f'Amount must be a positive integer.')
+                        continue
+
+                self.craft(index, amount)
+
             elif words[0] == 'deathcount':
                 if len(words) != 1:
-                    red(f'Invalid usage of command {words[0]!r}.')
+                    red(f'Invalid usage of command {words[0]}.')
                     continue
 
                 yellow(f'Death Count: {BLUE}{display_int(self.death_count)}')
 
             elif words[0] in {'deposit', 'withdraw'}:
                 if len(words) != 2:
-                    red(f'Invalid usage of command {words[0]!r}.')
+                    red(f'Invalid usage of command {words[0]}.')
                     continue
 
                 if self.region != 'bank':
@@ -272,7 +294,7 @@ class Profile:
 
             elif words[0] == 'enchant':
                 if len(words) != 2:
-                    red(f'Invalid usage of command {words[0]!r}.')
+                    red(f'Invalid usage of command {words[0]}.')
                     continue
 
                 if self.region != 'library':
@@ -287,7 +309,7 @@ class Profile:
 
             elif words[0] == 'equip':
                 if len(words) != 2:
-                    red(f'Invalid usage of command {words[0]!r}.')
+                    red(f'Invalid usage of command {words[0]}.')
                     continue
 
                 index = self.parse_index(words[1])
@@ -307,7 +329,7 @@ class Profile:
 
             elif words[0] in {'exit', 'quit'}:
                 if len(words) != 1:
-                    red(f'Invalid usage of command {words[0]!r}.')
+                    red(f'Invalid usage of command {words[0]}.')
                     continue
 
                 self.dump()
@@ -316,7 +338,7 @@ class Profile:
 
             elif words[0] == 'exp':
                 if len(words) != 1:
-                    red(f'Invalid usage of command {words[0]!r}.')
+                    red(f'Invalid usage of command {words[0]}.')
                     continue
 
                 lvl = calc_exp(self.experience)
@@ -334,7 +356,7 @@ class Profile:
 
             elif words[0] == 'get':
                 if len(words) < 2 or len(words) > 4:
-                    red(f'Invalid usage of command {words[0]!r}.')
+                    red(f'Invalid usage of command {words[0]}.')
                     continue
 
                 name = words[1]
@@ -359,7 +381,7 @@ class Profile:
                                f'Using barehand by default.')
                         tool_index = None
 
-                amount = None
+                amount = 1
 
                 if len(words) == 4:
                     amount = parse_int(words[3])
@@ -373,7 +395,7 @@ class Profile:
 
             elif words[0] == 'goto':
                 if len(words) != 2:
-                    red(f'Invalid usage of command {words[0]!r}.')
+                    red(f'Invalid usage of command {words[0]}.')
                     continue
 
                 self.goto(words[1])
@@ -392,7 +414,7 @@ class Profile:
 
             elif words[0] in {'info', 'information'}:
                 if len(words) != 2:
-                    red(f'Invalid usage of command {words[0]!r}.')
+                    red(f'Invalid usage of command {words[0]}.')
                     continue
 
                 index = self.parse_index(words[1])
@@ -403,21 +425,21 @@ class Profile:
 
             elif words[0] == 'look':
                 if len(words) != 1:
-                    red(f'Invalid usage of command {words[0]!r}.')
+                    red(f'Invalid usage of command {words[0]}.')
                     continue
 
                 self.look()
 
             elif words[0] == 'ls':
                 if len(words) != 1:
-                    red(f'Invalid usage of command {words[0]!r}.')
+                    red(f'Invalid usage of command {words[0]}.')
                     continue
 
                 self.display_inv()
 
             elif words[0] == 'merge':
                 if len(words) != 3:
-                    red(f'Invalid usage of command {words[0]!r}.')
+                    red(f'Invalid usage of command {words[0]}.')
                     continue
 
                 index_1 = self.parse_index(words[1])
@@ -429,14 +451,14 @@ class Profile:
 
             elif words[0] == 'money':
                 if len(words) != 1:
-                    red(f'Invalid usage of command {words[0]!r}.')
+                    red(f'Invalid usage of command {words[0]}.')
                     continue
 
                 self.display_money()
 
             elif words[0] in {'move', 'switch'}:
                 if len(words) != 3:
-                    red(f'Invalid usage of command {words[0]!r}.')
+                    red(f'Invalid usage of command {words[0]}.')
                     continue
 
                 index_1 = self.parse_index(words[1])
@@ -451,19 +473,19 @@ class Profile:
 
             elif words[0] == 'pickupstash':
                 if len(words) != 1:
-                    red(f'Invalid usage of command {words[0]!r}.')
+                    red(f'Invalid usage of command {words[0]}.')
                     continue
 
                 self.pickupstash()
 
             elif words[0] == 'pet':
                 if len(words) < 2:
-                    red(f'Invalid usage of command {words[0]!r}.')
+                    red(f'Invalid usage of command {words[0]}.')
                     continue
 
                 if words[1] == 'add':
                     if len(words) != 3:
-                        red(f'Invalid usage of command {words[0]!r}.')
+                        red(f'Invalid usage of command {words[0]}.')
                         continue
 
                     index = self.parse_index(words[2])
@@ -474,14 +496,14 @@ class Profile:
 
                 elif words[1] == 'despawn':
                     if len(words) != 2:
-                        red(f'Invalid usage of command {words[0]!r}.')
+                        red(f'Invalid usage of command {words[0]}.')
                         continue
 
                     self.despawn_pet()
 
                 elif words[1] == 'info':
                     if len(words) != 3:
-                        red(f'Invalid usage of command {words[0]!r}.')
+                        red(f'Invalid usage of command {words[0]}.')
                         continue
 
                     index = self.parse_index(words[2], len(self.pets))
@@ -492,14 +514,14 @@ class Profile:
 
                 elif words[1] == 'ls':
                     if len(words) != 2:
-                        red(f'Invalid usage of command {words[0]!r}.')
+                        red(f'Invalid usage of command {words[0]}.')
                         continue
 
                     self.display_pets()
 
                 elif words[1] == 'remove':
                     if len(words) != 3:
-                        red(f'Invalid usage of command {words[0]!r}.')
+                        red(f'Invalid usage of command {words[0]}.')
                         continue
 
                     index = self.parse_index(words[2], len(self.pets))
@@ -510,7 +532,7 @@ class Profile:
 
                 elif words[1] == 'summon':
                     if len(words) != 3:
-                        red(f'Invalid usage of command {words[0]!r}.')
+                        red(f'Invalid usage of command {words[0]}.')
                         continue
 
                     index = self.parse_index(words[2], len(self.pets))
@@ -524,14 +546,31 @@ class Profile:
 
             elif words[0] in {'playtime', 'pt'}:
                 if len(words) != 1:
-                    red(f'Invalid usage of command {words[0]!r}.')
+                    red(f'Invalid usage of command {words[0]}.')
                     continue
 
                 self.display_playtime()
 
+            elif words[0] == 'recipes':
+                if len(words) > 2:
+                    red(f'Invalid usage of command {words[0]}.')
+                    continue
+
+                if len(words) == 1:
+                    self.display_recipes()
+                    continue
+
+                category = words[1]
+                if category not in ('farming', 'mining', 'combat', 'fishing',
+                                    'foraging', 'enchanting', 'alchemy',
+                                    'slayer'):
+                    red(f'Invalid recipe category: {category}')
+
+                self.display_recipe(category)
+
             elif words[0] == 'save':
                 if len(words) != 1:
-                    red(f'Invalid usage of command {words[0]!r}.')
+                    red(f'Invalid usage of command {words[0]}.')
                     continue
 
                 self.dump()
@@ -539,7 +578,7 @@ class Profile:
 
             elif words[0] == 'sell':
                 if len(words) != 2:
-                    red(f'Invalid usage of command {words[0]!r}.')
+                    red(f'Invalid usage of command {words[0]}.')
                     continue
 
                 index = self.parse_index(words[1])
@@ -550,7 +589,7 @@ class Profile:
 
             elif words[0] == 'shop':
                 if len(words) > 2:
-                    red(f'Invalid usage of command {words[0]!r}.')
+                    red(f'Invalid usage of command {words[0]}.')
                     continue
 
                 if last_shop is None:
@@ -571,7 +610,7 @@ class Profile:
 
             elif words[0] == 'skills':
                 if len(words) > 2:
-                    red(f'Invalid usage of command {words[0]!r}.')
+                    red(f'Invalid usage of command {words[0]}.')
                     continue
 
                 if len(words) == 1:
@@ -589,7 +628,7 @@ class Profile:
 
             elif words[0] == 'slay':
                 if len(words) < 2 or len(words) > 4:
-                    red(f'Invalid usage of command {words[0]!r}.')
+                    red(f'Invalid usage of command {words[0]}.')
                     continue
 
                 name = words[1]
@@ -627,7 +666,7 @@ class Profile:
 
             elif words[0] == 'split':
                 if len(words) != 4:
-                    red(f'Invalid usage of command {words[0]!r}.')
+                    red(f'Invalid usage of command {words[0]}.')
                     continue
 
                 index_1 = self.parse_index(words[1])
@@ -643,14 +682,14 @@ class Profile:
 
             elif words[0] == 'stats':
                 if len(words) != 1:
-                    red(f'Invalid usage of command {words[0]!r}.')
+                    red(f'Invalid usage of command {words[0]}.')
                     continue
 
                 self.display_stats()
 
             elif words[0] == 'talkto':
                 if len(words) != 2:
-                    red(f'Invalid usage of command {words[0]!r}.')
+                    red(f'Invalid usage of command {words[0]}.')
                     continue
 
                 name = words[1]
@@ -664,7 +703,7 @@ class Profile:
 
             elif words[0] == 'unequip':
                 if len(words) != 2:
-                    red(f'Invalid usage of command {words[0]!r}.')
+                    red(f'Invalid usage of command {words[0]}.')
                     continue
 
                 part = words[1]
@@ -686,7 +725,7 @@ class Profile:
 
             elif words[0] == 'warp':
                 if len(words) > 2:
-                    red(f'Invalid usage of command {words[0]!r}.')
+                    red(f'Invalid usage of command {words[0]}.')
                     continue
 
                 if len(words) == 1:

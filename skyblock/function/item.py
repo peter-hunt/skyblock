@@ -1,4 +1,4 @@
-from ..item.object import ItemType, Empty, ITEM_OBJS
+from ..item.object import ItemType, Empty, OBJECTS
 
 __all__ = ['load_item']
 
@@ -8,7 +8,7 @@ def load_item(obj):
         return obj
     elif 'type' not in obj:
         return Empty()
-    for cls in ITEM_OBJS:
+    for cls in OBJECTS:
         if obj['type'] == cls.__name__.lower():
             return cls.from_obj(obj)
     else:

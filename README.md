@@ -38,6 +38,7 @@ python -m skyblock
 ## Added Features:
 * Armor pieces
 * Axes, hoes, pickaxes, bows, and swords
+* Crafting
 * Enchantments
 * Farming, combat, mining, enchanting, and foraging
 * Fast Traveling

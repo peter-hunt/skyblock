@@ -1,10 +1,10 @@
 from math import ceil
 from typing import Union
 
-from ..constant.color import GOLD, DARK_GRAY, GREEN, AQUA, YELLOW
+from ..constant.color import GOLD, DARK_GRAY, GREEN, AQUA, YELLOW, WHITE
 from ..function.io import gray, red, green, yellow
-from ..function.util import display_int
-from ..item.item import get_item, get_stack_size
+from ..function.util import display_int, display_name, includes
+from ..item.item import ITEMS, get_item, get_stack_size
 from ..item.object import (
     ItemType, Item, Empty, Bow, Sword, Armor,
     Axe, Hoe, Pickaxe, TravelScroll, Pet,
@@ -72,7 +72,9 @@ def profile_item(cls):
     cls.pickupstash = pickupstash
 
     def put_stash(self, item: ItemType, count: int, /):
-        if isinstance(item, Item):
+        stack_count = get_stack_size(item.name)
+
+        if stack_count != 0:
             for index, slot in enumerate(self.stash):
                 if not isinstance(slot, Item):
                     continue
@@ -96,10 +98,9 @@ def profile_item(cls):
 
     cls.put_stash = put_stash
 
-    def recieve_item(self, item: ItemType, count: int = 1,
-                     /, *, log: bool = True):
+    def recieve_item(self, item: ItemType, count: int = 1, /):
         item_copy = item.copy()
-        stack_count = get_stack_size(item_copy.name)
+        stack_count = get_stack_size(item.name)
         counter = count
 
         for index, slot in enumerate(self.inventory):
@@ -107,28 +108,33 @@ def profile_item(cls):
                 delta = min(counter, stack_count)
                 if stack_count != 1:
                     item_copy.count = delta
-                self.inventory[index] = item_copy
+                self.inventory[index] = item_copy.copy()
                 counter -= delta
+
             elif not isinstance(slot, Item) or not isinstance(item, Item):
                 continue
-            elif slot.name != item.name or slot.rarity != item.rarity:
+
+            elif (item.name != slot.name or
+                  getattr(item, 'rarity', '') != getattr(slot, 'rarity', '')):
                 continue
-            else:
+
+            elif slot.count < stack_count:
                 delta = min(counter, stack_count - slot.count)
                 counter -= delta
                 self.inventory[index].count += delta
+
             if counter == 0:
                 break
         else:
+            item_copy.count = 1
             self.put_stash(item_copy, counter)
             return
 
-        if log:
-            if hasattr(item_copy, 'count') and item_copy.count != 1:
-                item_copy.count = 1
-            count_str = ('' if count <= 1
-                         else f' {DARK_GRAY}x {display_int(count)}')
-            gray(f'+ {item_copy.display()}{count_str}')
+        if getattr(item_copy, 'count', 1) != 1:
+            item_copy.count = 1
+        count_str = (
+            '' if count <= 1 else f' {DARK_GRAY}x {display_int(count)}')
+        gray(f'+ {item_copy.display()}{count_str}')
 
     cls.recieve_item = recieve_item
 
@@ -155,7 +161,17 @@ def profile_item(cls):
                     counter -= delta
 
                 if counter == 0:
-                    return
+                    break
+
+        count_str = ('' if count <= 1
+                     else f' {DARK_GRAY}x {display_int(count)}')
+        if includes(ITEMS, name):
+            item = get_item(name)
+            if getattr(item, 'count', 1) != 1:
+                item.count = 1
+            gray(f'- {item.display()}{count_str}')
+        else:
+            gray(f'- {WHITE}{display_name(name)}{count_str}')
 
     cls.remove_item = remove_item
 

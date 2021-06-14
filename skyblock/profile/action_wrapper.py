@@ -29,6 +29,7 @@ from ..item.object import (
     Axe, Hoe, Pickaxe, TravelScroll, Pet,
     Crop, Mineral, Tree, Mob,
 )
+from ..item.recipe import RECIPES
 from ..item.resource import get_resource
 from ..map.island import ISLANDS
 from ..map.object import calc_dist, path_find
@@ -126,6 +127,22 @@ def profile_action(cls):
             red('This item is not consumable!')
 
     cls.consume = consume
+
+    def craft(self, index: int, amount: int = 1, /):
+        recipe = RECIPES[index]
+
+        for item, count in recipe.ingredients:
+            if not self.has_item(item.name, count * amount):
+                red("You don't have the items to do this!")
+                return
+
+        for item, count in recipe.ingredients:
+            self.remove_item(item.name, count * amount)
+
+        result_name, result_count = recipe.result
+        self.recieve_item(result_name, result_count * amount)
+
+    cls.craft = craft
 
     def despawn_pet(self, /):
         for i, pet in enumerate(self.pets):
