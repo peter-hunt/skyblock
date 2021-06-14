@@ -1,4 +1,5 @@
 from math import ceil
+from typing import Union
 
 from ..constant.color import GOLD, DARK_GRAY, GREEN, AQUA, YELLOW
 from ..function.io import gray, red, green, yellow
@@ -25,6 +26,14 @@ def profile_item(cls):
         self.collection[name] += amount
 
     cls.collect = collect
+
+    def get_active_pet(self, /) -> Union[Pet, Empty]:
+        for pet in self.pets:
+            if pet.active:
+                return pet
+        return Empty()
+
+    cls.get_active_pet = get_active_pet
 
     def merge(self, index_1: int, index_2: int, /):
         item_from = self.inventory[index_1]

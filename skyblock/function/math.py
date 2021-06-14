@@ -3,16 +3,16 @@ from random import randint, random
 from typing import Optional, Tuple
 
 from ..constant.color import GOLD, GRAY, BLUE, WHITE, GREEN, RED, AQUA
-from ..constant.main import DUNGEON_EXP, SKILL_EXP, SKILL_LIMITS
+from ..constant.main import DUNGEON_EXP, SKILL_EXP, SKILL_LIMITS, PET_EXP_DIFF
 from ..constant.util import Amount, Number
 
 from .io import gray, yellow, white
 from .util import display_int, roman
 
 __all__ = [
-    'calc_exp', 'calc_lvl', 'calc_skill_exp', 'calc_skill_exp_info',
-    'display_skill_reward', 'dung_stat', 'random_amount', 'random_bool',
-    'random_int',
+    'calc_exp', 'calc_lvl', 'calc_pet_exp', 'calc_pet_upgrade_exp',
+    'calc_skill_exp', 'calc_skill_exp_info', 'display_skill_reward',
+    'dung_stat', 'random_amount', 'random_bool', 'random_int',
 ]
 
 
@@ -42,6 +42,29 @@ def calc_lvl(lvl: int, /) -> int:
 
     else:
         return 4.5 * lvl ** 2 - 162.5 * lvl + 2220
+
+
+def calc_pet_exp(rarity: str, amount: Number, /) -> int:
+    if rarity == 'mythic':
+        rarity = 'l'
+    diff_list = PET_EXP_DIFF['curel'.index(rarity[0])]
+    for lvl, diff in enumerate(diff_list):
+        if amount < diff:
+            return lvl
+        amount -= diff
+    else:
+        return 100
+
+
+def calc_pet_upgrade_exp(rarity: str, amount: Number, /) -> int:
+    if rarity == 'mythic':
+        rarity = 'l'
+    diff_list = PET_EXP_DIFF['curel'.index(rarity[0])]
+    for diff in diff_list:
+        if amount < diff:
+            break
+        amount -= diff
+    return amount, diff
 
 
 def calc_skill_exp(name: str, amount: Number, /) -> int:

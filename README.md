@@ -37,13 +37,13 @@ python -m skyblock
 # Content
 ## Added Features:
 * Armor pieces
-* Axes and pickaxes
+* Axes, hoes, pickaxes, bows, and swords
 * Enchantments
 * Farming, combat, mining, enchanting, and foraging
 * Fast Traveling
 * Islands partially added
-* Items stats
 * NPC buying and trading items
+* Pets
 * Simple combat system
 * Skill system
 * Swords and bows that don't consume arrows
@@ -53,7 +53,6 @@ python -m skyblock
 * Collections
 * Combat while mining
 * Crafting
-* Functional pets
 * Minions
 
 # Furthur information

@@ -148,16 +148,15 @@ class TravelScroll(ItemType):
 class Pet(ItemType):
     name: str
     rarity: str
-    active: bool = False
+    category: str = None
     exp: float = 0.0
     candy_used: int = 0
+    active: bool = False
 
-    damage: int = 0
     health: int = 0
     defense: int = 0
     speed: int = 0
     true_defense: int = 0
-
     intelligence: int = 0
     strength: int = 0
     crit_chance: int = 0

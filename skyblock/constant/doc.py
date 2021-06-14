@@ -84,6 +84,24 @@ Display information about your money.
 > switch <index-1> <index-2>
 Switch items slot in the inventory.
 
+> pet add <index>
+Add a pet to the pet menu.
+
+> pet despawn <index>
+Despawn a pet from the pet menu.
+
+> pet info <index>
+Display info about pet in the pet menu.
+
+> pet ls
+List all the pets in the pet menu.
+
+> pet remove <index>
+Remove a pet from the pet menu to your inventory.
+
+> pet summon <index>
+Summon a pet from the inventory.
+
 > pickupstash
 Takes all items currently in the Stash.
 
@@ -92,10 +110,10 @@ Takes all items currently in the Stash.
 Shows your current playtime.
 
 > sell <index>
-Sell item.
+Sell the item.
 
 > shop [index=all]
-Show goods in recently opened shop.
+Show trades in recently opened shop.
 
 > skills [skill=all]
 Get information about your skills.

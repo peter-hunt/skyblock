@@ -1,3 +1,6 @@
+
+from typing import List
+
 __all__ = [
     'ARMOR_PARTS', 'DUNGEON_EXP', 'INTEREST_TABLE', 'SELL_PRICE',
     'SKILL_EXP', 'SKILL_LIMITS',
@@ -89,6 +92,82 @@ INTEREST_TABLE = {
         (50_000_000, 160_000_000, 0.001),
     ],
 }
+
+
+def appender(ls: List[int]):
+    def func(diff):
+        ls.append(ls[-1] + diff)
+    return func
+
+
+FC, FU, FR, FE, FL = 1, 2, 4, 8, 16
+
+
+def append_exp(dod: int, fls: int):
+    if fls & FC:
+        common.append(common[-1] + dod)
+    if fls & FU:
+        uncommon.append(uncommon[-1] + dod)
+    if fls & FR:
+        rare.append(rare[-1] + dod)
+    if fls & FE:
+        epic.append(epic[-1] + dod)
+    if fls & FL:
+        legendary.append(legendary[-1] + dod)
+
+
+common, uncommon, rare, epic, legendary = (
+    [0, 100], [0, 175], [0, 275], [0, 440], [0, 660])
+
+append_exp(15, FU)
+append_exp(25, FR)
+for i in range(3):
+    append_exp(10, FC)
+for i in range(4):
+    append_exp(15, FC)
+for i in range(3):
+    append_exp(20, FC | FU)
+for i in range(2):
+    append_exp(25, FC | FU)
+for dod in range(30, 90, 10):
+    for i in range(2):
+        append_exp(dod, FC | FU | FR)
+for dod in range(50, 90, 10):
+    for i in range(2):
+        append_exp(dod, FE)
+for dod in range(70, 90, 10):
+    for i in range(2):
+        append_exp(dod, FL)
+for dod in range(90, 210, 10):
+    append_exp(dod, FC | FU | FR | FE | FL)
+for dod in range(220, 320, 20):
+    append_exp(dod, FC | FU | FR | FE | FL)
+for dod in range(350, 550, 50):
+    append_exp(dod, FC | FU | FR | FE | FL)
+for dod in range(600, 2100, 100):
+    append_exp(dod, FC | FU | FR | FE | FL)
+for dod in range(2200, 5200, 200):
+    append_exp(dod, FC | FU | FR | FE | FL)
+for dod in range(5500, 10500, 500):
+    append_exp(dod, FC | FU | FR | FE | FL)
+for dod in range(11000, 21000, 1000):
+    append_exp(dod, FC | FU | FR | FE | FL)
+for dod in range(22000, 28000, 2000):
+    append_exp(dod, FC)
+for dod in range(22000, 32000, 2000):
+    append_exp(dod, FU | FR | FE | FL)
+for dod in range(35000, 55000, 5000):
+    append_exp(dod, FU)
+for dod in range(35000, 80000, 5000):
+    append_exp(dod, FR)
+for dod in range(35000, 105000, 5000):
+    append_exp(dod, FE | FL)
+for dod in range(110000, 150000, 10000):
+    append_exp(dod, FL)
+
+PET_EXP_DIFF = [
+    common, uncommon, rare, epic, legendary,
+]
 
 
 SELL_PRICE = {

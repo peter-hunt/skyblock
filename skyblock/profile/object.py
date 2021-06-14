@@ -12,6 +12,7 @@ from ..function.util import (
     backupable, display_int, display_number, generate_help,
     get, includes, parse_int, shorten_number,
 )
+from ..item.item import get_item
 from ..item.mob import get_mob
 from ..item.object import (
     Item, Empty, Bow, Sword, Armor, Axe, Hoe, Pickaxe,
@@ -185,8 +186,9 @@ class Profile:
                 # self.recieve_item(item)
                 # item = get_item('golden_axe')
                 # self.recieve_item(item)
-                # item = get_item('enderman_pet')
-                # self.recieve_item(item)
+                item = get_item('enderman_pet', rarity='legendary')
+                item.exp = 10 ** 6
+                self.recieve_item(item)
                 # self.add_exp(2000)
                 # item = get_scroll('nest')
                 # self.recieve_item(item)
@@ -352,7 +354,8 @@ class Profile:
 
                     tool_item = self.inventory[tool_index]
                     if not isinstance(tool_item, (Empty, Axe, Hoe, Pickaxe)):
-                        yellow(f'{tool_item.name} item is not tool.\n'
+                        yellow(f'{tool_item.display()}{YELLOW}'
+                               f' is not tool.\n'
                                f'Using barehand by default.')
                         tool_index = None
 
@@ -418,11 +421,8 @@ class Profile:
                     continue
 
                 index_1 = self.parse_index(words[1])
-                if index_1 is None:
-                    continue
-
                 index_2 = self.parse_index(words[2])
-                if index_2 is None:
+                if index_1 is None or index_2 is None:
                     continue
 
                 self.merge(index_1, index_2)
@@ -440,11 +440,8 @@ class Profile:
                     continue
 
                 index_1 = self.parse_index(words[1])
-                if index_1 is None:
-                    continue
-
                 index_2 = self.parse_index(words[2])
-                if index_2 is None:
+                if index_1 is None or index_2 is None:
                     continue
 
                 self.inventory[index_1], self.inventory[index_2] = (
@@ -458,6 +455,73 @@ class Profile:
                     continue
 
                 self.pickupstash()
+
+            elif words[0] == 'pet':
+                if len(words) < 2:
+                    red(f'Invalid usage of command {words[0]!r}.')
+                    continue
+
+                if words[1] == 'add':
+                    if len(words) != 3:
+                        red(f'Invalid usage of command {words[0]!r}.')
+                        continue
+
+                    index = self.parse_index(words[2])
+                    if index is None:
+                        continue
+
+                    self.add_pet(index)
+
+                elif words[1] == 'despawn':
+                    if len(words) != 2:
+                        red(f'Invalid usage of command {words[0]!r}.')
+                        continue
+
+                    self.despawn_pet()
+
+                elif words[1] == 'info':
+                    if len(words) != 3:
+                        red(f'Invalid usage of command {words[0]!r}.')
+                        continue
+
+                    index = self.parse_index(words[2], len(self.pets))
+                    if index is None:
+                        continue
+
+                    self.display_item(self.pets[index])
+
+                elif words[1] == 'ls':
+                    if len(words) != 2:
+                        red(f'Invalid usage of command {words[0]!r}.')
+                        continue
+
+                    self.display_pets()
+
+                elif words[1] == 'remove':
+                    if len(words) != 3:
+                        red(f'Invalid usage of command {words[0]!r}.')
+                        continue
+
+                    index = self.parse_index(words[2], len(self.pets))
+                    if index is None:
+                        continue
+
+                    self.remove_pet(index)
+
+                elif words[1] == 'summon':
+                    if len(words) != 3:
+                        red(f'Invalid usage of command {words[0]!r}.')
+                        continue
+
+                    index = self.parse_index(words[2], len(self.pets))
+                    if index is None:
+                        continue
+
+                    self.summon_pet(index)
+
+                else:
+                    red(f'Invalid subcommand of {words[0]}: {words[1]!r}')
+
             elif words[0] in {'playtime', 'pt'}:
                 if len(words) != 1:
                     red(f'Invalid usage of command {words[0]!r}.')
@@ -478,11 +542,11 @@ class Profile:
                     red(f'Invalid usage of command {words[0]!r}.')
                     continue
 
-                item_index = self.parse_index(words[1])
-                if item_index is None:
+                index = self.parse_index(words[1])
+                if index is None:
                     continue
 
-                self.sell(item_index)
+                self.sell(index)
 
             elif words[0] == 'shop':
                 if len(words) > 2:
@@ -567,11 +631,8 @@ class Profile:
                     continue
 
                 index_1 = self.parse_index(words[1])
-                if index_1 is None:
-                    continue
-
                 index_2 = self.parse_index(words[2])
-                if index_2 is None:
+                if index_1 is None or index_2 is None:
                     continue
 
                 amount = parse_int(words[3])

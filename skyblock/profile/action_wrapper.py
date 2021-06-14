@@ -14,7 +14,6 @@ from ..constant.enchanting import (
 )
 from ..constant.main import INTEREST_TABLE, SELL_PRICE
 from ..constant.mob import CUBISM_EFT, ENDER_SLAYER_EFT, BOA_EFT, SMITE_EFT
-from ..constant.util import Number
 from ..function.io import gray, red, green, yellow, blue, aqua, white
 from ..function.math import (
     calc_exp, calc_lvl, calc_skill_exp, random_amount, random_bool, random_int,
@@ -27,7 +26,8 @@ from ..item.item import COLLECTION_ITEMS
 from ..item.mob import get_mob
 from ..item.object import (
     Item, Empty, Bow, Sword, Armor,
-    Axe, Hoe, Pickaxe, TravelScroll, Crop, Mineral, Tree, Mob,
+    Axe, Hoe, Pickaxe, TravelScroll, Pet,
+    Crop, Mineral, Tree, Mob,
 )
 from ..item.resource import get_resource
 from ..map.island import ISLANDS
@@ -37,6 +37,19 @@ __all__ = ['profile_action']
 
 
 def profile_action(cls):
+    def add_pet(self, index: int, /):
+        item = self.inventory[index]
+
+        if not isinstance(item, Pet):
+            red('Invalid pet.')
+
+        self.pets.append(item)
+        self.inventory[index] = Empty()
+
+        green(f'Successfully added {item.display()} {GREEN}to your pet menu!')
+
+    cls.add_pet = add_pet
+
     def buy(self, trade: Tuple, amount: int, /):
         cost = trade[0]
 
@@ -113,6 +126,19 @@ def profile_action(cls):
             red('This item is not consumable!')
 
     cls.consume = consume
+
+    def despawn_pet(self, /):
+        for i, pet in enumerate(self.pets):
+            if pet.active:
+                self.pets[i].active = False
+                break
+        else:
+            green("You don't have a pet spawned!")
+            return
+
+        green(f'Your despawned your {pet.display()}{GREEN}!')
+
+    cls.despawn_pet = despawn_pet
 
     def die(self, /):
         bank = 0
@@ -417,6 +443,16 @@ def profile_action(cls):
             region = get(island.regions, target.name)
 
     cls.goto = goto
+
+    def remove_pet(self, index: int, /):
+        pet = self.pets[index]
+        pet.active = False
+        self.pets.pop(index)
+        self.recieve_item(pet)
+
+        green(f'Your converted {pet.display()}{GREEN} into an item!')
+
+    cls.remove_pet = remove_pet
 
     def sell(self, index: int, /):
         island = get(ISLANDS, self.island)
@@ -729,6 +765,17 @@ def profile_action(cls):
 
     cls.slay = slay
 
+    def summon_pet(self, index: int, /):
+        self.pets[index].active = True
+
+        for i, pet in enumerate(self.pets):
+            if i != index and pet.active:
+                self.pets[i].active = False
+
+        green(f'Your summoned your {self.pets[index].display()}{GREEN}!')
+
+    cls.summon_pet = summon_pet
+
     def update(self, /):
         now = int(time())
         last = now if self.last_update == 0 else self.last_update
@@ -766,11 +813,10 @@ def profile_action(cls):
         for i_name, r_name in self.fast_travel:
             name = i_name if r_name is None else r_name
             if dest == name:
-                island = get(ISLANDS, i_name)
-                region = get(island.regions,
-                             island.spawn if r_name is None else r_name)
                 self.island = i_name
-                self.region = r_name
+                island = get(ISLANDS, self.island)
+                self.region = island.spawn if r_name is None else r_name
+                region = get(island.regions, self.region)
                 gray(f'Warped to {AQUA}{region}{GRAY}'
                      f' of {AQUA}{island}{GRAY}.')
                 return

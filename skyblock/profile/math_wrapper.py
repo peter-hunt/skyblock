@@ -2,13 +2,15 @@ from math import ceil
 from os import get_terminal_size
 from typing import Optional
 
-from ..constant.color import BOLD, DARK_AQUA, GRAY
+from ..constant.color import BOLD, DARK_AQUA, GRAY, BLUE, GREEN
 from ..constant.main import SKILL_EXP
 from ..constant.util import Number
-from ..function.math import calc_exp, calc_skill_exp, display_skill_reward
+from ..function.math import (
+    calc_exp, calc_pet_exp, calc_skill_exp, display_skill_reward,
+)
 from ..function.io import dark_aqua, red, green, aqua
 from ..function.util import display_name, roman
-from ..item.object import Empty, Bow, Sword, Axe, Hoe, Pickaxe, Armor
+from ..item.object import Empty, Bow, Sword, Axe, Hoe, Pickaxe, Armor, Pet
 
 __all__ = ['profile_math']
 
@@ -28,6 +30,7 @@ def profile_math(cls):
         if not hasattr(self, f'skill_xp_{name}'):
             red(f'Skill not found: {name}')
             return
+
         exp = getattr(self, f'skill_xp_{name}')
         original_lvl = calc_skill_exp(name, exp)
         exp += amount
@@ -52,10 +55,38 @@ def profile_math(cls):
             display_skill_reward(name, original_lvl, current_lvl)
             dark_aqua(f"{BOLD}{'':-^{width}}")
 
+        for pet_index, pet in enumerate(self.pets):
+            if pet.active:
+                break
+        else:
+            pet_index = None
+
+        if pet_index is not None:
+            pet_exp = pet.exp
+
+            original_pet_lvl = calc_pet_exp(pet.rarity, pet_exp)
+
+            if pet.category == name:
+                pet_exp += amount
+            elif name in {'alchemy', 'enchanting'}:
+                pet_exp += amount / 12
+            else:
+                pet_exp += amount / 4
+
+            self.pets[pet_index].exp = pet_exp
+            current_pet_lvl = calc_pet_exp(pet.rarity, pet_exp)
+
+            if current_pet_lvl > original_pet_lvl:
+                pet_str = pet.display().split(']')[1].lstrip()
+                green(f'Your {pet_str}{GREEN} levelled up to'
+                      f' level {BLUE}{current_pet_lvl}{GREEN}!')
+
     cls.add_skill_exp = add_skill_exp
 
     def get_stat(self, name: str, index: Optional[int] = None):
         value = 0
+
+        pet = self.get_active_pet()
 
         if index is None:
             item = Empty()
@@ -150,6 +181,10 @@ def profile_math(cls):
             value += foraging_lvl * 4
         elif name == 'farming_fortune':
             value += farming_lvl * 4
+
+        if isinstance(pet, Pet):
+            lvl_mult = calc_pet_exp(pet.rarity, pet.exp) / 100
+            value += getattr(pet, name, 0) * lvl_mult
 
         return value
 

@@ -158,6 +158,22 @@ def profile_display(cls):
 
     cls.display_money = display_money
 
+    def display_pets(self, /):
+        length = len(self.pets)
+        if length == 0:
+            gray("You don't have any pets in your pet menu!")
+            return
+
+        digits = len(f'{length}')
+
+        gray('Your pets:')
+
+        for index, pet in enumerate(self.pets):
+            active = f'{AQUA}*{GRAY}' if pet.active else ' '
+            gray(f'{active} {index + 1:>{digits}} {pet.display()}')
+
+    cls.display_pets = display_pets
+
     def display_playtime(self, /):
         all_mins = self.play_time // 60
         hours, mins = divmod(all_mins, 60)

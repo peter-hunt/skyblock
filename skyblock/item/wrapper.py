@@ -1,11 +1,15 @@
+from math import floor
+
 from ..constant.color import (
     RARITY_COLORS,
     CLN, BOLD, DARK_RED, GOLD, GRAY, DARK_GRAY,
     BLUE, GREEN, RED, LIGHT_PURPLE, YELLOW, WHITE,
 )
 from ..constant.enchanting import ULTIMATE_ENCHS
-from ..function.math import dung_stat
-from ..function.util import display_int, display_name, roman, shorten_number
+from ..function.math import calc_pet_exp, calc_pet_upgrade_exp, dung_stat
+from ..function.util import (
+    display_int, display_name, display_number, roman, shorten_number,
+)
 
 __all__ = ['item_type', 'mob_type']
 
@@ -86,6 +90,8 @@ def item_type(cls: type, /) -> type:
             name = f'Travel Scroll to {display_name(self.island)}'
             if self.region is not None:
                 name += f' {display_name(self.region)}'
+        elif self.__class__.__name__ == 'Pet':
+            name = display_name('_'.join(self.name.split('_')[:-1]))
         else:
             name = display_name(self.name)
 
@@ -100,7 +106,11 @@ def item_type(cls: type, /) -> type:
             stars = (f' {RED}' + (self.stars - 5) * '✪'
                      + GOLD + (10 - self.stars) * '✪')
 
-        return f'{color}{modifier}{name}{stars}{DARK_GRAY}{count}{CLN}'
+        if self.__class__.__name__ == 'Pet':
+            lvl = calc_pet_exp(self.rarity, self.exp)
+            return (f'{GRAY}[Lvl {lvl}] {color}{name}')
+        else:
+            return f'{color}{modifier}{name}{stars}{DARK_GRAY}{count}{CLN}'
 
     cls.display = display
 
@@ -116,6 +126,8 @@ def item_type(cls: type, /) -> type:
             name = f'Travel Scroll to {display_name(self.island)}'
             if self.region is not None:
                 name += f' {display_name(self.region)}'
+        elif self.__class__.__name__ == 'Pet':
+            name = display_name('_'.join(self.name.split('_')[:-1]))
         else:
             name = display_name(self.name)
 
@@ -127,7 +139,11 @@ def item_type(cls: type, /) -> type:
             stars = (f' {RED}' + (self.stars - 5) * '✪'
                      + GOLD + (10 - self.stars) * '✪')
 
-        info = f'{rarity_color}{modifier}{name}{stars}{rarity_color}'
+        if self.__class__.__name__ == 'Pet':
+            lvl = calc_pet_exp(self.rarity, self.exp)
+            info = f'{GRAY}[Lvl {lvl}] {rarity_color}{name}'
+        else:
+            info = f'{rarity_color}{modifier}{name}{stars}'
 
         if self.__class__.__name__ == 'Pickaxe':
             info += (f'\n{DARK_GRAY}Breaking Power '
@@ -145,7 +161,7 @@ def item_type(cls: type, /) -> type:
                         continue
 
                 display_stat = display_name(stat_name)
-                perc = '%' if stat_name[0] in 'ac' else ''
+                ext = '%' if stat_name[0] in 'ac' else ''
                 value = getattr(self, stat_name)
 
                 hot_potato = ''
@@ -162,13 +178,13 @@ def item_type(cls: type, /) -> type:
                         value_str = f'{dungeon_value:.1f}'
                         if value_str.endswith('.0'):
                             value_str = value_str[:-2]
-                        dung = f' {DARK_GRAY}(+{value_str}{perc})'
+                        dung = f' {DARK_GRAY}(+{value_str}{ext})'
 
                 basic_stats.append(f'{display_stat}: {RED}'
-                                   f'+{value}{perc}{hot_potato}{dung}')
+                                   f'+{value}{ext}{hot_potato}{dung}')
 
-            info += '\n' + '\n'.join(f'{GRAY}{stat}{CLN}'
-                                     for stat in basic_stats)
+            info += '\n' + '\n'.join(f'{GRAY}{stat}'
+                                     for stat in basic_stats) + CLN
 
             bonus_stats = []
             for stat_name in ('defense', 'intelligence', 'true_denfense',
@@ -188,13 +204,13 @@ def item_type(cls: type, /) -> type:
                         value_str = f'{dungeon_value:.1f}'
                         if value_str.endswith('.0'):
                             value_str = value_str[:-2]
-                        dung = f' {DARK_GRAY}(+{value_str}{perc})'
+                        dung = f' {DARK_GRAY}(+{value_str})'
 
                 bonus_stats.append(f'{display_stat}: {GREEN}'
                                    f'+{value}{dung}')
 
-            info += '\n\n' + '\n'.join(f'{GRAY}{stat}{CLN}'
-                                       for stat in bonus_stats)
+            info += '\n\n' + '\n'.join(f'{GRAY}{stat}'
+                                       for stat in bonus_stats) + CLN
 
         elif self.__class__.__name__ == 'Armor':
             enchantments = getattr(self, 'enchantments', {})
@@ -206,7 +222,7 @@ def item_type(cls: type, /) -> type:
                     continue
 
                 display_stat = display_name(stat_name)
-                perc = '%' if stat_name[0] in 'ac' else ''
+                ext = '%' if stat_name[0] in 'ac' else ''
                 value = getattr(self, stat_name)
 
                 dung = ''
@@ -218,13 +234,13 @@ def item_type(cls: type, /) -> type:
                         value_str = f'{dungeon_value:.1f}'
                         if value_str.endswith('.0'):
                             value_str = value_str[:-2]
-                        dung = f' {DARK_GRAY}(+{value_str}{perc})'
+                        dung = f' {DARK_GRAY}(+{value_str}{ext})'
 
                 basic_stats.append(f'{display_stat}: {RED}'
-                                   f'+{value}{perc}{dung}')
+                                   f'+{value}{ext}{dung}')
 
-            info += '\n' + '\n'.join(f'{GRAY}{stat}{CLN}'
-                                     for stat in basic_stats)
+            info += '\n' + '\n'.join(f'{GRAY}{stat}'
+                                     for stat in basic_stats) + CLN
 
             bonus_stats = []
             for stat_name in ('health', 'defense', 'intelligence', 'speed',
@@ -251,9 +267,7 @@ def item_type(cls: type, /) -> type:
                 if value == 0:
                     continue
 
-                hp = ''
-                if stat_name == 'health':
-                    hp = ' HP'
+                ext = ' HP' if stat_name[0] == 'h' else ''
 
                 dung = ''
                 if is_dungeon:
@@ -262,13 +276,57 @@ def item_type(cls: type, /) -> type:
                         value_str = f'{dungeon_value:.1f}'
                         if value_str.endswith('.0'):
                             value_str = value_str[:-2]
-                        dung = f' {DARK_GRAY}(+{value_str}{perc})'
+                        dung = f' {DARK_GRAY}(+{value_str}{ext})'
 
                 bonus_stats.append(f'{display_stat}: {GREEN}'
-                                   f'+{value}{hp}{hot_potato}{dung}')
+                                   f'+{value}{ext}{hot_potato}{dung}')
 
-            info += '\n\n' + '\n'.join(f'{GRAY}{stat}{CLN}'
-                                       for stat in bonus_stats)
+            info += '\n\n' + '\n'.join(f'{GRAY}{stat}'
+                                       for stat in bonus_stats) + CLN
+
+        elif self.__class__.__name__ == 'Pet':
+            category = display_name(self.category)
+            info += f'\n{DARK_GRAY}{category} Pet'
+
+            pet_lvl = calc_pet_exp(self.rarity, self.exp)
+            lvl_mult = pet_lvl / 100
+
+            stats = []
+            for stat_name in ('health', 'defense', 'speed', 'true_defense',
+                              'intelligence', 'strength', 'crit_chance',
+                              'crit_damage', 'magic_find', 'attack_speed',
+                              'ferocity'):
+                if getattr(self, stat_name, 0) == 0:
+                    continue
+
+                display_stat = display_name(stat_name)
+                value = getattr(self, stat_name) * lvl_mult
+
+                ext = ''
+                if stat_name[0] == 'h':
+                    ext = ' HP'
+                elif stat_name[0] == 'ac':
+                    ext = '%'
+
+                stats.append(f'{display_stat}: {GREEN}'
+                             f'+{display_int(floor(value))}{ext}')
+
+            stats_str = '\n'.join(f'{GRAY}{stat}' for stat in stats)
+            info += f'\n\n{stats_str}{CLN}'
+
+            next_level = min(pet_lvl + 1, 100)
+            exp_left, exp_to_next = calc_pet_upgrade_exp(self.rarity, self.exp)
+            exp_left = exp_left
+            perc = round(exp_left / exp_to_next * 100, 1)
+            bar = min(int(exp_left / exp_to_next * 20), 20)
+            left, right = '-' * bar, '-' * (20 - bar)
+            info += (
+                f'\n\n{GRAY}Progress to Level {next_level}:'
+                f' {YELLOW}{display_int(perc)}%\n'
+                f'{GREEN}{BOLD}{left}{GRAY}{BOLD}{right}'
+                f' {YELLOW}{display_int(floor(exp_left))}'
+                f'/{shorten_number(exp_to_next)}'
+            )
 
         elif self.__class__.__name__ == 'TravelScroll':
             r_name = ('Spawn' if self.region is None
@@ -340,7 +398,7 @@ def item_type(cls: type, /) -> type:
 
         if self.__class__.__name__ == 'Armor':
             type_name = self.part.upper()
-        elif self.__class__.__name__ == 'TravelScroll':
+        elif self.__class__.__name__ in {'Pet', 'TravelScroll'}:
             type_name = ''
         else:
             type_name = self.__class__.__name__.upper()
@@ -348,7 +406,7 @@ def item_type(cls: type, /) -> type:
             type_name = f'DUNGEON {type_name}'
 
         info = info.rstrip('\n')
-        if self.__class__.__name__ == 'TravelScroll':
+        if self.__class__.__name__ in {'Pet', 'TravelScroll'}:
             info += '\n'
         info += f'\n{rarity_color}{self.rarity.upper()} {type_name}'.rstrip()
         info += CLN
