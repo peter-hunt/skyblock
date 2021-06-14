@@ -5,7 +5,8 @@ from ..function.io import gray, red, green, yellow
 from ..function.util import display_int
 from ..item.item import get_item, get_stack_size
 from ..item.object import (
-    ItemType, Item, Empty, Bow, Sword, Armor, Axe, Hoe, Pickaxe, Pet,
+    ItemType, Item, Empty, Bow, Sword, Armor,
+    Axe, Hoe, Pickaxe, TravelScroll, Pet,
 )
 
 __all__ = ['profile_item']
@@ -173,7 +174,7 @@ def profile_item(cls):
         item_2 = self.inventory[index_2]
 
         if (not hasattr(item_1, 'count')
-                or isinstance(item_1, (Bow, Sword, Armor,
+                or isinstance(item_1, (Bow, Sword, Armor, TravelScroll,
                                        Axe, Hoe, Pickaxe, Pet))):
             red('Cannot split unstackable items.')
             return

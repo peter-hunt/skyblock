@@ -1,5 +1,5 @@
 from ...constant.color import GREEN, AQUA, RED, WHITE
-from ...item.item import get_item
+from ...item.item import get_item, get_scroll
 from ...item.object import Item
 from ...item.mob import get_mob
 from ...item.resource import get_resource
@@ -114,7 +114,32 @@ FARMHOUSE = Region(
         Npc('anita'),
     ],
 )
-FASHION_SHOP = Region('fashion_shop', 27, -44)
+FASHION_SHOP = Region(
+    'fashion_shop', 27, -44,
+    npcs=[
+        Npc('seymour',
+            init_dialog=[
+                'Looking to buy something fancy?',
+            ],
+            trades=[
+                (3_000_000, [get_item('cheap_tuxedo_jacket'),
+                             get_item('cheap_tuxedo_pants'),
+                             get_item('cheap_tuxedo_oxfords')]),
+                (20_000_000, [get_item('fancy_tuxedo_jacket'),
+                              get_item('fancy_tuxedo_pants'),
+                              get_item('fancy_tuxedo_oxfords')]),
+                (79_999_999, [get_item('elegant_tuxedo_jacket'),
+                              get_item('elegant_tuxedo_pants'),
+                              get_item('elegant_tuxedo_oxfords')]),
+            ]),
+        Npc('taylor',
+            dialog=[
+                'Hello!',
+                'You look dashing today!',
+                'Would you like to buy something?',
+            ]),
+    ],
+)
 FLOWER_HOUSE = Region('flower_house', -7, -25)
 FOREST = Region(
     'forest', -95, -40,
@@ -123,10 +148,40 @@ FOREST = Region(
 )
 GRAVEYARD = Region(
     'graveyard', -99, -54,
+    npcs=[
+        Npc('pat',
+            init_dialog=[
+                'You like flint? I like flint! I sell flint!',
+                ("My brother is mining the gravel from the Spider's Den."
+                 " We are the Flint Bros!"),
+                'Click me again to open my shop!',
+            ],
+            trades=[
+                (6, Item('flint')),
+                (4, Item('gravel')),
+            ]),
+    ],
     mobs=[get_mob('zombie', level=1)],
     portal='spider',
 )
-HIGH_LEVEL = Region('high_level', 0, 150)
+HIGH_LEVEL = Region(
+    'high_level', 0, 150,
+    mobs=[get_mob('skeleton', level=6)],
+)
+HUB_CASTLE = Region(
+    'hub_castle', -280, -60,
+    npcs=[
+        Npc('armorsmith',
+            init_dialog=[
+                'To fast travel or not to fast travel?',
+            ],
+            trades=[
+                (150_000, get_scroll('hub_castle')),
+            ]),
+    ],
+    mobs=[get_mob('wolf'),
+          get_mob('old_wolf')],
+)
 LIBRARY = Region('library', 37, -111)
 MOUNTAIN = Region('mountain', 0, 0)
 PETS_BUILDING = Region(
@@ -158,8 +213,32 @@ PETS_BUILDING = Region(
             ])
     ]
 )
-POTION_SHOP = Region('potion_shop', 41, -63)
-RUINS = Region('ruins', -250, -80)
+POTION_SHOP = Region(
+    'potion_shop', 41, -63,
+    npcs=[
+        Npc('alchemist',
+            init_dialog=[
+                'There is a darkness in you, adventurer',
+                "I've seen it in my flames, you are destined for great things.",
+                "For now, you shouldn't let it get to your head.",
+                'Talk to me again to open the Alchemist Shop!',
+            ],
+            trades=[
+                (10, Item('nether_wart')),
+                (4, Item('sugar')),
+                (10, Item('rabbit_foot')),
+                (12, Item('spider_eye')),
+                (12, Item('blaze_powder')),
+                (200, Item('ghast_tear')),
+                (20, Item('magma_cream')),
+            ]),
+    ],
+)
+RUINS = Region(
+    'ruins', -250, -80,
+    mobs=[get_mob('wolf'),
+          get_mob('old_wolf')],
+)
 TAVERN = Region('tavern', -85, -69)
 VILLAGE = Region(
     'village', -3, -85,
@@ -213,10 +292,10 @@ VILLAGE = Region(
             trades=[
                 # (100, get_item('fishing_rod',
                 #                enchantments={'magnet': 1})),
-                (20, get_item('raw_fish')),
-                (30, get_item('raw_salmon')),
-                (100, get_item('clownfish')),
-                (40, get_item('pufferfish')),
+                (20, Item('raw_fish')),
+                (30, Item('raw_salmon')),
+                (100, Item('clownfish')),
+                (40, Item('pufferfish')),
             ]),
         Npc('jack',
             dialog=[
@@ -229,20 +308,20 @@ VILLAGE = Region(
                 ('Additionally, leveling your Skills can permanently'
                  ' boost some of your stats!'),
             ]),
+        Npc('jamie',
+            init_dialog=[
+                'You might have noticed that you have a Mana bar!',
+                'Some items have mysterious properties, called Abilities.',
+                ("Abilities use your Mana as a resource. "
+                 "Here, take this Rogue Sword. I don't need it!"),
+            ],
+            claim_item=get_item('rogue_sword')),
         Npc('liam',
             dialog=[
                 ('One day those houses in the Village'
                  ' will be rentable for Coins!'),
                 ('Anyone will be able to rent them,'
                  ' players, co-ops, even Guilds!'),
-            ]),
-        Npc('duke',
-            dialog=[
-                'Are you new here? As you can see there is a lot to explore!',
-                (f'My advice is to start by visiting the {AQUA}Farm{WHITE},'
-                 f' or the {AQUA}Coal Mine{WHITE} both North of here.'),
-                (f'If you do need some wood, the best place '
-                 f'to get some is West of the {AQUA}Village{WHITE}!')
             ]),
         Npc('mine_merchant',
             init_dialog=[
@@ -291,7 +370,7 @@ WIZARD_TOWER = Region('wizard_tower', 40, 70)
 HUB_JOINTS = [
     AUCTION_HOUSE, BANK, BAZAAR_ALLEY, BLACKSMITH, BUILDERS_HOUSE, COAL_MINE,
     COMMUNITY_CENTER, FARM, FARMHOUSE, FASHION_SHOP, FLOWER_HOUSE, FOREST,
-    GRAVEYARD, HIGH_LEVEL, CRYPT, LIBRARY, MOUNTAIN, PETS_BUILDING,
+    GRAVEYARD, HIGH_LEVEL, HUB_CASTLE, CRYPT, LIBRARY, MOUNTAIN, PETS_BUILDING,
     POTION_SHOP, RUINS, TAVERN, VILLAGE, WILDERNESS, WIZARD_TOWER,
 ]
 
@@ -333,6 +412,7 @@ HUB_CONNS = [
     (HIGH_LEVEL, RUINS),
     (HIGH_LEVEL, WILDERNESS),
     (HIGH_LEVEL, WIZARD_TOWER),
+    (HUB_CASTLE, RUINS),
     (LIBRARY, VILLAGE),
     (MOUNTAIN, RUINS),
     (MOUNTAIN, VILLAGE),

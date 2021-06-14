@@ -73,15 +73,23 @@ def profile_action(cls):
                 self.remove_item(item[0].name, item[1] * amount, **kwargs)
 
         good = trade[1]
+        if not isinstance(good, list):
+            good = [good]
 
-        self.recieve_item(good, amount)
-        amt_str = '' if amount == 1 else f'{GRAY} x {amount}'
+        display = []
 
-        if price is not None:
-            green(f"You bought {good.display()}{amt_str}{GREEN} for "
+        for item in good:
+            self.recieve_item(item, amount)
+            amt_str = '' if amount == 1 else f'{GRAY} x {amount}'
+            display.append(f'{item}{amt_str}')
+
+        display_str = f'{GREEN}, '.join(display)
+
+        if isinstance(price, (float, int)):
+            green(f"You bought {display_str}{GREEN} for "
                   f"{GOLD}{shorten_number(price)} Coins{GREEN}!")
         else:
-            green(f"You bought {good.display()}{amt_str}{GREEN}!")
+            green(f"You bought {display_str}{GREEN}!")
 
     cls.buy = buy
 

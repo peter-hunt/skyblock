@@ -17,9 +17,10 @@ class Npc:
     name: str
     init_dialog: Optional[List[str]] = None
     dialog: Optional[List[List[str]]] = None
-    trades: Optional[List[Tuple[Union[Tuple[int, ItemType],
-                                      int], ItemType]]] = None  # price, item
-    claim_item: Optional[ItemType] = None  # price, item, amount
+    # price, item, amount
+    trades: Optional[List[Tuple[Union[Tuple[int, ItemType], int],
+                                Union[ItemType, List[ItemType]]]]] = None
+    claim_item: Optional[ItemType] = None
 
     def __repr__(self):
         return display_name(self.name)

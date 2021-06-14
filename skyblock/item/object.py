@@ -188,7 +188,7 @@ class Mineral(Resource):
     drop: str
     amount: int = 1
     breaking_power: int = 0
-    hardness: int = 2
+    hardness: Number = 2
     exp: Amount = 1
     mining_exp: Number = 1
 

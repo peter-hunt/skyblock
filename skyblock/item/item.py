@@ -32,6 +32,7 @@ COLLECTION_ITEMS = [
     Item('chicken', 64, 'common'),
     Item('mutton', 64, 'common'),
     Item('rabbit', 64, 'common'),
+    Item('rabbit_foot', 64, 'common'),
     Item('nether_wart', 64, 'common'),
 
     Item('cobblestone', 64, 'common'),
@@ -144,11 +145,14 @@ COMPACT_ITEMS = [
 
 OTHER_ITEMS = [
     Item('arrow', 64, 'common'),
+    Item('blaze_powder', 64, 'common'),
     Item('exp_share_core', 1, 'epic'),
+    Item('flint', 64, 'common'),
     Item('gold_nugget', 64, 'common'),
     Item('golden_powder', 64, 'epic'),
     Item('lapis_crystal', 1, 'rare'),
     Item('poisonous_potato', 64, 'common'),
+    Item('sugar', 64, 'common'),
     Item('summoning_eye', 1, 'epic'),
 ]
 
@@ -262,6 +266,27 @@ ARMOR_PIECES = [
     Armor('diamond_boots', rarity='uncommon', part='boots',
           defense=15),
 
+    Armor('cheap_tuxedo_jacket', rarity='epic', part='chestplate',
+          crit_damage=50, intelligence=50),
+    Armor('cheap_tuxedo_pants', rarity='epic', part='leggings',
+          crit_damage=25, intelligence=25),
+    Armor('cheap_tuxedo_oxfords', rarity='epic', part='boots',
+          crit_damage=25, intelligence=25),
+
+    Armor('fancy_tuxedo_jacket', rarity='legendary', part='chestplate',
+          crit_damage=80, intelligence=150),
+    Armor('fancy_tuxedo_pants', rarity='legendary', part='leggings',
+          crit_damage=35, intelligence=75),
+    Armor('fancy_tuxedo_oxfords', rarity='legendary', part='boots',
+          crit_damage=35, intelligence=75),
+
+    Armor('elegant_tuxedo_jacket', rarity='legendary', part='chestplate',
+          crit_damage=100, intelligence=300),
+    Armor('elegant_tuxedo_pants', rarity='legendary', part='leggings',
+          crit_damage=50, intelligence=100),
+    Armor('elegant_tuxedo_oxfords', rarity='legendary', part='boots',
+          crit_damage=50, intelligence=100, speed=10),
+
     Armor('lapis_helmet', rarity='uncommon', part='helmet',
           defense=25),
     Armor('lapis_chestplate', rarity='uncommon', part='chestplate',
@@ -337,10 +362,13 @@ TOOLS = [
 ]
 
 TRAVEL_SCROLLS = [
+    TravelScroll('hub', 'hub_castle', rarity='epic'),
     TravelScroll('barn'),
     TravelScroll('gold'),
     TravelScroll('deep'),
     TravelScroll('park'),
+    TravelScroll('park', 'howl', rarity='epic'),
+    TravelScroll('park', 'jungle', rarity='epic'),
     TravelScroll('spider'),
     TravelScroll('spider', 'nest', rarity='epic'),
     TravelScroll('end'),
@@ -357,6 +385,11 @@ PETS = [
         speed=10, intelligence=50, strength=30),
     Pet('bee_pet', rarity='legendary',
         speed=10, intelligence=50, strength=30),
+
+    Pet('hound_pet', rarity='epic',
+        strength=40, attack_speed=15, ferocity=5),
+    Pet('hound_pet', rarity='legendary',
+        strength=40, attack_speed=15, ferocity=5),
 
     Pet('tarantula_pet', rarity='epic',
         strength=10, crit_chance=10, crit_damage=30),

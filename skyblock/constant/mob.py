@@ -23,10 +23,15 @@ BOA_EFT = [
     'weaver_spider',
     'voracious_spider',
     'dasher_spider',
+    'spider_jockey',
 ]
 
 SMITE_EFT = [
     'zombie',
+    'skeleton',
+    'gravel_skeleton',
+    'crypt_ghoul',
+    'golden_ghoul',
     'lapis_zombie',
     'redstone_pigman',
     'diamond_zombie',

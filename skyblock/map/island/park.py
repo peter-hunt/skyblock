@@ -1,4 +1,5 @@
-from ...item.item import get_item
+from ...item.item import get_item, get_scroll
+from ...item.mob import get_mob
 from ...item.resource import get_resource
 
 from ..object import Npc, Region, Island, add_dist
@@ -7,12 +8,17 @@ __all__ = ['PARK']
 
 
 BIRCH_PARK = Region(
-    'birch_park', -300, -20,
+    'birch', -300, -20,
     resources=[get_resource('birch')],
     portal='hub',
 )
+HOWLING_CAVE = Region(
+    'howl', -330, -55,
+    mobs=[get_mob('pack_spirit'),
+          get_mob('soul_of_the_alpha')],
+)
 SPRUCE_WOOD = Region(
-    'spruce_wood', -325, 0,
+    'spruce', -325, 0,
     resources=[get_resource('spruce')],
     npcs=[
         Npc('melancholic_viking',
@@ -23,17 +29,18 @@ SPRUCE_WOOD = Region(
             ],
             trades=[
                 (130_000, get_item('raider_axe')),
+                (70_000, get_scroll('jungle')),
             ]),
     ],
     skill_req=('foraging', 2),
 )
 DARK_THICKET = Region(
-    'dark_thicket', -330, -45,
+    'dark', -330, -45,
     resources=[get_resource('dark_oak')],
     skill_req=('foraging', 3),
 )
 SAVANNA_WOODLAND = Region(
-    'savanna_woodland', -350, -15,
+    'savanna', -350, -15,
     resources=[get_resource('acacia')],
     npcs=[
         Npc('master_tactician_funk',
@@ -44,15 +51,17 @@ SAVANNA_WOODLAND = Region(
     skill_req=('foraging', 4),
 )
 JUNGLE_ISLAND = Region(
-    'jungle_island', -55, -60,
+    'jungle', -55, -60,
     resources=[get_resource('jungle')],
     skill_req=('foraging', 5),
 )
 
 PARK_JOINTS = [
-    BIRCH_PARK, SPRUCE_WOOD, DARK_THICKET, SAVANNA_WOODLAND, JUNGLE_ISLAND,
+    BIRCH_PARK, HOWLING_CAVE, SPRUCE_WOOD,
+    DARK_THICKET, SAVANNA_WOODLAND, JUNGLE_ISLAND,
 ]
 PARK_CONNS = [
+    (BIRCH_PARK, HOWLING_CAVE),
     (BIRCH_PARK, SPRUCE_WOOD),
     (DARK_THICKET, SAVANNA_WOODLAND),
     (DARK_THICKET, SPRUCE_WOOD),

@@ -126,6 +126,10 @@ SELL_PRICE = {
     'potato': 1,
     'melon': 0.5,
     'pumpkin': 4,
+    'nether_wart': 3,
+
+    'blaze_powder': 4,
+    'sugar': 2,
 
     'enchanted_ender_pearl': 140,
     'enchanted_eye_of_ender': 3_520,

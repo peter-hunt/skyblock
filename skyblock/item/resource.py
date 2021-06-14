@@ -15,8 +15,10 @@ RESOURCES = [
     Crop('melon', drop='melon', amount=(3, 7), farming_exp=4),
     Crop('pumpkin', drop='pumpkin', amount=1, farming_exp=4.5),
 
-    Mineral('stone', drop='cobblestone', amount=1, breaking_power=0,
+    Mineral('stone', drop='cobblestone', amount=1, breaking_power=1,
             hardness=1, exp=0, mining_exp=1),
+    Mineral('gravel', drop='gravel', amount=1, breaking_power=0,
+            hardness=0.6, exp=0, mining_exp=4),
     Mineral('coal_ore', drop='coal', amount=1, breaking_power=1,
             hardness=3, exp=1, mining_exp=5),
     Mineral('iron_ore', drop='iron', amount=1, breaking_power=2,
