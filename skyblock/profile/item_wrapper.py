@@ -47,7 +47,7 @@ def profile_item(cls):
 
         item_type = get_item(item_from.name)
         if item_to.count == item_type.count:
-            yellow('Target item is already full as a stack.')
+            red('Target item is already full as a stack.')
             return
 
         delta = max(item_from.count, item_to.count - item_type.count)

@@ -153,7 +153,7 @@ def profile_action(cls):
             green("You don't have a pet spawned!")
             return
 
-        green(f'Your despawned your {pet.display()}{GREEN}!')
+        green(f'You despawned your {pet.display()}{GREEN}!')
 
     cls.despawn_pet = despawn_pet
 
@@ -202,7 +202,8 @@ def profile_action(cls):
         elif isinstance(item, Pickaxe):
             table = PICKAXE_ENCHS
         else:
-            red('This item cannot be enchanted!')
+            red('Cannot Enchant Item!')
+            gray('This item cannot be enchanted!')
             return
 
         avaliable = []
@@ -268,25 +269,24 @@ def profile_action(cls):
             lvl = lvls[level]
 
             if level + 1 < current:
-                blue('An higher level of the'
-                     ' current enchantment is already applied!')
+                red('Higher level already present!')
                 return
 
             white(f'Cost: {DARK_AQUA}{lvl} Experience Levels')
 
             if exp_lvl < lvl:
-                red("You don't have enough Experience Levels!")
+                red("You don't have enough Levels!")
                 return
 
             self.experience -= calc_lvl(lvl)
 
             if current == level + 1:
-                green(f'Removed {BLUE}{display_name(name)} {roman(level + 1)}'
-                      f' from {item.display()}!')
+                green(f'You removed {BLUE}{display_name(name)}'
+                      f' {roman(level + 1)} from your {item.display()}!')
                 item.enchantments.pop(name)
             else:
-                green(f'Applied {BLUE}{display_name(name)} {roman(level + 1)}'
-                      f' to {item.display()}!')
+                green(f'You applied {BLUE}{display_name(name)}'
+                      f' {roman(level + 1)} to your {item.display()}!')
                 item.enchantments[name] = level + 1
 
                 for conf in CONFLICTS:
@@ -349,7 +349,7 @@ def profile_action(cls):
                 mining_speed += 10 + 20 * enchantments['efficiency']
 
             if resource.breaking_power > breaking_power:
-                red(f'Insufficient breaking power for {resource.name}.')
+                red(f'Insufficient breaking power for {resource.name}!')
                 return
 
             time_cost = 30 * resource.hardness / mining_speed
@@ -467,7 +467,7 @@ def profile_action(cls):
         self.pets.pop(index)
         self.recieve_item(pet)
 
-        green(f'Your converted {pet.display()}{GREEN} into an item!')
+        green(f'You converted {pet.display()}{GREEN} into an item!')
 
     cls.remove_pet = remove_pet
 
@@ -481,7 +481,7 @@ def profile_action(cls):
 
         item = self.inventory[index]
         if item.name not in SELL_PRICE:
-            red(f"Can't sell {item.display()}.")
+            red('You cannot sell this item to an NPC!')
             return
 
         delta = SELL_PRICE[item.name] * getattr(item, 'count', 1)
@@ -789,7 +789,7 @@ def profile_action(cls):
             if i != index and pet.active:
                 self.pets[i].active = False
 
-        green(f'Your summoned your {self.pets[index].display()}{GREEN}!')
+        green(f'You summoned your {self.pets[index].display()}{GREEN}!')
 
     cls.summon_pet = summon_pet
 
@@ -839,11 +839,12 @@ def profile_action(cls):
                 return
 
         if dest == self.island:
-            yellow(f'Already at island: {dest!r}')
+            red(f'Already at island: {dest!r}')
             return
 
         if not includes(ISLANDS, dest):
-            red(f'Island not found: {dest!r}')
+            red("Unknown destination!"
+                " Check the Fast Travel menu to view options!")
             return
 
         if dest == 'hub':
@@ -857,7 +858,7 @@ def profile_action(cls):
                     region = _region
                     break
             else:
-                yellow(f'Cannot warp to {dest}')
+                red(f'Cannot warp to {dest}')
                 return
 
         last = self.island

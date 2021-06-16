@@ -8,7 +8,7 @@ from ..constant.color import (
 )
 from ..constant.main import ARMOR_PARTS
 from ..constant.stat import ALL_STAT, HIDDEN_STATS, PERC_STATS
-from ..function.io import gray, dark_gray, green, yellow, aqua, white
+from ..function.io import gray, dark_gray, red, green, yellow, white
 from ..function.math import (
     calc_skill_exp, calc_skill_exp_info, display_skill_reward,
 )
@@ -177,6 +177,10 @@ def profile_display(cls):
 
     def display_playtime(self, /):
         all_mins = self.play_time // 60
+        if all_mins == 0:
+            red("You don't have enough playtime"
+                " to use this command, try again later!")
+            return
         hours, mins = divmod(all_mins, 60)
         green(f'You have {hours} hours and {mins:0>2} minutes playtime!')
 
