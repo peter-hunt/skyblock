@@ -39,6 +39,7 @@ SPECIAL_NAMES = {
     'savanna': 'Savanna Woodland',
     'spider': "Spider's Den",
     'spruce': 'Spruce Wood',
+    'ranchers_boots': "Rancher's Boots",
     'rngesus': 'RNGesus',
     'runaans_bow': "Runaan's Bow",
     'tacticians_sword': "Tactician's Sword",

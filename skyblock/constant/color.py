@@ -26,6 +26,7 @@ LIGHT_PURPLE = '\x1b[0;38;2;255;85;255m'
 YELLOW = '\x1b[0;38;2;255;255;85m'
 WHITE = '\x1b[0;38;2;255;255;255m'
 
+# item and drop rarity notation colors
 RARITY_COLORS = {
     'common': f'{BOLD}{WHITE}',
     'uncommon': f'{BOLD}{GREEN}',
@@ -40,6 +41,7 @@ RARITY_COLORS = {
     'rngesus': f'{BOLD}{LIGHT_PURPLE}',
 }
 
+# colors and symbols for more convenient statistics displaying
 STAT_COLORS = {
     'health': f'{RED}❤',
     'defense': f'{GREEN}❈',

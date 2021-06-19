@@ -51,10 +51,13 @@ python -m skyblock
 * Swords and bows that don't consume arrows
 
 ## Features Planned:
+* Abilities
 * Anvil and Reforging
 * Combat while mining
-* Crafting
+* Dungeons
+* Full Collections
 * Minions
+* More Islands (Dwarvin Mines, Dungeon Hub, Mushroom Island)
 
 # Furthur information
 This project is a clone of [Hypixel Skyblock](https://hypixel-skyblock.fandom.com/wiki/Hypixel_SkyBlock_Wiki)

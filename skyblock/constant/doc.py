@@ -67,8 +67,10 @@ Get resources.
 Go to a region.
 
 > info <index>
-> information <index>
 Display detailed informatioon about the item.
+
+> item <id>
+Display information of any item.
 
 > ls
 List all the items in the inventory.

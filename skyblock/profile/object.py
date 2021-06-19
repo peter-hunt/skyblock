@@ -460,6 +460,18 @@ class Profile:
 
                 self.display_item(self.inventory[index])
 
+            elif words[0] == 'item':
+                if len(words) != 2:
+                    red(f'Invalid usage of command {words[0]}.')
+                    continue
+
+                name = words[1]
+                item = get_item(name)
+                if item is None:
+                    continue
+
+                self.display_item(item)
+
             elif words[0] == 'look':
                 if len(words) != 1:
                     red(f'Invalid usage of command {words[0]}.')

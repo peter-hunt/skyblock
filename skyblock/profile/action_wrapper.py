@@ -119,7 +119,7 @@ def profile_action(cls):
             self.inventory[index] = Empty()
             name = display_name(item.island)
             if item.region is not None:
-                name += f' {display_name(item.region)}'
+                name += f' {GRAY}- {AQUA}{display_name(item.region)}'
             yellow('You consumed the scroll!')
             yellow(f'You may now fast travel to {GREEN}{name}{YELLOW}!')
 
@@ -343,6 +343,12 @@ def profile_action(cls):
                 if is_coll:
                     self.collect(drop_item, amount_pool * drop_pool)
 
+                if resource.name == 'wheat':
+                    seeds_pool = random_amount((0, 3))
+                    self.recieve_item(Item('seeds'), seeds_pool * drop_pool)
+                    if is_coll:
+                        self.collect('seeds', seeds_pool * drop_pool)
+
                 self.add_skill_exp('farming', resource.farming_exp)
                 if count >= (last_cp + cp_step) * amount:
                     while count >= (last_cp + cp_step) * amount:
@@ -432,11 +438,12 @@ def profile_action(cls):
         region = get(island.regions, self.region)
 
         if not includes(island.regions, dest):
-            red(f'Region not found: {dest!r}')
+            red('Unknown destination! Use /look to view options!')
             return
         if region.name == dest:
-            yellow(f'Already at region: {dest!r}')
+            yellow(f'Already at {AQUA}{display_name(dest)}{YELLOW}!')
             return
+
         path, accum_dist = path_find(region, get(island.regions, dest),
                                      island.conns, island.dists)
 
@@ -705,11 +712,12 @@ def profile_action(cls):
                          f" enchantment granted you {GREEN}+"
                          f" {additional_defense} ❈ Defense{GRAY}!\n")
 
-                damage_recieved = mob.damage / (1 + defense / 100)
-                hp -= damage_recieved
-                gray(f"You recieved {YELLOW}"
-                     f"{shorten_number(damage_recieved)}{GRAY}"
-                     f" damage from the {display_name(mob.name)}{GRAY}!\n")
+                if mob.damage != 0:
+                    damage_recieved = mob.damage / (1 + defense / 100)
+                    hp -= damage_recieved
+                    gray(f"You recieved {YELLOW}"
+                         f"{shorten_number(damage_recieved)}{GRAY}"
+                         f" damage from the {display_name(mob.name)}{GRAY}!\n")
 
                 exp_npng = 0
                 for npng_chance in no_pain_no_gain:
@@ -834,12 +842,6 @@ def profile_action(cls):
         dest_island = get(ISLANDS, dest)
         region = get(island.regions, self.region)
 
-        original_island = self.island
-
-        dest_region = get(dest_island.regions,
-                          default=get(dest_island.regions, dest_island.spawn),
-                          portal=original_island)
-
         if dest_island.skill_req is not None:
             name, level = dest_island.skill_req
             skill_exp = getattr(self, f'skill_xp_{name}')
@@ -849,48 +851,50 @@ def profile_action(cls):
                 red(f'Requires {name.capitalize()} level {roman(level)}')
                 return
 
-        if dest_region is not None:
-            self.island = dest
-            self.region = dest_region.name
-            island = get(ISLANDS, self.island)
-            gray(f'Warped to {AQUA}{dest_region}{GRAY} of'
-                 f' {AQUA}{island}{GRAY}.')
+        if dest == self.island and island.spawn == self.region:
+            yellow(f'Already at {AQUA}{display_name(dest)}{YELLOW}!')
             return
+
+        dest_region = get(dest_island.regions,
+                          default=get(dest_island.regions, dest_island.spawn),
+                          portal=self.island)
 
         for i_name, r_name in self.fast_travel:
             name = i_name if r_name is None else r_name
             if dest == name:
                 self.island = i_name
-                self.region = island.spawn if r_name is None else r_name
                 island = get(ISLANDS, self.island)
-                region = get(island.regions, self.region)
+                if r_name is None:
+                    region = dest_region
+                    self.region = region.name
+                else:
+                    self.region = r_name
+                    region = get(island.regions, r_name)
 
                 gray(f'Warped to {AQUA}{region}{GRAY}'
                      f' of {AQUA}{island}{GRAY}.')
                 return
 
-        if dest == self.island:
-            red(f'Already at island: {dest!r}')
-            return
-
         if not includes(ISLANDS, dest):
-            red("Unknown destination!"
-                " Check the Fast Travel menu to view options!")
+            red('Unknown destination! Use /warp to view options!')
             return
 
-        if dest == 'hub':
-            pass
-        elif getattr(region, 'portal', None) != dest:
-            for _region in island.regions:
-                if getattr(_region, 'portal', None) == dest:
-                    self.goto(_region.name)
-                    if self.region != _region.name:
-                        return
-                    region = _region
-                    break
-            else:
-                red(f'Cannot warp to {dest}')
+        portal_region = get(island.regions, portal=dest)
+
+        if portal_region is None:
+            red(f'Cannot warp to {dest}.')
+            exit()
+
+        if self.region != portal_region.name:
+            self.goto(portal_region.name)
+            if self.region != portal_region.name:
                 return
+
+        self.island = dest
+        self.region = dest_region.name
+        island = get(ISLANDS, self.island)
+        gray(f'Warped to {AQUA}{dest_region}{GRAY}'
+             f' of {AQUA}{island}{GRAY}.')
 
     cls.warp = warp
 
