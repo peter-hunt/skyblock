@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Optional
 
 from ..function.io import red
 from ..function.util import get, includes
@@ -14,6 +14,10 @@ RESOURCES = [
     Crop('carrot', drop='carrot', amount=1, farming_exp=4),
     Crop('melon', drop='melon', amount=(3, 7), farming_exp=4),
     Crop('pumpkin', drop='pumpkin', amount=1, farming_exp=4.5),
+    Crop('cactus', drop='cactus', amount=(5, 15), farming_exp=2),
+    Crop('sugar_cane', drop='sugar_cane', amount=(3, 5), farming_exp=2),
+    Crop('cocoa', drop='cocoa', amount=(2, 3), farming_exp=4),
+    Crop('mushroom', drop='mushroom', amount=1, farming_exp=3),
 
     Mineral('stone', drop='cobblestone', amount=1, breaking_power=1,
             hardness=1, exp=0, mining_exp=1),
@@ -39,6 +43,8 @@ RESOURCES = [
             hardness=50, exp=0, mining_exp=20),
     Mineral('end_stone', drop='end_stone', amount=1, breaking_power=1,
             hardness=3, exp=0, mining_exp=3),
+    Mineral('sand', drop='sand', amount=1, breaking_power=0,
+            hardness=0.5, exp=0, mining_exp=3),
 
     Tree('oak', 'oak_wood',
          hardness=2, foraging_exp=6),
@@ -55,8 +61,8 @@ RESOURCES = [
 ]
 
 
-def get_resource(name: str, default: Any = None, **kwargs) -> ItemType:
+def get_resource(name: str, **kwargs) -> Optional[ItemType]:
     if not includes(RESOURCES, name):
         red(f'Invalid resource: {name!r}')
-        exit()
-    return get(RESOURCES, name, default, **kwargs)
+        return
+    return get(RESOURCES, name, **kwargs)

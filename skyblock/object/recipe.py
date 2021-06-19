@@ -1,3 +1,5 @@
+from typing import Optional
+
 from ..function.io import red
 from ..function.util import includes, get
 
@@ -57,6 +59,12 @@ RECIPES = [
            [(Item('paper'), 3),
             (Item('leather'), 1)],
            (Item('book'), 1)),
+    Recipe('string_to_wool', 'farming',
+           [(Item('string'), 4)],
+           (Item('wool'), 1)),
+    Recipe('hide_to_leather', 'farming',
+           [(Item('rabbit_hide'), 4)],
+           (Item('leather'), 1)),
 
     Recipe('bread_to_enchanted', 'farming',
            [(Item('wheat'), 144)],
@@ -213,6 +221,12 @@ RECIPES = [
            [(Item('cocoa'), 160)],
            (get_item('enchanted_cocoa'), 1),
            collection_req=('cocoa', 4)),
+    Recipe('scroll_to_desert', 'farming',
+           [(Item('enchanted_ender_pearl'), 16),
+            (Item('enchanted_cactus_green'), 48),
+            (Item('enchanted_cocoa'), 80)],
+           (get_scroll('desert'), 1),
+           collection_req=('potato', 5)),
     Recipe('cocoa_to_enchanted_cookie', 'farming',
            [(Item('enchanted_cocoa'), 128),
             (Item('wheat'), 32)],
@@ -498,8 +512,8 @@ RECIPES = [
 ]
 
 
-def get_recipe(name: str, **kwargs) -> Recipe:
+def get_recipe(name: str, **kwargs) -> Optional[Recipe]:
     if not includes(RECIPES, name):
         red(f'Invalid recipe: {name!r}')
-        exit()
+        return
     return get(RECIPES, name, **kwargs)

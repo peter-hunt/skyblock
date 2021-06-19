@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Optional
 
 from ..function.io import red
 from ..function.util import get, includes
@@ -50,6 +50,46 @@ MOBS = [
             (get_item('ghoul_pet', rarity='legendary'),
              1, 'rngesus', 0.00001),
         ]),
+
+    Mob('chicken', level=1, health=4, damage=0,
+        coins=0, combat_xp=6, exp=2,
+        drops=[
+            (Item('chicken'), 1, 'common', 1),
+            (Item('feather'), (1, 2), 'common', 2 / 3),
+            (Item('egg'), 1, 'common', 1 / 4),
+        ]),
+    Mob('cow', level=1, health=10, damage=0,
+        coins=0, combat_xp=10, exp=2,
+        drops=[
+            (Item('beef'), (1, 3), 'common', 1),
+            (Item('leather'), (1, 2), 'common', 2 / 3),
+        ]),
+    Mob('mooshroom', level=1, health=10, damage=0,
+        coins=0, combat_xp=0, exp=2,
+        drops=[
+            (Item('beef'), (1, 3), 'common', 1),
+            (Item('leather'), (1, 2), 'common', 2 / 3),
+            (Item('mushroom'), (1, 3), 'common', 1),
+        ]),
+    Mob('pig', level=1, health=10, damage=0,
+        coins=0, combat_xp=10, exp=2,
+        drops=[
+            (Item('porkchop'), (1, 3), 'common', 1),
+        ]),
+    Mob('sheep', level=1, health=8, damage=0,
+        coins=0, combat_xp=10, exp=2,
+        drops=[
+            (Item('mutton'), (1, 2), 'common', 1),
+            (Item('wool'), 1, 'common', 1),
+        ]),
+    Mob('rabbit', level=10, health=125, damage=0,
+        coins=0, combat_xp=15, exp=2,
+        drops=[
+            (Item('rabbit'), 1, 'common', 0.6),
+            (Item('rabbit_hide'), 1, 'common', 0.3),
+            (Item('rabbit_foot'), 1, 'uncommon', 0.1),
+        ]),
+
     Mob('golden_ghoul', level=60, health=45_000, damage=500,
         coins=100, combat_xp=50, exp=30,
         drops=[
@@ -293,8 +333,8 @@ MOBS = [
 ]
 
 
-def get_mob(name: str, default: Any = None, **kwargs) -> ItemType:
+def get_mob(name: str, **kwargs) -> Optional[ItemType]:
     if not includes(MOBS, name):
         red(f'Invalid mob: {name!r}')
-        exit()
-    return get(MOBS, name, default, **kwargs)
+        return
+    return get(MOBS, name, **kwargs)

@@ -127,7 +127,7 @@ COLLECTIONS = [
             (200, 20),
             (500, 50),
             (2_000, get_recipe('cocoa_to_enchanted')),
-            (5_000, 500),
+            (5_000, get_recipe('scroll_to_desert')),
             (10_000, get_recipe('cocoa_to_enchanted_cookie')),
             (20_000, 2_000),
             (50_000, 5_000),

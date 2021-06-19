@@ -31,6 +31,7 @@ SPECIAL_NAMES = {
     'end': 'The End',
     'first_strike': 'First-Strike',
     'gold': 'Gold Mine',
+    'jakes_house': "Jake's House",
     'jungle': 'Jungle Island',
     'necrons_blade': "Necron's Blade",
     'park': 'The Park',

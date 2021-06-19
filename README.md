@@ -57,7 +57,7 @@ python -m skyblock
 * Dungeons
 * Full Collections
 * Minions
-* More Islands (Dwarvin Mines, Dungeon Hub, Mushroom Island)
+* More Islands (Dwarvin Mines, Dungeon Hub)
 
 # Furthur information
 This project is a clone of [Hypixel Skyblock](https://hypixel-skyblock.fandom.com/wiki/Hypixel_SkyBlock_Wiki)

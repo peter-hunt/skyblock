@@ -85,6 +85,7 @@ COMPACT_ITEMS = [
     Item('golden_carrot', 64, 'common'),
     Item('glistering_melon', 64, 'common'),
     Item('mushroom_block', 64, 'common'),
+    Item('wool', 64, 'common'),
 
     Item('enchanted_hay_bale', 64, 'uncommon'),
     Item('tightly_tied_hay_bale', 64, 'rare'),
@@ -167,9 +168,11 @@ COMPACT_ITEMS = [
 
 OTHER_ITEMS = [
     Item('arrow', 64, 'common'),
+    Item('beef', 64, 'common'),
     Item('blaze_powder', 64, 'common'),
     Item('book', 64, 'common'),
     Item('bread', 64, 'common'),
+    Item('egg', 16, 'common'),
     Item('exp_share_core', 1, 'epic'),
     Item('flint', 64, 'common'),
     Item('gold_nugget', 64, 'common'),
@@ -180,6 +183,7 @@ OTHER_ITEMS = [
     Item('planks', 64, 'common'),
     Item('poisonous_potato', 64, 'common'),
     Item('rabbit_foot', 64, 'common'),
+    Item('rabbit_hide', 64, 'common'),
     Item('stick', 64, 'common'),
     Item('sugar', 64, 'common'),
     Item('summoning_eye', 1, 'epic'),
@@ -452,6 +456,7 @@ TOOLS = [
 TRAVEL_SCROLLS = [
     TravelScroll('hub', 'hub_castle', rarity='epic'),
     TravelScroll('barn'),
+    TravelScroll('desert'),
     TravelScroll('gold'),
     TravelScroll('deep'),
     TravelScroll('park'),
