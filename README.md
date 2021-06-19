@@ -39,6 +39,7 @@ python -m skyblock
 * Armor pieces
 * Axes, hoes, pickaxes, bows, and swords
 * Crafting
+* Collections, but incomplete
 * Enchantments
 * Farming, combat, mining, enchanting, and foraging
 * Fast Traveling
@@ -51,7 +52,6 @@ python -m skyblock
 
 ## Features Planned:
 * Anvil and Reforging
-* Collections
 * Combat while mining
 * Crafting
 * Minions
