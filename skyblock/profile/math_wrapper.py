@@ -2,15 +2,20 @@ from math import ceil
 from os import get_terminal_size
 from typing import Optional
 
-from ..constant.color import BOLD, DARK_AQUA, GRAY, BLUE, GREEN
+from ..constant.color import (
+    BOLD, DARK_AQUA, GRAY, BLUE, GREEN, YELLOW, RARITY_COLORS,
+)
 from ..constant.main import SKILL_EXP
 from ..constant.util import Number
 from ..function.math import (
     calc_exp, calc_pet_exp, calc_skill_exp, display_skill_reward,
 )
-from ..function.io import dark_aqua, red, green, aqua
+from ..function.io import dark_aqua, gold, dark_gray, red, green, yellow, aqua
 from ..function.util import display_name, roman
-from ..item.object import Empty, Bow, Sword, Axe, Hoe, Pickaxe, Armor, Pet
+from ..object.collection import is_collection, get_collection, calc_coll_lvl
+from ..object.object import (
+    Empty, Bow, Sword, Axe, Hoe, Pickaxe, Armor, Pet, Recipe,
+)
 
 __all__ = ['profile_math']
 
@@ -82,6 +87,75 @@ def profile_math(cls):
                       f' level {BLUE}{current_pet_lvl}{GREEN}!')
 
     cls.add_skill_exp = add_skill_exp
+
+    def coll_amount(self, name: str, /) -> Optional[int]:
+        if not is_collection(name):
+            red(f'Unknown collection: {name!r}')
+            return
+        return self.collection[name]
+
+    cls.coll_amount = coll_amount
+
+    def coll_lvl(self, name: str, /) -> Optional[int]:
+        if not is_collection(name):
+            red(f'Unknown collection: {name!r}')
+            return
+        return calc_coll_lvl(name, self.collection[name])
+
+    cls.coll_lvl = coll_lvl
+
+    def collect(self, name: str, amount: int, /):
+        if not is_collection(name):
+            red(f'Unknown collection: {name!r}')
+            return
+
+        display = display_name(name)
+
+        original_lvl = self.coll_lvl(name)
+
+        if self.collection[name] == 0 and amount > 0:
+            gold(f'{BOLD}COLLECTION UNLOCKED {YELLOW}{display}')
+
+        self.collection[name] += amount
+
+        current_lvl = self.coll_lvl(name)
+
+        if current_lvl <= original_lvl:
+            return
+
+        width, _ = get_terminal_size()
+        width = ceil(width * 0.85)
+        yellow(f"{BOLD}{'':-^{width}}")
+
+        coll = get_collection(name)
+
+        original = roman(original_lvl) if original_lvl != 0 else '0'
+        gold(f' {BOLD}COLLECTION LEVEL UP {YELLOW}{display_name(name)}'
+             f' {GRAY}{original}➜{YELLOW}{roman(current_lvl)}\n')
+
+        rewards = []
+
+        for index, (_, rwds) in enumerate(coll.levels):
+            if original_lvl < index + 1 <= current_lvl:
+                if isinstance(rwds, tuple):
+                    rewards += rwds
+                else:
+                    rewards.append(rwds)
+
+        green(f' REWARDS')
+        for reward in rewards:
+            if isinstance(reward, (float, int)):
+                dark_gray(f'  +{DARK_AQUA}{reward}{GRAY}'
+                          f' {display_name(coll.category)} Experience')
+                self.add_skill_exp(coll.category, reward)
+            elif isinstance(reward, Recipe):
+                item = reward.result[0]
+                color = RARITY_COLORS[item.rarity]
+                print(f'  {color}{display_name(item.name)} {GRAY}Recipe')
+
+        yellow(f"{BOLD}{'':-^{width}}")
+
+    cls.collect = collect
 
     def get_stat(self, name: str, index: Optional[int] = None):
         value = 0

@@ -41,8 +41,9 @@ SPECIAL_NAMES = {
     'spruce': 'Spruce Wood',
     'rngesus': 'RNGesus',
     'runaans_bow': "Runaan's Bow",
-    'triple_strike': 'Triple-Strike',
     'tacticians_sword': "Tactician's Sword",
+    'tightly_tied_hay_bale': 'Tightly-Tied Hay Bale',
+    'triple_strike': 'Triple-Strike',
 }
 
 IGNORED_WORDS = ('from', 'of', 'the', 'to')

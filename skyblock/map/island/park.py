@@ -1,6 +1,6 @@
-from ...item.item import get_item, get_scroll
-from ...item.mob import get_mob
-from ...item.resource import get_resource
+from ...object.item import get_item, get_scroll
+from ...object.mob import get_mob
+from ...object.resource import get_resource
 
 from ..object import Npc, Region, Island, add_dist
 

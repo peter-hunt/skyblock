@@ -4,7 +4,9 @@ from time import sleep
 from typing import Iterable, Optional
 
 from ..constant.color import (
-    BOLD, GOLD, GRAY, GREEN, AQUA, YELLOW, WHITE, STAT_COLORS,
+    BOLD, DARK_AQUA, DARK_RED, GOLD, GRAY, DARK_GRAY,
+    GREEN, AQUA, RED, YELLOW, WHITE,
+    STAT_COLORS, RARITY_COLORS,
 )
 from ..constant.main import ARMOR_PARTS
 from ..constant.stat import ALL_STAT, HIDDEN_STATS, PERC_STATS
@@ -16,8 +18,9 @@ from ..function.util import (
     display_int, display_name, display_number,
     get, index, roman, shorten_number,
 )
-from ..item.object import Empty, ItemType
-from ..item.recipe import RECIPES
+from ..object.collection import COLLECTIONS, get_collection
+from ..object.object import Empty, ItemType, Recipe
+from ..object.recipe import RECIPES
 from ..map.island import ISLANDS
 from ..map.object import Npc
 
@@ -36,6 +39,101 @@ def profile_display(cls):
 
     cls.display_armor = display_armor
 
+    def display_collection_info(self, name: str, /):
+        width, _ = get_terminal_size()
+        width = ceil(width * 0.85)
+        yellow(f"{BOLD}{'':-^{width}}")
+
+        coll = get_collection(name)
+        lvl = self.coll_lvl(name)
+        lvl_str = f' {roman(lvl)}' if lvl != 0 else ''
+        display = display_name(name)
+
+        current = self.coll_amount(name)
+
+        yellow(f'{display}{lvl_str}')
+        last_lvl = 0
+        next_lvl = None
+        rewards = None
+        past_amount = 0
+
+        for index, (amount, rwds) in enumerate(coll.levels):
+            display = display
+
+            if not hasattr(rwds, '__iter__'):
+                rwds = [rwds]
+
+            if amount > current and next_lvl is None:
+                next_lvl = amount - last_lvl
+                rewards = [reward for reward in rwds]
+                past_amount = last_lvl
+            last_lvl = amount
+
+            gray(f'\n{display} {roman(index + 1)} Reward:')
+            for reward in rwds:
+                if isinstance(reward, (float, int)):
+                    dark_gray(f' +{DARK_AQUA}{reward}{GRAY}'
+                              f' {display_name(coll.category)} Experience')
+                elif isinstance(reward, Recipe):
+                    item = reward.result[0]
+                    color = RARITY_COLORS[item.rarity]
+                    print(f'  {color}{display_name(item.name)} {GRAY}Recipe')
+
+        this_lvl = current - past_amount
+        progress = min(this_lvl / next_lvl, 1)
+        bar = floor(progress * 20)
+        left, right = '-' * bar, '-' * (20 - bar)
+        if rewards is not None:
+            gray(f'\nProgress: {YELLOW}{floor(progress * 100)}{GOLD}%')
+        green(f'{BOLD}{left}{GRAY}{BOLD}{right} {YELLOW}{display_int(this_lvl)}'
+              f'{GOLD}/{YELLOW}{shorten_number(next_lvl)}\n')
+        if rewards is not None:
+            gray(f'{display} {roman(lvl + 1)} Reward:')
+            for reward in rewards:
+                if isinstance(reward, (float, int)):
+                    dark_gray(f'  +{DARK_AQUA}{reward}{GRAY}'
+                              f' {display_name(coll.category)} Experience')
+                elif isinstance(reward, Recipe):
+                    item = reward.result[0]
+                    color = RARITY_COLORS[item.rarity]
+                    print(f'  {color}{display_name(item.name)} {GRAY}Recipe')
+
+        yellow(f"{BOLD}{'':-^{width}}")
+
+    cls.display_collection_info = display_collection_info
+
+    def display_collection(self, category: str, /, *, end=True):
+        width, _ = get_terminal_size()
+        width = ceil(width * 0.85)
+        yellow(f"{BOLD}{'':-^{width}}")
+
+        green(f'{display_name(category)} Collections')
+        colls = [coll for coll in COLLECTIONS if coll.category == category]
+
+        if len(colls) == 0:
+            gray('  none')
+        else:
+            for coll in colls:
+                if self.collection[coll.name] == 0:
+                    gray('  unknown')
+                    continue
+                name = display_name(coll.name)
+                lvl = self.coll_lvl(coll.name)
+                lvl_str = f' {roman(lvl)}' if lvl != 0 else ''
+                yellow(f'  {name}{lvl_str}')
+
+        if end:
+            yellow(f"{BOLD}{'':-^{width}}")
+
+    cls.display_collection = display_collection
+
+    def display_collections(self, /):
+        for category in ('farming', 'mining', 'combat',
+                         'foraging', 'fishing'):
+            self.display_collection(category, end=False)
+
+    cls.display_collections = display_collections
+
     def display_item(self, item: ItemType, /):
         if isinstance(item, Empty):
             gray('Empty')
@@ -51,7 +149,35 @@ def profile_display(cls):
 
     cls.display_item = display_item
 
-    def look(self, /):
+    def display_inv(self, /):
+        length = len(self.inventory)
+        if length == 0:
+            gray('Your inventory is empty.')
+            return
+
+        digits = len(f'{length}')
+        empty_slots = []
+        index = 0
+        while index < length:
+            item = self.inventory[index]
+            if isinstance(item, Empty):
+                while index < length:
+                    if not isinstance(self.inventory[index], Empty):
+                        break
+                    empty_slots.append(index)
+                    index += 1
+                continue
+
+            if empty_slots:
+                for empty_index in empty_slots:
+                    gray(f'{(empty_index + 1):>{digits * 2 + 1}}')
+                empty_slots.clear()
+            gray(f'{(index + 1):>{digits * 2 + 1}} {item.display()}')
+            index += 1
+
+    cls.display_inv = display_inv
+
+    def display_location(self, /):
         island = get(ISLANDS, self.island)
         region = get(island.regions, self.region)
 
@@ -97,35 +223,7 @@ def profile_display(cls):
             gray(f'\nPortal to {AQUA}{display_name(region.portal)}{GRAY}'
                  f' ({region.portal})')
 
-    cls.look = look
-
-    def display_inv(self, /):
-        length = len(self.inventory)
-        if length == 0:
-            gray('Your inventory is empty.')
-            return
-
-        digits = len(f'{length}')
-        empty_slots = []
-        index = 0
-        while index < length:
-            item = self.inventory[index]
-            if isinstance(item, Empty):
-                while index < length:
-                    if not isinstance(self.inventory[index], Empty):
-                        break
-                    empty_slots.append(index)
-                    index += 1
-                continue
-
-            if empty_slots:
-                for empty_index in empty_slots:
-                    gray(f'{(empty_index + 1):>{digits * 2 + 1}}')
-                empty_slots.clear()
-            gray(f'{(index + 1):>{digits * 2 + 1}} {item.display()}')
-            index += 1
-
-    cls.display_inv = display_inv
+    cls.display_location = display_location
 
     def display_money(self, /):
         if self.region != 'bank':
@@ -186,7 +284,51 @@ def profile_display(cls):
 
     cls.display_playtime = display_playtime
 
-    def display_recipe(self, category: Optional[str], /, *, end=True):
+    def display_recipe_info(self, index: int, /):
+        if index >= len(RECIPES):
+            red('Recipe index out of bound.')
+            return
+
+        width, _ = get_terminal_size()
+        width = ceil(width * 0.85)
+        yellow(f"{BOLD}{'':-^{width}}")
+
+        recipe = RECIPES[index]
+
+        green(f'{display_name(recipe.name)} '
+              f'{GRAY}({display_name(recipe.category)} Recipe)')
+
+        gray('\nIngredients:')
+        for item, amount in recipe.ingredients:
+            count_str = f'{DARK_GRAY} x {amount}'
+            gray(f'  {item.display()}{count_str}')
+        gray('\nResult:')
+        item, amount = recipe.result
+        count_str = f'{DARK_GRAY} x {amount}'
+        gray(f'  {item.display()}{count_str}')
+
+        requirements = []
+
+        if recipe.collection_req is not None:
+            coll_name, coll_lvl = recipe.collection_req
+            lvl = self.coll_lvl(coll_name)
+            if lvl < coll_lvl:
+                requirements.append(
+                    f'{DARK_RED}❣ {RED}Requires {GREEN}'
+                    f'{display_name(coll_name)} Collection {roman(coll_lvl)}'
+                )
+
+        if len(requirements) != 0:
+            gray()
+            for req in requirements:
+                gray(req)
+
+        yellow(f"{BOLD}{'':-^{width}}")
+
+    cls.display_recipe_info = display_recipe_info
+
+    def display_recipe(self, category: Optional[str], /, *,
+                       show_all=False, end=True):
         width, _ = get_terminal_size()
         width = ceil(width * 0.85)
         yellow(f"{BOLD}{'':-^{width}}")
@@ -194,27 +336,40 @@ def profile_display(cls):
         green(f'{display_name(category)} Recipes')
         recipes = [recipe for recipe in RECIPES if recipe.category == category]
 
+        if not show_all:
+            recipes_copy = [recipe for recipe in recipes]
+            recipes = []
+            for recipe in recipes_copy:
+                if recipe.collection_req is not None:
+                    coll_name, coll_lvl = recipe.collection_req
+                    lvl = self.coll_lvl(coll_name)
+                    if lvl < coll_lvl:
+                        continue
+
+                for item, count in recipe.ingredients:
+                    if not self.has_item(item.name, count):
+                        break
+                else:
+                    recipes.append(recipe)
+
         digits = len(f'{len(RECIPES)}')
 
         if len(recipes) == 0:
             gray('  none')
-            return
-
-        for recipe in recipes:
-            i = index(RECIPES, recipe.name)
-            gray(f'  {(i + 1):>{digits}} {AQUA}{display_name(recipe.name)}')
+        else:
+            for recipe in recipes:
+                i = index(RECIPES, recipe.name)
+                gray(f'  {(i + 1):>{digits}} {AQUA}{display_name(recipe.name)}')
 
         if end:
-            width, _ = get_terminal_size()
-            width = ceil(width * 0.85)
             yellow(f"{BOLD}{'':-^{width}}")
 
     cls.display_recipe = display_recipe
 
-    def display_recipes(self, /):
+    def display_recipes(self, /, *, show_all=False):
         for category in ('farming', 'mining', 'combat', 'fishing', 'foraging',
                          'enchanting', 'alchemy', 'slayer'):
-            self.display_recipe(category, end=False)
+            self.display_recipe(category, show_all=show_all, end=False)
 
         width, _ = get_terminal_size()
         width = ceil(width * 0.85)

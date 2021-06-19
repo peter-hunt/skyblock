@@ -4,8 +4,8 @@ from typing import Union
 from ..constant.color import GOLD, DARK_GRAY, GREEN, AQUA, YELLOW, WHITE
 from ..function.io import gray, red, green, yellow
 from ..function.util import display_int, display_name, includes
-from ..item.item import ITEMS, get_item, get_stack_size
-from ..item.object import (
+from ..object.item import ITEMS, get_item, get_stack_size
+from ..object.object import (
     ItemType, Item, Empty, Bow, Sword, Armor,
     Axe, Hoe, Pickaxe, TravelScroll, Pet,
 )
@@ -19,13 +19,6 @@ def profile_item(cls):
         green('You have cleared your stash!')
 
     cls.clearstash = clearstash
-
-    def collect(self, name: str, amount: int, /):
-        if name not in self.collection:
-            self.collection[name] = 0
-        self.collection[name] += amount
-
-    cls.collect = collect
 
     def get_active_pet(self, /) -> Union[Pet, Empty]:
         for pet in self.pets:

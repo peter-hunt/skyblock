@@ -1,4 +1,4 @@
-from ..item.object import ItemType, Empty, OBJECTS
+from ..object.object import ItemType, Empty, OBJECTS
 
 __all__ = ['load_item']
 

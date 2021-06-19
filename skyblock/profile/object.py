@@ -12,13 +12,14 @@ from ..function.util import (
     backupable, display_int, display_number, generate_help,
     get, includes, parse_int, shorten_number,
 )
-from ..item.item import get_item
-from ..item.mob import get_mob
-from ..item.object import (
+from ..object.collection import COLLECTIONS, is_collection
+from ..object.item import get_item
+from ..object.mob import get_mob
+from ..object.object import (
     Item, Empty, Bow, Sword, Armor, Axe, Hoe, Pickaxe,
 )
-from ..item.recipe import RECIPES
-from ..item.resource import get_resource
+from ..object.recipe import RECIPES
+from ..object.resource import get_resource
 from ..map.island import ISLANDS
 from ..map.object import Npc
 
@@ -62,7 +63,10 @@ class Profile:
     skill_xp_foraging: float = 0.0
     skill_xp_mining: float = 0.0
     skill_xp_taming: float = 0.0
-    collection: Dict[str, int] = {}
+    collection: Dict[str, int] = {
+        collection.name: 0
+        for collection in COLLECTIONS
+    }
 
     crafted_minions: List[str] = []
     fast_travel: List[str] = [('hub', None)]
@@ -118,6 +122,7 @@ class Profile:
             if island is None:
                 yellow('Invalid island. Using hub as default.')
                 island = get(ISLANDS, 'hub')
+
             region = get(island.regions, self.region)
             if region is None:
                 yellow('Invalid region. Using island spawn as default.')
@@ -187,9 +192,9 @@ class Profile:
                 # self.recieve_item(item)
                 # item = get_item('golden_axe')
                 # self.recieve_item(item)
-                item = get_item('enderman_pet', rarity='legendary')
-                item.exp = 10 ** 6
-                self.recieve_item(item)
+                # item = get_item('enderman_pet', rarity='legendary')
+                # item.exp = 10 ** 6
+                # self.recieve_item(item)
                 # self.add_exp(2000)
                 # item = get_scroll('nest')
                 # self.recieve_item(item)
@@ -212,6 +217,27 @@ class Profile:
                     continue
 
                 self.consume(index)
+
+            elif words[0] == 'collections':
+                if len(words) > 2:
+                    red(f'Invalid usage of command {words[0]}.')
+                    continue
+
+                if len(words) == 1:
+                    self.display_collections()
+                    continue
+
+                category = words[1]
+                if category in ('farming', 'mining', 'combat',
+                                'foraging', 'fishing'):
+                    self.display_collection(category)
+                elif is_collection(category):
+                    if self.collection[category] == 0:
+                        yellow(f'Locked collection: {category}')
+                        continue
+                    self.display_collection_info(category)
+                else:
+                    red(f'Unknown collection: {category!r}')
 
             elif words[0] == 'craft':
                 if len(words) not in {2, 3}:
@@ -242,7 +268,7 @@ class Profile:
                 yellow(f'Death Count: {BLUE}{display_int(self.death_count)}')
 
             elif words[0] in {'deposit', 'withdraw'}:
-                if len(words) != 2:
+                if len(words) > 2:
                     red(f'Invalid usage of command {words[0]}.')
                     continue
 
@@ -250,16 +276,27 @@ class Profile:
                     red('You can only do that while you are at the bank!')
                     continue
 
-                coins_str = words[1]
-                if not fullmatch(r'\d+(\.\d+)?[TtBbMmKk]?', coins_str):
-                    red('Invalid amount of coins.')
-                    continue
-                if coins_str[-1].lower() in 'kmbt':
-                    mult = 1000 ** ('kmbt'.index(coins_str[-1].lower()) + 1)
-                    coins_str = coins_str[:-1]
+                coins_str = words[1].lower() if len(words) == 2 else 'all'
+                if coins_str in {'all', 'half'}:
+                    if words[0] == 'deposit':
+                        coins = self.purse
+                    else:
+                        coins = self.balance
+
+                    if coins_str == 'half':
+                        coins /= 2
                 else:
-                    mult = 1
-                coins = eval(coins_str) * mult
+                    if not fullmatch(r'\d+(\.\d+)?[tbmk]?', coins_str):
+                        red('Invalid amount of coins.')
+                        continue
+
+                    if coins_str[-1] in 'kmbt':
+                        mult = 1000 ** ('kmbt'.index(
+                            coins_str[-1].lower()) + 1)
+                        coins_str = coins_str[:-1]
+                    else:
+                        mult = 1
+                    coins = eval(coins_str) * mult
 
                 if words[0] == 'deposit':
                     if self.purse == 0:
@@ -428,7 +465,7 @@ class Profile:
                     red(f'Invalid usage of command {words[0]}.')
                     continue
 
-                self.look()
+                self.display_location()
 
             elif words[0] == 'ls':
                 if len(words) != 1:
@@ -552,7 +589,7 @@ class Profile:
                 self.display_playtime()
 
             elif words[0] == 'recipes':
-                if len(words) > 2:
+                if len(words) > 3:
                     red(f'Invalid usage of command {words[0]}.')
                     continue
 
@@ -560,13 +597,31 @@ class Profile:
                     self.display_recipes()
                     continue
 
-                category = words[1]
-                if category not in ('farming', 'mining', 'combat', 'fishing',
-                                    'foraging', 'enchanting', 'alchemy',
-                                    'slayer'):
-                    red(f'Invalid recipe category: {category}')
+                show_all = False
 
-                self.display_recipe(category)
+                if len(words) == 3:
+                    if words[2] != '--all':
+                        red(f'Invalid tag: {words[2]!r}')
+                        red("Can only use '--all'.")
+                        continue
+                    show_all = True
+
+                restriction = words[1]
+                if len(words) == 2 and restriction == '--all':
+                    self.display_recipes(show_all=True)
+                    continue
+                elif restriction in ('farming', 'mining', 'combat', 'fishing',
+                                     'foraging', 'enchanting', 'alchemy',
+                                     'slayer'):
+                    self.display_recipe(restriction, show_all=show_all)
+                    continue
+
+                index = self.parse_index(restriction, len(RECIPES))
+                if index is None:
+                    red(f'Invalid recipe category or index: {restriction!r}')
+                    continue
+
+                self.display_recipe_info(index)
 
             elif words[0] == 'save':
                 if len(words) != 1:

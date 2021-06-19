@@ -2,12 +2,11 @@ from re import escape, fullmatch
 from sys import stdout
 
 from ..constant.color import (
-    DARK_AQUA,
-    GRAY, DARK_GRAY, RED, GREEN, YELLOW, BLUE, AQUA, WHITE,
+    DARK_AQUA, GOLD, GRAY, DARK_GRAY, RED, GREEN, YELLOW, BLUE, AQUA, WHITE,
 )
 
 __all__ = [
-    'dark_aqua',
+    'dark_aqua', 'gold',
     'gray', 'dark_gray', 'red', 'green', 'yellow', 'blue', 'aqua', 'white',
     'input_regex',
 ]
@@ -16,6 +15,11 @@ __all__ = [
 def dark_aqua(*args, sep=' ', end='\n') -> None:
     string = sep.join(f'{arg}' for arg in args)
     stdout.write(f'{DARK_AQUA}{string}{end}\x1b[0m')
+
+
+def gold(*args, sep=' ', end='\n') -> None:
+    string = sep.join(f'{arg}' for arg in args)
+    stdout.write(f'{GOLD}{string}{end}\x1b[0m')
 
 
 def gray(*args, sep=' ', end='\n') -> None:

@@ -171,6 +171,13 @@ PET_EXP_DIFF = [
 
 
 SELL_PRICE = {
+    'wheat': 1,
+    'carrot': 1,
+    'potato': 1,
+    'melon': 0.5,
+    'pumpkin': 4,
+    'nether_wart': 3,
+
     'cobblestone': 1,
     'coal': 2,
     'iron': 3,
@@ -200,15 +207,12 @@ SELL_PRICE = {
     'acacia_wood': 2,
     'jungle_wood': 2,
 
-    'wheat': 1,
-    'carrot': 1,
-    'potato': 1,
-    'melon': 0.5,
-    'pumpkin': 4,
-    'nether_wart': 3,
-
     'blaze_powder': 4,
     'sugar': 2,
+
+    'hay_bale': 9,
+    'enchanted_hay_bale': 1_300,
+    'tightly_tied_hay_bale': 187_200,
 
     'enchanted_ender_pearl': 140,
     'enchanted_eye_of_ender': 3_520,

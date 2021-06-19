@@ -32,6 +32,8 @@ Buy item from the shop.
 > clearstash
 Removes all items currently in the Stash.
 
+> collection [category | name]
+
 > consume
 > use
 Consume items.
@@ -42,7 +44,7 @@ Craft items.
 > deathcount
 Displays how many times you have died.
 
-> deposit <coins>
+> deposit [all | half | <coins>]
 Deposit coins from the purse to the bank.
 
 > enchant <index>
@@ -112,8 +114,8 @@ Takes all items currently in the Stash.
 > pt
 Shows your current playtime.
 
-> recipes [category=all]
-Shows all recipes avaliable.
+> recipes [category] [--all]
+Shows all recipes or recipes avaliable.
 
 > sell <index>
 Sell the item.
@@ -142,6 +144,6 @@ Unequip armor.
 > warp <island>
 Warp to an island using portal or consumed travel scroll.
 
-> withdraw <coins>
+> withdraw [all | half | <coins>]
 Withdraw coins from the bank to the purse.
 """.strip()

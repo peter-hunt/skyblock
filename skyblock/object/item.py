@@ -19,8 +19,7 @@ COLLECTION_ITEMS = [
     Item('pumpkin', 64, 'common'),
     Item('melon', 64, 'common'),
     Item('seeds', 64, 'common'),
-    Item('red_mushroom', 64, 'common'),
-    Item('brown_mushroom', 64, 'common'),
+    Item('mushroom', 64, 'common'),
     Item('cocoa_beans', 64, 'common'),
     Item('cactus', 64, 'common'),
     Item('sugar_cane', 64, 'common'),
@@ -30,7 +29,6 @@ COLLECTION_ITEMS = [
     Item('chicken', 64, 'common'),
     Item('mutton', 64, 'common'),
     Item('rabbit', 64, 'common'),
-    Item('rabbit_foot', 64, 'common'),
     Item('nether_wart', 64, 'common'),
 
     Item('cobblestone', 64, 'common'),
@@ -69,8 +67,8 @@ COLLECTION_ITEMS = [
     Item('acacia_wood', 64, 'common'),
     Item('jungle_wood', 64, 'common'),
 
-    Item('raw_fish', 64, 'common'),
-    Item('raw_salmon', 64, 'common'),
+    Item('fish', 64, 'common'),
+    Item('salmon', 64, 'common'),
     Item('clownfish', 64, 'common'),
     Item('pufferfish', 64, 'common'),
     Item('prismarine_shard', 64, 'common'),
@@ -82,6 +80,11 @@ COLLECTION_ITEMS = [
 ]
 
 COMPACT_ITEMS = [
+    Item('hay_bale', 64, 'common'),
+    Item('enchanted_bread', 64, 'common'),
+    Item('enchanted_hay_bale', 64, 'uncommon'),
+    Item('tightly_tied_hay_bale', 64, 'rare'),
+
     Item('coal_block', 64, 'common'),
     Item('iron_block', 64, 'common'),
     Item('gold_block', 64, 'common'),
@@ -144,6 +147,7 @@ COMPACT_ITEMS = [
 OTHER_ITEMS = [
     Item('arrow', 64, 'common'),
     Item('blaze_powder', 64, 'common'),
+    Item('book', 64, 'common'),
     Item('bread', 64, 'common'),
     Item('exp_share_core', 1, 'epic'),
     Item('flint', 64, 'common'),
@@ -151,8 +155,10 @@ OTHER_ITEMS = [
     Item('golden_powder', 64, 'epic'),
     Item('iron_nugget', 64, 'common'),
     Item('lapis_crystal', 1, 'rare'),
+    Item('paper', 64, 'common'),
     Item('planks', 64, 'common'),
     Item('poisonous_potato', 64, 'common'),
+    Item('rabbit_foot', 64, 'common'),
     Item('stick', 64, 'common'),
     Item('sugar', 64, 'common'),
     Item('summoning_eye', 1, 'epic'),
@@ -267,6 +273,24 @@ ARMOR_PIECES = [
           defense=30),
     Armor('diamond_boots', rarity='uncommon', part='boots',
           defense=15),
+
+    Armor('farm_suit_helmet', rarity='common', part='helmet',
+          defense=15),
+    Armor('farm_suit_chestplate', rarity='common', part='chestplate',
+          defense=40),
+    Armor('farm_suit_leggings', rarity='common', part='leggings',
+          defense=30),
+    Armor('farm_suit_boots', rarity='common', part='boots',
+          defense=15),
+
+    Armor('farm_helmet', rarity='rare', part='helmet',
+          health=20, defense=40),
+    Armor('farm_chestplate', rarity='rare', part='chestplate',
+          health=20, defense=75),
+    Armor('farm_leggings', rarity='rare', part='leggings',
+          health=20, defense=50),
+    Armor('farm_boots', rarity='rare', part='boots',
+          health=20, defense=35),
 
     Armor('cheap_tuxedo_jacket', rarity='epic', part='chestplate',
           crit_damage=50, intelligence=50),

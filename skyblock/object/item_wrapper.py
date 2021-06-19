@@ -149,7 +149,7 @@ def item_type(cls: type, /) -> type:
             info += (f'\n{DARK_GRAY}Breaking Power '
                      f"{getattr(self, 'breaking_power')}{CLN}\n"
                      f'\n{GRAY}Mining Speed: {GREEN}+'
-                     f"{getattr(self, 'mining_speed')}{CLN}\n")
+                     f"{getattr(self, 'mining_speed')}{CLN}")
 
         elif self.__class__.__name__ in {'Bow', 'Sword'}:
             is_dungeon = self.stars is not None
@@ -183,8 +183,9 @@ def item_type(cls: type, /) -> type:
                 basic_stats.append(f'{display_stat}: {RED}'
                                    f'+{value}{ext}{hot_potato}{dung}')
 
-            info += '\n' + '\n'.join(f'{GRAY}{stat}'
-                                     for stat in basic_stats) + CLN
+            if len(basic_stats) != 0:
+                info += '\n' + '\n'.join(f'{GRAY}{stat}'
+                                         for stat in basic_stats)
 
             bonus_stats = []
             for stat_name in ('defense', 'intelligence', 'true_denfense',
@@ -209,8 +210,9 @@ def item_type(cls: type, /) -> type:
                 bonus_stats.append(f'{display_stat}: {GREEN}'
                                    f'+{value}{dung}')
 
-            info += '\n\n' + '\n'.join(f'{GRAY}{stat}'
-                                       for stat in bonus_stats) + CLN
+            if len(bonus_stats) != 0:
+                info += '\n' + '\n'.join(f'{GRAY}{stat}'
+                                         for stat in bonus_stats)
 
         elif self.__class__.__name__ == 'Armor':
             enchantments = getattr(self, 'enchantments', {})
@@ -239,8 +241,9 @@ def item_type(cls: type, /) -> type:
                 basic_stats.append(f'{display_stat}: {RED}'
                                    f'+{value}{ext}{dung}')
 
-            info += '\n' + '\n'.join(f'{GRAY}{stat}'
-                                     for stat in basic_stats) + CLN
+            if len(basic_stats) != 0:
+                info += '\n' + '\n'.join(f'{GRAY}{stat}'
+                                         for stat in basic_stats)
 
             bonus_stats = []
             for stat_name in ('health', 'defense', 'intelligence', 'speed',
@@ -281,8 +284,9 @@ def item_type(cls: type, /) -> type:
                 bonus_stats.append(f'{display_stat}: {GREEN}'
                                    f'+{value}{ext}{hot_potato}{dung}')
 
-            info += '\n\n' + '\n'.join(f'{GRAY}{stat}'
-                                       for stat in bonus_stats) + CLN
+            if len(bonus_stats) != 0:
+                info += '\n' + '\n'.join(f'{GRAY}{stat}'
+                                         for stat in bonus_stats)
 
         elif self.__class__.__name__ == 'Pet':
             category = display_name(self.category)
@@ -411,8 +415,8 @@ def item_type(cls: type, /) -> type:
         info += f'\n{rarity_color}{self.rarity.upper()} {type_name}'.rstrip()
         info += CLN
 
-        while '\n\n\n' in info:
-            info = info.replace('\n\n\n', '\n\n')
+        # while '\n\n\n' in info:
+        #     info = info.replace('\n\n\n', '\n\n')
 
         return info
 

@@ -1,6 +1,6 @@
 from ...constant.color import BLUE, GREEN, AQUA, RED, WHITE
-from ...item.mob import get_mob
-from ...item.resource import get_resource
+from ...object.mob import get_mob
+from ...object.resource import get_resource
 
 from ..object import Npc, Region, Island, add_dist
 

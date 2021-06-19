@@ -9,7 +9,7 @@ from ..function.item import load_item
 from ..function.io import red, yellow
 from ..function.path import is_profile
 from ..function.util import display_name, parse_int
-from ..item.object import Empty
+from ..object.object import Empty
 from ..map.object import Npc
 
 __all__ = ['profile_type']

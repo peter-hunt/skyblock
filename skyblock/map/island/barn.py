@@ -1,4 +1,4 @@
-from ...item.resource import get_resource
+from ...object.resource import get_resource
 
 from ..object import Region, Island, add_dist
 

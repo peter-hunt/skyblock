@@ -1,6 +1,6 @@
-from ...item.item import get_item
-from ...item.object import Item
-from ...item.resource import get_resource
+from ...object.item import get_item
+from ...object.object import Item
+from ...object.resource import get_resource
 from ..object import Island, Npc, Region, add_dist
 
 __all__ = ['GOLD']

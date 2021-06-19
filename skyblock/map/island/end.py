@@ -1,8 +1,8 @@
 from ...constant.color import LIGHT_PURPLE, WHITE
-from ...item.item import get_item
-from ...item.mob import get_mob
-from ...item.object import Item
-from ...item.resource import get_resource
+from ...object.item import get_item
+from ...object.mob import get_mob
+from ...object.object import Item
+from ...object.resource import get_resource
 from ..object import Island, Npc, Region, add_dist
 
 __all__ = ['END']

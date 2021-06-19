@@ -1,7 +1,8 @@
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, Iterator, List, Optional, Tuple, Union
 
 from ..constant.util import Amount, Number
 
+from .collection_wrapper import collection_type
 from .item_wrapper import item_type
 from .mob_wrapper import mob_type
 from .recipe_wrapper import recipe_type
@@ -9,7 +10,7 @@ from .recipe_wrapper import recipe_type
 __all__ = [
     'ItemType', 'Item', 'Empty', 'Bow', 'Sword', 'Axe', 'Pickaxe', 'Hoe',
     'Armor', 'TravelScroll', 'Pet', 'OBJECTS',
-    'Resource', 'Mineral', 'Tree', 'Mob', 'Recipe',
+    'Resource', 'Mineral', 'Tree', 'Mob', 'Recipe', 'Collection',
 ]
 
 
@@ -243,7 +244,7 @@ class Mob:
     drops: List[Tuple[ItemType, Amount, str, Number]]
 
 
-@recipe_type
+@mob_type
 class Mob:
     name: str
     level: int
@@ -261,5 +262,15 @@ class Recipe:
     category: str
     ingredients: List[Tuple[ItemType, Amount]]
     result: Tuple[ItemType, Amount]
-    # collection_req: Optional[Tuple[str, int]] = None
+    collection_req: Optional[Tuple[str, int]] = None
     # slayer_req: Optional[Tuple[str, int]] = None
+
+
+@collection_type
+class Collection:
+    name: str
+    category: str
+    levels: List[Tuple[int, Union[Recipe, Tuple[Recipe], Number]]]
+
+    def __iter__(self, /) -> Iterator:
+        return iter(self.levels)

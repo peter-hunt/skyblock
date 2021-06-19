@@ -22,15 +22,15 @@ from ..function.util import (
     backupable, display_name, display_number, get, get_ench, includes,
     roman, shorten_number,
 )
-from ..item.item import COLLECTION_ITEMS
-from ..item.mob import get_mob
-from ..item.object import (
+from ..object.collection import is_collection
+from ..object.mob import get_mob
+from ..object.object import (
     Item, Empty, Bow, Sword, Armor,
     Axe, Hoe, Pickaxe, TravelScroll, Pet,
     Crop, Mineral, Tree, Mob,
 )
-from ..item.recipe import RECIPES
-from ..item.resource import get_resource
+from ..object.recipe import RECIPES
+from ..object.resource import get_resource
 from ..map.island import ISLANDS
 from ..map.object import calc_dist, path_find
 
@@ -130,6 +130,13 @@ def profile_action(cls):
 
     def craft(self, index: int, amount: int = 1, /):
         recipe = RECIPES[index]
+
+        if recipe.collection_req is not None:
+            coll_name, lvl = recipe.collection_req
+            if self.coll_lvl(coll_name) < lvl:
+                red("You haven't reached the collection "
+                    "required by the recipe!")
+                return
 
         for item, count in recipe.ingredients:
             if not self.has_item(item.name, count * amount):
@@ -327,13 +334,13 @@ def profile_action(cls):
 
             last_cp = Decimal()
             cp_step = Decimal('0.1')
-            is_collection = includes(COLLECTION_ITEMS, drop_item)
+            is_coll = is_collection(drop_item)
             for count in range(1, amount + 1):
                 sleep(time_cost)
                 amount_pool = random_amount(default_amount)
                 drop_pool = random_int(fortune_mult)
                 self.recieve_item(Item(drop_item), amount_pool * drop_pool)
-                if is_collection:
+                if is_coll:
                     self.collect(drop_item, amount_pool * drop_pool)
 
                 self.add_skill_exp('farming', resource.farming_exp)
@@ -366,13 +373,13 @@ def profile_action(cls):
 
             last_cp = Decimal()
             cp_step = Decimal('0.1')
-            is_collection = includes(COLLECTION_ITEMS, drop_item)
+            is_coll = is_collection(drop_item)
             for count in range(1, amount + 1):
                 sleep(time_cost)
                 amount_pool = random_amount(default_amount)
                 drop_pool = random_int(fortune_mult)
                 self.recieve_item(Item(drop_item), amount_pool * drop_pool)
-                if is_collection:
+                if is_coll:
                     self.collect(drop_item, amount_pool * drop_pool)
 
                 self.add_exp(resource.exp * random_amount(experience))
@@ -400,12 +407,12 @@ def profile_action(cls):
 
             last_cp = Decimal()
             cp_step = Decimal('0.1')
-            is_collection = includes(COLLECTION_ITEMS, drop_item)
+            is_coll = is_collection(drop_item)
             for count in range(1, amount + 1):
                 sleep(time_cost)
                 drop_pool = random_int(foraging_fortune)
                 self.recieve_item(Item(drop_item), drop_pool)
-                if is_collection:
+                if is_coll:
                     self.collect(drop_item, drop_pool)
 
                 self.add_skill_exp('foraging', resource.foraging_exp)
@@ -612,9 +619,8 @@ def profile_action(cls):
 
         last_cp = Decimal()
         cp_step = Decimal('0.1')
-        is_collection = {
-            row[0].name: includes(COLLECTION_ITEMS, row[0].name)
-            for row in mob.drops
+        is_coll = {
+            row[0].name: is_collection(row[0].name) for row in mob.drops
         }
         green(f'Slaying {mob.display()}')
         for count in range(1, amount + 1):
@@ -765,7 +771,7 @@ def profile_action(cls):
 
                 self.recieve_item(loot, random_amount(count))
 
-                if is_collection[loot.name]:
+                if is_coll[loot.name]:
                     self.collect(loot.name, loot.count)
 
                 if rarity not in {'common', 'uncommon'}:
@@ -825,15 +831,40 @@ def profile_action(cls):
 
     def warp(self, dest: str, /):
         island = get(ISLANDS, self.island)
+        dest_island = get(ISLANDS, dest)
         region = get(island.regions, self.region)
+
+        original_island = self.island
+
+        dest_region = get(dest_island.regions,
+                          default=get(dest_island.regions, dest_island.spawn),
+                          portal=original_island)
+
+        if dest_island.skill_req is not None:
+            name, level = dest_island.skill_req
+            skill_exp = getattr(self, f'skill_xp_{name}')
+            exp_lvl = calc_skill_exp(name, skill_exp)
+            if exp_lvl < level:
+                red(f'Cannot warp to {dest}!')
+                red(f'Requires {name.capitalize()} level {roman(level)}')
+                return
+
+        if dest_region is not None:
+            self.island = dest
+            self.region = dest_region.name
+            island = get(ISLANDS, self.island)
+            gray(f'Warped to {AQUA}{dest_region}{GRAY} of'
+                 f' {AQUA}{island}{GRAY}.')
+            return
 
         for i_name, r_name in self.fast_travel:
             name = i_name if r_name is None else r_name
             if dest == name:
                 self.island = i_name
-                island = get(ISLANDS, self.island)
                 self.region = island.spawn if r_name is None else r_name
+                island = get(ISLANDS, self.island)
                 region = get(island.regions, self.region)
+
                 gray(f'Warped to {AQUA}{region}{GRAY}'
                      f' of {AQUA}{island}{GRAY}.')
                 return
@@ -860,24 +891,6 @@ def profile_action(cls):
             else:
                 red(f'Cannot warp to {dest}')
                 return
-
-        last = self.island
-        island = get(ISLANDS, dest)
-
-        if island.skill_req is not None:
-            name, level = island.skill_req
-            skill_exp = getattr(self, f'skill_xp_{name}')
-            exp_lvl = calc_skill_exp(name, skill_exp)
-            if exp_lvl < level:
-                red(f'Cannot warp to {dest}!')
-                red(f'Requires {name.capitalize()} level {roman(level)}')
-                return
-
-        self.island = dest
-        region = get(island.regions, portal=last,
-                     default=get(island.regions, island.spawn))
-        self.region = region.name
-        gray(f'Warped to {AQUA}{region}{GRAY} of {AQUA}{island}{GRAY}.')
 
     cls.warp = warp
 

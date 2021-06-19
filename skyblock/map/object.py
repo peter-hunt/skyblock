@@ -4,7 +4,7 @@ from math import dist, inf
 from typing import Dict, List, Optional, Tuple, Union
 
 from ..function.util import display_name
-from ..item.object import ItemType, Resource, Mob
+from ..object.object import ItemType, Resource, Mob
 
 
 __all__ = [
