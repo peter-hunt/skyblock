@@ -6,11 +6,11 @@ from ..constant.color import GOLD, GRAY, BLUE, GREEN, YELLOW
 from ..constant.doc import profile_doc
 from ..constant.main import ARMOR_PARTS
 from ..constant.util import Number
-from ..function.math import calc_exp, calc_lvl
+from ..function.math import calc_exp, calc_lvl, calc_skill_exp
 from ..function.io import gray, red, green, yellow, blue
 from ..function.util import (
     backupable, display_int, display_number, generate_help,
-    get, includes, parse_int, shorten_number,
+    get, includes, parse_int, roman, shorten_number,
 )
 from ..object.collection import COLLECTIONS, is_collection
 from ..object.item import get_item
@@ -356,6 +356,15 @@ class Profile:
                 armor_piece = self.inventory[index]
                 if not isinstance(armor_piece, Armor):
                     red('Cannot equip non-armor item.')
+                    continue
+
+                combat_req = armor_piece.combat_skill_req
+                combat_lvl = calc_skill_exp('combat', self.skill_xp_combat)
+
+                if armor_piece.combat_skill_req is None:
+                    pass
+                elif combat_req > combat_lvl:
+                    red(f'Requires Combat level {roman(combat_req)}')
                     continue
 
                 slot_index = ARMOR_PARTS.index(armor_piece.part)
