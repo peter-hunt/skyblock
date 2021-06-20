@@ -215,6 +215,7 @@ PETS_BUILDING = Region(
 )
 POTION_SHOP = Region(
     'potion_shop', 41, -63,
+    resources=[get_resource('nether_wart')],
     npcs=[
         Npc('alchemist',
             init_dialog=[

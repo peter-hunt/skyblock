@@ -9,15 +9,16 @@ __all__ = ['RESOURCES', 'get_resource']
 
 
 RESOURCES = [
-    Crop('wheat', drop='wheat', amount=1, farming_exp=4),
-    Crop('potato', drop='potato', amount=1, farming_exp=4),
-    Crop('carrot', drop='carrot', amount=1, farming_exp=4),
-    Crop('melon', drop='melon', amount=(3, 7), farming_exp=4),
-    Crop('pumpkin', drop='pumpkin', amount=1, farming_exp=4.5),
-    Crop('cactus', drop='cactus', amount=(5, 15), farming_exp=2),
-    Crop('sugar_cane', drop='sugar_cane', amount=(3, 5), farming_exp=2),
-    Crop('cocoa', drop='cocoa', amount=(2, 3), farming_exp=4),
-    Crop('mushroom', drop='mushroom', amount=1, farming_exp=3),
+    Crop('wheat', amount=1, farming_exp=4),
+    Crop('potato', amount=1, farming_exp=4),
+    Crop('carrot', amount=1, farming_exp=4),
+    Crop('melon', amount=(3, 7), farming_exp=4),
+    Crop('pumpkin', amount=1, farming_exp=4.5),
+    Crop('cactus', amount=(5, 15), farming_exp=2),
+    Crop('sugar_cane', amount=(3, 5), farming_exp=2),
+    Crop('cocoa', amount=(2, 3), farming_exp=4),
+    Crop('mushroom', amount=1, farming_exp=3),
+    Crop('nether_wart', amount=(2, 4), farming_exp=2),
 
     Mineral('stone', drop='cobblestone', amount=1, breaking_power=1,
             hardness=1, exp=0, mining_exp=1),

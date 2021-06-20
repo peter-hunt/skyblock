@@ -91,6 +91,9 @@ Display information about your money.
 > switch <index-1> <index-2>
 Switch items slot in the inventory.
 
+> organize
+Organize your inventory. (replace empty slots and make stacks)
+
 > pet add <index>
 Add a pet to the pet menu.
 

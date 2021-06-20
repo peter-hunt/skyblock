@@ -58,9 +58,9 @@ def profile_item(cls):
             red('Your stash is already empty!')
             return
         stash = [item.copy() for item in self.stash]
-        self.stash.clear()
+        self.stash = []
         for item in stash:
-            self.recieve_item(item)
+            self.recieve_item(item, getattr(item, 'count', 1))
 
     cls.pickupstash = pickupstash
 
@@ -75,6 +75,10 @@ def profile_item(cls):
                     continue
                 self.stash[index].count += count
                 break
+            else:
+                item_copy = item.copy()
+                item_copy.count = count
+                self.stash.append(item_copy)
         else:
             for _ in range(count):
                 self.stash.append(item)
@@ -92,6 +96,9 @@ def profile_item(cls):
     cls.put_stash = put_stash
 
     def recieve_item(self, item: ItemType, count: int = 1, /):
+        if isinstance(item, Empty):
+            return
+
         item_copy = item.copy()
         stack_count = get_stack_size(item.name)
         counter = count
@@ -125,8 +132,8 @@ def profile_item(cls):
 
         if getattr(item_copy, 'count', 1) != 1:
             item_copy.count = 1
-        count_str = (
-            '' if count <= 1 else f' {DARK_GRAY}x {display_int(count)}')
+        count_str = ('' if count <= 1 else
+                     f' {DARK_GRAY}x {display_int(count)}')
         gray(f'+ {item_copy.display()}{count_str}')
 
     cls.recieve_item = recieve_item

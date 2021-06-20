@@ -428,7 +428,7 @@ class Profile:
                         red(f'Amount must be a positive integer.')
                         continue
 
-                self.get_item(name, tool_index, amount)
+                self.harvest_resource(name, tool_index, amount)
 
             elif words[0] == 'goto':
                 if len(words) != 2:
@@ -519,6 +519,17 @@ class Profile:
                     self.inventory[index_2], self.inventory[index_1])
                 gray(f'Switched {self.inventory[index_2].display()}{GRAY}'
                      f' and {self.inventory[index_1].display()}')
+
+            elif words[0] == 'organize':
+                if len(words) != 1:
+                    red(f'Invalid usage of command {words[0]}.')
+                    continue
+
+                inventory = [item.copy() for item in self.inventory
+                             if not isinstance(item, Empty)]
+                self.inventory = [Empty() for _ in range(36)]
+                for item in inventory:
+                    self.recieve_item(item, getattr(item, 'count', 1))
 
             elif words[0] == 'pickupstash':
                 if len(words) != 1:

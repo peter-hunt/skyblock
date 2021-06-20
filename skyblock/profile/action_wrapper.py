@@ -23,6 +23,7 @@ from ..function.util import (
     roman, shorten_number,
 )
 from ..object.collection import is_collection
+from ..object.item import get_item
 from ..object.mob import get_mob
 from ..object.object import (
     Item, Empty, Bow, Sword, Armor,
@@ -146,8 +147,11 @@ def profile_action(cls):
         for item, count in recipe.ingredients:
             self.remove_item(item.name, count * amount)
 
-        result_name, result_count = recipe.result
-        self.recieve_item(result_name, result_count * amount)
+        result, result_count = recipe.result
+        original = get_item(result.name)
+        if hasattr(original, 'conut'):
+            original.count = 1
+        self.recieve_item(original, result_count * amount)
 
     cls.craft = craft
 
@@ -313,7 +317,7 @@ def profile_action(cls):
     cls.enchant = enchant
 
     @backupable
-    def get_item(self, name: str, tool_index: Optional[int],
+    def harvest_resource(self, name: str, tool_index: Optional[int],
                  amount: Optional[int] = 1, /):
         resource = get_resource(name)
         tool = Empty() if tool_index is None else self.inventory[tool_index]
@@ -329,7 +333,7 @@ def profile_action(cls):
 
             farming_fortune = self.get_stat('farming_fortune', tool_index)
             fortune_mult = 1 + farming_fortune / 100
-            drop_item = resource.drop
+            drop_item = resource.name
             default_amount = resource.amount
 
             last_cp = Decimal()
@@ -430,7 +434,7 @@ def profile_action(cls):
         else:
             red('Unknown resource type.')
 
-    cls.get_item = get_item
+    cls.harvest_resource = harvest_resource
 
     @backupable
     def goto(self, dest: str, /):
@@ -468,7 +472,7 @@ def profile_action(cls):
             dist = calc_dist(region, target)
             time_cost = float(dist) / (5 * (speed / 100))
             green(f'Going from {region} to {target}...')
-            gray(f'(time cost: {time_cost:.2f}s)')
+            gray(f'(time cost: {time_cost:.1f}s)')
             sleep(time_cost)
             self.region = target.name
             region = get(island.regions, target.name)

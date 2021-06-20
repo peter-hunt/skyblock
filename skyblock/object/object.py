@@ -208,7 +208,6 @@ class Resource:
 @item_type
 class Crop(Resource):
     name: str
-    drop: str
     amount: int = 1
     farming_exp: Number = 1
 

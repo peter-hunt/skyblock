@@ -147,13 +147,16 @@ def profile_math(cls):
             if isinstance(reward, (float, int)):
                 dark_gray(f'  +{DARK_AQUA}{reward}{GRAY}'
                           f' {display_name(coll.category)} Experience')
-                self.add_skill_exp(coll.category, reward)
             elif isinstance(reward, Recipe):
                 item = reward.result[0]
                 color = RARITY_COLORS[item.rarity]
                 print(f'  {color}{display_name(item.name)} {GRAY}Recipe')
 
         yellow(f"{BOLD}{'':-^{width}}")
+
+        for reward in rewards:
+            if isinstance(reward, (float, int)):
+                self.add_skill_exp(coll.category, reward)
 
     cls.collect = collect
 

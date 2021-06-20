@@ -106,6 +106,22 @@ COMPACT_ITEMS = [
     Item('enchanted_paper', 64, 'uncommon'),
     Item('enchanted_bookshelf', 64, 'uncommon'),
     Item('enchanted_sugar_cane', 64, 'rare'),
+    Item('enchanted_feather', 64, 'uncommon'),
+    Item('enchanted_beef', 64, 'uncommon'),
+    Item('enchanted_leather', 64, 'uncommon'),
+    Item('enchanted_pork', 64, 'uncommon'),
+    Item('enchanted_grilled_pork', 64, 'rare'),
+    Item('enchanted_chicken', 64, 'uncommon'),
+    Item('enchanted_egg', 16, 'rare'),
+    Item('enchanted_cake', 16, 'uncommon'),
+    Item('super_enchanted_egg', 64, 'rare'),
+    Item('enchanted_mutton', 64, 'uncommon'),
+    Item('enchanted_cooked_mutton', 64, 'rare'),
+    Item('enchanted_rabbit', 64, 'uncommon'),
+    Item('enchanted_rabbit_foot', 64, 'uncommon'),
+    Item('enchanted_rabbit_hide', 64, 'uncommon'),
+    Item('enchanted_nether_wart', 64, 'uncommon'),
+    Item('mutant_nether_wart', 64, 'rare'),
 
     Item('coal_block', 64, 'common'),
     Item('iron_block', 64, 'common'),
@@ -212,6 +228,9 @@ WEAPONS = [
 
     Sword('raider_axe', 'rare', damage=80,
           strength=50),
+
+    Sword('pigman_sword', 'legendary', damage=220,
+          strength=100, crit_chance=5, crit_damage=30, intelligence=300),
 
     Sword('aspect_of_the_dragons', 'legendary', damage=225,
           strength=100,
@@ -357,6 +376,9 @@ ARMOR_PIECES = [
           defense=95, speed=15),
     Armor('speedster_boots', rarity='epic', part='boots',
           defense=65, speed=15),
+
+    Armor('cow_head', rarity='common', part='helmet',
+          health=15, defense=5),
 
     Armor('cheap_tuxedo_jacket', rarity='epic', part='chestplate',
           crit_damage=50, intelligence=50),
