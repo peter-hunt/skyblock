@@ -6,7 +6,7 @@ from .constant.color import GREEN, AQUA
 from .constant.doc import menu_doc
 from .function.io import gray, red, green, yellow, aqua, input_regex
 from .function.path import is_dir, is_profile
-from .function.util import backupable, generate_help
+from .function.util import checkpoint, clear, generate_help
 from .profile.object import Profile
 
 __all__ = ['main']
@@ -25,14 +25,14 @@ def init_env():
     init_home_dir('skyblock', 'saves')
 
 
-@backupable
+@checkpoint
 def new():
     name = input_regex('Please enter the name of the profile.', r'\w+')
     Profile(name).dump()
     green('New profile created!')
 
 
-@backupable
+@checkpoint
 def ls():
     if not is_dir(warn=True):
         return
@@ -51,7 +51,7 @@ def ls():
                 yellow(f' {name}')
 
 
-@backupable
+@checkpoint
 def main():
     init_env()
 
@@ -61,14 +61,14 @@ def main():
         if len(words) == 0:
             continue
 
-        elif words[0] in {'new', 'touch'}:
+        elif words[0] == 'clear':
             if len(words) != 1:
                 red(f'Invalid usage of command {words[0]}.')
                 continue
 
-            new()
+            clear()
 
-        elif words[0] in {'del', 'delete'}:
+        elif words[0] in {'del', 'rm'}:
             if len(words) != 2:
                 red(f'Invalid usage of command {words[0]}.')
                 continue
@@ -101,7 +101,7 @@ def main():
                 gray(usage)
                 gray(description)
 
-        elif words[0] in {'list', 'ls'}:
+        elif words[0] == 'ls':
             if len(words) != 1:
                 red(f'Invalid usage of command {words[0]}.')
                 continue
@@ -118,6 +118,13 @@ def main():
                 continue
 
             game.mainloop()
+
+        elif words[0] in {'new', 'touch'}:
+            if len(words) != 1:
+                red(f'Invalid usage of command {words[0]}.')
+                continue
+
+            new()
 
         else:
             red(f'Unknown command: {words[0]!r}')

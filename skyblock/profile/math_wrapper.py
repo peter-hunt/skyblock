@@ -8,7 +8,7 @@ from ..constant.color import (
 from ..constant.main import SKILL_EXP
 from ..constant.util import Number
 from ..function.math import (
-    calc_exp, calc_pet_exp, calc_skill_exp, display_skill_reward,
+    calc_exp_lvl, calc_pet_lvl, calc_skill_lvl, display_skill_reward,
 )
 from ..function.io import dark_aqua, gold, dark_gray, red, green, yellow, aqua
 from ..function.util import display_name, roman
@@ -22,10 +22,10 @@ __all__ = ['profile_math']
 
 def profile_math(cls):
     def add_exp(self, amount: Number, /):
-        enchanting_lvl = calc_skill_exp('enchanting', self.skill_xp_enchanting)
-        original_lvl = calc_exp(self.experience)
+        enchanting_lvl = calc_skill_lvl('enchanting', self.skill_xp_enchanting)
+        original_lvl = calc_exp_lvl(self.experience)
         self.experience += amount * (1 + 0.04 * enchanting_lvl)
-        current_lvl = calc_exp(self.experience)
+        current_lvl = calc_exp_lvl(self.experience)
         if current_lvl > original_lvl:
             green(f'Reached XP level {current_lvl}.')
 
@@ -37,10 +37,10 @@ def profile_math(cls):
             return
 
         exp = getattr(self, f'skill_xp_{name}')
-        original_lvl = calc_skill_exp(name, exp)
+        original_lvl = calc_skill_lvl(name, exp)
         exp += amount
         setattr(self, f'skill_xp_{name}', exp)
-        current_lvl = calc_skill_exp(name, exp)
+        current_lvl = calc_skill_lvl(name, exp)
         if current_lvl > original_lvl:
             coins_reward = 0
             if name != 'catacombs':
@@ -69,7 +69,7 @@ def profile_math(cls):
         if pet_index is not None:
             pet_exp = pet.exp
 
-            original_pet_lvl = calc_pet_exp(pet.rarity, pet_exp)
+            original_pet_lvl = calc_pet_lvl(pet.rarity, pet_exp)
 
             if pet.category == name:
                 pet_exp += amount
@@ -79,7 +79,7 @@ def profile_math(cls):
                 pet_exp += amount / 4
 
             self.pets[pet_index].exp = pet_exp
-            current_pet_lvl = calc_pet_exp(pet.rarity, pet_exp)
+            current_pet_lvl = calc_pet_lvl(pet.rarity, pet_exp)
 
             if current_pet_lvl > original_pet_lvl:
                 pet_str = pet.display().split(']')[1].lstrip()
@@ -195,11 +195,11 @@ def profile_math(cls):
 
         value += getattr(item, name, 0)
 
-        combat_lvl = calc_skill_exp('combat', self.skill_xp_combat)
-        farming_lvl = calc_skill_exp('farming', self.skill_xp_farming)
-        enchanting_lvl = calc_skill_exp('enchanting', self.skill_xp_enchanting)
-        foraging_lvl = calc_skill_exp('foraging', self.skill_xp_foraging)
-        mining_lvl = calc_skill_exp('mining', self.skill_xp_mining)
+        combat_lvl = calc_skill_lvl('combat', self.skill_xp_combat)
+        farming_lvl = calc_skill_lvl('farming', self.skill_xp_farming)
+        enchanting_lvl = calc_skill_lvl('enchanting', self.skill_xp_enchanting)
+        foraging_lvl = calc_skill_lvl('foraging', self.skill_xp_foraging)
+        mining_lvl = calc_skill_lvl('mining', self.skill_xp_mining)
 
         if name == 'health':
             value += 100
@@ -260,7 +260,7 @@ def profile_math(cls):
             value += farming_lvl * 4
 
         if isinstance(pet, Pet):
-            lvl_mult = calc_pet_exp(pet.rarity, pet.exp) / 100
+            lvl_mult = calc_pet_lvl(pet.rarity, pet.exp) / 100
             value += getattr(pet, name, 0) * lvl_mult
 
         return value

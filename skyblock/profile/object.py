@@ -6,10 +6,10 @@ from ..constant.color import GOLD, GRAY, BLUE, GREEN, YELLOW
 from ..constant.doc import profile_doc
 from ..constant.main import ARMOR_PARTS
 from ..constant.util import Number
-from ..function.math import calc_exp, calc_lvl, calc_skill_exp
+from ..function.math import calc_exp_lvl, calc_exp, calc_skill_lvl
 from ..function.io import gray, red, green, yellow, blue
 from ..function.util import (
-    backupable, display_int, display_number, generate_help,
+    checkpoint, clear, display_int, display_number, generate_help,
     get, includes, parse_int, roman, shorten_number,
 )
 from ..object.collection import COLLECTIONS, is_collection
@@ -87,7 +87,7 @@ class Profile:
 
     npc_talked: List[str] = []
 
-    @backupable
+    @checkpoint
     def talkto_npc(self, npc: Npc, /) -> Optional[str]:
         if npc.name not in self.npc_talked:
             if npc.init_dialog is not None:
@@ -184,7 +184,7 @@ class Profile:
                 self.buy(chosen_trade, amount)
 
             elif words[0] == 'cheat':
-                # item = get_item('hyperion')
+                # item = get_item('giants_sword')
                 # item.stars = 10
                 # item.hot_potato = 30
                 # self.recieve_item(item)
@@ -199,6 +199,13 @@ class Profile:
                 # item = get_scroll('nest')
                 # self.recieve_item(item)
                 ...
+
+            elif words[0] == 'clear':
+                if len(words) != 1:
+                    red(f'Invalid usage of command {words[0]}.')
+                    continue
+
+                clear()
 
             elif words[0] == 'clearstash':
                 if len(words) != 1:
@@ -359,7 +366,7 @@ class Profile:
                     continue
 
                 combat_req = armor_piece.combat_skill_req
-                combat_lvl = calc_skill_exp('combat', self.skill_xp_combat)
+                combat_lvl = calc_skill_lvl('combat', self.skill_xp_combat)
 
                 if armor_piece.combat_skill_req is None:
                     pass
@@ -387,8 +394,8 @@ class Profile:
                     red(f'Invalid usage of command {words[0]}.')
                     continue
 
-                lvl = calc_exp(self.experience)
-                left = self.experience - calc_lvl(lvl)
+                lvl = calc_exp_lvl(self.experience)
+                left = self.experience - calc_exp(lvl)
                 if lvl <= 15:
                     gap = 2 * lvl + 7
                 elif lvl <= 30:
@@ -396,9 +403,10 @@ class Profile:
                 else:
                     gap = 9 * lvl - 158
 
-                yellow(f'Experience: {BLUE}{display_int(lvl)} Levels')
-                blue(f'{shorten_number(left)}/{shorten_number(gap)}'
-                     f' {YELLOW}to the next level.')
+                gray(f'Experience: {BLUE}{display_int(lvl)} Levels')
+                yellow(f'{shorten_number(left)}{GOLD}'
+                       f'/{YELLOW}{shorten_number(gap)}'
+                       f' {GRAY}to the next level.')
 
             elif words[0] == 'get':
                 if len(words) < 2 or len(words) > 4:

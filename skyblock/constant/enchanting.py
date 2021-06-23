@@ -1,9 +1,14 @@
+"""
+Constant about enchantments, and enchanting information.
+"""
+
 __all__ = [
     'ULTIMATE_ENCHS', 'CONFLICTS', 'ENCHS', 'ENCH_REQUIREMENTS',
     'SWORD_ENCHS', 'BOW_ENCHS', 'ARMOR_ENCHS',
     'AXE_ENCHS', 'HOE_ENCHS', 'PICKAXE_ENCHS', 'FISHING_ROD_ENCHS',
 ]
 
+# list of ultimate enchantments
 ULTIMATE_ENCHS = [
     'bank',
     # 'chimera',
@@ -12,9 +17,10 @@ ULTIMATE_ENCHS = [
     'no_pain_no_gain',
     'one_for_all',
     'soul_eater',
-    # 'ultimate_jerry',
+    'ultimate_jerry',
 ]
 
+# groups of enchantements which cannot be applied to a single item
 CONFLICTS = [
     ('bane_of_arthropods', 'sharpness', 'smite'),
     ('execute', 'prosecute'),
@@ -31,6 +37,7 @@ CONFLICTS = [
     # ('fortune', 'silk_touch'),
 ]
 
+# enchantments and level costs enchanting at the table
 ENCHS = [
     # name, maximum, weight, bias
     ('bane_of_arthropods', 5, 5, 5),
@@ -102,6 +109,7 @@ ENCHS = [
 
 ENCHS = sorted(ENCHS, key=lambda pair: pair[0])
 
+# enchanting skill level requirements for certain enchantments
 ENCH_REQUIREMENTS = [
     ('scavenger', 1),
     ('infinite_quiver', 2),
@@ -162,6 +170,7 @@ ENCH_REQUIREMENTS = [
     ('soul_eater', 36),
 ]
 
+# list of sword enchantments (used by enchanting table)
 SWORD_ENCHS = [
     'bane_of_arthropods',
     # 'cleave',
@@ -196,9 +205,10 @@ SWORD_ENCHS = [
     # 'combo',
     'one_for_all',
     'soul_eater',
-    # 'ultimate_jerry',
+    'ultimate_jerry',
 ]
 
+# list of bow enchantments (used by enchanting table)
 BOW_ENCHS = [
     'chance',
     'cubism',
@@ -214,6 +224,7 @@ BOW_ENCHS = [
     # 'telekinesis',
 ]
 
+# list of armor enchantments (used by enchanting table)
 ARMOR_ENCHS = [
     # 'aqua_affinity',
     'big_brain',
@@ -237,11 +248,13 @@ ARMOR_ENCHS = [
     'no_pain_no_gain',
 ]
 
+# list of axe enchantments (used by enchanting table)
 AXE_ENCHS = [
     'efficiency',
     # 'telekinesis',
 ]
 
+# list of hoe enchantments (used by enchanting table)
 HOE_ENCHS = [
     # 'cultivating',
     # 'delicate',
@@ -251,6 +264,7 @@ HOE_ENCHS = [
     # 'telekinesis',
 ]
 
+# list of pickaxe enchantments (used by enchanting table)
 PICKAXE_ENCHS = [
     # 'compact',
     'efficiency',
@@ -260,6 +274,7 @@ PICKAXE_ENCHS = [
     # 'telekinesis',
 ]
 
+# list of fishing rod enchantments (used by enchanting table)
 FISHING_ROD_ENCHS = [
     'angler',
     'blessing',

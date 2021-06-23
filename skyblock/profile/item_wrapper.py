@@ -6,8 +6,7 @@ from ..function.io import gray, red, green, yellow
 from ..function.util import display_int, display_name, includes
 from ..object.item import ITEMS, get_item, get_stack_size
 from ..object.object import (
-    ItemType, Item, Empty, Bow, Sword, Armor,
-    Axe, Hoe, Pickaxe, TravelScroll, Pet,
+    ItemType, Item, Empty, Pet,
 )
 
 __all__ = ['profile_item']
@@ -36,6 +35,12 @@ def profile_item(cls):
             return
         if item_from.name != item_to.name:
             red('Cannot merge different items.')
+            return
+        if getattr(item_from, 'enchantments', {}):
+            red('Cannot merge enchanted items.')
+            return
+        if getattr(item_to, 'enchantments', {}):
+            red('Cannot merge enchanted items.')
             return
 
         item_type = get_item(item_from.name)
@@ -198,9 +203,9 @@ def profile_item(cls):
         item_1 = self.inventory[index_1]
         item_2 = self.inventory[index_2]
 
-        if (not hasattr(item_1, 'count')
-                or isinstance(item_1, (Bow, Sword, Armor, TravelScroll,
-                                       Axe, Hoe, Pickaxe, Pet))):
+        stack_size = get_stack_size(item_1.name)
+
+        if stack_size == 1:
             red('Cannot split unstackable items.')
             return
 

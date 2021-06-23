@@ -6,7 +6,7 @@ from ..constant.color import (
     BLUE, GREEN, RED, LIGHT_PURPLE, YELLOW, WHITE,
 )
 from ..constant.enchanting import ULTIMATE_ENCHS
-from ..function.math import calc_pet_exp, calc_pet_upgrade_exp, dung_stat
+from ..function.math import calc_pet_lvl, calc_pet_upgrade_exp, dung_stat
 from ..function.util import (
     display_int, display_name, roman, shorten_number,
 )
@@ -107,14 +107,14 @@ def item_type(cls: type, /) -> type:
                      + GOLD + (10 - self.stars) * '✪')
 
         if self.__class__.__name__ == 'Pet':
-            lvl = calc_pet_exp(self.rarity, self.exp)
+            lvl = calc_pet_lvl(self.rarity, self.exp)
             return (f'{GRAY}[Lvl {lvl}] {color}{name}')
         else:
             return f'{color}{modifier}{name}{stars}{DARK_GRAY}{count}{CLN}'
 
     cls.display = display
 
-    def info(self, cata_lvl=0):
+    def info(self, /, *, combat_lvl=0, cata_lvl=0):
         rarity_color = RARITY_COLORS[self.rarity]
 
         if getattr(self, 'modifer', None) is not None:
@@ -140,7 +140,7 @@ def item_type(cls: type, /) -> type:
                      + GOLD + (10 - self.stars) * '✪')
 
         if self.__class__.__name__ == 'Pet':
-            lvl = calc_pet_exp(self.rarity, self.exp)
+            lvl = calc_pet_lvl(self.rarity, self.exp)
             info = f'{GRAY}[Lvl {lvl}] {rarity_color}{name}'
         else:
             info = f'{rarity_color}{modifier}{name}{stars}'
@@ -152,7 +152,9 @@ def item_type(cls: type, /) -> type:
                      f"{getattr(self, 'mining_speed')}{CLN}")
 
         elif self.__class__.__name__ in {'Bow', 'Sword'}:
+            enchantments = getattr(self, 'enchantments', {})
             is_dungeon = self.stars is not None
+
             basic_stats = []
             for stat_name in ('damage', 'strength', 'crit_chance',
                               'crit_damage', 'attack_speed'):
@@ -169,6 +171,10 @@ def item_type(cls: type, /) -> type:
                     value += self.hot_potato
                     hot_potato = f' {YELLOW}(+{self.hot_potato})'
 
+                if stat_name == 'damage':
+                    if enchantments.get('one_for_all', 0) != 0:
+                        value *= 3.1
+
                 dung = ''
                 if is_dungeon:
                     dungeon_value = dung_stat(value, cata_lvl, self.stars)
@@ -180,8 +186,11 @@ def item_type(cls: type, /) -> type:
                             value_str = value_str[:-2]
                         dung = f' {DARK_GRAY}(+{value_str}{ext})'
 
+                if value < 1:
+                    continue
+
                 basic_stats.append(f'{display_stat}: {RED}'
-                                   f'+{value}{ext}{hot_potato}{dung}')
+                                   f'+{value:.0f}{ext}{hot_potato}{dung}')
 
             if len(basic_stats) != 0:
                 info += '\n' + '\n'.join(f'{GRAY}{stat}'
@@ -216,8 +225,8 @@ def item_type(cls: type, /) -> type:
 
         elif self.__class__.__name__ == 'Armor':
             enchantments = getattr(self, 'enchantments', {})
-
             is_dungeon = self.stars is not None
+
             basic_stats = []
             for stat_name in ('strength', 'crit_chance', 'crit_damage'):
                 if getattr(self, stat_name, 0) == 0:
@@ -292,7 +301,7 @@ def item_type(cls: type, /) -> type:
             category = display_name(self.category)
             info += f'\n{DARK_GRAY}{category} Pet'
 
-            pet_lvl = calc_pet_exp(self.rarity, self.exp)
+            pet_lvl = calc_pet_lvl(self.rarity, self.exp)
             lvl_mult = pet_lvl / 100
 
             stats = []
@@ -391,11 +400,13 @@ def item_type(cls: type, /) -> type:
             info += (f'\n{DARK_GRAY}This item can be reforged!{CLN}')
 
         if getattr(self, 'combat_skill_req', None) is not None:
-            info += (f'\n{DARK_RED}❣ {RED}Requires '
-                     f'{GREEN}Combat Skill {self.combat_skill_req}{CLN}')
+            if combat_lvl < self.combat_skill_req:
+                info += (f'\n{DARK_RED}❣ {RED}Requires '
+                        f'{GREEN}Combat Skill {self.combat_skill_req}{CLN}')
         if getattr(self, 'dungeon_skill_req', None) is not None:
-            info += (f'\n{DARK_RED}❣ {RED}Requires '
-                     f'{GREEN}Catacombs Skill {self.dungeon_skill_req}{CLN}')
+            if cata_lvl < self.dungeon_skill_req:
+                info += (f'\n{DARK_RED}❣ {RED}Requires '
+                        f'{GREEN}Catacombs Skill {self.dungeon_skill_req}{CLN}')
         if getattr(self, 'dungeon_completion_req', None) is not None:
             info += (f'\n{DARK_RED}❣ {RED}Requires {GREEN}Catacombs Floor '
                      f'{roman(self.dungeon_completion_req)} Completion{CLN}')

@@ -11,12 +11,12 @@ from ..constant.util import (
 from .io import red, yellow
 
 __all__ = [
-    'backupable', 'display_int', 'display_name', 'display_number', 'get',
-    'generate_help', 'includes', 'index', 'roman', 'shorten_number',
+    'checkpoint', 'clear', 'display_int', 'display_name', 'display_number',
+    'get', 'generate_help', 'includes', 'index', 'roman', 'shorten_number',
 ]
 
 
-def backupable(func: FunctionType, /) -> FunctionType:
+def checkpoint(func: FunctionType, /) -> FunctionType:
     def result(*args, **kwargs):
         try:
             return func(*args, **kwargs)
@@ -24,6 +24,10 @@ def backupable(func: FunctionType, /) -> FunctionType:
             yellow('\nKeyboardInterruption')
     result.__name__ = func.__name__
     return result
+
+
+def clear():
+    print('\x1b[2J', end='')
 
 
 def display_int(number: Union[int, float], /) -> str:

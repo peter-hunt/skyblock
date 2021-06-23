@@ -16,10 +16,11 @@ from ..constant.main import INTEREST_TABLE, SELL_PRICE
 from ..constant.mob import CUBISM_EFT, ENDER_SLAYER_EFT, BOA_EFT, SMITE_EFT
 from ..function.io import gray, red, green, yellow, blue, aqua, white
 from ..function.math import (
-    calc_exp, calc_lvl, calc_skill_exp, random_amount, random_bool, random_int,
+    calc_exp_lvl, calc_exp, calc_skill_lvl,
+    random_amount, random_bool, random_int,
 )
 from ..function.util import (
-    backupable, display_name, display_number, get, get_ench, includes,
+    checkpoint, display_name, display_number, get, get_ench, includes,
     roman, shorten_number,
 )
 from ..object.collection import is_collection
@@ -168,7 +169,15 @@ def profile_action(cls):
 
     cls.despawn_pet = despawn_pet
 
-    def die(self, /):
+    def die(self, /) -> bool:
+        if self.has_item('saving_grace'):
+            self.remove_item('saving_grace')
+            self.island = 'hub'
+            self.region = 'village'
+            green('Saving Grace has activated! '
+                  'You have been revived safely.')
+            return False
+
         bank = 0
 
         for piece in self.armor:
@@ -191,14 +200,20 @@ def profile_action(cls):
         red(f'You died and lost {display_number(lost_coins)} coins!')
         self.region = get(ISLANDS, self.island).spawn
 
+        return True
+
     cls.die = die
 
-    @backupable
+    @checkpoint
     def enchant(self, item_index: int, /):
-        enchanting_lvl = calc_skill_exp('enchanting', self.skill_xp_enchanting)
-        exp_lvl = calc_exp(self.experience)
+        enchanting_lvl = calc_skill_lvl('enchanting', self.skill_xp_enchanting)
+        exp_lvl = calc_exp_lvl(self.experience)
 
         item = self.inventory[item_index]
+
+        if getattr(item, 'count', 1) != 1:
+            red('Cannot Enchant more than one item at once!')
+            return
 
         if isinstance(item, Sword):
             table = SWORD_ENCHS
@@ -233,15 +248,15 @@ def profile_action(cls):
                 current = item.enchantments.get(name, 0)
                 xps = get_ench(name)
                 if current != 0:
-                    current_xp = calc_lvl(xps[min(current - 1, len(xps) - 1)])
+                    current_xp = calc_exp(xps[min(current - 1, len(xps) - 1)])
                 else:
                     current_xp = 0
                 discounted = [
-                    calc_lvl(xp) if lvl + 1 == current else
-                    calc_lvl(xp) - current_xp
+                    calc_exp(xp) if lvl + 1 == current else
+                    calc_exp(xp) - current_xp
                     for lvl, xp in enumerate(xps)
                 ]
-                discounted_lvl = [calc_exp(xp) for xp in discounted]
+                discounted_lvl = [calc_exp_lvl(xp) for xp in discounted]
                 avaliable.append((name, discounted_lvl))
 
                 blue(f'{len(avaliable):>2} {name}')
@@ -289,7 +304,7 @@ def profile_action(cls):
                 red("You don't have enough Levels!")
                 return
 
-            self.experience -= calc_lvl(lvl)
+            self.experience -= calc_exp(lvl)
 
             if current == level + 1:
                 green(f'You removed {BLUE}{display_name(name)}'
@@ -316,9 +331,9 @@ def profile_action(cls):
 
     cls.enchant = enchant
 
-    @backupable
+    @checkpoint
     def harvest_resource(self, name: str, tool_index: Optional[int],
-                 amount: Optional[int] = 1, /):
+                         amount: Optional[int] = 1, /):
         resource = get_resource(name)
         tool = Empty() if tool_index is None else self.inventory[tool_index]
         amount = 1 if amount is None else amount
@@ -371,7 +386,7 @@ def profile_action(cls):
 
             time_cost = 30 * resource.hardness / mining_speed
 
-            enchanting_lvl = calc_skill_exp('enchanting',
+            enchanting_lvl = calc_skill_lvl('enchanting',
                                             self.skill_xp_enchanting)
 
             mining_fortune = self.get_stat('mining_fortune', tool_index)
@@ -436,7 +451,7 @@ def profile_action(cls):
 
     cls.harvest_resource = harvest_resource
 
-    @backupable
+    @checkpoint
     def goto(self, dest: str, /):
         island = get(ISLANDS, self.island)
         region = get(island.regions, self.region)
@@ -463,7 +478,7 @@ def profile_action(cls):
             if target.skill_req is not None:
                 name, level = target.skill_req
                 skill_exp = getattr(self, f'skill_xp_{name}')
-                exp_lvl = calc_skill_exp(name, skill_exp)
+                exp_lvl = calc_skill_lvl(name, skill_exp)
                 if exp_lvl < level:
                     red(f'Cannot go to {dest}!')
                     red(f'Requires {name.capitalize()} level {roman(level)}')
@@ -510,7 +525,7 @@ def profile_action(cls):
 
     cls.sell = sell
 
-    @backupable
+    @checkpoint
     def slay(self, name: str, weapon_index: Optional[int], amount: int = 1, /):
         mob = get_mob(name)
         weapon = (Empty() if weapon_index is None
@@ -540,7 +555,7 @@ def profile_action(cls):
         last_stand = 0
         no_pain_no_gain = []
 
-        combat_lvl = calc_skill_exp('combat', self.skill_xp_combat)
+        combat_lvl = calc_skill_lvl('combat', self.skill_xp_combat)
 
         enchantments = getattr(weapon, 'enchantments', {})
 
@@ -551,13 +566,11 @@ def profile_action(cls):
                 gray(f"Your {LIGHT_PURPLE}{BOLD}Ultimate Jerry{GRAY} "
                      f"enchantment granted {GREEN}+ {ultimate_jerry}"
                      f" {GRAY}additional weapon base damage!\n")
-            additional_damage = damage * \
-                enchantments.get('one_for_all', 0) * 2.1
-            if additional_damage != 0:
-                gray(f"Your {LIGHT_PURPLE}{BOLD}One For All{GRAY} "
-                     f"enchantment granted {GREEN}+{additional_damage}"
-                     f" {GRAY}additional weapon base damage!\n")
-            damage += additional_damage + weapon.hot_potato
+
+            damage += weapon.hot_potato
+
+            if enchantments.get('one_for_all', 0) != 0:
+                damage *= 3.1
 
             strength += weapon.hot_potato
             crit_chance += weapon.crit_chance
@@ -734,7 +747,9 @@ def profile_action(cls):
                          f" experience point{GRAY}!\n")
 
                 if hp <= 0:
-                    self.die()
+                    if self.die():
+                        red(f' ☠ {GRAY}You were killed by'
+                            f' {display_name(mob.name)}.')
                     return
 
                 if random_bool(0.5) and thorns != 0:
@@ -849,7 +864,7 @@ def profile_action(cls):
         if dest_island.skill_req is not None:
             name, level = dest_island.skill_req
             skill_exp = getattr(self, f'skill_xp_{name}')
-            exp_lvl = calc_skill_exp(name, skill_exp)
+            exp_lvl = calc_skill_lvl(name, skill_exp)
             if exp_lvl < level:
                 red(f'Cannot warp to {dest}!')
                 red(f'Requires {name.capitalize()} level {roman(level)}')
@@ -887,7 +902,7 @@ def profile_action(cls):
 
         if portal_region is None:
             red(f'Cannot warp to {dest}.')
-            exit()
+            return
 
         if self.region != portal_region.name:
             self.goto(portal_region.name)

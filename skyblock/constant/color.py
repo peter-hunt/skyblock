@@ -1,3 +1,7 @@
+"""
+Constant of color codes used by displaying.
+"""
+
 __all__ = [
     'CLN', 'BOLD',
     'BLACK', 'DARK_BLUE', 'DARK_GREEN', 'DARK_AQUA', 'DARK_RED', 'DARK_PURPLE',
@@ -6,6 +10,7 @@ __all__ = [
     'RARITY_COLORS', 'STAT_COLORS',
 ]
 
+# color codes for text formatting
 CLN = '\x1b[0m'
 BOLD = '\x1b[1m'
 

@@ -1,3 +1,6 @@
+"""
+Contains constants of many categories.
+"""
 
 from typing import List
 
@@ -7,8 +10,10 @@ __all__ = [
 ]
 
 
+# names of armor parts used by iterating and displaying
 ARMOR_PARTS = ['helmet', 'chestplate', 'leggings', 'boots']
 
+# dungeon level exp requirements
 DUNGEON_EXP = [
     (0, 0, 0),
     (1, 50, 50),
@@ -63,7 +68,7 @@ DUNGEON_EXP = [
     (50, 116250000, 569809640),
 ]
 
-
+# balance interest table
 INTEREST_TABLE = {
     'starter': [
         (0, 10_000_000, 0.02),
@@ -165,11 +170,12 @@ for dod in range(35000, 105000, 5000):
 for dod in range(110000, 150000, 10000):
     append_exp(dod, FL)
 
+# derivative of culumative pet exp requirements for each level
 PET_EXP_DIFF = [
     common, uncommon, rare, epic, legendary,
 ]
 
-
+# items sell price at npc
 SELL_PRICE = {
     'wheat': 1,
     'carrot': 1,
@@ -294,6 +300,25 @@ SELL_PRICE = {
     'blaze_rod': 9,
     'magma_cream': 9,
 
+    'enchanted_rotten_flesh': 320,
+    'zombies_heart': 123_000,
+    'enchanted_bone': 320,
+    'enchanted_bone_block': 51_200,
+    'enchanted_string': 576,
+    'enchanted_spider_eye': 480,
+    'enchanted_fermented_spider_eye': 31_000,
+    'enchanted_gunpowder': 640,
+    'enchanted_firework_rocket': 41_000,
+    'enchanted_ender_pearl': 140,
+    'enchanted_eye_of_ender': 3_520,
+    'absolute_ender_pearl': 11_200,
+    'enchanted_ghast_tear': 80,
+    'enchanted_slime_ball': 800,
+    'enchanted_slime_block': 128_000,
+    'enchanted_blaze_powder': 1_440,
+    'enchanted_blaze_rod': 230_400,
+    'enchanted_magma_cream': 1_280,
+
     'oak_wood': 2,
     'birch_wood': 2,
     'spruce_wood': 2,
@@ -323,7 +348,7 @@ SELL_PRICE = {
     'flaming_sword': 20,
 }
 
-
+# other level exp requirements
 SKILL_EXP = [
     (0, 0, 0, 0),
     (1, 50, 50, 25),
@@ -388,7 +413,7 @@ SKILL_EXP = [
     (60, 7_000_000, 111_672_425, 1_000_000),
 ]
 
-
+# maximum levels for each skill
 SKILL_LIMITS = {
     'farming': 60,
     'mining': 60,

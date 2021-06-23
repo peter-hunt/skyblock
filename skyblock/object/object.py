@@ -11,6 +11,7 @@ __all__ = [
     'ItemType', 'Item', 'Empty', 'Bow', 'Sword', 'Axe', 'Pickaxe', 'Hoe',
     'Armor', 'TravelScroll', 'Pet', 'OBJECTS',
     'Resource', 'Mineral', 'Tree', 'Mob', 'Recipe', 'Collection',
+    'load_item',
 ]
 
 
@@ -38,6 +39,7 @@ class Bow(ItemType):
     name: str
     rarity: str
     damage: int
+    count: int = 1
 
     strength: int = 0
     crit_chance: int = 0
@@ -60,6 +62,7 @@ class Sword(ItemType):
     name: str
     rarity: str
     damage: int
+    count: int = 1
 
     strength: int = 0
     crit_chance: int = 0
@@ -273,3 +276,15 @@ class Collection:
 
     def __iter__(self, /) -> Iterator:
         return iter(self.levels)
+
+
+def load_item(obj):
+    if isinstance(obj, ItemType):
+        return obj
+    elif 'type' not in obj:
+        return Empty()
+    for cls in OBJECTS:
+        if obj['type'] == cls.__name__.lower():
+            return cls.from_obj(obj)
+    else:
+        raise ValueError(f"invalid item obj type: {obj['type']!r}")

@@ -1,12 +1,16 @@
+"""
+Docstring for user cli.
+"""
+
 __all__ = ['menu_doc', 'profile_doc']
 
+# documentation for commands at menu and profiles
 menu_doc = """
-> new
-> touch
-Create a new profile.
+> clear
+Clear the screen.
 
 > del <name>
-> delete <name>
+> rm <name>
 Delete a profile.
 
 > exit
@@ -16,18 +20,24 @@ Exit the menu.
 > help [command]
 Show this message or get command description.
 
-> list
-> ls
-List all the profile avaliable.
-
 > load <name>
 > open <name>
 Load a profile and run it.
+
+> ls
+List all the profile avaliable.
+
+> new
+> touch
+Create a new profile.
 """.strip()
 
 profile_doc = """
 > buy <index> [amount=1]
 Buy item from the shop.
+
+> clear
+Clear the screen.
 
 > clearstash
 Removes all items currently in the Stash.

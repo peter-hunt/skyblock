@@ -12,7 +12,7 @@ from ..constant.main import ARMOR_PARTS
 from ..constant.stat import ALL_STAT, HIDDEN_STATS, PERC_STATS
 from ..function.io import gray, dark_gray, red, green, yellow, white
 from ..function.math import (
-    calc_skill_exp, calc_skill_exp_info, display_skill_reward,
+    calc_skill_lvl, calc_skill_lvl_info, display_skill_reward,
 )
 from ..function.util import (
     display_int, display_name, display_number,
@@ -139,12 +139,13 @@ def profile_display(cls):
             gray('Empty')
             return
 
-        cata_lvl = calc_skill_exp('catacombs', self.skill_xp_catacombs)
+        combat_lvl = calc_skill_lvl('combat', self.skill_xp_combat)
+        cata_lvl = calc_skill_lvl('catacombs', self.skill_xp_catacombs)
 
         width, _ = get_terminal_size()
         width = ceil(width * 0.85)
         yellow(f"{BOLD}{'':-^{width}}")
-        gray(item.info(cata_lvl=cata_lvl))
+        gray(item.info(combat_lvl=combat_lvl, cata_lvl=cata_lvl))
         yellow(f"{BOLD}{'':-^{width}}")
 
     cls.display_item = display_item
@@ -429,7 +430,7 @@ def profile_display(cls):
         yellow(f"{BOLD}{'':-^{width}}")
 
         exp = getattr(self, f'skill_xp_{name}')
-        lvl, exp_left, exp_to_next = calc_skill_exp_info(name, exp)
+        lvl, exp_left, exp_to_next = calc_skill_lvl_info(name, exp)
         green(f'{display_name(name)} {roman(lvl)}')
 
         if exp_left < exp_to_next:

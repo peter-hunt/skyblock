@@ -1,3 +1,7 @@
+"""
+Constant used throughout the profile, including maths and utilities.
+"""
+
 from .color import *
 from .color import __all__ as __color_all__
 from .doc import *

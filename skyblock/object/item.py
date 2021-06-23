@@ -162,6 +162,8 @@ COMPACT_ITEMS = [
     Item('enchanted_redstone_lamp', 64, 'rare'),
     Item('enchanted_packed_ice', 64, 'rare'),
 
+    Item('slime_block', 64, 'common'),
+
     Item('enchanted_rotten_flesh', 64, 'uncommon'),
     Item('enchanted_bone', 64, 'uncommon'),
     Item('enchanted_string', 64, 'uncommon'),
@@ -171,8 +173,17 @@ COMPACT_ITEMS = [
     Item('enchanted_eye_of_ender', 64, 'uncommon'),
     Item('enchanted_ghast_tear', 64, 'uncommon'),
     Item('enchanted_slime_ball', 64, 'uncommon'),
-    Item('enchanted_blaze_rod', 64, 'uncommon'),
+    Item('enchanted_blaze_powder', 64, 'uncommon'),
     Item('enchanted_magma_cream', 64, 'uncommon'),
+
+    Item('enchanted_bone_block', 64, 'rare'),
+    Item('enchanted_fermented_spider_eye', 64, 'rare'),
+    Item('enchanted_firework_rocket', 64, 'rare'),
+    Item('enchanted_eye_of_ender', 64, 'rare'),
+    Item('absolute_ender_pearl', 64, 'rare'),
+    Item('tesselated_ender_pearl', 64, 'legendary'),
+    Item('enchanted_slime_block', 64, 'rare'),
+    Item('enchanted_blaze_rod', 64, 'uncommon'),
 
     Item('enchanted_oak_wood', 64, 'uncommon'),
     Item('enchanted_birch_wood', 64, 'uncommon'),
@@ -183,16 +194,19 @@ COMPACT_ITEMS = [
 ]
 
 OTHER_ITEMS = [
+    Item('apple', 64, 'common'),
     Item('arrow', 64, 'common'),
     Item('beef', 64, 'common'),
     Item('blaze_powder', 64, 'common'),
     Item('book', 64, 'common'),
     Item('bread', 64, 'common'),
     Item('egg', 16, 'common'),
+    Item('enchanted_golden_apple', 64, 'uncommon'),
     Item('exp_share_core', 1, 'epic'),
     Item('flint', 64, 'common'),
     Item('glowstone_block', 64, 'common'),
     Item('gold_nugget', 64, 'common'),
+    Item('golden_apple', 64, 'common'),
     Item('golden_powder', 64, 'epic'),
     Item('iron_nugget', 64, 'common'),
     Item('lapis_crystal', 1, 'rare'),
@@ -201,6 +215,7 @@ OTHER_ITEMS = [
     Item('poisonous_potato', 64, 'common'),
     Item('rabbit_foot', 64, 'common'),
     Item('rabbit_hide', 64, 'common'),
+    Item('saving_grace', 64, 'rare'),
     Item('stick', 64, 'common'),
     Item('sugar', 64, 'common'),
     Item('summoning_eye', 1, 'epic'),
@@ -242,6 +257,16 @@ WEAPONS = [
     Sword('end_stone_sword', 'epic', damage=120,
           strength=80),
 
+    Sword('zombie_sword', 'rare', damage=100,
+          strength=50, intelligence=50),
+    Sword('leaping_sword', 'epic', damage=150,
+          strength=100, crit_damage=25),
+    Sword('leaping_sword', 'epic', damage=150,
+          strength=100, crit_damage=25),
+    Sword('aspect_of_the_end', 'rare', damage=100,
+          strength=100),
+    Sword('silver_fang', 'uncommon', count=64, damage=100),
+
     Sword('aspect_of_the_dragons', 'legendary', damage=225,
           strength=100,
           combat_skill_req=18),
@@ -249,6 +274,9 @@ WEAPONS = [
     Sword('livid_dagger', 'legendary', damage=210,
           strength=60, crit_chance=100, crit_damage=50, attack_speed=50,
           dungeon_completion_req=5),
+
+    Sword('giants_sword', 'legendary', damage=500,
+          dungeon_completion_req=6),
 
     Sword('necrons_blade', 'legendary', damage=210,
           strength=60, defense=250, intelligence=50,
@@ -275,8 +303,18 @@ WEAPONS = [
     Bow('end_stone_bow', 'epic', damage=140,
         combat_skill_req=18),
 
-    Bow('runaans_bow', 'legendary', damage=160,
+    Bow('hurricane_bow', 'epic', damage=120,
         strength=50),
+    Bow('runaans_bow', 'legendary', damage=288,
+        strength=50),
+    Bow('explosive_bow', 'epic', damage=100,
+        strength=20),
+    Bow('ender_bow', 'rare', damage=60),
+    Bow('slime_bow', 'epic', damage=100,
+        crit_damage=50),
+    Bow('magma_bow', 'epic', damage=100,
+        strength=100),
+
     Bow('mosquito_bow', 'legendary', damage=251,
         strength=151, crit_damage=39),
     Bow('souls_rebound', 'epic', damage=450),
@@ -449,6 +487,42 @@ ARMOR_PIECES = [
     Armor('mithril_coat', rarity='epic', part='chestplate',
           defense=125, speed=15),
 
+    Armor('zombie_hat', rarity='common', part='helmet',
+          defense=10),
+    Armor('zombies_heart', rarity='rare', part='helmet',
+          health=50),
+    Armor('zombie_chestplate', rarity='epic', part='chestplate',
+          health=200, defense=40),
+    Armor('zombie_leggings', rarity='epic', part='leggings',
+          health=160, defense=30),
+    Armor('zombie_boots', rarity='epic', part='boots',
+          health=120, defense=25),
+
+    Armor('skeleton_hat', rarity='common', part='helmet',
+          intelligence=10, speed=2),
+    Armor('skeletons_helmet', rarity='rare', part='helmet',
+          defense=75),
+
+    Armor('spiders_boots', rarity='rare', part='boots',
+          defense=45, intelligence=50, speed=5),
+    Armor('spider_hat', rarity='common', part='helmet',
+          crit_chance=2),
+
+    Armor('creeper_hat', rarity='common', part='helmet',
+          strength=5, crit_chance=5, crit_damage=5,
+          health=5, defense=5, intelligence=5),
+    Armor('creeper_pants', rarity='rare', part='leggings',
+          health=200, defense=65),
+
+    Armor('ghast_head', rarity='common', part='helmet',
+          health=100),
+
+    Armor('slime_hat', rarity='common', part='helmet',
+          health=50),
+
+    Armor('blaze_hat', rarity='common', part='helmet',
+          strength=20),
+
     Armor('blaze_helmet', rarity='epic', part='helmet',
           strength=10, defense=50, speed=2),
     Armor('blaze_chestplate', rarity='epic', part='chestplate',
@@ -457,6 +531,18 @@ ARMOR_PIECES = [
           strength=10, defense=110, speed=2),
     Armor('blaze_boots', rarity='epic', part='boots',
           strength=10, defense=70, speed=2),
+
+    Armor('magma_cube_head', rarity='common', part='helmet',
+          health=25, defense=25),
+
+    Armor('armor_of_magma_helmet', rarity='epic', part='helmet',
+          health=50, defense=15),
+    Armor('armor_of_magma_chestplate', rarity='epic', part='chestplate',
+          health=100, defense=30),
+    Armor('armor_of_magma_leggings', rarity='epic', part='leggings',
+          health=75, defense=25),
+    Armor('armor_of_magma_boots', rarity='epic', part='boots',
+          health=45, defense=15),
 
     Armor('cheap_tuxedo_jacket', rarity='epic', part='chestplate',
           crit_damage=50, intelligence=50),
@@ -547,6 +633,9 @@ TOOLS = [
             enchantments={'efficiency': 1}),
     Pickaxe('promising_pickaxe', rarity='uncommon',
             breaking_power=2, mining_speed=190),
+
+    Pickaxe('zombie_pickaxe', rarity='common',
+            breaking_power=3, mining_speed=290),
 
     Pickaxe('stonk', rarity='epic',
             breaking_power=1, mining_speed=380,

@@ -5,11 +5,10 @@ from re import sub
 from typing import Optional
 
 from ..constant.color import WHITE
-from ..function.item import load_item
 from ..function.io import red, yellow
 from ..function.path import is_profile
 from ..function.util import display_name, parse_int
-from ..object.object import Empty
+from ..object.object import Empty, load_item
 from ..map.object import Npc
 
 __all__ = ['profile_type']

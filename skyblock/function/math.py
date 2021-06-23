@@ -10,30 +10,47 @@ from .io import gray, yellow, white
 from .util import display_int, roman
 
 __all__ = [
-    'calc_exp', 'calc_lvl', 'calc_pet_exp', 'calc_pet_upgrade_exp',
-    'calc_skill_exp', 'calc_skill_exp_info', 'display_skill_reward',
+    'calc_exp_lvl', 'calc_exp', 'calc_pet_lvl', 'calc_pet_upgrade_exp',
+    'calc_skill_lvl', 'calc_skill_lvl_info', 'display_skill_reward',
     'dung_stat', 'random_amount', 'random_bool', 'random_int',
 ]
 
 
-def calc_exp(amount: Number, /) -> int:
-    if amount <= 352:
-        for lvl in range(17):
-            if (lvl + 1) ** 2 + 6 * (lvl + 1) > amount:
-                return lvl
+def calc_exp_lvl(exp: Number, /) -> int:
+    """
+    Calculate vanilla xp level from xp.
 
-    elif amount <= 1507:
-        for lvl in range(17, 32):
-            if 2.5 * (lvl + 1) ** 2 - 40.5 * (lvl + 1) + 360 > amount:
-                return lvl
+    Args:
+        exp: An integer or float of the vanilla xp.
 
-    else:
-        for lvl in count(32):
-            if 4.5 * (lvl + 1) ** 2 - 162.5 * (lvl + 1) + 2220 > amount:
-                return lvl
+    Returns:
+        An integer of vanilla xp level.
+    """
+
+    for lvl in range(17):
+        if (lvl + 1) ** 2 + 6 * (lvl + 1) > exp:
+            return lvl
+
+    for lvl in range(17, 32):
+        if 2.5 * (lvl + 1) ** 2 - 40.5 * (lvl + 1) + 360 > exp:
+            return lvl
+
+    for lvl in count(32):
+        if 4.5 * (lvl + 1) ** 2 - 162.5 * (lvl + 1) + 2220 > exp:
+            return lvl
 
 
-def calc_lvl(lvl: int, /) -> int:
+def calc_exp(lvl: int, /) -> int:
+    """
+    Calculate vanilla xp from xp level.
+
+    Args:
+        lvl: An integer of the vanilla xp level.
+
+    Returns:
+        An integer of vanilla xp.
+    """
+
     if lvl <= 16:
         return lvl ** 2 + 6 * lvl
 
@@ -44,58 +61,111 @@ def calc_lvl(lvl: int, /) -> int:
         return 4.5 * lvl ** 2 - 162.5 * lvl + 2220
 
 
-def calc_pet_exp(rarity: str, amount: Number, /) -> int:
+def calc_pet_lvl(rarity: str, exp: Number, /) -> int:
+    """
+    Calculate pet xp level from rarity and xp.
+
+    Args:
+        rarity: A string of pet rarity.
+        exp: An integer or float of the pet xp.
+
+    Returns:
+        An integer of pet xp level.
+    """
+
     if rarity == 'mythic':
         rarity = 'l'
     diff_list = PET_EXP_DIFF['curel'.index(rarity[0])]
     for lvl, diff in enumerate(diff_list):
-        if amount < diff:
+        if exp < diff:
             return lvl
-        amount -= diff
+        exp -= diff
     else:
         return 100
 
 
-def calc_pet_upgrade_exp(rarity: str, amount: Number, /) -> int:
+def calc_pet_upgrade_exp(rarity: str, exp: Number, /) -> int:
+    """
+    Calculate pet xp needed for upgrade from rarity and xp.
+
+    Args:
+        rarity: A string of pet rarity.
+        exp: An integer or float of the pet xp.
+
+    Returns:
+        An integer of pet xp to the next level.
+    """
+
     if rarity == 'mythic':
         rarity = 'l'
     diff_list = PET_EXP_DIFF['curel'.index(rarity[0])]
     for diff in diff_list:
-        if amount < diff:
+        if exp < diff:
             break
-        amount -= diff
-    return amount, diff
+        exp -= diff
+    return exp, diff
 
 
-def calc_skill_exp(name: str, amount: Number, /) -> int:
+def calc_skill_lvl(name: str, exp: Number, /) -> int:
+    """
+    Calculate skill level from xp.
+
+    Args:
+        name: A string of the skill.
+        exp: An integer or float of the skill xp.
+
+    Returns:
+        An integer of skill level.
+    """
+
     exp_table = DUNGEON_EXP if name == 'catacombs' else SKILL_EXP
     for line in exp_table:
         lvl, _, cumulative = line[:3]
-        if amount < cumulative:
+        if exp < cumulative:
             return lvl - 1
     else:
         return SKILL_LIMITS[name]
 
 
-def calc_skill_exp_info(
-    name: str, amount: Number, /,
-) -> Tuple[int, int, Optional[int]]:
+def calc_skill_lvl_info(name: str, exp: Number, /) -> \
+        Tuple[int, int, Optional[int]]:
+    """
+    Calculate skill level from xp.
+
+    Args:
+        name: A string of the skill.
+        exp: An integer or float of the skill xp.
+
+    Returns:
+        An tuple of current level, xp left to the next level,
+        xp required to the next level, and coins reward of the next level.
+    """
+
     exp_table = DUNGEON_EXP if name == 'catacombs' else SKILL_EXP
     for line in exp_table:
         lvl, _, cumulative = line[:3]
-        if amount < cumulative:
+        if exp < cumulative:
             # current, left, next_required, coins
-            exp_left = amount - exp_table[lvl - 1][2]
+            exp_left = exp - exp_table[lvl - 1][2]
             if name == 'catacombs':
                 return lvl - 1, exp_left, line[1]
             else:
                 return lvl - 1, exp_left, line[1]
     else:
-        exp_left = amount - exp_table[-2][2]
+        exp_left = exp - exp_table[-2][2]
         return SKILL_LIMITS[name], exp_left, line[1]
 
 
 def display_skill_reward(name: str, original: Number, current: Number):
+    """
+    Display skill upgrade reward.
+
+    Args:
+        name: A string of the skill.
+        original: An integer or float of the skill level before the upgrade.
+        current: An integer or float of the skill level after the upgrade.
+    """
+
     coins_reward = 0
     if name != 'catacombs':
         for lvl in range(original + 1, current + 1):
@@ -245,8 +315,21 @@ def display_skill_reward(name: str, original: Number, current: Number):
 
 # 5l*4% + 5l*5% + 5l*6% + 5l*7% + 5l*8% + 5l*9% +
 # 5l*10% + 5l*12% + 5l*14% + 16% + 17% + 18% + 19% + 20%
-def dung_stat(num: int, lvl: int, stars: int) -> Number:
+def dung_stat(value: Number, lvl: int, stars: int) -> float:
+    """
+    Calculate dungeon item stat bonus based on dungeon level.
+
+    Args:
+        value: An integer or float of the stat.
+        lvl: An integer of dungeon level.
+        stars: An integer of stars on the item.
+
+    Returns:
+        A float of stat bonus rate.
+    """
+
     mult = 1 + 0.1 * stars
+
     for i in range(lvl):
         if i < 35:
             mult += 0.01 * (4 + (i // 5))
@@ -254,10 +337,21 @@ def dung_stat(num: int, lvl: int, stars: int) -> Number:
             mult += 0.01 * (10 + 2 * ((i - 35) // 5))
         else:
             mult += 0.01 * ((i - 45) + 16)
-    return num * mult
+
+    return value * mult
 
 
 def random_amount(amount: Amount = 1, /) -> int:
+    """
+    Generate random integer based on given range.
+
+    Args:
+        amount: An integer or a range of integer.
+
+    Returns:
+        A random integer between the range.
+    """
+
     if isinstance(amount, tuple):
         return randint(amount[0], amount[1])
     else:
@@ -265,9 +359,29 @@ def random_amount(amount: Amount = 1, /) -> int:
 
 
 def random_bool(chance: float = 0.5, /) -> bool:
+    """
+    Generate random boolean based on given range.
+
+    Args:
+        chance: A float of chance of whether the result will be true.
+
+    Returns:
+        A random boolean based on the chance.
+    """
+
     return random() < chance
 
 
-def random_int(num: float, /) -> int:
+def random_int(num: Number, /) -> int:
+    """
+    Generate random integer close to and average to given number.
+
+    Args:
+        num: An integer or float of the wanted average.
+
+    Returns:
+        A random integer averaging to the given number.
+    """
+
     int_part, float_part = divmod(num, 1)
-    return int(int_part + (float_part > random()))
+    return int(int_part + random_bool(float_part))
