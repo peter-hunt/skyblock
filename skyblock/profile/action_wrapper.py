@@ -1,5 +1,6 @@
 from decimal import Decimal
 from math import ceil
+from random import random
 from time import sleep, time
 from typing import Optional, Tuple
 
@@ -148,7 +149,21 @@ def profile_action(cls):
             self.remove_item(item.name, count * amount)
 
         result, result_count = recipe.result
-        original = get_item(result.name)
+        rarity = result.rarity
+
+        if isinstance(result, Pet):
+            keep_weight = 80
+            upgrade_weight = 20 + 0.2 * self.get_stat('pet_luck')
+            total = keep_weight + upgrade_weight
+            if random() > (keep_weight / total):
+                rarity = {
+                    'common': 'uncommon',
+                    'uncommon': 'rare',
+                    'rare': 'epic',
+                    'epic': 'legendary',
+                }[rarity]
+
+        original = get_item(result.name, rarity=rarity)
         if hasattr(original, 'conut'):
             original.count = 1
         self.recieve_item(original, result_count * amount)

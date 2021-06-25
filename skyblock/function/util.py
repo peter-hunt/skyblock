@@ -78,7 +78,7 @@ def get(ls: List[Any], /, name: Optional[str] = None,
         if name is not None and item.name != name:
             continue
         for kwarg in kwargs:
-            if kwarg in {'enchantments', 'hot_potato'}:
+            if kwarg in {'count', 'enchantments', 'hot_potato'}:
                 attrs[kwarg] = kwargs[kwarg]
                 continue
             if getattr(item, kwarg, None) != kwargs[kwarg]:

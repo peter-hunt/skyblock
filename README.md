@@ -58,7 +58,6 @@ python -m skyblock
 * Dungeons
 * Fishing
 * Minions
-* Pet Crafting
 
 # Furthur information
 This project is a clone of [Hypixel Skyblock](https://hypixel-skyblock.fandom.com/wiki/Hypixel_SkyBlock_Wiki)

@@ -7,17 +7,17 @@ from ..constant.color import GOLD, GRAY, BLUE, GREEN, YELLOW
 from ..constant.doc import profile_doc
 from ..constant.main import ARMOR_PARTS
 from ..constant.util import Number
-from ..function.math import calc_exp_lvl, calc_exp, calc_skill_lvl
+from ..function.math import calc_pet_exp, calc_exp_lvl, calc_exp, calc_skill_lvl
 from ..function.io import gray, red, green, yellow
 from ..function.util import (
     checkpoint, clear, display_int, display_number, generate_help,
     get, includes, is_valid_usage, parse_int, roman, shorten_number,
 )
 from ..object.collection import COLLECTIONS, is_collection
-from ..object.item import get_item, get_scroll
+from ..object.item import ITEMS, get_item, get_scroll
 from ..object.mob import get_mob
 from ..object.object import (
-    Item, Empty, Bow, Sword, Armor, Axe, Hoe, Pickaxe, Drill,
+    Item, Empty, Bow, Sword, Armor, Axe, Hoe, Pickaxe, Drill, Pet,
 )
 from ..object.recipe import RECIPES
 from ..object.resource import get_resource
@@ -196,24 +196,12 @@ class Profile:
                 self.buy(chosen_trade, amount)
 
             elif words[0] == 'cheat':
-                # item = get_item('enchanted_coal_block')
-                # self.recieve_item(item, 2)
-                # item = get_item('enchanted_iron_block')
-                # self.recieve_item(item, 3)
-                # item = get_item('enchanted_gold_block')
-                # self.recieve_item(item, 26)
-                # item = get_item('enchanted_redstone_block')
-                # self.recieve_item(item, 3)
-                # item = get_item('enchanted_diamond_block')
-                # self.recieve_item(item, 28)
-                # item = get_item('refined_mithril')
-                # self.recieve_item(item, 13)
-                # item = get_item('refined_titanium')
-                # self.recieve_item(item, 2)
-                # item = get_item('glacite_jewel')
-                # self.recieve_item(item, 65)
-                # item = get_item('treasurite')
-                # self.recieve_item(item, 10)
+                # item = get_item('enchanted_chicken')
+                # self.recieve_item(item, 128)
+                # item = get_item('enchanted_egg')
+                # self.recieve_item(item, 1)
+                # item = get_item('super_enchanted_egg')
+                # self.recieve_item(item, 1)
                 ...
 
             elif words[0] == 'clear':
@@ -440,11 +428,11 @@ class Profile:
 
             elif words[0] == 'item':
                 name = words[1]
-                item = get_item(name)
-                if item is None:
-                    continue
-
-                self.display_item(item)
+                for item in ITEMS:
+                    if item.name == name:
+                        if isinstance(item, Pet):
+                            item.exp = calc_pet_exp(item.rarity, 100)
+                        self.display_item(item)
 
             elif words[0] == 'look':
                 self.display_location()

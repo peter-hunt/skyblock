@@ -10,9 +10,10 @@ from .io import gray, yellow, white
 from .util import display_int, roman
 
 __all__ = [
-    'calc_exp_lvl', 'calc_exp', 'calc_pet_lvl', 'calc_pet_upgrade_exp',
-    'calc_skill_lvl', 'calc_skill_lvl_info', 'display_skill_reward',
-    'dung_stat', 'random_amount', 'random_bool', 'random_int',
+    'calc_exp_lvl', 'calc_exp', 'calc_pet_exp', 'calc_pet_lvl',
+    'calc_pet_upgrade_exp', 'calc_skill_lvl', 'calc_skill_lvl_info',
+    'display_skill_reward', 'dung_stat', 'random_amount', 'random_bool',
+    'random_int',
 ]
 
 
@@ -61,6 +62,30 @@ def calc_exp(lvl: int, /) -> int:
         return 4.5 * lvl ** 2 - 162.5 * lvl + 2220
 
 
+def calc_pet_exp(rarity: str, level: Number, /) -> int:
+    """
+    Calculate pet xp from rarity and level.
+
+    Args:
+        rarity: A string of pet rarity.
+        int: An integer or float of the pet level.
+
+    Returns:
+        An integer of pet xp.
+    """
+
+    if rarity == 'mythic':
+        rarity = 'l'
+    diff_list = PET_EXP_DIFF['curel'.index(rarity[0])]
+    exp = 0
+    for lvl, diff in enumerate(diff_list):
+        if lvl <= level:
+            exp += diff
+        else:
+            break
+    return exp
+
+
 def calc_pet_lvl(rarity: str, exp: Number, /) -> int:
     """
     Calculate pet xp level from rarity and xp.
@@ -101,9 +126,9 @@ def calc_pet_upgrade_exp(rarity: str, exp: Number, /) -> int:
     diff_list = PET_EXP_DIFF['curel'.index(rarity[0])]
     for diff in diff_list:
         if exp < diff:
-            break
+            return exp, diff
         exp -= diff
-    return exp, diff
+    return exp + diff, diff
 
 
 def calc_skill_lvl(name: str, exp: Number, /) -> int:

@@ -328,18 +328,27 @@ def item_type(cls: type, /) -> type:
             info += f'\n\n{stats_str}{CLN}'
 
             next_level = min(pet_lvl + 1, 100)
-            exp_left, exp_to_next = calc_pet_upgrade_exp(self.rarity, self.exp)
-            exp_left = exp_left
-            perc = round(exp_left / exp_to_next * 100, 1)
-            bar = min(int(exp_left / exp_to_next * 20), 20)
-            left, right = '-' * bar, '-' * (20 - bar)
-            info += (
-                f'\n\n{GRAY}Progress to Level {next_level}:'
-                f' {YELLOW}{display_int(perc)}%\n'
-                f'{GREEN}{BOLD}{left}{GRAY}{BOLD}{right}'
-                f' {YELLOW}{display_int(floor(exp_left))}'
-                f'/{shorten_number(exp_to_next)}'
-            )
+            if pet_lvl == 100:
+                exp_left, exp_to_next = calc_pet_upgrade_exp(self.rarity,
+                                                             self.exp)
+                info += (
+                    f"\n\n{GREEN}{BOLD}{'-' * 20}"
+                    f' {YELLOW}{display_int(floor(exp_left))}'
+                    f'/{shorten_number(exp_to_next)}'
+                )
+            else:
+                exp_left, exp_to_next = calc_pet_upgrade_exp(self.rarity,
+                                                             self.exp)
+                perc = round(exp_left / exp_to_next * 100, 1)
+                bar = min(int(exp_left / exp_to_next * 20), 20)
+                left, right = '-' * bar, '-' * (20 - bar)
+                info += (
+                    f'\n\n{GRAY}Progress to Level {next_level}:'
+                    f' {YELLOW}{display_int(perc)}%\n'
+                    f'{GREEN}{BOLD}{left}{GRAY}{BOLD}{right}'
+                    f' {YELLOW}{display_int(floor(exp_left))}'
+                    f'/{shorten_number(exp_to_next)}'
+                )
 
         elif self.__class__.__name__ == 'TravelScroll':
             r_name = ('Spawn' if self.region is None

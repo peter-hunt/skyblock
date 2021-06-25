@@ -81,6 +81,9 @@ def profile_display(cls):
                     print(f'  {color}{display_name(item.name)} {GRAY}Recipe')
 
         this_lvl = current - past_amount
+        if next_lvl is None:
+            next_lvl = 0
+
         progress = min(this_lvl / next_lvl, 1)
         bar = floor(progress * 20)
         left, right = '-' * bar, '-' * (20 - bar)
