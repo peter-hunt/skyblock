@@ -8,9 +8,10 @@ from .mob_wrapper import mob_type
 from .recipe_wrapper import recipe_type
 
 __all__ = [
-    'ItemType', 'Item', 'Empty', 'Bow', 'Sword', 'Axe', 'Pickaxe', 'Hoe',
+    'ItemType', 'Item', 'Empty', 'Bow', 'Sword',
+    'Axe', 'Pickaxe', 'Drill', 'Hoe',
     'Armor', 'TravelScroll', 'Pet', 'OBJECTS',
-    'Resource', 'Mineral', 'Tree', 'Mob', 'Recipe', 'Collection',
+    'Resource', 'Mineral', 'Wood', 'Mob', 'Recipe', 'Collection',
     'load_item',
 ]
 
@@ -97,8 +98,23 @@ class Axe(ItemType):
 class Pickaxe(ItemType):
     name: str
     rarity: str
+
     breaking_power: int
     mining_speed: int
+
+    modifier: Optional[str] = None
+    enchantments: Dict[str, int] = {}
+
+
+@item_type
+class Drill(ItemType):
+    name: str
+    rarity: str
+
+    breaking_power: int
+    mining_speed: int
+    mining_fortune: int = 0
+
     modifier: Optional[str] = None
     enchantments: Dict[str, int] = {}
 
@@ -199,7 +215,7 @@ class Pet(ItemType):
 
 
 OBJECTS = [
-    Item, Empty, Sword, Bow, Axe, Hoe, Pickaxe, Armor, TravelScroll, Pet,
+    Item, Empty, Sword, Bow, Axe, Hoe, Pickaxe, Drill, Armor, TravelScroll, Pet,
 ]
 
 
@@ -227,7 +243,7 @@ class Mineral(Resource):
 
 
 @item_type
-class Tree(Resource):
+class Wood(Resource):
     name: str
     drop: str
     hardness: int = 2

@@ -145,7 +145,7 @@ def item_type(cls: type, /) -> type:
         else:
             info = f'{rarity_color}{modifier}{name}{stars}'
 
-        if self.__class__.__name__ == 'Pickaxe':
+        if self.__class__.__name__ in {'Pickaxe', 'Drill'}:
             info += (f'\n{DARK_GRAY}Breaking Power '
                      f"{getattr(self, 'breaking_power')}{CLN}\n"
                      f'\n{GRAY}Mining Speed: {GREEN}+'

@@ -3,7 +3,7 @@ from typing import Optional
 from ..function.io import red
 from ..function.util import get, includes
 
-from .object import ItemType, Crop, Mineral, Tree
+from .object import ItemType, Crop, Mineral, Wood
 
 __all__ = ['RESOURCES', 'get_resource']
 
@@ -53,22 +53,22 @@ RESOURCES = [
             hardness=60, exp=30, mining_exp=45),
     Mineral('light_mithril', drop='mithril', amount=5, breaking_power=4,
             hardness=100, exp=50, mining_exp=45),
-    Mineral('titanium', drop='titanium', amount=5, breaking_power=4,
+    Mineral('titanium', drop='titanium', amount=1, breaking_power=5,
             hardness=150, exp=75, mining_exp=100),
     Mineral('gold_block', drop='gold', amount=9, breaking_power=3,
             hardness=30, exp=20, mining_exp=20),
 
-    Tree('oak', 'oak_wood',
+    Wood('oak', 'oak_wood',
          hardness=2, foraging_exp=6),
-    Tree('birch', 'birch_wood',
+    Wood('birch', 'birch_wood',
          hardness=2, foraging_exp=6),
-    Tree('spruce', 'spruce_wood',
+    Wood('spruce', 'spruce_wood',
          hardness=2, foraging_exp=6),
-    Tree('dark_oak', 'dark_oak_wood',
+    Wood('dark_oak', 'dark_oak_wood',
          hardness=2, foraging_exp=6),
-    Tree('acacia', 'acacia_wood',
+    Wood('acacia', 'acacia_wood',
          hardness=2, foraging_exp=6),
-    Tree('jungle', 'jungle_wood',
+    Wood('jungle', 'jungle_wood',
          hardness=2, foraging_exp=6),
 ]
 

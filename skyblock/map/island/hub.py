@@ -169,14 +169,14 @@ HIGH_LEVEL = Region(
     mobs=[get_mob('skeleton', level=6)],
 )
 HUB_CASTLE = Region(
-    'hub_castle', -280, -60,
+    'castle', -280, -60,
     npcs=[
         Npc('armorsmith',
             init_dialog=[
                 'To fast travel or not to fast travel?',
             ],
             trades=[
-                (150_000, get_scroll('hub_castle')),
+                (150_000, get_scroll('castle')),
             ]),
     ],
     mobs=[get_mob('wolf'),

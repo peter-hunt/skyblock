@@ -264,7 +264,6 @@ SELL_PRICE = {
     'titanium': 20,
     'sorrow': 13,
     'plasma': 20_000,
-    'bejeweled_handle': 100,
 
     'enchanted_cobblestone': 160,
     'enchanted_coal': 320,
@@ -296,7 +295,13 @@ SELL_PRICE = {
     'enchanted_mithril': 1_600,
     'enchanted_titanium': 3_200,
 
+    'treasurite': 5_000,
+
+    'refined_diamond': 4_096,
+    'refined_mithril': 256_000,
     'refined_titanium': 51_200,
+    'fuel_tank': 51_000,
+    'bejeweled_handle': 100,
 
     'rotten_flesh': 2,
     'bone': 2,

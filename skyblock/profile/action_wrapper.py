@@ -28,8 +28,8 @@ from ..object.item import get_item
 from ..object.mob import get_mob
 from ..object.object import (
     Item, Empty, Bow, Sword, Armor,
-    Axe, Hoe, Pickaxe, TravelScroll, Pet,
-    Crop, Mineral, Tree, Mob,
+    Axe, Hoe, Pickaxe, Drill, TravelScroll, Pet,
+    Crop, Mineral, Wood, Mob,
 )
 from ..object.recipe import RECIPES
 from ..object.resource import get_resource
@@ -224,7 +224,7 @@ def profile_action(cls):
             table = AXE_ENCHS
         elif isinstance(item, Hoe):
             table = HOE_ENCHS
-        elif isinstance(item, Pickaxe):
+        elif isinstance(item, (Pickaxe, Drill)):
             table = PICKAXE_ENCHS
         else:
             red('Cannot Enchant Item!')
@@ -337,7 +337,7 @@ def profile_action(cls):
         tool = Empty() if tool_index is None else self.inventory[tool_index]
         amount = 1 if amount is None else amount
 
-        if not isinstance(tool, (Empty, Axe, Hoe, Pickaxe)):
+        if not isinstance(tool, (Empty, Axe, Hoe, Pickaxe, Drill)):
             tool = Empty()
 
         enchantments = getattr(tool, 'enchantments', {})
@@ -357,7 +357,11 @@ def profile_action(cls):
                 sleep(time_cost)
                 amount_pool = random_amount(default_amount)
                 drop_pool = random_int(fortune_mult)
-                self.recieve_item(Item(drop_item), amount_pool * drop_pool)
+
+                item_type = get_item(drop_item)
+                if getattr(item_type, 'count', 1) != 1:
+                    item_type.count = 1
+                self.recieve_item(item_type, drop_pool)
                 if is_coll:
                     self.collect(drop_item, amount_pool * drop_pool)
 
@@ -402,7 +406,10 @@ def profile_action(cls):
                 sleep(time_cost)
                 amount_pool = random_amount(default_amount)
                 drop_pool = random_int(fortune_mult)
-                self.recieve_item(Item(drop_item), amount_pool * drop_pool)
+                item_type = get_item(drop_item)
+                if getattr(item_type, 'count', 1) != 1:
+                    item_type.count = 1
+                self.recieve_item(item_type, amount_pool * drop_pool)
                 if is_coll:
                     self.collect(drop_item, amount_pool * drop_pool)
 
@@ -413,11 +420,11 @@ def profile_action(cls):
                         last_cp += cp_step
                     gray(f'{count} / {amount} ({(last_cp * 100):.0f}%) done')
 
-                if 'mithril' in resource.name and random_amount((1, 20)) == 1:
+                if 'mithril' in resource.name and random_amount((1, 50)) == 1:
                     white('Titanium has spawned nearby!')
-                    self.harvest_resource(get_resource('titanium'), tool_index)
+                    self.harvest_resource('titanium', tool_index)
 
-        elif isinstance(resource, Tree):
+        elif isinstance(resource, Wood):
             if isinstance(tool, Axe):
                 tool_speed = tool.tool_speed
                 if 'efficiency' in enchantments:
@@ -438,8 +445,12 @@ def profile_action(cls):
             is_coll = is_collection(drop_item)
             for count in range(1, amount + 1):
                 sleep(time_cost)
-                drop_pool = random_int(foraging_fortune)
-                self.recieve_item(Item(drop_item), drop_pool)
+                drop_pool = random_int(fortune_mult)
+
+                item_type = get_item(drop_item)
+                if getattr(item_type, 'count', 1) != 1:
+                    item_type.count = 1
+                self.recieve_item(item_type, drop_pool)
                 if is_coll:
                     self.collect(drop_item, drop_pool)
 
@@ -508,6 +519,12 @@ def profile_action(cls):
     cls.remove_pet = remove_pet
 
     def sell(self, index: int, /):
+        item = self.inventory[index]
+
+        if isinstance(item, Empty):
+            yellow('Skipping as no item to sell.')
+            return
+
         island = get(ISLANDS, self.island)
         region = get(island.regions, self.region)
 
@@ -515,7 +532,6 @@ def profile_action(cls):
             red('No NPCs around to sell the item.')
             return
 
-        item = self.inventory[index]
         if item.name not in SELL_PRICE:
             red('You cannot sell this item to an NPC!')
             return
@@ -871,7 +887,7 @@ def profile_action(cls):
 
             interest *= now_cp - last_cp
             self.balance += interest
-            green(f'Since you've been away you earned '
+            green(f"Since you've been away you earned "
                   f'{GOLD}{display_number(interest)} coins{GREEN} '
                   f'as interest in your personal bank account!')
 
@@ -882,6 +898,21 @@ def profile_action(cls):
     cls.update = update
 
     def warp(self, dest: str, /):
+        if not includes(ISLANDS, dest):
+            for i_name, r_name in self.fast_travel:
+                if dest == r_name:
+                    self.island = i_name
+                    island = get(ISLANDS, self.island)
+                    self.region = r_name
+                    region = get(island.regions, r_name)
+
+                    gray(f'Warped to {AQUA}{region}{GRAY}'
+                         f' of {AQUA}{island}{GRAY}.')
+                    return
+            else:
+                red('Unknown destination! Use `warp` to view options!')
+                return
+
         island = get(ISLANDS, self.island)
         dest_island = get(ISLANDS, dest)
         region = get(island.regions, self.region)
@@ -904,8 +935,7 @@ def profile_action(cls):
                           portal=self.island)
 
         for i_name, r_name in self.fast_travel:
-            name = i_name if r_name is None else r_name
-            if dest == name:
+            if dest == i_name:
                 self.island = i_name
                 island = get(ISLANDS, self.island)
                 if r_name is None:
@@ -918,10 +948,6 @@ def profile_action(cls):
                 gray(f'Warped to {AQUA}{region}{GRAY}'
                      f' of {AQUA}{island}{GRAY}.')
                 return
-
-        if not includes(ISLANDS, dest):
-            red('Unknown destination! Use `warp` to view options!')
-            return
 
         portal_region = get(island.regions, portal=dest)
 

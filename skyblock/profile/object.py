@@ -14,10 +14,10 @@ from ..function.util import (
     get, includes, is_valid_usage, parse_int, roman, shorten_number,
 )
 from ..object.collection import COLLECTIONS, is_collection
-from ..object.item import get_item
+from ..object.item import get_item, get_scroll
 from ..object.mob import get_mob
 from ..object.object import (
-    Item, Empty, Bow, Sword, Armor, Axe, Hoe, Pickaxe,
+    Item, Empty, Bow, Sword, Armor, Axe, Hoe, Pickaxe, Drill,
 )
 from ..object.recipe import RECIPES
 from ..object.resource import get_resource
@@ -196,20 +196,44 @@ class Profile:
                 self.buy(chosen_trade, amount)
 
             elif words[0] == 'cheat':
-                # item = get_item('giants_sword')
-                # item.stars = 10
-                # item.hot_potato = 30
-                # self.recieve_item(item)
-                # item = get_item('diamond_pickaxe')
-                # self.recieve_item(item)
-                # item = get_item('golden_axe')
-                # self.recieve_item(item)
-                # item = get_item('enderman_pet', rarity='legendary')
-                # item.exp = 10 ** 6
-                # self.recieve_item(item)
-                # self.add_exp(2000)
-                # item = get_scroll('nest')
-                # self.recieve_item(item)
+                # item = get_item('enchanted_coal_block')
+                # self.recieve_item(item, 2)
+                # item = get_item('enchanted_iron_block')
+                # self.recieve_item(item, 3)
+                # item = get_item('enchanted_gold_block')
+                # self.recieve_item(item, 26)
+                # item = get_item('enchanted_redstone_block')
+                # self.recieve_item(item, 3)
+                # item = get_item('enchanted_diamond_block')
+                # self.recieve_item(item, 28)
+                # item = get_item('refined_mithril')
+                # self.recieve_item(item, 13)
+                # item = get_item('refined_titanium')
+                # self.recieve_item(item, 2)
+                # item = get_item('glacite_jewel')
+                # self.recieve_item(item, 65)
+                # item = get_item('treasurite')
+                # self.recieve_item(item, 10)
+                item = get_scroll('castle')
+                self.recieve_item(item)
+                item = get_scroll('barn')
+                self.recieve_item(item)
+                item = get_scroll('desert')
+                self.recieve_item(item)
+                item = get_scroll('gold')
+                self.recieve_item(item)
+                item = get_scroll('park')
+                self.recieve_item(item)
+                item = get_scroll('howl')
+                self.recieve_item(item)
+                item = get_scroll('jungle')
+                self.recieve_item(item)
+                item = get_scroll('spider')
+                self.recieve_item(item)
+                item = get_scroll('drag')
+                self.recieve_item(item)
+                item = get_scroll('mines')
+                self.recieve_item(item)
                 ...
 
             elif words[0] == 'clear':
@@ -394,9 +418,9 @@ class Profile:
                         continue
 
                     tool_item = self.inventory[tool_index]
-                    if not isinstance(tool_item, (Empty, Axe, Hoe, Pickaxe)):
-                        yellow(f'{tool_item.display()}{YELLOW}'
-                               f' is not tool.\n'
+                    if not isinstance(tool_item,
+                                      (Empty, Axe, Hoe, Pickaxe, Drill)):
+                        yellow(f'{tool_item.display()}{YELLOW} is not tool.\n'
                                f'Using barehand by default.')
                         tool_index = None
 
@@ -540,9 +564,9 @@ class Profile:
                 if len(words) == 2 and restriction == '--all':
                     self.display_recipes(show_all=True)
                     continue
-                elif restriction in ('farming', 'mining', 'combat', 'fishing',
-                                     'foraging', 'enchanting', 'alchemy',
-                                     'slayer'):
+                elif restriction in {
+                        'farming', 'mining', 'forging', 'combat', 'fishing',
+                        'foraging', 'enchanting', 'alchemy', 'slayer'}:
                     self.display_recipe(restriction, show_all=show_all)
                     continue
 

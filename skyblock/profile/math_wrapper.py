@@ -14,7 +14,7 @@ from ..function.io import dark_aqua, gold, dark_gray, red, green, yellow, aqua
 from ..function.util import display_name, roman
 from ..object.collection import is_collection, get_collection, calc_coll_lvl
 from ..object.object import (
-    Empty, Bow, Sword, Axe, Hoe, Pickaxe, Armor, Pet, Recipe,
+    Empty, Bow, Sword, Axe, Hoe, Pickaxe, Drill, Armor, Pet, Recipe,
 )
 
 __all__ = ['profile_math']
@@ -171,7 +171,7 @@ def profile_math(cls):
         else:
             item = self.inventory[index]
 
-            if not isinstance(item, (Bow, Sword, Axe, Hoe, Pickaxe)):
+            if not isinstance(item, (Bow, Sword, Axe, Hoe, Pickaxe, Drill)):
                 item = Empty()
 
             item_ench = getattr(item, 'enchantments', {})

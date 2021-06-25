@@ -2,7 +2,8 @@ from ..function.io import red
 from ..function.util import get, includes
 
 from .object import (
-    ItemType, Item, Axe, Hoe, Pickaxe, Sword, Bow, Armor, TravelScroll, Pet,
+    ItemType, Item, Axe, Hoe, Pickaxe, Drill,
+    Sword, Bow, Armor, TravelScroll, Pet,
 )
 
 __all__ = [
@@ -158,8 +159,6 @@ COMPACT_ITEMS = [
     Item('enchanted_mithril', 64, 'uncommon'),
     Item('enchanted_titanium', 64, 'epic'),
 
-    Item('refined_titanium', 64, 'legendary'),
-
     Item('enchanted_coal_block', 64, 'rare'),
     Item('enchanted_iron_block', 64, 'rare'),
     Item('enchanted_gold_block', 64, 'rare'),
@@ -171,6 +170,15 @@ COMPACT_ITEMS = [
     Item('enchanted_glowstone_block', 64, 'uncommon'),
     Item('enchanted_redstone_lamp', 64, 'rare'),
     Item('enchanted_packed_ice', 64, 'rare'),
+
+    Item('refined_diamond', 64, 'epic'),
+    Item('refined_mithril', 64, 'epic'),
+    Item('refined_titanium', 64, 'legendary'),
+    Item('fuel_tank', 1, 'rare'),
+    Item('mithril_plate', 1, 'rare'),
+    Item('bejeweled_handle', 64, 'rare'),
+    Item('golden_plate', 1, 'rare'),
+    Item('drill_engine', 1, 'rare'),
 
     Item('slime_block', 64, 'common'),
 
@@ -227,7 +235,7 @@ OTHER_ITEMS = [
     Item('sugar', 64, 'common'),
 
     Item('glacite_jewel', 64, 'rare'),
-    Item('bejeweled_handle', 64, 'rare'),
+    Item('treasurite', 64, 'epic'),
 
     Item('summoning_eye', 1, 'epic'),
 ]
@@ -683,14 +691,29 @@ TOOLS = [
             breaking_power=5, mining_speed=200),
     Pickaxe('bandaged_mithril_pickaxe', rarity='uncommon',
             breaking_power=5, mining_speed=250),
+    Pickaxe('mithril_pickaxe', rarity='uncommon',
+            breaking_power=5, mining_speed=280),
+    Pickaxe('refined_mithril_pickaxe', rarity='rare',
+            breaking_power=5, mining_speed=300),
     Pickaxe('titanium_pickaxe', rarity='rare',
             breaking_power=6, mining_speed=310),
     Pickaxe('refined_titanium_pickaxe', rarity='rare',
             breaking_power=6, mining_speed=400),
+
+    Drill('mithril_drill_226', rarity='rare',
+          breaking_power=5, mining_speed=450),
+    Drill('mithril_drill_326', rarity='rare',
+          breaking_power=6, mining_speed=600),
+    Drill('titanium_drill_355', rarity='epic',
+          breaking_power=7, mining_speed=700, mining_fortune=15),
+    Drill('titanium_drill_455', rarity='epic',
+          breaking_power=8, mining_speed=900, mining_fortune=15),
+    Drill('titanium_drill_555', rarity='epic',
+          breaking_power=9, mining_speed=1_200, mining_fortune=15),
 ]
 
 TRAVEL_SCROLLS = [
-    TravelScroll('hub', 'hub_castle', rarity='epic'),
+    TravelScroll('hub', 'castle', rarity='epic'),
     TravelScroll('barn'),
     TravelScroll('desert'),
     TravelScroll('gold'),
@@ -701,6 +724,8 @@ TRAVEL_SCROLLS = [
     TravelScroll('spider'),
     TravelScroll('spider', 'nest', rarity='epic'),
     TravelScroll('end'),
+    TravelScroll('end', 'drag', rarity='epic'),
+    TravelScroll('mines'),
 ]
 
 PETS = [

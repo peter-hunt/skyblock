@@ -36,25 +36,28 @@ profile_doc = """
 > buy <index> [amount=1]
 Buy item from the shop.
 
+> cheat
+Cheat to debug.
+
 > clear
 Clear the screen.
 
 > clearstash
 Removes all items currently in the Stash.
 
-> collection [category | name]
+> collection [category|name]
 
-> consume
-> use
-Consume items.
+> consume <index>
+> use <index>
+Consume item.
 
-> craft <recipe-index> <amount>
+> craft <recipe-index> [amount=1]
 Craft items.
 
 > deathcount
 Displays how many times you have died.
 
-> deposit [all | half | <coins>]
+> deposit [all|half|<coins>]
 Deposit coins from the purse to the bank.
 
 > enchant <index>
@@ -157,9 +160,9 @@ Talk to an npc.
 > unequip <part>
 Unequip armor.
 
-> warp <island>
+> warp [island]
 Warp to an island using portal or consumed travel scroll.
 
-> withdraw [all | half | <coins>]
+> withdraw [all|half|<coins>]
 Withdraw coins from the bank to the purse.
 """.strip()

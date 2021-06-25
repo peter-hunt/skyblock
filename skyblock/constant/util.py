@@ -28,52 +28,75 @@ ROMAN_NUM = [
 # names with special translation from id to displayed name
 SPECIAL_NAMES = {
     'attack_speed': 'Bonus Attack Speed',
-    'barn': 'The Barn',
-    'birch': 'Birch Park',
-    'builders_house': "Builder's House",
-    'veins': 'Cliffside Veins',
+
     'counter_strike': 'Counter-Strike',
-    'crypt': 'Hub Crypts',
-    'dark_thicket': 'Dark Thicket',
-    'deep': 'Deep Caverns',
-    'dragons_nest': "Dragon's Nest",
-    'end': 'The End',
-    'far': 'Far Reserve',
     'first_strike': 'First-Strike',
-    'forge': 'The Forge',
-    'giants_sword': "Giant's Sword",
-    'goblins': 'Goblin Burrows',
-    'gold': 'Gold Mine',
+    'triple_strike': 'Triple-Strike',
+
+    'builders_house': "Builder's House",
+    'castle': 'Hub Castle',
+    'crypt': 'Hub Crypts',
+
+    'skeletons_helmet': "Skeleton's Helmet",
+    'spiders_boots': "Spider's Boots",
+    'ranchers_boots': "Rancher's Boots",
+    'tightly_tied_hay_bale': 'Tightly-Tied Hay Bale',
+    'runaans_bow': "Runaan's Bow",
+    'zombies_heart': "Zombie's Heart",
+
+    'barn': 'The Barn',
+
+    'desert': 'Mushroom Desert',
     'jakes_house': "Jake's House",
+
+    'gold': 'Gold Mine',
+
+    'deep': 'Deep Caverns',
+    'pigmans_den': "Pigman's Den",
+
+    'spider': "Spider's Den",
+    'nest': 'Top of Nest',
+
+    'end': 'The End',
+    'drag': "Dragon's Nest",
+
+    'park': 'The Park',
+    'birch': 'Birch Park',
+    'dark_thicket': 'Dark Thicket',
     'jungle': 'Jungle Island',
+    'savanna': 'Savanna Woodland',
+    'spruce': 'Spruce Wood',
+
+    'mines': 'Dwarven Mines',
+    'veins': 'Cliffside Veins',
+    'far': 'Far Reserve',
+    'forge': 'The Forge',
+    'goblins': 'Goblin Burrows',
+    'mist': 'The Mist',
+    'palace': 'Royal Palace',
+    'ramparts': "Rampart's Quarry",
+    'royal': 'Royal Mines',
+    'springs': 'Lava Springs',
+    'upper': 'Upper Mines',
+
+    'giants_sword': "Giant's Sword",
+    'necrons_blade': "Necron's Blade",
+    'tacticians_sword': "Tactician's Sword",
+
     'miners_outfit_helmet': "Miner's Outfit Helmet",
     'miners_outfit_chestplate': "Miner's Outfit Chestplate",
     'miners_outfit_leggings': "Miner's Outfit Leggings",
     'miners_outfit_boots': "Miner's Outfit Boots",
-    'mines': 'Dwarven Mines',
-    'mist': 'The Mist',
-    'necrons_blade': "Necron's Blade",
-    'palace': 'Royal Palace',
-    'park': 'The Park',
-    'pigmans_den': "Pigman's Den",
+
+    'mithril_drill_226': 'Mithril Drill SX-R226',
+    'mithril_drill_326': 'Mithril Drill SX-R326',
+    'titanium_drill_355': 'Titanium Drill DR-X355',
+    'titanium_drill_455': 'Titanium Drill DR-X455',
+    'titanium_drill_555': 'Titanium Drill DR-X555',
+
     'pray_rngesus': 'Pray RNGesus',
-    'savanna': 'Savanna Woodland',
-    'skeletons_helmet': "Skeleton's Helmet",
-    'spider': "Spider's Den",
-    'spiders_boots': "Spider's Boots",
-    'springs': 'Lava Springs',
-    'spruce': 'Spruce Wood',
-    'ramparts': "Rampart's Quarry",
-    'ranchers_boots': "Rancher's Boots",
     'rngesus': 'RNGesus',
-    'royal': 'Royal Mines',
-    'runaans_bow': "Runaan's Bow",
-    'tacticians_sword': "Tactician's Sword",
-    'tightly_tied_hay_bale': 'Tightly-Tied Hay Bale',
-    'triple_strike': 'Triple-Strike',
-    'upper': 'Upper Mines',
-    'zombies_heart': "Zombie's Heart",
 }
 
-# ignored word by capitalization
+# words ignored by capitalization
 IGNORED_WORDS = ('from', 'of', 'the', 'to')

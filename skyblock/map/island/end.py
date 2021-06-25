@@ -46,7 +46,7 @@ END_CAVES = Region(
     mobs=[get_mob('enderman', level=50)],
 )
 DRAGONS_NEST = Region(
-    'dragons_nest', -600, -280,
+    'drag', -600, -280,
     resources=[get_resource('end_stone')],
     mobs=[get_mob('watcher'),
           get_mob('obsidian_defender'),

@@ -217,6 +217,7 @@ MOBS = [
         coins=50, combat_xp=70, exp=100,
         drops=[
             (Item('starfall'), (1, 2), 'common', 1),
+            (Item('treasurite'), 1, 'rare', 0.005),
         ]),
     Mob('ghost', level=100, health=1_000_000, damage=1_000,
         coins=100, combat_xp=100, exp=0,
