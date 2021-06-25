@@ -19,6 +19,7 @@ from ..function.util import (
     get, index, roman, shorten_number,
 )
 from ..object.collection import COLLECTIONS, get_collection
+from ..object.item import get_item
 from ..object.object import Empty, ItemType, Recipe
 from ..object.recipe import RECIPES
 from ..map.island import ISLANDS
@@ -227,33 +228,17 @@ def profile_display(cls):
     cls.display_location = display_location
 
     def display_money(self, /):
-        if self.region != 'bank':
-            if self.purse < 1000:
-                shortened_purse = ''
-            else:
-                shortened_purse = f' {GRAY}({shorten_number(self.purse)})'
-
-            white(f'Purse: {GOLD}{display_number(self.purse)} Coins'
-                  f'{shortened_purse}')
+        if self.region not in {'bank', 'dwarven_village'}:
+            white(f'Purse: {GOLD}{display_number(self.purse)} Coins')
             return
-
-        shortened_balance = ''
-        if self.balance >= 1000:
-            shortened_balance = f' {GRAY}({shorten_number(self.balance)})'
-
-        shortened_purse = ''
-        if self.purse >= 1000:
-            shortened_purse = f' {GRAY}({shorten_number(self.purse)})'
 
         balance_str = display_number(self.balance)
         purse_str = display_number(self.purse)
         length = max(len(balance_str), len(purse_str))
 
         green('Bank Account')
-        gray(f'Balance: {GOLD}{balance_str:>{length}} Coins'
-             f'{shortened_balance}')
-        white(f'Purse:   {GOLD}{purse_str:>{length}} Coins'
-              f'{shortened_purse}')
+        gray(f'Balance: {GOLD}{balance_str:>{length}} Coins')
+        white(f'Purse:   {GOLD}{purse_str:>{length}} Coins')
         gray(f'Bank Level: {GREEN}{display_name(self.bank_level)}')
 
     cls.display_money = display_money
@@ -390,17 +375,22 @@ def profile_display(cls):
                 if isinstance(cost, (int, float)):
                     gray(f'  {(index + 1):>{digits}} {item.display()}{GRAY}'
                          f' for {GOLD}{display_number(cost)} coins{GRAY}.')
-                else:
-                    gray(f'  {(index + 1):>{digits}} {item.display()}{GRAY}')
-                    for cost_item in cost:
-                        if isinstance(cost_item, int):
-                            gray(f"  {'':>{digits}}   {GOLD}"
-                                 f"{display_number(cost_item)} coins{GRAY}")
-                        else:
-                            count = ('' if cost_item[1] == 1
-                                     else f' {GRAY}x {cost_item[1]}')
-                            gray(f"  {'':>{digits}}   "
-                                 f"{cost_item[0].display()}{count}")
+                    continue
+
+                gray(f'  {(index + 1):>{digits}} {item.display()}{GRAY}')
+                for cost_item in cost:
+                    if isinstance(cost_item, int):
+                        gray(f"  {'':>{digits}}   {GOLD}"
+                             f"{display_number(cost_item)} coins{GRAY}")
+                        continue
+
+                    item, amount = cost_item
+                    item_type = get_item(item.name)
+                    color = RARITY_COLORS[item_type.rarity]
+                    cost_display = f'{color}{display_name(item.name)}{GRAY}'
+                    count = ('' if amount == 1
+                             else f' {GRAY}x {amount}')
+                    gray(f"  {'':>{digits}}   {cost_display}{count}")
         else:
             self.info(npc.trades[trade_index][1])
 

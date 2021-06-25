@@ -1,5 +1,6 @@
 from random import choice
 from re import fullmatch
+from readline import add_history
 from typing import Dict, List, Optional
 
 from ..constant.color import GOLD, GRAY, BLUE, GREEN, YELLOW
@@ -97,6 +98,9 @@ class Profile:
                     self.npc_talk(npc.name, npc.dialog)
                 elif isinstance(npc.dialog, tuple):
                     self.npc_talk(npc.name, choice(npc.dialog))
+            elif npc.trades is not None:
+                self.display_shop(npc, None)
+                return npc.name
             else:
                 self.npc_silent(npc)
             if npc.claim_item is not None:
@@ -134,12 +138,15 @@ class Profile:
 
             self.update()
 
-            words = input(':> ').split()
+            original_input = input(':> ')
+            words = original_input.split()
 
             if len(words) == 0:
                 continue
 
-            elif words[0] == 'armor':
+            add_history(original_input)
+
+            if words[0] == 'armor':
                 if len(words) > 2:
                     red(f'Invalid usage of command {words[0]}.')
                     continue
@@ -279,8 +286,9 @@ class Profile:
                     red(f'Invalid usage of command {words[0]}.')
                     continue
 
-                if self.region != 'bank':
-                    red('You can only do that while you are at the bank!')
+                if self.region not in {'bank', 'dwarven_village'}:
+                    red('You can only do that while you are '
+                        'at the Bank or Dwarvin Village!')
                     continue
 
                 coins_str = words[1].lower() if len(words) == 2 else 'all'

@@ -40,7 +40,7 @@ python -m skyblock
 * Axes, hoes, pickaxes, bows, and swords
 * Crafting
 * Collections, but incomplete
-* Enchantments
+* Enchantments and Enchanting
 * Farming, combat, mining, enchanting, and foraging
 * Fast Traveling
 * Islands partially added
@@ -53,11 +53,13 @@ python -m skyblock
 ## Features Planned:
 * Abilities
 * Anvil and Reforging
+* Collections (foraging, fishing, boss)
 * Combat while mining
 * Dungeons
-* Full Collections
+* Fishing
 * Minions
-* More Islands (Dwarvin Mines, Dungeon Hub)
+* More Islands (Nether Island)
+* Pet Crafting
 
 # Furthur information
 This project is a clone of [Hypixel Skyblock](https://hypixel-skyblock.fandom.com/wiki/Hypixel_SkyBlock_Wiki)

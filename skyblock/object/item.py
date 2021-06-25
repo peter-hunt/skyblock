@@ -24,11 +24,14 @@ COLLECTION_ITEMS = [
     Item('cactus', 64, 'common'),
     Item('sugar_cane', 64, 'common'),
     Item('feather', 64, 'common'),
+    Item('beef', 64, 'common'),
     Item('leather', 64, 'common'),
     Item('porkchop', 64, 'common'),
     Item('chicken', 64, 'common'),
     Item('mutton', 64, 'common'),
     Item('rabbit', 64, 'common'),
+    Item('rabbit_foot', 64, 'common'),
+    Item('rabbit_hide', 64, 'common'),
     Item('nether_wart', 64, 'common'),
 
     Item('cobblestone', 64, 'common'),
@@ -48,6 +51,10 @@ COLLECTION_ITEMS = [
     Item('sand', 64, 'common'),
     Item('end_stone', 64, 'common'),
     Item('mithril', 64, 'common'),
+    Item('starfall', 64, 'rare'),
+    Item('titanium', 64, 'rare'),
+    Item('sorrow', 64, 'rare'),
+    Item('plasma', 64, 'rare'),
 
     Item('rotten_flesh', 64, 'common'),
     Item('bone', 64, 'common'),
@@ -149,6 +156,9 @@ COMPACT_ITEMS = [
     Item('enchanted_sand', 64, 'uncommon'),
     Item('enchanted_end_stone', 64, 'uncommon'),
     Item('enchanted_mithril', 64, 'uncommon'),
+    Item('enchanted_titanium', 64, 'epic'),
+
+    Item('refined_titanium', 64, 'legendary'),
 
     Item('enchanted_coal_block', 64, 'rare'),
     Item('enchanted_iron_block', 64, 'rare'),
@@ -196,7 +206,6 @@ COMPACT_ITEMS = [
 OTHER_ITEMS = [
     Item('apple', 64, 'common'),
     Item('arrow', 64, 'common'),
-    Item('beef', 64, 'common'),
     Item('blaze_powder', 64, 'common'),
     Item('book', 64, 'common'),
     Item('bread', 64, 'common'),
@@ -213,11 +222,13 @@ OTHER_ITEMS = [
     Item('paper', 64, 'common'),
     Item('planks', 64, 'common'),
     Item('poisonous_potato', 64, 'common'),
-    Item('rabbit_foot', 64, 'common'),
-    Item('rabbit_hide', 64, 'common'),
     Item('saving_grace', 64, 'rare'),
     Item('stick', 64, 'common'),
     Item('sugar', 64, 'common'),
+
+    Item('glacite_jewel', 64, 'rare'),
+    Item('bejeweled_handle', 64, 'rare'),
+
     Item('summoning_eye', 1, 'epic'),
 ]
 
@@ -280,11 +291,11 @@ WEAPONS = [
 
     Sword('necrons_blade', 'legendary', damage=210,
           strength=60, defense=250, intelligence=50,
-          true_denfense=20, ferocity=30,
+          true_defense=20, ferocity=30,
           dungeon_completion_req=7, stars=0),
     Sword('astraea', 'legendary', damage=210,
           strength=60, defense=250, intelligence=50,
-          true_denfense=20, ferocity=30,
+          true_defense=20, ferocity=30,
           dungeon_completion_req=7, stars=0),
     Sword('hyperion', 'legendary', damage=260,
           strength=150, intelligence=350, ferocity=30,
@@ -583,6 +594,33 @@ ARMOR_PIECES = [
     Armor('miner_boots', rarity='uncommon', part='boots',
           defense=45),
 
+    Armor('goblin_helmet', rarity='rare', part='helmet',
+          defense=70, intelligence=-1, mining_speed=10),
+    Armor('goblin_chestplate', rarity='rare', part='chestplate',
+          defense=140, intelligence=-1, mining_speed=10),
+    Armor('goblin_leggings', rarity='rare', part='leggings',
+          defense=125, intelligence=-1, mining_speed=10),
+    Armor('goblin_boots', rarity='rare', part='boots',
+          defense=60, intelligence=-1, mining_speed=10),
+
+    Armor('glacite_helmet', rarity='rare', part='helmet',
+          defense=70, speed=10, mining_speed=10, true_defense=5),
+    Armor('glacite_chestplate', rarity='rare', part='chestplate',
+          defense=150, speed=15, mining_speed=10, true_defense=20),
+    Armor('glacite_leggings', rarity='rare', part='leggings',
+          defense=125, speed=15, mining_speed=10, true_defense=20),
+    Armor('glacite_boots', rarity='rare', part='boots',
+          defense=70, speed=10, mining_speed=10, true_defense=5),
+
+    Armor('sorrow_helmet', rarity='legendary', part='helmet',
+          magic_find=10, mining_speed=50, mining_fortune=20, true_defense=100),
+    Armor('sorrow_chestplate', rarity='legendary', part='chestplate',
+          magic_find=10, mining_speed=50, mining_fortune=20, true_defense=200),
+    Armor('sorrow_leggings', rarity='legendary', part='leggings',
+          magic_find=10, mining_speed=50, mining_fortune=20, true_defense=150),
+    Armor('sorrow_boots', rarity='legendary', part='boots',
+          magic_find=10, mining_speed=50, mining_fortune=20, true_defense=75),
+
     Armor('ender_helmet', rarity='epic', part='helmet',
           health=20, defense=35),
     Armor('ender_chestplate', rarity='epic', part='chestplate',
@@ -640,6 +678,15 @@ TOOLS = [
     Pickaxe('stonk', rarity='epic',
             breaking_power=1, mining_speed=380,
             enchantments={'efficiency': 6}),
+
+    Pickaxe('fractured_mithril_pickaxe', rarity='uncommon',
+            breaking_power=5, mining_speed=200),
+    Pickaxe('bandaged_mithril_pickaxe', rarity='uncommon',
+            breaking_power=5, mining_speed=250),
+    Pickaxe('titanium_pickaxe', rarity='rare',
+            breaking_power=6, mining_speed=310),
+    Pickaxe('refined_titanium_pickaxe', rarity='rare',
+            breaking_power=6, mining_speed=400),
 ]
 
 TRAVEL_SCROLLS = [

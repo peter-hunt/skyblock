@@ -189,6 +189,42 @@ MOBS = [
             (Item('exp_share_core'), 1, 'rngesus', 0.0001),
         ]),
 
+    Mob('goblin', level=25, health=800, damage=300,
+        coins=10, combat_xp=20, exp=50,
+        drops=[
+            (get_item('goblin_helmet'),
+             1, 'rngesus', 0.00075),
+            (get_item('goblin_chestplate'),
+             1, 'rngesus', 0.00075),
+            (get_item('goblin_leggings'),
+             1, 'rngesus', 0.00075),
+            (get_item('goblin_boots'),
+             1, 'rngesus', 0.00075),
+        ]),
+    Mob('ice_walker', level=45, health=8_880, damage=500,
+        coins=40, combat_xp=40, exp=75,
+        drops=[
+            (get_item('glacite_helmet'),
+             1, 'rngesus', 0.0025),
+            (get_item('glacite_chestplate'),
+             1, 'rngesus', 0.0025),
+            (get_item('glacite_leggings'),
+             1, 'rngesus', 0.0025),
+            (get_item('glacite_boots'),
+             1, 'rngesus', 0.0025),
+        ]),
+    Mob('treasure_hoarder', level=70, health=22_000, damage=750,
+        coins=50, combat_xp=70, exp=100,
+        drops=[
+            (Item('starfall'), (1, 2), 'common', 1),
+        ]),
+    Mob('ghost', level=100, health=1_000_000, damage=1_000,
+        coins=100, combat_xp=100, exp=0,
+        drops=[
+            (Item('sorrow'), 1, 'rare', 0.0012),
+            (Item('plasma'), 1, 'legendary', 0.001),
+        ]),
+
     Mob('pack_spirit', level=35, health=7_000, damage=450,
         coins=11, combat_xp=15, exp=10,
         drops=[

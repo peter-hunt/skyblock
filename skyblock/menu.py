@@ -1,6 +1,7 @@
 from os import walk
 from os.path import join
 from pathlib import Path
+from readline import add_history
 
 from .constant.color import GREEN, AQUA
 from .constant.doc import menu_doc
@@ -15,9 +16,13 @@ __all__ = ['main']
 menu_help = generate_help(menu_doc)
 
 
+def join_path(*names):
+    return join(Path.home(), *names)
+
+
 def init_home_dir(*names):
-    if not Path(join(Path.home(), *names)).is_dir():
-        Path(join(Path.home(), *names)).mkdir()
+    if not Path(join_path(*names)).is_dir():
+        Path(join_path(*names)).mkdir()
 
 
 def init_env():
@@ -56,12 +61,15 @@ def main():
     init_env()
 
     while True:
-        words = input('> ').split()
+        original_input = input('> ')
+        words = original_input.split()
 
         if len(words) == 0:
             continue
 
-        elif words[0] == 'clear':
+        add_history(original_input)
+
+        if words[0] == 'clear':
             if len(words) != 1:
                 red(f'Invalid usage of command {words[0]}.')
                 continue

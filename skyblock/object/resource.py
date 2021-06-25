@@ -47,6 +47,17 @@ RESOURCES = [
     Mineral('sand', drop='sand', amount=1, breaking_power=0,
             hardness=0.5, exp=0, mining_exp=3),
 
+    Mineral('gray_mithril', drop='mithril', amount=1, breaking_power=4,
+            hardness=30, exp=15, mining_exp=45),
+    Mineral('dark_mithril', drop='mithril', amount=2, breaking_power=4,
+            hardness=60, exp=30, mining_exp=45),
+    Mineral('light_mithril', drop='mithril', amount=5, breaking_power=4,
+            hardness=100, exp=50, mining_exp=45),
+    Mineral('titanium', drop='titanium', amount=5, breaking_power=4,
+            hardness=150, exp=75, mining_exp=100),
+    Mineral('gold_block', drop='gold', amount=9, breaking_power=3,
+            hardness=30, exp=20, mining_exp=20),
+
     Tree('oak', 'oak_wood',
          hardness=2, foraging_exp=6),
     Tree('birch', 'birch_wood',

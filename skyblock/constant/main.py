@@ -259,6 +259,12 @@ SELL_PRICE = {
     'netherrack': 1,
     'sand': 2,
     'end_stone': 2,
+    'mithril': 10,
+    'starfall': 15,
+    'titanium': 20,
+    'sorrow': 13,
+    'plasma': 20_000,
+    'bejeweled_handle': 100,
 
     'enchanted_cobblestone': 160,
     'enchanted_coal': 320,
@@ -288,6 +294,9 @@ SELL_PRICE = {
     'enchanted_sand': 320,
     'enchanted_end_stone': 320,
     'enchanted_mithril': 1_600,
+    'enchanted_titanium': 3_200,
+
+    'refined_titanium': 51_200,
 
     'rotten_flesh': 2,
     'bone': 2,

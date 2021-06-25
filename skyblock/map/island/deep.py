@@ -45,12 +45,13 @@ OBSIDIAN_SANCTUARY = Region(
                get_resource('diamond_block'), get_resource('obsidian')],
     mobs=[get_mob('enchanted_diamond_zombie'),
           get_mob('enchanted_diamond_skeleton')],
+    portal='mines',
 )
 LIFT = Region(
     'lift', 50, 0,
     npcs=[
         Npc('life_operator',
-            init_dialog=[
+            dialog=[
                 'Hey Feller!',
                 'I control this lift here behind me.',
                 ("Once you've explored an area"
@@ -59,7 +60,7 @@ LIFT = Region(
                  " it's a long fall!"),
                 'Good luck on your adventures.',
             ])
-    ]
+    ],
 )
 
 DEEP_JOINTS = [

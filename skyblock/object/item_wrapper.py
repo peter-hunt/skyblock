@@ -197,7 +197,7 @@ def item_type(cls: type, /) -> type:
                                          for stat in basic_stats)
 
             bonus_stats = []
-            for stat_name in ('defense', 'intelligence', 'true_denfense',
+            for stat_name in ('defense', 'intelligence', 'true_defense',
                               'ferocity', 'speed'):
                 if getattr(self, stat_name, 0) == 0:
                     continue
@@ -257,7 +257,7 @@ def item_type(cls: type, /) -> type:
             bonus_stats = []
             for stat_name in ('health', 'defense', 'intelligence', 'speed',
                               'magic_find', 'mining_speed', 'mining_fortune',
-                              'true_denfense', 'ferocity',
+                              'true_defense', 'ferocity',
                               'sea_creature_chance'):
 
                 display_stat = display_name(stat_name)
@@ -402,11 +402,11 @@ def item_type(cls: type, /) -> type:
         if getattr(self, 'combat_skill_req', None) is not None:
             if combat_lvl < self.combat_skill_req:
                 info += (f'\n{DARK_RED}❣ {RED}Requires '
-                        f'{GREEN}Combat Skill {self.combat_skill_req}{CLN}')
+                         f'{GREEN}Combat Skill {self.combat_skill_req}{CLN}')
         if getattr(self, 'dungeon_skill_req', None) is not None:
             if cata_lvl < self.dungeon_skill_req:
                 info += (f'\n{DARK_RED}❣ {RED}Requires '
-                        f'{GREEN}Catacombs Skill {self.dungeon_skill_req}{CLN}')
+                         f'{GREEN}Catacombs Skill {self.dungeon_skill_req}{CLN}')
         if getattr(self, 'dungeon_completion_req', None) is not None:
             info += (f'\n{DARK_RED}❣ {RED}Requires {GREEN}Catacombs Floor '
                      f'{roman(self.dungeon_completion_req)} Completion{CLN}')

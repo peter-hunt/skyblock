@@ -414,6 +414,10 @@ def profile_action(cls):
                         last_cp += cp_step
                     gray(f'{count} / {amount} ({(last_cp * 100):.0f}%) done')
 
+                if 'mithril' in resource.name and random_amount((1, 20)) == 1:
+                    white('Titanium has spawned nearby!')
+                    self.harvest_resource(get_resource('titanium'), tool_index)
+
         elif isinstance(resource, Tree):
             if isinstance(tool, Axe):
                 tool_speed = tool.tool_speed
@@ -473,7 +477,7 @@ def profile_action(cls):
                 speed += piece.speed
 
         route = f'{GRAY} ➜ {AQUA}'.join(f'{region}' for region in path)
-        aqua(f'Route: {route} ({float(accum_dist):.2f}m)')
+        gray(f'Route: {AQUA}{route} {GRAY}({float(accum_dist):.2f}m)')
         for target in path[1:]:
             if target.skill_req is not None:
                 name, level = target.skill_req
@@ -528,6 +532,8 @@ def profile_action(cls):
     @checkpoint
     def slay(self, name: str, weapon_index: Optional[int], amount: int = 1, /):
         mob = get_mob(name)
+        mob_name = display_name(mob.name)
+
         weapon = (Empty() if weapon_index is None
                   else self.inventory[weapon_index])
 
@@ -646,7 +652,7 @@ def profile_action(cls):
         is_coll = {
             row[0].name: is_collection(row[0].name) for row in mob.drops
         }
-        green(f'Slaying {mob.display()}')
+        green(f'Slaying {mob.display()}{GREEN}:')
         for count in range(1, amount + 1):
             sleep(time_cost)
             healed = round((time_cost // 2) * (1.5 + health / 100), 1)
@@ -655,23 +661,27 @@ def profile_action(cls):
             if healed != 0:
                 hp += healed
                 gray(f'You healed for {GREEN}{shorten_number(healed)}'
-                     f'{RED}❤{GRAY}.')
+                     f'{RED}❤{GRAY}.\n'
+                     f'Your HP: {GREEN}{shorten_number(hp)}{GRAY}/'
+                     f'{GREEN}{shorten_number(health)}{RED}❤\n')
 
             mob_hp = mob.health
             while True:
                 strike_count = 0
 
+                killed = False
+
                 for _ in range(random_int(1 + ferocity / 100)):
                     crit = ''
                     if random_bool(crit_chance / 100):
-                        damage_delt = damage * (1 + crit_damage / 100)
+                        damage_dealt = damage * (1 + crit_damage / 100)
                         if crit_chance >= 100 and random_bool(overload * 0.1):
-                            damage_delt *= 1.1
+                            damage_dealt *= 1.1
                         crit = 'crit '
                     else:
-                        damage_delt = damage
+                        damage_dealt = damage
 
-                    damage_delt *= 1 + (strength + soul_eater_strength) / 100
+                    damage_dealt *= 1 + (strength + soul_eater_strength) / 100
 
                     if soul_eater_strength != 0:
                         gray(f"Your {LIGHT_PURPLE}{BOLD}Soul Eater{GRAY}"
@@ -680,61 +690,74 @@ def profile_action(cls):
                              f" on your hit!\n")
                         soul_eater_strength = 0
 
-                    damage_delt *= (
+                    damage_dealt *= (
                         1 + giant_killer * (min(0.1 * (mob_hp - hp), 5) / 100)
                     )
 
                     if strike_count == 0:
-                        damage_delt *= first_strike
+                        damage_dealt *= first_strike
                     if strike_count < 3:
-                        damage_delt *= triple_strike
+                        damage_dealt *= triple_strike
 
-                    damage_delt *= 1 + min(prosecute * (mob_hp / mob.health),
-                                           0.35)
-                    damage_delt += (execute / 100) * (mob.health - mob_hp)
+                    damage_dealt *= 1 + min(prosecute * (mob_hp / mob.health),
+                                            0.35)
+                    damage_dealt += (execute / 100) * (mob.health - mob_hp)
 
-                    mob_hp -= damage_delt
-                    gray(f"You delt {YELLOW}{shorten_number(damage_delt)}{GRAY}"
-                         f" {crit}damage to the {display_name(mob.name)}!\n")
+                    mob_hp = max(mob_hp - damage_dealt, 0)
+                    gray(f"You've dealt {YELLOW}{shorten_number(damage_dealt)}"
+                         f"{GRAY} {crit}damage to the {mob_name}!\n\n")
 
                     if life_steal != 0:
                         delta = min(health - hp, life_steal * health)
                         if delta != 0:
                             hp += delta
-                            gray(f"Your {BLUE}Life Steal{GRAY} "
-                                 f"enchantment healed you for {AQUA}"
-                                 f"{shorten_number(delta)}{RED}❤{GRAY}!\n")
+                            gray(f'Your {BLUE}Life Steal{GRAY} '
+                                 f'enchantment healed you for {AQUA}'
+                                 f'{shorten_number(delta)}{RED}❤{GRAY}!\n'
+                                 f'Your HP: {GREEN}{shorten_number(hp)}{GRAY}/'
+                                 f'{GREEN}{shorten_number(health)}{RED}❤\n')
 
                     if syphon != 0:
                         delta = min(health - hp,
                                     syphon * health * (crit_damage // 100))
                         if delta != 0:
                             hp += delta
-                            gray(f"Your {BLUE}Syphon{GRAY} "
-                                 f"enchantment healed you for {AQUA}"
-                                 f"{shorten_number(delta)}{RED}❤{GRAY}!\n")
+                            gray(f'Your {BLUE}Syphon{GRAY} '
+                                 f'enchantment healed you for {AQUA}'
+                                 f'{shorten_number(delta)}{RED}❤{GRAY}!\n'
+                                 f'Your HP: {GREEN}{shorten_number(hp)}{GRAY}/'
+                                 f'{GREEN}{shorten_number(health)}{RED}❤\n')
 
-                if mob_hp <= 0:
-                    a_an = 'an' if mob.name[0] in 'aeiou' else 'a'
-                    green(f"You've killed {a_an} "
-                          f"{display_name(mob.name)}!")
-                    soul_eater_strength = mob.damage * soul_eater
+                    if mob_hp <= 0:
+                        a_an = 'an' if mob.name[0] in 'aeiou' else 'a'
+                        green(f"You've killed {a_an} {mob_name}!")
+                        soul_eater_strength = mob.damage * soul_eater
+                        killed = True
+                        break
+
+                    gray(f"{mob_name}'s HP: "
+                         f"{GREEN}{shorten_number(mob_hp)}{GRAY}"
+                         f"/{GREEN}{shorten_number(mob.health)}{RED}❤\n")
+
+                if killed:
                     break
 
                 actual_defense = defense
                 if last_stand != 0 and hp / health < 0.4:
                     additional_defense = actual_defense * (last_stand / 100)
                     actual_defense += additional_defense
-                    gray(f"Your {LIGHT_PURPLE}{BOLD}Last Stand{GRAY}"
-                         f" enchantment granted you {GREEN}+"
-                         f" {additional_defense} ❈ Defense{GRAY}!\n")
+                    gray(f'Your {LIGHT_PURPLE}{BOLD}Last Stand{GRAY}'
+                         f' enchantment granted you {GREEN}+'
+                         f' {additional_defense} ❈ Defense{GRAY}!\n')
 
                 if mob.damage != 0:
                     damage_recieved = mob.damage / (1 + defense / 100)
                     hp -= damage_recieved
-                    gray(f"You recieved {YELLOW}"
-                         f"{shorten_number(damage_recieved)}{GRAY}"
-                         f" damage from the {display_name(mob.name)}{GRAY}!\n")
+                    gray(f'You recieved {YELLOW}'
+                         f'{shorten_number(damage_recieved)}{GRAY}'
+                         f' damage from the {mob_name}{GRAY}!\n'
+                         f'Your HP: {GREEN}{shorten_number(hp)}{GRAY}/'
+                         f'{GREEN}{shorten_number(health)}{RED}❤\n')
 
                 exp_npng = 0
                 for npng_chance in no_pain_no_gain:
@@ -748,27 +771,28 @@ def profile_action(cls):
 
                 if hp <= 0:
                     if self.die():
-                        red(f' ☠ {GRAY}You were killed by'
-                            f' {display_name(mob.name)}.')
+                        red(f' ☠ {GRAY}You were killed by {mob_name}.')
                     return
 
                 if random_bool(0.5) and thorns != 0:
                     thorns_damage = (thorns / 100) * damage_recieved
                     mob_hp -= thorns_damage
                     gray(f"Your {BLUE}Thorns{GRAY} enchantment delt {YELLOW}"
-                         f"{shorten_number(damage_delt)}{GRAY} {crit}damage"
-                         f" to the {display_name(mob.name)}{GRAY}!\n")
+                         f"{shorten_number(damage_dealt)}{GRAY} {crit}damage"
+                         f" to the {mob_name}{GRAY}!\n")
 
                     if mob_hp <= 0:
                         a_an = 'an' if mob.name[0] in 'aeiou' else 'a'
-                        green(f"You've killed {a_an} "
-                              f"{display_name(mob.name)}{GRAY}!")
-                        gray(f'Your HP: {AQUA}{shorten_number(hp)}{RED}❤')
+                        green(f"You've killed {a_an} {mob_name}{GRAY}!\n"
+                              f'Your HP: {GREEN}{shorten_number(hp)}{GRAY}/'
+                              f'{GREEN}{shorten_number(health)}{RED}❤\n')
                         break
 
-                gray(f'Your HP: {AQUA}{shorten_number(hp)}{RED}❤')
-                gray(f"{display_name(mob.name)}'s HP: "
-                     f"{AQUA}{shorten_number(mob_hp)}{RED}❤\n\n")
+                gray(f'Your HP: {GREEN}{shorten_number(hp)}{GRAY}/'
+                     f'{GREEN}{shorten_number(health)}{RED}❤\n'
+                     f"{mob_name}'s HP: "
+                     f"{GREEN}{shorten_number(mob_hp)}{GRAY}"
+                     f"/{GREEN}{shorten_number(mob.health)}{RED}❤\n\n")
 
                 strike_count += 1
 
@@ -777,7 +801,9 @@ def profile_action(cls):
                 hp += delta
 
                 gray(f"Your {BLUE}Vampirism{GRAY} enchantment healed you for "
-                     f"{AQUA}{shorten_number(delta)}{RED}❤{GRAY}!")
+                     f"{AQUA}{shorten_number(delta)}{RED}❤{GRAY}!\n"
+                              f'Your HP: {GREEN}{shorten_number(hp)}{GRAY}/'
+                              f'{GREEN}{shorten_number(health)}{RED}❤\n')
 
             self.purse += mob.coins + scavenger
             self.add_exp(mob.exp * random_int(experience))
@@ -895,7 +921,7 @@ def profile_action(cls):
                 return
 
         if not includes(ISLANDS, dest):
-            red('Unknown destination! Use /warp to view options!')
+            red('Unknown destination! Use `warp` to view options!')
             return
 
         portal_region = get(island.regions, portal=dest)
@@ -909,11 +935,13 @@ def profile_action(cls):
             if self.region != portal_region.name:
                 return
 
+        island = get(ISLANDS, dest)
+        gray(f'Warping to {AQUA}{dest_region}{GRAY}'
+             f' of {AQUA}{island}{GRAY}...')
+        sleep(6)
+
         self.island = dest
         self.region = dest_region.name
-        island = get(ISLANDS, self.island)
-        gray(f'Warped to {AQUA}{dest_region}{GRAY}'
-             f' of {AQUA}{island}{GRAY}.')
 
     cls.warp = warp
 

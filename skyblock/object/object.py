@@ -71,7 +71,7 @@ class Sword(ItemType):
 
     defense: int = 0
     intelligence: int = 0
-    true_denfense: int = 0
+    true_defense: int = 0
     ferocity: int = 0
     speed: int = 0
 
@@ -129,7 +129,7 @@ class Armor(ItemType):
     magic_find: int = 0
     mining_speed: int = 0
     mining_fortune: int = 0
-    true_denfense: int = 0
+    true_defense: int = 0
     ferocity: int = 0
     sea_creature_chance: int = 0
 
