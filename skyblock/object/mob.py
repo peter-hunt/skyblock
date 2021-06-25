@@ -119,7 +119,6 @@ MOBS = [
         coins=4, combat_xp=15, exp=25,
         drops=[
             (Item('gold_nugget'), 2, 'common', 1),
-            (get_item('flaming_sword'), 1, 'uncommon', 0.03),
             (Item('exp_share_core'), 1, 'rngesus', 0.0001),
         ]),
     Mob('small_emerald_slime', level=5, health=80, damage=70,
@@ -295,6 +294,57 @@ MOBS = [
         coins=5, combat_xp=4, exp=5,
         drops=[
             (Item('slime_ball'), 1, 'common', 1),
+        ]),
+
+    Mob('zombie_pigman', level=12, health=240, damage=125,
+        coins=4, combat_xp=15, exp=25,
+        drops=[
+            (Item('gold_nugget'), 2, 'common', 1),
+            (get_item('flaming_sword'), 1, 'uncommon', 0.03),
+        ]),
+    Mob('mini_blaze', level=12, health=500, damage=120,
+        coins=5, combat_xp=10, exp=30,
+        drops=[
+            (Item('blaze_rod'), 1, 'common', 1),
+        ]),
+    Mob('blaze', level=15, health=600, damage=150,
+        coins=10, combat_xp=10, exp=35,
+        drops=[
+            (Item('blaze_rod'), 2, 'common', 1),
+            (get_item('blaze_hat'), 1, 'uncommon', 0.05),
+        ]),
+    Mob('wither_skeleton', level=10, health=250, damage=152,
+        coins=4, combat_xp=13, exp=15,
+        drops=[
+            (Item('bone'), 3, 'common', 1),
+            (Item('coal'), 1, 'common', 0.5),
+            (Item('enchanted_coal'), 1, 'rare', 0.01),
+        ]),
+    Mob('small_magma_cube', level=3, health=200, damage=70,
+        coins=3, combat_xp=4, exp=7,
+        drops=[
+            (Item('magma_cream'), 1, 'common', 1),
+        ]),
+    Mob('medium_magma_cube', level=6, health=250, damage=120,
+        coins=4, combat_xp=4, exp=9,
+        drops=[
+            (Item('magma_cream'), 1, 'common', 1),
+        ]),
+    Mob('large_magma_cube', level=9, health=300, damage=150,
+        coins=4, combat_xp=4, exp=20,
+        drops=[
+            (Item('magma_cream'), (1, 3), 'common', 1),
+            (get_item('magma_cube_pet', rarity='common'),
+             1, 'rare', 0.01),
+            (get_item('magma_cube_pet', rarity='uncommon'),
+             1, 'legendary', 0.0005),
+            (get_item('magma_cube_pet', rarity='rare'),
+             1, 'rngesus', 0.0001),
+        ]),
+    Mob('ghast', level=17, health=330, damage=150,
+        coins=30, combat_xp=50, exp=32,
+        drops=[
+            (Item('ghast_tear'), 1, 'common', 1),
         ]),
 
     Mob('enderman', level=42, health=4_500, damage=500,

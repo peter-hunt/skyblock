@@ -80,6 +80,7 @@ GRAVEL_MINE = Region(
             ]),
     ],
     resources=[get_resource('gravel')],
+    portal='nether',
 )
 TOP_OF_NEST = Region(
     'nest', -365, -220,

@@ -340,6 +340,20 @@ SELL_PRICE = {
     'acacia_wood': 2,
     'jungle_wood': 2,
 
+    'oak_sapling': 0.2,
+    'birch_sapling': 0.2,
+    'spruce_sapling': 0.2,
+    'dark_oak_sapling': 0.2,
+    'acacia_sapling': 0.2,
+    'jungle_sapling': 0.2,
+
+    'oak_leaves': 2,
+    'birch_leaves': 2,
+    'spruce_leaves': 2,
+    'dark_oak_leaves': 2,
+    'acacia_leaves': 2,
+    'jungle_leaves': 2,
+
     'enchanted_oak': 320,
     'enchanted_birch': 320,
     'enchanted_spruce': 320,

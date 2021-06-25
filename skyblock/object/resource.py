@@ -58,6 +58,13 @@ RESOURCES = [
     Mineral('gold_block', drop='gold', amount=9, breaking_power=3,
             hardness=30, exp=20, mining_exp=20),
 
+    Mineral('glowstone', drop='glowstone', amount=4, breaking_power=1,
+            hardness=0.3, exp=0, mining_exp=7),
+    Mineral('netherrack', drop='netherrack', amount=1, breaking_power=1,
+            hardness=0.4, exp=0, mining_exp=0.5),
+    Mineral('quartz_ore', drop='quartz', amount=1, breaking_power=1,
+            hardness=3, exp=(2, 5), mining_exp=5),
+
     Wood('oak_wood', hardness=2, foraging_exp=6),
     Wood('birch_wood', hardness=2, foraging_exp=6),
     Wood('spruce_wood', hardness=2, foraging_exp=6),

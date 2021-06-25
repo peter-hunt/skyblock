@@ -57,6 +57,9 @@ SPECIAL_NAMES = {
     'spider': "Spider's Den",
     'nest': 'Top of Nest',
 
+    'nether': 'Blazing Fortress',
+    'magma': 'Magma Fields',
+
     'end': 'The End',
     'drag': "Dragon's Nest",
 

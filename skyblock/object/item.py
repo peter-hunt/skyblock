@@ -757,6 +757,8 @@ TRAVEL_SCROLLS = [
     TravelScroll('park', 'jungle', rarity='epic'),
     TravelScroll('spider'),
     TravelScroll('spider', 'nest', rarity='epic'),
+    TravelScroll('nether'),
+    TravelScroll('nether', 'magma', rarity='epic'),
     TravelScroll('end'),
     TravelScroll('end', 'drag', rarity='epic'),
     TravelScroll('mines'),
@@ -783,6 +785,13 @@ PETS = [
         strength=10, crit_chance=10, crit_damage=30),
     Pet('tarantula_pet', rarity='legendary', category='combat',
         strength=10, crit_chance=10, crit_damage=30),
+
+    Pet('magma_cube_pet', rarity='common', category='combat',
+        health=50, defense=100 / 3, strength=20),
+    Pet('magma_cube_pet', rarity='uncommon', category='combat',
+        health=50, defense=100 / 3, strength=20),
+    Pet('magma_cube_pet', rarity='rare', category='combat',
+        health=50, defense=100 / 3, strength=20),
 
     Pet('enderman_pet', rarity='common', category='combat',
         crit_damage=75),
