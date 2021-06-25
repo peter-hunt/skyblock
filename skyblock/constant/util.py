@@ -62,7 +62,7 @@ SPECIAL_NAMES = {
 
     'park': 'The Park',
     'birch': 'Birch Park',
-    'dark_thicket': 'Dark Thicket',
+    'dark': 'Dark Thicket',
     'jungle': 'Jungle Island',
     'savanna': 'Savanna Woodland',
     'spruce': 'Spruce Wood',
@@ -87,6 +87,11 @@ SPECIAL_NAMES = {
     'miners_outfit_chestplate': "Miner's Outfit Chestplate",
     'miners_outfit_leggings': "Miner's Outfit Leggings",
     'miners_outfit_boots': "Miner's Outfit Boots",
+
+    'growth_helmet': 'Helmet of Growth',
+    'growth_chestplate': "Chestplate of Growth",
+    'growth_leggings': "Leggings of Growth",
+    'growth_boots': "Boots of Growth",
 
     'mithril_drill_226': 'Mithril Drill SX-R226',
     'mithril_drill_326': 'Mithril Drill SX-R326',

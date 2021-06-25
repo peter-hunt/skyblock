@@ -45,7 +45,8 @@ Clear the screen.
 > clearstash
 Removes all items currently in the Stash.
 
-> collection [category|name]
+> collections [category|name]
+Display collections.
 
 > consume <index>
 > use <index>

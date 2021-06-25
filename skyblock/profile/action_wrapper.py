@@ -438,21 +438,23 @@ def profile_action(cls):
             foraging_fortune = self.get_stat('foraging_fortune', tool_index)
             fortune_mult = 1 + foraging_fortune / 100
 
-            drop_item = resource.drop
+            wood_name = resource.name
+            wood_item = get_item(wood_name)
+            wood_item.count = 1
+
+            sapling_item = get_item(f'{wood_name[:-5]}_sapling')
+            sapling_item.count = 1
 
             last_cp = Decimal()
             cp_step = Decimal('0.1')
-            is_coll = is_collection(drop_item)
             for count in range(1, amount + 1):
                 sleep(time_cost)
                 drop_pool = random_int(fortune_mult)
 
-                item_type = get_item(drop_item)
-                if getattr(item_type, 'count', 1) != 1:
-                    item_type.count = 1
-                self.recieve_item(item_type, drop_pool)
-                if is_coll:
-                    self.collect(drop_item, drop_pool)
+                self.recieve_item(wood_item, drop_pool)
+                self.collect(wood_name, drop_pool)
+                if random_amount((1, 5)) == 1:
+                    self.recieve_item(sapling_item, drop_pool)
 
                 self.add_skill_exp('foraging', resource.foraging_exp)
                 if count >= (last_cp + cp_step) * amount:
@@ -935,15 +937,11 @@ def profile_action(cls):
                           portal=self.island)
 
         for i_name, r_name in self.fast_travel:
-            if dest == i_name:
+            if dest == i_name and r_name is None:
                 self.island = i_name
                 island = get(ISLANDS, self.island)
-                if r_name is None:
-                    region = dest_region
-                    self.region = region.name
-                else:
-                    self.region = r_name
-                    region = get(island.regions, r_name)
+                region = dest_region
+                self.region = region.name
 
                 gray(f'Warped to {AQUA}{region}{GRAY}'
                      f' of {AQUA}{island}{GRAY}.')

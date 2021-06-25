@@ -245,7 +245,6 @@ class Mineral(Resource):
 @item_type
 class Wood(Resource):
     name: str
-    drop: str
     hardness: int = 2
     foraging_exp: Number = 1
 

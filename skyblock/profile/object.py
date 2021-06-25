@@ -404,7 +404,6 @@ class Profile:
             elif words[0] == 'get':
                 name = words[1]
                 if get_resource(name) is None:
-                    red(f'Resource not found: {name!r}')
                     continue
                 if get(region.resources, name) is None:
                     red(f'Resource not avaliable at {region}: {name!r}')

@@ -75,6 +75,13 @@ COLLECTION_ITEMS = [
     Item('acacia_wood', 64, 'common'),
     Item('jungle_wood', 64, 'common'),
 
+    Item('enchanted_oak', 64, 'uncommon'),
+    Item('enchanted_birch', 64, 'uncommon'),
+    Item('enchanted_spruce', 64, 'uncommon'),
+    Item('enchanted_dark_oak', 64, 'uncommon'),
+    Item('enchanted_acacia', 64, 'uncommon'),
+    Item('enchanted_jungle', 64, 'uncommon'),
+
     Item('fish', 64, 'common'),
     Item('salmon', 64, 'common'),
     Item('clownfish', 64, 'common'),
@@ -202,13 +209,6 @@ COMPACT_ITEMS = [
     Item('tesselated_ender_pearl', 64, 'legendary'),
     Item('enchanted_slime_block', 64, 'rare'),
     Item('enchanted_blaze_rod', 64, 'uncommon'),
-
-    Item('enchanted_oak_wood', 64, 'uncommon'),
-    Item('enchanted_birch_wood', 64, 'uncommon'),
-    Item('enchanted_spruce_wood', 64, 'uncommon'),
-    Item('enchanted_dark_oak_wood', 64, 'uncommon'),
-    Item('enchanted_acacia_wood', 64, 'uncommon'),
-    Item('enchanted_jungle_wood', 64, 'uncommon'),
 ]
 
 OTHER_ITEMS = [
@@ -233,6 +233,20 @@ OTHER_ITEMS = [
     Item('saving_grace', 64, 'rare'),
     Item('stick', 64, 'common'),
     Item('sugar', 64, 'common'),
+
+    Item('oak_sapling', 64, 'common'),
+    Item('birch_sapling', 64, 'common'),
+    Item('spruce_sapling', 64, 'common'),
+    Item('dark_oak_sapling', 64, 'common'),
+    Item('acacia_sapling', 64, 'common'),
+    Item('jungle_sapling', 64, 'common'),
+
+    Item('oak_leaves', 64, 'common'),
+    Item('birch_leaves', 64, 'common'),
+    Item('spruce_leaves', 64, 'common'),
+    Item('dark_oak_leaves', 64, 'common'),
+    Item('acacia_leaves', 64, 'common'),
+    Item('jungle_leaves', 64, 'common'),
 
     Item('glacite_jewel', 64, 'rare'),
     Item('treasurite', 64, 'epic'),
@@ -333,6 +347,8 @@ WEAPONS = [
         crit_damage=50),
     Bow('magma_bow', 'epic', damage=100,
         strength=100),
+
+    Bow('savanna_bow', 'uncommon', damage=50),
 
     Bow('mosquito_bow', 'legendary', damage=251,
         strength=151, crit_damage=39),
@@ -550,6 +566,24 @@ ARMOR_PIECES = [
           strength=10, defense=110, speed=2),
     Armor('blaze_boots', rarity='epic', part='boots',
           strength=10, defense=70, speed=2),
+
+    Armor('leaflet_helmet', rarity='common', part='helmet',
+          health=20),
+    Armor('leaflet_chestplate', rarity='common', part='chestplate',
+          health=35),
+    Armor('leaflet_leggings', rarity='common', part='leggings',
+          health=30),
+    Armor('leaflet_boots', rarity='common', part='boots',
+          health=15),
+
+    Armor('growth_helmet', rarity='rare', part='helmet',
+          health=50, defense=30),
+    Armor('growth_chestplate', rarity='rare', part='chestplate',
+          health=100, defense=50),
+    Armor('growth_leggings', rarity='rare', part='leggings',
+          health=80, defense=40),
+    Armor('growth_boots', rarity='rare', part='boots',
+          health=50, defense=25),
 
     Armor('magma_cube_head', rarity='common', part='helmet',
           health=25, defense=25),

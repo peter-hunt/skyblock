@@ -143,7 +143,7 @@ FASHION_SHOP = Region(
 FLOWER_HOUSE = Region('flower_house', -7, -25)
 FOREST = Region(
     'forest', -95, -40,
-    resources=[get_resource('oak')],
+    resources=[get_resource('oak_wood')],
     portal='park',
 )
 GRAVEYARD = Region(

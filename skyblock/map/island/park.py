@@ -9,7 +9,7 @@ __all__ = ['PARK']
 
 BIRCH_PARK = Region(
     'birch', -300, -20,
-    resources=[get_resource('birch')],
+    resources=[get_resource('birch_wood')],
     portal='hub',
 )
 HOWLING_CAVE = Region(
@@ -19,7 +19,7 @@ HOWLING_CAVE = Region(
 )
 SPRUCE_WOOD = Region(
     'spruce', -325, 0,
-    resources=[get_resource('spruce')],
+    resources=[get_resource('spruce_wood')],
     npcs=[
         Npc('melancholic_viking',
             init_dialog=[
@@ -36,12 +36,12 @@ SPRUCE_WOOD = Region(
 )
 DARK_THICKET = Region(
     'dark', -330, -45,
-    resources=[get_resource('dark_oak')],
+    resources=[get_resource('dark_oak_wood')],
     skill_req=('foraging', 3),
 )
 SAVANNA_WOODLAND = Region(
     'savanna', -350, -15,
-    resources=[get_resource('acacia')],
+    resources=[get_resource('acacia_wood')],
     npcs=[
         Npc('master_tactician_funk',
             trades=[
@@ -52,7 +52,7 @@ SAVANNA_WOODLAND = Region(
 )
 JUNGLE_ISLAND = Region(
     'jungle', -55, -60,
-    resources=[get_resource('jungle')],
+    resources=[get_resource('jungle_wood')],
     skill_req=('foraging', 5),
 )
 

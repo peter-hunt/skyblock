@@ -58,18 +58,12 @@ RESOURCES = [
     Mineral('gold_block', drop='gold', amount=9, breaking_power=3,
             hardness=30, exp=20, mining_exp=20),
 
-    Wood('oak', 'oak_wood',
-         hardness=2, foraging_exp=6),
-    Wood('birch', 'birch_wood',
-         hardness=2, foraging_exp=6),
-    Wood('spruce', 'spruce_wood',
-         hardness=2, foraging_exp=6),
-    Wood('dark_oak', 'dark_oak_wood',
-         hardness=2, foraging_exp=6),
-    Wood('acacia', 'acacia_wood',
-         hardness=2, foraging_exp=6),
-    Wood('jungle', 'jungle_wood',
-         hardness=2, foraging_exp=6),
+    Wood('oak_wood', hardness=2, foraging_exp=6),
+    Wood('birch_wood', hardness=2, foraging_exp=6),
+    Wood('spruce_wood', hardness=2, foraging_exp=6),
+    Wood('dark_oak_wood', hardness=2, foraging_exp=6),
+    Wood('acacia_wood', hardness=2, foraging_exp=6),
+    Wood('jungle_wood', hardness=2, foraging_exp=6),
 ]
 
 
