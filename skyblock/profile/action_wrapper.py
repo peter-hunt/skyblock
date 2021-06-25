@@ -102,10 +102,10 @@ def profile_action(cls):
         display_str = f'{GREEN}, '.join(display)
 
         if isinstance(price, (float, int)):
-            green(f"You bought {display_str}{GREEN} for "
-                  f"{GOLD}{shorten_number(price)} Coins{GREEN}!")
+            green(f'You bought {display_str}{GREEN} for '
+                  f'{GOLD}{shorten_number(price)} Coins{GREEN}!')
         else:
-            green(f"You bought {display_str}{GREEN}!")
+            green(f'You bought {display_str}{GREEN}!')
 
     cls.buy = buy
 
@@ -136,8 +136,7 @@ def profile_action(cls):
         if recipe.collection_req is not None:
             coll_name, lvl = recipe.collection_req
             if self.coll_lvl(coll_name) < lvl:
-                red("You haven't reached the collection "
-                    "required by the recipe!")
+                red("You haven't reached the required collection yet!")
                 return
 
         for item, count in recipe.ingredients:
@@ -194,8 +193,8 @@ def profile_action(cls):
         self.death_count += 1
 
         if bank != 0:
-            gray(f"Your {BLUE}Bank{GRAY} enchantment saved {GOLD}"
-                 f"{shorten_number(saved)} coins{GRAY} for you!")
+            gray(f'Your {BLUE}Bank{GRAY} enchantment saved {GOLD}'
+                 f'{shorten_number(saved)} coins{GRAY} for you!')
 
         red(f'You died and lost {display_number(lost_coins)} coins!')
         self.region = get(ISLANDS, self.island).spawn
@@ -523,8 +522,8 @@ def profile_action(cls):
 
         delta = SELL_PRICE[item.name] * getattr(item, 'count', 1)
         self.purse += delta
-        green(f"You sold {item.display()}{GREEN} for "
-              f"{GOLD}{shorten_number(delta)} Coins{GREEN}!")
+        green(f'You sold {item.display()}{GREEN} for '
+              f'{GOLD}{shorten_number(delta)} Coins{GREEN}!')
         self.inventory[index] = Empty()
 
     cls.sell = sell
@@ -569,9 +568,9 @@ def profile_action(cls):
             ultimate_jerry = enchantments.get('ultimate_jerry', 0) * 50
             damage = weapon.damage + ultimate_jerry + 5
             if ultimate_jerry != 0:
-                gray(f"Your {LIGHT_PURPLE}{BOLD}Ultimate Jerry{GRAY} "
-                     f"enchantment granted {GREEN}+ {ultimate_jerry}"
-                     f" {GRAY}additional weapon base damage!\n")
+                gray(f'Your {LIGHT_PURPLE}{BOLD}Ultimate Jerry{GRAY} '
+                     f'enchantment granted {GREEN}+ {ultimate_jerry}'
+                     f' {GRAY}additional weapon base damage!\n')
 
             damage += weapon.hot_potato
 
@@ -684,10 +683,10 @@ def profile_action(cls):
                     damage_dealt *= 1 + (strength + soul_eater_strength) / 100
 
                     if soul_eater_strength != 0:
-                        gray(f"Your {LIGHT_PURPLE}{BOLD}Soul Eater{GRAY}"
-                             f" enchantment applied {RED}+"
-                             f" {soul_eater_strength} ❁ Strength{GRAY}"
-                             f" on your hit!\n")
+                        gray(f'Your {LIGHT_PURPLE}{BOLD}Soul Eater{GRAY}'
+                             f' enchantment applied {RED}+'
+                             f' {soul_eater_strength} ❁ Strength{GRAY}'
+                             f' on your hit!\n')
                         soul_eater_strength = 0
 
                     damage_dealt *= (
@@ -705,7 +704,7 @@ def profile_action(cls):
 
                     mob_hp = max(mob_hp - damage_dealt, 0)
                     gray(f"You've dealt {YELLOW}{shorten_number(damage_dealt)}"
-                         f"{GRAY} {crit}damage to the {mob_name}!\n\n")
+                         f'{GRAY} {crit}damage to the {mob_name}!\n\n')
 
                     if life_steal != 0:
                         delta = min(health - hp, life_steal * health)
@@ -736,8 +735,8 @@ def profile_action(cls):
                         break
 
                     gray(f"{mob_name}'s HP: "
-                         f"{GREEN}{shorten_number(mob_hp)}{GRAY}"
-                         f"/{GREEN}{shorten_number(mob.health)}{RED}❤\n")
+                         f'{GREEN}{shorten_number(mob_hp)}{GRAY}'
+                         f'/{GREEN}{shorten_number(mob.health)}{RED}❤\n')
 
                 if killed:
                     break
@@ -752,8 +751,8 @@ def profile_action(cls):
 
                 if mob.damage != 0:
                     damage_recieved = mob.damage / (1 + defense / 100)
-                    hp -= damage_recieved
-                    gray(f'You recieved {YELLOW}'
+                    hp = max(hp - damage_recieved, 0)
+                    gray(f"You've recieved {YELLOW}"
                          f'{shorten_number(damage_recieved)}{GRAY}'
                          f' damage from the {mob_name}{GRAY}!\n'
                          f'Your HP: {GREEN}{shorten_number(hp)}{GRAY}/'
@@ -765,9 +764,9 @@ def profile_action(cls):
                         exp_npng += 10
                 if exp_npng != 0:
                     self.add_exp(exp_npng)
-                    gray(f"Your {LIGHT_PURPLE}{BOLD}No Pain No Gain{GRAY}"
-                         f" enchantment granted you {GREEN}{exp_npng}"
-                         f" experience point{GRAY}!\n")
+                    gray(f'Your {LIGHT_PURPLE}{BOLD}No Pain No Gain{GRAY}'
+                         f' enchantment granted you {GREEN}{exp_npng}'
+                         f' experience point{GRAY}!\n')
 
                 if hp <= 0:
                     if self.die():
@@ -777,9 +776,9 @@ def profile_action(cls):
                 if random_bool(0.5) and thorns != 0:
                     thorns_damage = (thorns / 100) * damage_recieved
                     mob_hp -= thorns_damage
-                    gray(f"Your {BLUE}Thorns{GRAY} enchantment delt {YELLOW}"
-                         f"{shorten_number(damage_dealt)}{GRAY} {crit}damage"
-                         f" to the {mob_name}{GRAY}!\n")
+                    gray(f'Your {BLUE}Thorns{GRAY} enchantment delt {YELLOW}'
+                         f'{shorten_number(damage_dealt)}{GRAY} {crit}damage'
+                         f' to the {mob_name}{GRAY}!\n')
 
                     if mob_hp <= 0:
                         a_an = 'an' if mob.name[0] in 'aeiou' else 'a'
@@ -791,8 +790,8 @@ def profile_action(cls):
                 gray(f'Your HP: {GREEN}{shorten_number(hp)}{GRAY}/'
                      f'{GREEN}{shorten_number(health)}{RED}❤\n'
                      f"{mob_name}'s HP: "
-                     f"{GREEN}{shorten_number(mob_hp)}{GRAY}"
-                     f"/{GREEN}{shorten_number(mob.health)}{RED}❤\n\n")
+                     f'{GREEN}{shorten_number(mob_hp)}{GRAY}'
+                     f'/{GREEN}{shorten_number(mob.health)}{RED}❤\n\n')
 
                 strike_count += 1
 
@@ -800,10 +799,10 @@ def profile_action(cls):
                 delta = (health - hp) * (vampirism / 100)
                 hp += delta
 
-                gray(f"Your {BLUE}Vampirism{GRAY} enchantment healed you for "
-                     f"{AQUA}{shorten_number(delta)}{RED}❤{GRAY}!\n"
-                              f'Your HP: {GREEN}{shorten_number(hp)}{GRAY}/'
-                              f'{GREEN}{shorten_number(health)}{RED}❤\n')
+                gray(f'Your {BLUE}Vampirism{GRAY} enchantment healed you for '
+                     f'{AQUA}{shorten_number(delta)}{RED}❤{GRAY}!\n'
+                     f'Your HP: {GREEN}{shorten_number(hp)}{GRAY}/'
+                     f'{GREEN}{shorten_number(health)}{RED}❤\n')
 
             self.purse += mob.coins + scavenger
             self.add_exp(mob.exp * random_int(experience))
@@ -872,9 +871,9 @@ def profile_action(cls):
 
             interest *= now_cp - last_cp
             self.balance += interest
-            green(f"Since you've been away you earned "
-                  f"{GOLD}{display_number(interest)} coins{GREEN} "
-                  f"as interest in your personal bank account!")
+            green(f'Since you've been away you earned '
+                  f'{GOLD}{display_number(interest)} coins{GREEN} '
+                  f'as interest in your personal bank account!')
 
         self.play_time += dt
 

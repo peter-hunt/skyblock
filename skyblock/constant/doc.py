@@ -9,8 +9,8 @@ menu_doc = """
 > clear
 Clear the screen.
 
-> del <name>
-> rm <name>
+> delete <name>
+> remove <name>
 Delete a profile.
 
 > exit
@@ -104,6 +104,10 @@ Switch items slot in the inventory.
 > organize
 Organize your inventory. (replace empty slots and make stacks)
 
+> pet
+> pet ls
+List all the pets in the pet menu.
+
 > pet add <index>
 Add a pet to the pet menu.
 
@@ -112,9 +116,6 @@ Despawn a pet from the pet menu.
 
 > pet info <index>
 Display info about pet in the pet menu.
-
-> pet ls
-List all the pets in the pet menu.
 
 > pet remove <index>
 Remove a pet from the pet menu to your inventory.

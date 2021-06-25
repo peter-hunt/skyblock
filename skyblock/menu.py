@@ -7,7 +7,7 @@ from .constant.color import GREEN, AQUA
 from .constant.doc import menu_doc
 from .function.io import gray, red, green, yellow, aqua, input_regex
 from .function.path import is_dir, is_profile
-from .function.util import checkpoint, clear, generate_help
+from .function.util import checkpoint, clear, generate_help, is_valid_usage
 from .profile.object import Profile
 
 __all__ = ['main']
@@ -69,18 +69,23 @@ def main():
 
         add_history(original_input)
 
-        if words[0] == 'clear':
-            if len(words) != 1:
-                red(f'Invalid usage of command {words[0]}.')
-                continue
+        phrase = words[0]
+        if len(words) >= 2:
+            phrase = ' '.join(words[:2])
+            if phrase not in menu_help:
+                phrase = words[0]
 
+        if phrase not in menu_help:
+            red(f'Command not found: {phrase!r}.')
+            continue
+        if not is_valid_usage(menu_help[phrase][0], words):
+            red(f'Invalid usage of command {words[0]}.')
+            continue
+
+        if words[0] == 'clear':
             clear()
 
-        elif words[0] in {'del', 'rm'}:
-            if len(words) != 2:
-                red(f'Invalid usage of command {words[0]}.')
-                continue
-
+        elif words[0] in {'delete', 'remove'}:
             path = Path(join(Path.home(), 'skyblock',
                              'saves', f'{words[1]}.json'))
             if path.is_file():
@@ -90,37 +95,26 @@ def main():
                 red(f'Profile not found: {words[1]}')
 
         elif words[0] in {'exit', 'quit'}:
-            if len(words) != 1:
-                red(f'Invalid usage of command {words[0]}.')
-                continue
-
             break
 
         elif words[0] == 'help':
             if len(words) == 1:
                 gray(menu_doc)
-            else:
-                phrase = ' '.join(words[1:])
-                if phrase not in menu_help:
-                    red(f'Command not found: {phrase!r}.')
-                    continue
-
-                usage, description = menu_help[phrase]
-                gray(usage)
-                gray(description)
-
-        elif words[0] == 'ls':
-            if len(words) != 1:
-                red(f'Invalid usage of command {words[0]}.')
                 continue
 
+            phrase = ' '.join(words[1:])
+            if phrase not in menu_help:
+                red(f'Command not found: {phrase!r}.')
+                continue
+
+            usage, description = menu_help[phrase]
+            gray(usage)
+            gray(description)
+
+        elif words[0] == 'ls':
             ls()
 
         elif words[0] in {'load', 'open'}:
-            if len(words) != 2:
-                red(f'Invalid usage of command {words[0]}.')
-                continue
-
             game = Profile.load(words[1])
             if game is None:
                 continue
@@ -128,10 +122,6 @@ def main():
             game.mainloop()
 
         elif words[0] in {'new', 'touch'}:
-            if len(words) != 1:
-                red(f'Invalid usage of command {words[0]}.')
-                continue
-
             new()
 
         else:

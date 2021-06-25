@@ -12,7 +12,8 @@ from .io import red, yellow
 
 __all__ = [
     'checkpoint', 'clear', 'display_int', 'display_name', 'display_number',
-    'get', 'generate_help', 'includes', 'index', 'roman', 'shorten_number',
+    'get', 'generate_help', 'includes', 'index', 'is_valid_usage', 'roman',
+    'shorten_number',
 ]
 
 
@@ -115,6 +116,17 @@ def index(ls: List[Any], name: str, /) -> bool:
         if item.name == name:
             return i
     raise ValueError(f'{name!r} is not in list')
+
+
+def is_valid_usage(usage: str, words: List[str], /) -> bool:
+    all_words = usage.split()[1:]
+    pos_words = [word for word in all_words if word[0] != '[']
+
+    if len(words) > len(all_words):
+        return False
+    if len(words) < len(pos_words):
+        return False
+    return True
 
 
 def parse_int(string: str, /) -> Optional[int]:
