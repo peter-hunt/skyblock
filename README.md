@@ -43,7 +43,7 @@ python -m skyblock
 * Enchantments and Enchanting
 * Farming, combat, mining, enchanting, and foraging
 * Fast Traveling
-* Islands partially added
+* Islands
 * NPC buying and trading items
 * Pets
 * Simple combat system
@@ -53,12 +53,11 @@ python -m skyblock
 ## Features Planned:
 * Abilities
 * Anvil and Reforging
-* Collections (foraging, fishing, boss)
+* Collections (fishing, boss)
 * Combat while mining
 * Dungeons
 * Fishing
 * Minions
-* More Islands (Nether Island)
 * Pet Crafting
 
 # Furthur information

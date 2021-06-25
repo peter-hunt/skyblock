@@ -45,6 +45,7 @@ Clear the screen.
 > clearstash
 Removes all items currently in the Stash.
 
+> collection [category|name]
 > collections [category|name]
 Display collections.
 
@@ -134,6 +135,7 @@ Takes all items currently in the Stash.
 > pt
 Shows your current playtime.
 
+> recipe [category] [--all]
 > recipes [category] [--all]
 Shows all recipes or recipes avaliable.
 
@@ -143,6 +145,7 @@ Sell the item.
 > shop [index=all]
 Show trades in recently opened shop.
 
+> skill [skill=all]
 > skills [skill=all]
 Get information about your skills.
 

@@ -229,7 +229,7 @@ class Profile:
 
                 self.consume(index)
 
-            elif words[0] == 'collections':
+            elif words[0] in {'collection', 'collections'}:
                 if len(words) == 1:
                     self.display_collections()
                     continue
@@ -525,7 +525,7 @@ class Profile:
             elif words[0] in {'playtime', 'pt'}:
                 self.display_playtime()
 
-            elif words[0] == 'recipes':
+            elif words[0] in {'recipe', 'recipes'}:
                 if len(words) == 1:
                     self.display_recipes()
                     continue
@@ -584,7 +584,7 @@ class Profile:
 
                 self.display_shop(npc, trade_index)
 
-            elif words[0] == 'skills':
+            elif words[0] in {'skill', 'skills'}:
                 if len(words) == 1:
                     self.display_skills()
                     continue
