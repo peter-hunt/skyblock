@@ -194,10 +194,10 @@ class Profile:
                 self.buy(chosen_trade, amount)
 
             elif words[0] == 'cheat':
-                item = get_item('jungle_axe')
-                self.recieve_item(item)
-                item = get_item('treecapitator')
-                self.recieve_item(item)
+                # item = get_item('jungle_axe')
+                # self.recieve_item(item)
+                # item = get_item('treecapitator')
+                # self.recieve_item(item)
                 ...
 
             elif words[0] == 'clear':
@@ -406,7 +406,7 @@ class Profile:
                         red(f'Amount must be a positive integer.')
                         continue
 
-                self.harvest_resource(name, tool_index, amount)
+                self.gather_resource(name, tool_index, amount)
 
             elif words[0] == 'goto':
                 self.goto(words[1])
@@ -532,19 +532,20 @@ class Profile:
                         continue
                     show_all = True
 
-                restriction = words[1]
-                if len(words) == 2 and restriction == '--all':
+                arg = words[1]
+                if len(words) == 2 and arg == '--all':
                     self.display_recipes(show_all=True)
                     continue
-                elif restriction in {
-                        'farming', 'mining', 'forging', 'combat', 'fishing',
+                elif arg in {
+                        'farming', 'mining', 'forging',
+                        'smelting', 'combat', 'fishing',
                         'foraging', 'enchanting', 'alchemy', 'slayer'}:
-                    self.display_recipe(restriction, show_all=show_all)
+                    self.display_recipe(arg, show_all=show_all)
                     continue
 
-                index = self.parse_index(restriction, len(RECIPES))
+                index = self.parse_index(arg, len(RECIPES))
                 if index is None:
-                    red(f'Invalid recipe category or index: {restriction!r}')
+                    red(f'Invalid recipe category or index: {arg!r}')
                     continue
 
                 self.display_recipe_info(index)

@@ -900,7 +900,7 @@ RECIPES = [
            [(Item('sorrow'), 12)],
            (get_item('sorrow_boots'), 1)),
 
-    # refining recipes
+    # forging recipes
     Recipe('diamond_to_refined', 'forging',
            [(Item('enchanted_diamond_block'), 2)],
            (Item('refined_diamond'), 1)),
@@ -977,6 +977,14 @@ RECIPES = [
             (Item('mithril_plate'), 15),
             (Item('plasma'), 20)],
            (get_item('titanium_drill_555'), 1)),
+
+    # smelting recipes
+    Recipe('glass', 'smelting',
+           [(Item('sand'), 1)],
+           (Item('glass'), 1)),
+    Recipe('bottle', 'smelting',
+           [(Item('glass'), 3)],
+           (Item('bottle'), 3)),
 
     Recipe('leather_helmet', 'combat',
            [(Item('leather'), 5)],

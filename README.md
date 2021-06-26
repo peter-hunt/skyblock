@@ -53,11 +53,15 @@ python -m skyblock
 * Swords and bows that don't consume arrows
 
 ## Features Planned:
+* Abilities (mainly for Swords and Pets)
 * Anvil and Reforging
 * Collections (fishing, boss)
 * Combat while mining
 * Dungeons
 * Fishing
+* Flower (Foraging resource at Hub)
+* Forging (Dwarven Mines)
+* HoTM Skill Tree (Dwarven Mines)
 * Minions
 
 # Furthur information

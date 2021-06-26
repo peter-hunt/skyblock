@@ -364,8 +364,8 @@ def profile_action(cls):
     cls.enchant = enchant
 
     @checkpoint
-    def harvest_resource(self, name: str, tool_index: Optional[int],
-                         amount: Optional[int] = 1, /):
+    def gather_resource(self, name: str, tool_index: Optional[int],
+                        amount: Optional[int] = 1, /):
         resource = get_resource(name)
         tool = Empty() if tool_index is None else self.inventory[tool_index]
         amount = 1 if amount is None else amount
@@ -468,7 +468,7 @@ def profile_action(cls):
 
                 if 'mithril' in resource.name and randint(1, 50) == 1:
                     white('Titanium has spawned nearby!')
-                    self.harvest_resource('titanium', tool_index)
+                    self.gather_resource('titanium', tool_index)
 
         elif isinstance(resource, Wood):
             if getattr(tool, 'name', None) == 'jungle_axe':
@@ -525,7 +525,7 @@ def profile_action(cls):
         else:
             red('Unknown resource type.')
 
-    cls.harvest_resource = harvest_resource
+    cls.gather_resource = gather_resource
 
     @checkpoint
     def goto(self, dest: str, /):

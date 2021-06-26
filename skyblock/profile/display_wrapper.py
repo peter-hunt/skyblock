@@ -350,8 +350,9 @@ def profile_display(cls):
     cls.display_recipe = display_recipe
 
     def display_recipes(self, /, *, show_all=False):
-        for category in ('farming', 'mining', 'forging', 'combat', 'fishing',
-                         'foraging', 'enchanting', 'alchemy', 'slayer'):
+        for category in ('farming', 'mining', 'forging', 'smelting',
+                         'combat', 'fishing', 'foraging',
+                         'enchanting', 'alchemy', 'slayer'):
             self.display_recipe(category, show_all=show_all, end=False)
 
         width, _ = get_terminal_size()
