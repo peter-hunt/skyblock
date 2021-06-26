@@ -1,7 +1,7 @@
 from ..object import Bow, Sword
 
-__all__ = ['WEAPONS']
 
+__all__ = ['WEAPONS']
 
 WEAPONS = [
     Bow('bow', 'common', damage=30),
@@ -101,5 +101,4 @@ WEAPONS = [
           dungeon_completion_req=7, stars=0),
     Sword('valkyrie', 'legendary', damage=270,
           strength=145, intelligence=60, ferocity=60,
-          dungeon_completion_req=7, stars=0),
-]
+          dungeon_completion_req=7, stars=0)]

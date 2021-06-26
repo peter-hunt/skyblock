@@ -1,7 +1,7 @@
 from ..object import Axe, Hoe, Pickaxe, Drill
 
-__all__ = ['TOOLS']
 
+__all__ = ['TOOLS']
 
 TOOLS = [
     Axe('wooden_axe', rarity='common', tool_speed=2),
@@ -70,5 +70,4 @@ TOOLS = [
     Drill('titanium_drill_455', rarity='epic',
           breaking_power=8, mining_speed=900, mining_fortune=15),
     Drill('titanium_drill_555', rarity='epic',
-          breaking_power=9, mining_speed=1_200, mining_fortune=15),
-]
+          breaking_power=9, mining_speed=1_200, mining_fortune=15)]

@@ -33,6 +33,9 @@ Create a new profile.
 """.strip()
 
 profile_doc = """
+> armor [part=all]
+Display equipped armor.
+
 > buy <index> [amount=1]
 Buy item from the shop.
 

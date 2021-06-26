@@ -6,36 +6,32 @@ from typing import Optional, Tuple
 
 from ..constant.color import (
     RARITY_COLORS, BOLD, DARK_AQUA, GOLD, GRAY, BLUE, GREEN,
-    AQUA, RED, LIGHT_PURPLE, YELLOW, WHITE,
-)
+    AQUA, RED, LIGHT_PURPLE, YELLOW, WHITE)
 from ..constant.enchanting import (
     ENCHS, CONFLICTS, ENCH_REQUIREMENTS,
     SWORD_ENCHS, BOW_ENCHS, ARMOR_ENCHS,
-    AXE_ENCHS, HOE_ENCHS, PICKAXE_ENCHS,
-)
+    AXE_ENCHS, HOE_ENCHS, PICKAXE_ENCHS)
 from ..constant.main import INTEREST_TABLE, SELL_PRICE
 from ..constant.mob import CUBISM_EFT, ENDER_SLAYER_EFT, BOA_EFT, SMITE_EFT
 from ..function.io import gray, red, green, yellow, blue, aqua, white
 from ..function.math import (
     calc_exp_lvl, calc_exp, calc_skill_lvl,
-    random_amount, random_bool, random_int,
-)
+    random_amount, random_bool, random_int)
 from ..function.util import (
     checkpoint, display_name, display_number, get, get_ench, includes,
-    roman, shorten_number,
-)
+    roman, shorten_number)
 from ..object.collection import is_collection
 from ..object.item import get_item
 from ..object.mob import get_mob
 from ..object.object import (
     Item, Empty, Bow, Sword, Armor,
     Axe, Hoe, Pickaxe, Drill, TravelScroll, Pet,
-    Crop, Mineral, Wood, Mob,
-)
+    Crop, Mineral, Wood, Mob)
 from ..object.recipe import RECIPES
 from ..object.resource import get_resource
 from ..map.island import ISLANDS
 from ..map.object import calc_dist, path_find
+
 
 __all__ = ['profile_action']
 
@@ -409,8 +405,21 @@ def profile_action(cls):
 
             mining_fortune = self.get_stat('mining_fortune', tool_index)
             fortune_mult = 1 + mining_fortune / 100
-            experience = 1 + 0.125 * enchantments.get('experience', 0)
-            experience *= 1 + 0.04 * enchanting_lvl
+            exp_mult = 1 + 0.125 * enchantments.get('experience', 0)
+            exp_mult *= 1 + 0.04 * enchanting_lvl
+
+            lapis_exp_bonus = 1
+
+            for piece in self.armor:
+                if not isinstance(piece, Armor):
+                    break
+
+                if piece.name in {'lapis_helmet', 'lapis_chestplate',
+                                   'lapis_leggings', 'lapis_boots'}:
+                    lapis_exp_bonus += 0.5
+
+            exp_mult *= lapis_exp_bonus
+
             drop_item = resource.drop
             default_amount = resource.amount
 
@@ -428,7 +437,7 @@ def profile_action(cls):
                 if is_coll:
                     self.collect(drop_item, amount_pool * drop_pool)
 
-                self.add_exp(resource.exp * random_amount(experience))
+                self.add_exp(resource.exp * random_amount(exp_mult))
                 self.add_skill_exp('mining', resource.mining_exp)
                 if count >= (last_cp + cp_step) * amount:
                     while count >= (last_cp + cp_step) * amount:
@@ -497,11 +506,30 @@ def profile_action(cls):
         path, accum_dist = path_find(region, get(island.regions, dest),
                                      island.conns, island.dists)
 
-        speed = 100
+        speed = self.get_stat('speed')
+
+        full_set = True
 
         for piece in self.armor:
-            if isinstance(piece, Armor):
-                speed += piece.speed
+            if not isinstance(piece, Armor):
+                full_set = False
+                continue
+
+        if full_set:
+            piece_names = [piece.name for piece in self.armor]
+            if piece_names == [
+                    'young_dragon_helmet', 'young_dragon_chestplate',
+                    'young_dragon_leggings', 'young_dragon_boots']:
+                speed += 70
+            elif piece_names == ['farm_helmet', 'farm_chestplate',
+                                 'farm_leggings', 'farm_boots']:
+                if self.island in {'barn', 'desert'} or self.region == 'farm':
+                    speed += 25
+            elif piece_names == [
+                    'farm_suit_helmet', 'farm_suit_chestplate',
+                    'farm_suit_leggings', 'farm_suit_boots']:
+                if self.island in {'barn', 'desert'}:
+                    speed += 20
 
         route = f'{GRAY} ➜ {AQUA}'.join(f'{region}' for region in path)
         gray(f'Route: {AQUA}{route} {GRAY}({float(accum_dist):.2f}m)')
@@ -597,13 +625,59 @@ def profile_action(cls):
 
         enchantments = getattr(weapon, 'enchantments', {})
 
+        farm_armor_speed = False
+        farm_suit_speed = False
+        pumpkin_buff = False
+        deflect = False
+        protective_blood = False
+        holy_blood = False
+        young_blood = False
+
         if isinstance(weapon, (Bow, Sword)):
             ultimate_jerry = enchantments.get('ultimate_jerry', 0) * 50
             damage = weapon.damage + ultimate_jerry + 5
-            if ultimate_jerry != 0:
-                gray(f'Your {LIGHT_PURPLE}{BOLD}Ultimate Jerry{GRAY} '
-                     f'enchantment granted {GREEN}+ {ultimate_jerry}'
-                     f' {GRAY}additional weapon base damage!\n')
+
+            for armor_piece in self.armor:
+                if not isinstance(armor_piece, Armor):
+                    break
+            else:
+                piece_names = [piece.name for piece in self.armor]
+                if piece_names == ['farm_helmet', 'farm_chestplate',
+                                   'farm_leggings', 'farm_boots']:
+                    if (self.island in {'barn', 'desert'}
+                            or self.region == 'farm'):
+                        farm_armor_speed += True
+                elif piece_names == [
+                        'farm_suit_helmet', 'farm_suit_chestplate',
+                        'farm_suit_leggings', 'farm_suit_boots']:
+                    if self.island in {'barn', 'desert'}:
+                        farm_suit_speed = True
+                elif piece_names == ['pumpkin_helmet', 'pumpkin_chestplate',
+                                     'pumpkin_leggings', 'pumpkin_boots']:
+                    pumpkin_buff = True
+                elif piece_names == ['cactus_helmet', 'cactus_chestplate',
+                                     'cactus_leggings', 'cactus_boots']:
+                    deflect = True
+                elif piece_names == ['protector_dragon_helmet',
+                                     'protector_dragon_chestplate',
+                                     'protector_dragon_leggings',
+                                     'protector_dragon_boots']:
+                    protective_blood = True
+                elif piece_names == [
+                        'holy_dragon_helmet', 'holy_dragon_chestplate',
+                        'holy_dragon_leggings', 'holy_dragon_boots']:
+                    holy_blood = True
+                elif piece_names == [
+                        'young_dragon_helmet', 'young_dragon_chestplate',
+                        'young_dragon_leggings', 'young_dragon_boots']:
+                    young_blood = True
+                elif piece_names == [
+                        'strong_dragon_helmet', 'strong_dragon_chestplate',
+                        'strong_dragon_leggings', 'strong_dragon_boots']:
+                    if isinstance(weapon, Empty):
+                        pass
+                    elif weapon.name == 'aspect_of_the_end':
+                        damage += 75
 
             damage += weapon.hot_potato
 
@@ -643,11 +717,14 @@ def profile_action(cls):
             last_stand += ench.get('last_stand', 0) * 5
             no_pain_no_gain.append(ench.get('no_pain_no_gain', 0) * 25)
 
+        if deflect:
+            thorns += 33
+
         warrior = 0.04 * min(combat_lvl, 50)
         warrior += 0.01 * max(min(combat_lvl - 50, 10), 0)
         damage *= 1 + warrior
-
-        time_cost = 10 / (5 * speed / 100)
+        if pumpkin_buff:
+            damage *= 1.1
 
         execute = 0.2 * enchantments.get('execute', 0)
         experience = 1 + 0.125 * enchantments.get('experience', 0)
@@ -682,20 +759,30 @@ def profile_action(cls):
         last_cp = Decimal()
         cp_step = Decimal('0.1')
         is_coll = {
-            row[0].name: is_collection(row[0].name) for row in mob.drops
-        }
+            row[0].name: is_collection(row[0].name) for row in mob.drops}
         green(f'Slaying {mob.display()}{GREEN}:')
         for count in range(1, amount + 1):
+            actual_speed = speed
+            if young_blood and hp >= health / 2:
+                actual_speed += 70
+            if farm_armor_speed:
+                actual_speed += 25
+            if farm_suit_speed:
+                actual_speed += 20
+            time_cost = 10 / (5 * actual_speed / 100)
             sleep(time_cost)
-            healed = round((time_cost // 2) * (1.5 + health / 100), 1)
-            healed *= 1 + (rejuvenate / 100)
-            healed = max(health - hp, healed)
+
+            healed = (round((time_cost // 2) * (1.5 + health / 100), 1)
+                      * (1 + (rejuvenate / 100)))
+            if holy_blood:
+                health *= 3
+            hp = min(hp - healed, health)
             if healed != 0:
-                hp += healed
                 gray(f'You healed for {GREEN}{shorten_number(healed)}'
                      f'{RED}❤{GRAY}.\n'
                      f'Your HP: {GREEN}{shorten_number(hp)}{GRAY}/'
                      f'{GREEN}{shorten_number(health)}{RED}❤\n')
+            healed = 0
 
             mob_hp = mob.health
             while True:
@@ -716,15 +803,10 @@ def profile_action(cls):
                     damage_dealt *= 1 + (strength + soul_eater_strength) / 100
 
                     if soul_eater_strength != 0:
-                        gray(f'Your {LIGHT_PURPLE}{BOLD}Soul Eater{GRAY}'
-                             f' enchantment applied {RED}+'
-                             f' {soul_eater_strength} ❁ Strength{GRAY}'
-                             f' on your hit!\n')
                         soul_eater_strength = 0
 
                     damage_dealt *= (
-                        1 + giant_killer * (min(0.1 * (mob_hp - hp), 5) / 100)
-                    )
+                        1 + giant_killer * (min(0.1 * (mob_hp - hp), 5) / 100))
 
                     if strike_count == 0:
                         damage_dealt *= first_strike
@@ -740,25 +822,10 @@ def profile_action(cls):
                          f'{GRAY} {crit}damage to the {mob_name}!\n\n')
 
                     if life_steal != 0:
-                        delta = min(health - hp, life_steal * health)
-                        if delta != 0:
-                            hp += delta
-                            gray(f'Your {BLUE}Life Steal{GRAY} '
-                                 f'enchantment healed you for {AQUA}'
-                                 f'{shorten_number(delta)}{RED}❤{GRAY}!\n'
-                                 f'Your HP: {GREEN}{shorten_number(hp)}{GRAY}/'
-                                 f'{GREEN}{shorten_number(health)}{RED}❤\n')
+                        healed += life_steal * health
 
                     if syphon != 0:
-                        delta = min(health - hp,
-                                    syphon * health * (crit_damage // 100))
-                        if delta != 0:
-                            hp += delta
-                            gray(f'Your {BLUE}Syphon{GRAY} '
-                                 f'enchantment healed you for {AQUA}'
-                                 f'{shorten_number(delta)}{RED}❤{GRAY}!\n'
-                                 f'Your HP: {GREEN}{shorten_number(hp)}{GRAY}/'
-                                 f'{GREEN}{shorten_number(health)}{RED}❤\n')
+                        healed += syphon * health * (crit_damage // 100)
 
                     if mob_hp <= 0:
                         a_an = 'an' if mob.name[0] in 'aeiou' else 'a'
@@ -775,15 +842,16 @@ def profile_action(cls):
                     break
 
                 actual_defense = defense
+                if protective_blood:
+                    actual_defense *= 1 + (1 - hp / health)
+
                 if last_stand != 0 and hp / health < 0.4:
-                    additional_defense = actual_defense * (last_stand / 100)
-                    actual_defense += additional_defense
-                    gray(f'Your {LIGHT_PURPLE}{BOLD}Last Stand{GRAY}'
-                         f' enchantment granted you {GREEN}+'
-                         f' {additional_defense} ❈ Defense{GRAY}!\n')
+                    actual_defense *= last_stand / 100
 
                 if mob.damage != 0:
                     damage_recieved = mob.damage / (1 + defense / 100)
+                    if pumpkin_buff:
+                        damage_recieved *= 0.9
                     hp = max(hp - damage_recieved, 0)
                     gray(f"You've recieved {YELLOW}"
                          f'{shorten_number(damage_recieved)}{GRAY}'
@@ -797,9 +865,6 @@ def profile_action(cls):
                         exp_npng += 10
                 if exp_npng != 0:
                     self.add_exp(exp_npng)
-                    gray(f'Your {LIGHT_PURPLE}{BOLD}No Pain No Gain{GRAY}'
-                         f' enchantment granted you {GREEN}{exp_npng}'
-                         f' experience point{GRAY}!\n')
 
                 if hp <= 0:
                     if self.die():
@@ -809,9 +874,6 @@ def profile_action(cls):
                 if random_bool(0.5) and thorns != 0:
                     thorns_damage = (thorns / 100) * damage_recieved
                     mob_hp -= thorns_damage
-                    gray(f'Your {BLUE}Thorns{GRAY} enchantment delt {YELLOW}'
-                         f'{shorten_number(damage_dealt)}{GRAY} {crit}damage'
-                         f' to the {mob_name}{GRAY}!\n')
 
                     if mob_hp <= 0:
                         a_an = 'an' if mob.name[0] in 'aeiou' else 'a'

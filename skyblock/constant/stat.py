@@ -23,15 +23,13 @@ ALL_STAT = [
     'ferocity',
     'mining_fortune',
     'farming_fortune',
-    'foraging_fortune',
-]
+    'foraging_fortune']
 
 # stats not shown if are zero
 HIDDEN_STATS = [
     'true_defense',
     'attack_speed',
-    'ferocity',
-]
+    'ferocity']
 
 # stats shown with percentage sign
 PERC_STATS = [
@@ -39,5 +37,4 @@ PERC_STATS = [
     'crit_damage',
     'attack_speed',
     'sea_creature_chance',
-    'ability_damage',
-]
+    'ability_damage']

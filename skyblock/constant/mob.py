@@ -3,8 +3,7 @@ Constants about mobs.
 """
 
 __all__ = [
-    'CUBISM_EFT', 'ENDER_SLAYER_EFT', 'BOA_EFT', 'SMITE_EFT',
-]
+    'CUBISM_EFT', 'ENDER_SLAYER_EFT', 'BOA_EFT', 'SMITE_EFT']
 
 # list of mobs affected by cubism enchantment
 CUBISM_EFT = [
@@ -12,16 +11,14 @@ CUBISM_EFT = [
     'small_emerald_slime',
     'medium_emerald_slime',
     'large_emerald_slime',
-    'rainy_slime',
-]
+    'rainy_slime']
 
 # list of mobs affected by ender slayer enchantment
 ENDER_SLAYER_EFT = [
     'enderman',
-    'zealot',
     # 'voidling_extremist',
-    # 'voidling_fanatic',
-]
+    # 'voidling_fanatic'
+    'zealot']
 
 # list of mobs affected by bane of arthropods enchantment
 # BANE_OF_ARTHROPODS
@@ -30,8 +27,7 @@ BOA_EFT = [
     'weaver_spider',
     'voracious_spider',
     'dasher_spider',
-    'spider_jockey',
-]
+    'spider_jockey']
 
 # list of mobs affected by smite enchantment
 SMITE_EFT = [
@@ -45,8 +41,7 @@ SMITE_EFT = [
     'diamond_zombie',
     'diamond_skeleton',
     'enchanted_diamond_zombie',
-    'enchanted_diamond_skeleton',
-]
+    'enchanted_diamond_skeleton']
 
 
 # # DRAGON_HUNTER

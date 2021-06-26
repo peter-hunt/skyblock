@@ -2,10 +2,9 @@ from typing import Dict, Iterator, List, Optional, Tuple, Union
 
 from ..constant.util import Amount, Number
 
-from .collection_wrapper import collection_type
+from .other_wrapper import collection_type, mob_type, init_type
 from .item_wrapper import item_type
-from .mob_wrapper import mob_type
-from .recipe_wrapper import recipe_type
+
 
 __all__ = [
     'ItemType', 'Item', 'Empty', 'Bow', 'Sword',
@@ -157,6 +156,8 @@ class Armor(ItemType):
     dungeon_skill_req: Optional[int] = None
     dungeon_completion_req: Optional[int] = None
 
+    abilities: List[str] = []
+
 
 @item_type
 class TravelScroll(ItemType):
@@ -211,7 +212,7 @@ class Pet(ItemType):
     attack_speed: int = 0
     ferocity: int = 0
 
-    abilities: List = []
+    abilities: List[str] = []
 
 
 OBJECTS = [
@@ -273,7 +274,7 @@ class Mob:
     drops: List[Tuple[ItemType, Amount, str, Number]]
 
 
-@recipe_type
+@init_type
 class Recipe:
     name: str
     category: str

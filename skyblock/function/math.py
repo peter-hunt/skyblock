@@ -9,12 +9,12 @@ from ..constant.util import Amount, Number
 from .io import gray, yellow, white
 from .util import display_int, roman
 
+
 __all__ = [
     'calc_exp_lvl', 'calc_exp', 'calc_pet_exp', 'calc_pet_lvl',
     'calc_pet_upgrade_exp', 'calc_skill_lvl', 'calc_skill_lvl_info',
     'display_skill_reward', 'dung_stat', 'random_amount', 'random_bool',
-    'random_int',
-]
+    'random_int']
 
 
 def calc_exp_lvl(exp: Number, /) -> int:

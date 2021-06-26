@@ -6,6 +6,7 @@ from ...object.resource import get_resource
 
 from ..object import Npc, Region, Island, add_dist
 
+
 __all__ = ['MINES']
 
 DWARVEN_ENTRENCE = Region(
@@ -19,11 +20,8 @@ DWARVEN_ENTRENCE = Region(
                  " I can give you a safe ride back there."),
                 ("Be careful not to fall down the shaft though,"
                  " it's a long fall!"),
-                'Good luck on your adventures.',
-            ])
-    ],
-    portal='deep',
-)
+                'Good luck on your adventures.'])],
+    portal='deep')
 DWARVEN_VILLAGE = Region(
     'dwarven_village', 20, -140,
     resources=[get_resource('stone')],
@@ -41,59 +39,31 @@ DWARVEN_VILLAGE = Region(
                  get_item('titanium_pickaxe')),
                 (((Item('titanium_pickaxe'), 1),
                   (Item('refined_titanium'), 3)),
-                 get_item('refined_titanium_pickaxe')),
-            ]),
+                 get_item('refined_titanium_pickaxe'))]),
         Npc('gimley',
             dialog=[(
-                'Burp',
-                'Buurp',
-                'Buuuuurp',
-                'Buuuuuuuuuuuuuurp',
-                'BURP',
-                'BURP',
-                'BUURRPPP',
-                '‎*Inception BRRRAAWWWWWBRBRBB noises*',
-            )]),
+                'Burp', 'Buurp', 'Buuuuurp', 'Buuuuuuuuuuuuuurp',
+                'BURP', 'BUURRPPP',
+                '‎*Inception BRRRAAWWWWWBRBRBB noises*',)]),
         Npc('hornum',
             dialog=[(
-                'Burp',
-                'Buurp',
-                'Buuuuurp',
-                'Buuuuuuuuuuuuuurp',
-                'BURP',
-                'BURP',
-                'BUURRPPP',
-                '‎*Inception BRRRAAWWWWWBRBRBB noises*',
-            )]),
+                'Burp', 'Buurp', 'Buuuuurp', 'Buuuuuuuuuuuuuurp',
+                'BURP', 'BUURRPPP',
+                '‎*Inception BRRRAAWWWWWBRBRBB noises*')]),
         Npc('sargwyn',
             dialog=[(
-                'Burp',
-                'Buurp',
-                'Buuuuurp',
-                'Buuuuuuuuuuuuuurp',
-                'BURP',
-                'BURP',
-                'BUURRPPP',
-                '‎*Inception BRRRAAWWWWWBRBRBB noises*',
-            )]),
+                'Burp', 'Buurp', 'Buuuuurp', 'Buuuuuuuuuuuuuurp',
+                'BURP', 'BUURRPPP',
+                '‎*Inception BRRRAAWWWWWBRBRBB noises*',)]),
         Npc('tarwen',
             dialog=[(
-                'Burp',
-                'Buurp',
-                'Buuuuurp',
-                'Buuuuuuuuuuuuuurp',
-                'BURP',
-                'BURP',
-                'BUURRPPP',
-                '‎*Inception BRRRAAWWWWWBRBRBB noises*',
-            )]),
-    ],
-)
+                'Burp', 'Buurp', 'Buuuuurp', 'Buuuuuuuuuuuuuurp',
+                'BURP', 'BUURRPPP',
+                '‎*Inception BRRRAAWWWWWBRBRBB noises*')])])
 FAR = Region(
     'far', -120, 70,
     resources=[get_resource('stone'), get_resource('gray_mithril'),
-               get_resource('dark_mithril'), get_resource('light_mithril')],
-)
+               get_resource('dark_mithril'), get_resource('light_mithril')])
 FORGE = Region(
     'forge', 0, -70,
     npcs=[
@@ -104,21 +74,15 @@ FORGE = Region(
                 (f'Come back to me when you have '
                  f'a {GREEN}Drill{WHITE} in your inventory!'),
                 (f'What are you doing talking to me without '
-                 f'a {GREEN}Drill{WHITE}? Come back when you have one!'),
-            ]),
-    ],
-)
+                 f'a {GREEN}Drill{WHITE}? Come back when you have one!')])])
 GOBLINS = Region(
     'goblins', -110, 110,
-    mobs=[get_mob('goblin')],
-)
+    mobs=[get_mob('goblin')])
 ICE_WALLS = Region(
     'ice_walls', 0, 100,
-    mobs=[get_mob('ice_walker')],
-)
+    mobs=[get_mob('ice_walker')])
 MIST = Region(
-    'mist', 0, 40,
-)
+    'mist', 0, 40)
 PALACE = Region(
     'palace', 120, 120,
     npcs=[
@@ -128,40 +92,32 @@ PALACE = Region(
         Npc('erren'),
         Npc('grandan'),
         Npc('redos'),
-        Npc('thormyr'),
-    ],
-)
+        Npc('thormyr')])
 RAMPARTS = Region(
     'ramparts', -25, -50,
     resources=[get_resource('stone'), get_resource('gray_mithril'),
-               get_resource('dark_mithril'), get_resource('light_mithril')],
-)
+               get_resource('dark_mithril'), get_resource('light_mithril')])
 ROYAL = Region(
     'royal', 140, 35,
     resources=[get_resource('stone'), get_resource('gray_mithril'),
                get_resource('dark_mithril'), get_resource('light_mithril'),
-               get_resource('gold_block')],
-)
+               get_resource('gold_block')])
 SPRINGS = Region(
     'springs', 60, -70,
     resources=[get_resource('stone'), get_resource('gray_mithril'),
-               get_resource('dark_mithril'), get_resource('light_mithril')],
-)
+               get_resource('dark_mithril'), get_resource('light_mithril')])
 VEINS = Region(
     'veins', 20, 0,
     resources=[get_resource('stone'), get_resource('gray_mithril'),
-               get_resource('dark_mithril'), get_resource('light_mithril')],
-)
+               get_resource('dark_mithril'), get_resource('light_mithril')])
 UPPER = Region(
     'upper', -125, -50,
     resources=[get_resource('stone'), get_resource('gray_mithril'),
-               get_resource('dark_mithril'), get_resource('light_mithril')],
-)
+               get_resource('dark_mithril'), get_resource('light_mithril')])
 
 MINES_JOINTS = [
     DWARVEN_ENTRENCE, DWARVEN_VILLAGE, FAR, FORGE, GOBLINS, ICE_WALLS, MIST,
-    PALACE, RAMPARTS, ROYAL, SPRINGS, VEINS, UPPER,
-]
+    PALACE, RAMPARTS, ROYAL, SPRINGS, VEINS, UPPER]
 MINES_CONNS = [
     (DWARVEN_ENTRENCE, DWARVEN_VILLAGE),
     (DWARVEN_VILLAGE, RAMPARTS),
@@ -178,8 +134,7 @@ MINES_CONNS = [
     (RAMPARTS, UPPER),
     (RAMPARTS, VEINS),
     (ROYAL, SPRINGS),
-    (SPRINGS, VEINS),
-]
+    (SPRINGS, VEINS)]
 
 MINES_DISTS = {}
 
@@ -188,5 +143,4 @@ for conn in MINES_CONNS:
 
 MINES = Island(
     'mines', 'dwarven_entrence', MINES_JOINTS, MINES_CONNS, MINES_DISTS,
-    skill_req=('mining', 12),
-)
+    skill_req=('mining', 12))

@@ -10,11 +10,11 @@ from ..constant.util import (
 
 from .io import red, yellow
 
+
 __all__ = [
     'checkpoint', 'clear', 'display_int', 'display_name', 'display_number',
     'get', 'generate_help', 'includes', 'index', 'is_valid_usage', 'roman',
-    'shorten_number',
-]
+    'shorten_number']
 
 
 def checkpoint(func: FunctionType, /) -> FunctionType:

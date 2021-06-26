@@ -11,6 +11,7 @@ from ..function.util import display_name, parse_int
 from ..object.object import Empty, load_item
 from ..map.object import Npc
 
+
 __all__ = ['profile_type']
 
 

@@ -3,19 +3,17 @@ from os import get_terminal_size
 from typing import Optional
 
 from ..constant.color import (
-    BOLD, DARK_AQUA, GRAY, BLUE, GREEN, YELLOW, RARITY_COLORS,
-)
+    BOLD, DARK_AQUA, GRAY, BLUE, GREEN, YELLOW, RARITY_COLORS)
 from ..constant.main import SKILL_EXP
 from ..constant.util import Number
 from ..function.math import (
-    calc_exp_lvl, calc_pet_lvl, calc_skill_lvl, display_skill_reward,
-)
+    calc_exp_lvl, calc_pet_lvl, calc_skill_lvl, display_skill_reward)
 from ..function.io import dark_aqua, gold, dark_gray, red, green, yellow, aqua
 from ..function.util import display_name, roman
 from ..object.collection import is_collection, get_collection, calc_coll_lvl
 from ..object.object import (
-    Empty, Bow, Sword, Axe, Hoe, Pickaxe, Drill, Armor, Pet, Recipe,
-)
+    Empty, Bow, Sword, Axe, Hoe, Pickaxe, Drill, Armor, Pet, Recipe)
+
 
 __all__ = ['profile_math']
 
@@ -214,34 +212,97 @@ def profile_math(cls):
         elif name == 'sea_creature_chance':
             value += 20
 
+        full_set = True
+
         for piece in self.armor:
             if not isinstance(piece, Armor):
+                full_set = False
                 continue
 
             value += getattr(piece, name, 0)
 
+        miners_outfit_haste = False
+        lapis_armor_health = False
+        glacite_armor = False
+        ender_armor = False
+        old_blood = False
+        superior_blood = False
+
+        if full_set:
+            piece_names = [piece.name for piece in self.armor]
+            if piece_names == [
+                    'miners_outfit_helmet', 'miners_outfit_chestplate',
+                    'miners_outfit_leggings', 'miners_outfit_boots']:
+                miners_outfit_haste = True
+            elif piece_names == ['lapis_helmet', 'lapis_chestplate',
+                                 'lapis_leggings', 'lapis_boots']:
+                lapis_armor_health = True
+            elif piece_names == ['glacite_helmet', 'glacite_chestplate',
+                                 'glacite_leggings', 'glacite_boots']:
+                glacite_armor = True
+            elif piece_names == ['ender_helmet', 'ender_chestplate',
+                                 'ender_leggings', 'ender_boots']:
+                ender_armor = True
+            elif piece_names == [
+                    'old_dragon_helmet', 'old_dragon_chestplate',
+                    'old_dragon_leggings', 'old_dragon_boots']:
+                old_blood = True
+            elif piece_names == ['superior_dragon_helmet',
+                                 'superior_dragon_chestplate',
+                                 'superior_dragon_leggings',
+                                 'superior_dragon_boots']:
+                superior_blood = True
+
+        for piece in self.armor:
+            if not isinstance(piece, Armor):
+                continue
+
+            delta = 0
             armor_ench = getattr(piece, 'enchantments', {})
 
             if name == 'health':
-                value += piece.hot_potato
-                value += armor_ench.get('growth', 0) * 15
+                delta += piece.hot_potato
+                if old_blood:
+                    delta += armor_ench.get('growth', 0) * 25
+                else:
+                    delta += armor_ench.get('growth', 0) * 15
             elif name == 'defense':
-                value += piece.hot_potato
-                value += armor_ench.get('protection', 0) * 3
+                delta += piece.hot_potato
+                if old_blood:
+                    delta += armor_ench.get('protection', 0) * 5
+                else:
+                    delta += armor_ench.get('protection', 0) * 3
             elif name == 'true_defense':
-                value += armor_ench.get('true_protection', 0) * 3
+                if old_blood:
+                    delta += armor_ench.get('true_protection', 0) * 5
+                else:
+                    delta += armor_ench.get('true_protection', 0) * 3
             elif name == 'speed':
-                value += armor_ench.get('sugar_rush', 0) * 2
+                if old_blood:
+                    delta += armor_ench.get('sugar_rush', 0) * 2
+                else:
+                    delta += armor_ench.get('sugar_rush', 0) * 4
             elif name == 'intelligence':
-                value += armor_ench.get('big_brain', 0) * 5
-                value += armor_ench.get('smarty_pants', 0) * 5
+                delta += armor_ench.get('big_brain', 0) * 5
+                delta += armor_ench.get('smarty_pants', 0) * 5
+
+            if ender_armor:
+                if self.island == 'end':
+                    delta *= 2
+            if glacite_armor and name == 'defense':
+                if self.island in {'gold', 'deep', 'mines'}:
+                    delta *= 2
+
+            value += delta
 
         if name == 'health':
             value += min(farming_lvl, 14) * 2
             value += max(min(farming_lvl - 14, 5), 0) * 3
             value += max(min(farming_lvl - 19, 6), 0) * 4
             value += max(min(farming_lvl - 25, 35), 0) * 5
-        elif name == 'mining':
+            if lapis_armor_health:
+                value += 60
+        elif name == 'defense':
             value += min(mining_lvl, 14) * 1
             value += max(min(mining_lvl - 14, 46), 0) * 2
         elif name == 'strength':
@@ -252,6 +313,11 @@ def profile_math(cls):
         elif name == 'intelligence':
             value += min(enchanting_lvl, 14) * 1
             value += max(min(enchanting_lvl - 14, 46), 0) * 2
+        elif name == 'mining_speed':
+            if miners_outfit_haste:
+                value += 100
+            if glacite_armor:
+                value += 2 * mining_lvl
         elif name == 'mining_fortune':
             value += mining_lvl * 4
         elif name == 'foraging_fortune':
@@ -262,6 +328,9 @@ def profile_math(cls):
         if isinstance(pet, Pet):
             lvl_mult = calc_pet_lvl(pet.rarity, pet.exp) / 100
             value += getattr(pet, name, 0) * lvl_mult
+
+        if superior_blood:
+            value *= 1.05
 
         return value
 

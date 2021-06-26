@@ -5,9 +5,8 @@ from ..constant.color import GOLD, DARK_GRAY, GREEN, AQUA, YELLOW, WHITE
 from ..function.io import gray, red, green, yellow
 from ..function.util import display_int, display_name, includes
 from ..object.item import ITEMS, get_item, get_stack_size
-from ..object.object import (
-    ItemType, Item, Empty, Pet,
-)
+from ..object.object import ItemType, Item, Empty, Pet
+
 
 __all__ = ['profile_item']
 

@@ -36,6 +36,7 @@ python -m skyblock
 
 # Content
 ## Added Features:
+* Abilities
 * Armor pieces
 * Axes, hoes, pickaxes, bows, and swords
 * Crafting
@@ -51,7 +52,6 @@ python -m skyblock
 * Swords and bows that don't consume arrows
 
 ## Features Planned:
-* Abilities
 * Anvil and Reforging
 * Collections (fishing, boss)
 * Combat while mining

@@ -4,11 +4,10 @@ Contains constants of many categories.
 
 from typing import List
 
+
 __all__ = [
     'ARMOR_PARTS', 'DUNGEON_EXP', 'INTEREST_TABLE', 'SELL_PRICE',
-    'SKILL_EXP', 'SKILL_LIMITS',
-]
-
+    'SKILL_EXP', 'SKILL_LIMITS']
 
 # names of armor parts used by iterating and displaying
 ARMOR_PARTS = ['helmet', 'chestplate', 'leggings', 'boots']
@@ -65,38 +64,31 @@ DUNGEON_EXP = [
     (47, 60000000, 285559640),
     (48, 75000000, 360559640),
     (49, 93000000, 453559640),
-    (50, 116250000, 569809640),
-]
+    (50, 116250000, 569809640)]
 
 # balance interest table
 INTEREST_TABLE = {
     'starter': [
         (0, 10_000_000, 0.02),
-        (10_000_000, 15_000_000, 0.01),
-    ],
+        (10_000_000, 15_000_000, 0.01)],
     'gold': [
         (0, 10_000_000, 0.02),
-        (10_000_000, 20_000_000, 0.01),
-    ],
+        (10_000_000, 20_000_000, 0.01)],
     'deluxe': [
         (0, 10_000_000, 0.02),
         (10_000_000, 20_000_000, 0.01),
-        (20_000_000, 30_000_000, 0.005),
-    ],
+        (20_000_000, 30_000_000, 0.005)],
     'super_deluxe': [
         (0, 10_000_000, 0.02),
         (10_000_000, 20_000_000, 0.01),
         (20_000_000, 30_000_000, 0.005),
-        (30_000_000, 50_000_000, 0.002),
-    ],
+        (30_000_000, 50_000_000, 0.002)],
     'premier': [
         (0, 10_000_000, 0.02),
         (10_000_000, 20_000_000, 0.01),
         (20_000_000, 30_000_000, 0.005),
         (30_000_000, 50_000_000, 0.002),
-        (50_000_000, 160_000_000, 0.001),
-    ],
-}
+        (50_000_000, 160_000_000, 0.001)]}
 
 
 def appender(ls: List[int]):
@@ -171,9 +163,7 @@ for dod in range(110000, 150000, 10000):
     append_exp(dod, FL)
 
 # derivative of culumative pet exp requirements for each level
-PET_EXP_DIFF = [
-    common, uncommon, rare, epic, legendary,
-]
+PET_EXP_DIFF = [common, uncommon, rare, epic, legendary]
 
 # items sell price at npc
 SELL_PRICE = {
@@ -380,8 +370,7 @@ SELL_PRICE = {
     'ender_leggings': 10_000,
     'ender_boots': 10_000,
 
-    'flaming_sword': 20,
-}
+    'flaming_sword': 20}
 
 # other level exp requirements
 SKILL_EXP = [
@@ -445,8 +434,7 @@ SKILL_EXP = [
     (57, 6_100_000, 91_572_425, 600_000),
     (58, 6_400_000, 97_972_425, 700_000),
     (59, 6_700_000, 104_672_425, 800_000),
-    (60, 7_000_000, 111_672_425, 1_000_000),
-]
+    (60, 7_000_000, 111_672_425, 1_000_000)]
 
 # maximum levels for each skill
 SKILL_LIMITS = {
@@ -458,5 +446,4 @@ SKILL_LIMITS = {
     'enchanting': 60,
     'alchemy': 50,
     'taming': 50,
-    'dungeoneering': 50,
-}
+    'dungeoneering': 50}

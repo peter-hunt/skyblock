@@ -9,7 +9,6 @@ from .object import Item, Recipe
 
 __all__ = ['RECIPES', 'get_recipe']
 
-
 RECIPES = [
     Recipe('wooden_hoe', 'farming',
            [(Item('planks'), 2),
@@ -1495,8 +1494,7 @@ RECIPES = [
            [(Item('enchanted_jungle'), 512),
             (Item('super_enchanted_egg'), 1)],
            (get_item('ocelot_pet', rarity='epic'), 1),
-           collection_req=('jungle_wood', 9)),
-]
+           collection_req=('jungle_wood', 9))]
 
 
 def get_recipe(name: str, **kwargs) -> Optional[Recipe]:

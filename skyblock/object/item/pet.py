@@ -1,7 +1,7 @@
 from ..object import Pet
 
-__all__ = ['PETS']
 
+__all__ = ['PETS']
 
 PETS = [
     Pet('bee_pet', rarity='common', category='farming',
@@ -208,5 +208,4 @@ PETS = [
     Pet('ocelot_pet', rarity='epic', category='foraging',
         speed=50, ferocity=10),
     Pet('ocelot_pet', rarity='legendary', category='foraging',
-        speed=50, ferocity=10),
-]
+        speed=50, ferocity=10)]

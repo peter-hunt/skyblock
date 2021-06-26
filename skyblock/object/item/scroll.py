@@ -2,8 +2,8 @@ from ...function.io import red
 
 from ..object import TravelScroll
 
-__all__ = ['TRAVEL_SCROLLS', 'get_scroll']
 
+__all__ = ['TRAVEL_SCROLLS', 'get_scroll']
 
 TRAVEL_SCROLLS = [
     TravelScroll('hub', 'castle', rarity='epic'),
@@ -20,16 +20,12 @@ TRAVEL_SCROLLS = [
     TravelScroll('nether', 'magma', rarity='epic'),
     TravelScroll('end'),
     TravelScroll('end', 'drag', rarity='epic'),
-    TravelScroll('mines'),
-]
+    TravelScroll('mines')]
 
 
 def get_scroll(name: str) -> TravelScroll:
     for scroll in TRAVEL_SCROLLS:
-        if scroll.region is None:
-            if name == scroll.island:
-                return scroll
-        else:
-            if name == scroll.region:
-                return scroll
+        scroll_name = scroll.island if scroll.region is None else scroll.region
+        if name == scroll_name:
+            return scroll
     red(f'Invalid travel scroll: {name!r}')

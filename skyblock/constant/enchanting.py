@@ -5,8 +5,7 @@ Constant about enchantments, and enchanting information.
 __all__ = [
     'ULTIMATE_ENCHS', 'CONFLICTS', 'ENCHS', 'ENCH_REQUIREMENTS',
     'SWORD_ENCHS', 'BOW_ENCHS', 'ARMOR_ENCHS',
-    'AXE_ENCHS', 'HOE_ENCHS', 'PICKAXE_ENCHS', 'FISHING_ROD_ENCHS',
-]
+    'AXE_ENCHS', 'HOE_ENCHS', 'PICKAXE_ENCHS', 'FISHING_ROD_ENCHS']
 
 # list of ultimate enchantments
 ULTIMATE_ENCHS = [
@@ -17,8 +16,7 @@ ULTIMATE_ENCHS = [
     'no_pain_no_gain',
     'one_for_all',
     'soul_eater',
-    'ultimate_jerry',
-]
+    'ultimate_jerry']
 
 # groups of enchantements which cannot be applied to a single item
 CONFLICTS = [
@@ -29,13 +27,9 @@ CONFLICTS = [
     ('life_steal', 'mana_steal', 'syphon'),
     ('thunderbolt', 'thunderlord'),
 
-    ('blast_protection', 'fire_protection',
-     'projectile_protection', 'protection'),
-    # ('depth_strider', 'frost_walker'),
     # ('rejuvenate', 'respite'),
-
-    # ('fortune', 'silk_touch'),
-]
+    ('blast_protection', 'fire_protection',
+     'projectile_protection', 'protection')]
 
 # enchantments and level costs enchanting at the table
 ENCHS = [
@@ -61,7 +55,6 @@ ENCHS = [
     ('sharpness', 5, 5, 5),
     ('smite', 5, 5, 5),
     ('syphon', 3, 5, 15),
-    # ('telekinesis', 1, 5, 0),
     ('titan_killer', 5, 10, 0),
     ('thunderbolt', 5, (20, 25, 30, 40, 50)),
     ('thunderlord', 5, (20, 25, 30, 40, 50)),
@@ -78,12 +71,9 @@ ENCHS = [
     ('punch', 2, 30, 0),
     # ('snipe', 3, 5, 15),
 
-    # ('aqua_affinity', 1, 15, 0),
     ('blast_protection', 5, 5, 5),
-    # ('depth_strider', 3, 10, 0),
     # ('feather_falling', 5, 5, 5),
     ('fire_protection', 5, 5, 5),
-    # ('frost_walker', 2, 10, 0),
     ('growth', 5, 10, 0),
     ('respiration', 3, 10, 0),
     ('thorns', 3, 15, 0),
@@ -94,8 +84,6 @@ ENCHS = [
     ('fortune', 3, 15, 0),
     ('harvesting', 5, 5, 0),
     # ('rainbow', 1, 10, 0),
-    # ('silk_touch', 1, 15, 0),
-    # ('smelting_touch', 1, 5, 0),
 
     ('angler', 5, 10, 0),
     ('blessing', 5, 10, 0),
@@ -104,8 +92,7 @@ ENCHS = [
     ('luck_of_the_sea', 5, 5, 5),
     ('lure', 5, 5, 5),
     ('magnet', 5, (20, 25, 30, 40, 50)),
-    ('spiked_hook', 5, 10, 0),
-]
+    ('spiked_hook', 5, 10, 0)]
 
 ENCHS = sorted(ENCHS, key=lambda pair: pair[0])
 
@@ -122,7 +109,6 @@ ENCH_REQUIREMENTS = [
     ('growth', 5),
     ('snipe', 6),
     ('rainbow', 6),
-    ('replenish', 7),
     ('sugar_rush', 7),
     ('giant_killer', 8),
     ('dragon_tracer', 8),
@@ -167,8 +153,7 @@ ENCH_REQUIREMENTS = [
     ('overload', 33),  # more information needed
     ('legion', 34),
     ('swarm', 35),
-    ('soul_eater', 36),
-]
+    ('soul_eater', 36)]
 
 # list of sword enchantments (used by enchanting table)
 SWORD_ENCHS = [
@@ -193,7 +178,6 @@ SWORD_ENCHS = [
     'sharpness',
     'smite',
     'syphon',
-    # 'telekinesis',
     'titan_killer',
     'thunderbolt',
     'thunderlord',
@@ -205,8 +189,7 @@ SWORD_ENCHS = [
     # 'combo',
     'one_for_all',
     'soul_eater',
-    'ultimate_jerry',
-]
+    'ultimate_jerry']
 
 # list of bow enchantments (used by enchanting table)
 BOW_ENCHS = [
@@ -220,20 +203,15 @@ BOW_ENCHS = [
     # 'overload',
     'power',
     'punch',
-    'snipe',
-    # 'telekinesis',
-]
+    'snipe']
 
 # list of armor enchantments (used by enchanting table)
 ARMOR_ENCHS = [
-    # 'aqua_affinity',
     'big_brain',
     'blast_protection',
     'counter_strike',
-    # 'depth_strider',
     # 'feather_falling',
     'fire_protection',
-    # 'frost_walker',
     'growth',
     'projectile_protection',
     'protection',
@@ -245,34 +223,23 @@ ARMOR_ENCHS = [
     'sugar_rush',
 
     'last_stand',
-    'no_pain_no_gain',
-]
+    'no_pain_no_gain']
 
 # list of axe enchantments (used by enchanting table)
 AXE_ENCHS = [
-    'efficiency',
-    # 'telekinesis',
-]
+    'efficiency']
 
 # list of hoe enchantments (used by enchanting table)
 HOE_ENCHS = [
     # 'cultivating',
-    # 'delicate',
     'experience',
-    'harvesting',
-    # 'replenish',
-    # 'telekinesis',
-]
+    'harvesting']
 
 # list of pickaxe enchantments (used by enchanting table)
 PICKAXE_ENCHS = [
     # 'compact',
     'efficiency',
-    'experience',
-    # 'silk_touch',
-    # 'smelting_touch',
-    # 'telekinesis',
-]
+    'experience']
 
 # list of fishing rod enchantments (used by enchanting table)
 FISHING_ROD_ENCHS = [
@@ -285,6 +252,4 @@ FISHING_ROD_ENCHS = [
     'luck_of_the_sea',
     'lure',
     'magnet',
-    'spiked_hook',
-    # 'telekinesis',
-]
+    'spiked_hook']

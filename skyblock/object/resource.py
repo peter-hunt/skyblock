@@ -5,8 +5,8 @@ from ..function.util import get, includes
 
 from .object import ItemType, Crop, Mineral, Wood
 
-__all__ = ['RESOURCES', 'get_resource']
 
+__all__ = ['RESOURCES', 'get_resource']
 
 RESOURCES = [
     Crop('wheat', amount=1, farming_exp=4),
@@ -70,8 +70,7 @@ RESOURCES = [
     Wood('spruce_wood', hardness=2, foraging_exp=6),
     Wood('dark_oak_wood', hardness=2, foraging_exp=6),
     Wood('acacia_wood', hardness=2, foraging_exp=6),
-    Wood('jungle_wood', hardness=2, foraging_exp=6),
-]
+    Wood('jungle_wood', hardness=2, foraging_exp=6)]
 
 
 def get_resource(name: str, **kwargs) -> Optional[ItemType]:

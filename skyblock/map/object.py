@@ -8,8 +8,7 @@ from ..object.object import ItemType, Resource, Mob
 
 
 __all__ = [
-    'Npc', 'Region', 'Island', 'calc_dist', 'add_dist', 'path_find',
-]
+    'Npc', 'Region', 'Island', 'calc_dist', 'add_dist', 'path_find']
 
 
 @dataclass

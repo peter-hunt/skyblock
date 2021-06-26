@@ -11,14 +11,12 @@ from ..function.math import calc_pet_exp, calc_exp_lvl, calc_exp, calc_skill_lvl
 from ..function.io import gray, red, green, yellow
 from ..function.util import (
     checkpoint, clear, display_int, display_number, generate_help,
-    get, includes, is_valid_usage, parse_int, roman, shorten_number,
-)
+    get, includes, is_valid_usage, parse_int, roman, shorten_number)
 from ..object.collection import COLLECTIONS, is_collection
 from ..object.item import ITEMS, get_item, get_scroll
 from ..object.mob import get_mob
 from ..object.object import (
-    Item, Empty, Bow, Sword, Armor, Axe, Hoe, Pickaxe, Drill, Pet,
-)
+    Item, Empty, Bow, Sword, Armor, Axe, Hoe, Pickaxe, Drill, Pet)
 from ..object.recipe import RECIPES
 from ..object.resource import get_resource
 from ..map.island import ISLANDS
@@ -30,8 +28,8 @@ from .item_wrapper import profile_item
 from .math_wrapper import profile_math
 from .wrapper import profile_type
 
-__all__ = ['Profile']
 
+__all__ = ['Profile']
 
 profile_help = generate_help(profile_doc)
 
@@ -196,12 +194,14 @@ class Profile:
                 self.buy(chosen_trade, amount)
 
             elif words[0] == 'cheat':
-                # item = get_item('enchanted_chicken')
-                # self.recieve_item(item, 128)
-                # item = get_item('enchanted_egg')
-                # self.recieve_item(item, 1)
-                # item = get_item('super_enchanted_egg')
-                # self.recieve_item(item, 1)
+                item = get_item('ender_helmet')
+                self.recieve_item(item)
+                item = get_item('ender_chestplate')
+                self.recieve_item(item)
+                item = get_item('ender_leggings')
+                self.recieve_item(item)
+                item = get_item('ender_boots')
+                self.recieve_item(item)
                 ...
 
             elif words[0] == 'clear':

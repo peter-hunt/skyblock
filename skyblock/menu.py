@@ -10,13 +10,13 @@ from .function.path import is_dir, is_profile
 from .function.util import checkpoint, clear, generate_help, is_valid_usage
 from .profile.object import Profile
 
-__all__ = ['main']
 
+__all__ = ['main']
 
 menu_help = generate_help(menu_doc)
 
 
-def join_path(*names):
+def join_path(*names) -> str:
     return join(Path.home(), *names)
 
 
@@ -39,9 +39,7 @@ def new():
 
 @checkpoint
 def ls():
-    if not is_dir(warn=True):
-        return
-    if not is_dir('saves', warn=True):
+    if not is_dir(warn=True) or not is_dir('saves', warn=True):
         return
     names = [*walk(join(Path.home(), 'skyblock', 'saves'))][0][2]
     names = [name[:-5] for name in names if name.endswith('.json')]

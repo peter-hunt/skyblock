@@ -7,8 +7,7 @@ __all__ = [
     'BLACK', 'DARK_BLUE', 'DARK_GREEN', 'DARK_AQUA', 'DARK_RED', 'DARK_PURPLE',
     'GOLD', 'GRAY', 'DARK_GRAY', 'BLUE', 'GREEN', 'AQUA', 'RED', 'LIGHT_PURPLE',
     'YELLOW', 'WHITE',
-    'RARITY_COLORS', 'STAT_COLORS',
-]
+    'RARITY_COLORS', 'STAT_COLORS']
 
 # color codes for text formatting
 CLN = '\x1b[0m'
@@ -44,7 +43,7 @@ RARITY_COLORS = {
     'very_special': f'{BOLD}{RED}',
 
     'rngesus': f'{BOLD}{LIGHT_PURPLE}',
-}
+    'pray_rngesus': f'{BOLD}{LIGHT_PURPLE}'}
 
 # colors and symbols for more convenient statistics displaying
 STAT_COLORS = {
@@ -64,5 +63,4 @@ STAT_COLORS = {
     'ferocity': f'{RED}⫽',
     'mining_fortune': f'{GOLD}☘',
     'farming_fortune': f'{GOLD}☘',
-    'foraging_fortune': f'{GOLD}☘',
-}
+    'foraging_fortune': f'{GOLD}☘'}

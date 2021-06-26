@@ -1,20 +1,19 @@
 from ...function.io import red
 from ...function.util import get, includes
 
-from .armor import ARMOR_PIECES
 from ..object import ItemType, Item
+
+from .armor import ARMOR_PIECES
 from .pet import PETS
 from .scroll import TRAVEL_SCROLLS, get_scroll
 from .tool import TOOLS
 from .weapon import WEAPONS
 
+
 __all__ = [
     'COLLECTION_ITEMS', 'COMPACT_ITEMS', 'OTHER_ITEMS',
-    'ARMOR_PIECES', 'PETS', 'TRAVEL_SCROLLS', 'get_scroll', 'TOOLS', 'WEAPONS',
-    'ITEMS',
-    'get_item', 'get_stack_size',
-]
-
+    'ARMOR_PIECES', 'PETS', 'TRAVEL_SCROLLS', 'TOOLS', 'WEAPONS', 'ITEMS',
+    'get_item', 'get_stack_size', 'get_scroll']
 
 COLLECTION_ITEMS = [
     Item('wheat', 64, 'common'),
@@ -94,8 +93,7 @@ COLLECTION_ITEMS = [
     Item('clay', 64, 'common'),
     Item('lily_pad', 64, 'common'),
     Item('ink_sack', 64, 'common'),
-    Item('sponge', 64, 'common'),
-]
+    Item('sponge', 64, 'common')]
 
 COMPACT_ITEMS = [
     Item('hay_bale', 64, 'common'),
@@ -211,8 +209,7 @@ COMPACT_ITEMS = [
     Item('absolute_ender_pearl', 64, 'rare'),
     Item('tesselated_ender_pearl', 64, 'legendary'),
     Item('enchanted_slime_block', 64, 'rare'),
-    Item('enchanted_blaze_rod', 64, 'uncommon'),
-]
+    Item('enchanted_blaze_rod', 64, 'uncommon')]
 
 OTHER_ITEMS = [
     Item('apple', 64, 'common'),
@@ -254,8 +251,7 @@ OTHER_ITEMS = [
     Item('glacite_jewel', 64, 'rare'),
     Item('treasurite', 64, 'epic'),
 
-    Item('summoning_eye', 1, 'epic'),
-]
+    Item('summoning_eye', 1, 'epic')]
 
 ITEMS = (COLLECTION_ITEMS + COMPACT_ITEMS + OTHER_ITEMS
          + WEAPONS + ARMOR_PIECES + TOOLS + TRAVEL_SCROLLS + PETS)

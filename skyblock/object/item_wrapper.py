@@ -3,13 +3,14 @@ from math import floor
 from ..constant.color import (
     RARITY_COLORS,
     CLN, BOLD, DARK_RED, GOLD, GRAY, DARK_GRAY,
-    BLUE, GREEN, RED, LIGHT_PURPLE, YELLOW, WHITE,
-)
+    BLUE, GREEN, RED, LIGHT_PURPLE, YELLOW, WHITE)
 from ..constant.enchanting import ULTIMATE_ENCHS
-from ..function.math import calc_pet_lvl, calc_pet_upgrade_exp, dung_stat
+from ..function.math import (
+    calc_pet_lvl, calc_pet_upgrade_exp, calc_skill_lvl, dung_stat)
 from ..function.util import (
-    display_int, display_name, roman, shorten_number,
-)
+    display_int, display_name, roman, shorten_number)
+from .ability import get_ability
+
 
 __all__ = ['item_type']
 
@@ -114,8 +115,17 @@ def item_type(cls: type, /) -> type:
 
     cls.display = display
 
-    def info(self, /, *, combat_lvl=0, cata_lvl=0):
+    def info(self, player, /):
+        combat_lvl = calc_skill_lvl('combat', player.skill_xp_combat)
+        cata_lvl = calc_skill_lvl('catacombs', player.skill_xp_catacombs)
         rarity_color = RARITY_COLORS[self.rarity]
+
+        for armor_piece in player.armor:
+            if armor_piece.__class__.__name__ == 'Empty':
+                armor_piece_names = []
+                break
+        else:
+            armor_piece_names = [piece.name for piece in player.armor]
 
         if getattr(self, 'modifer', None) is not None:
             modifier = f'{self.modifier.capitalize()} '
@@ -174,6 +184,11 @@ def item_type(cls: type, /) -> type:
                 if stat_name == 'damage':
                     if enchantments.get('one_for_all', 0) != 0:
                         value *= 3.1
+                    if armor_piece_names == [
+                            'strong_dragon_helmet', 'strong_dragon_chestplate',
+                            'strong_dragon_leggings', 'strong_dragon_boots']:
+                        if self.name == 'aspect_of_the_end':
+                            value += 75
 
                 dung = ''
                 if is_dungeon:
@@ -357,6 +372,15 @@ def item_type(cls: type, /) -> type:
                      f'destination to your fast travel\noptions.\n\n'
                      f'Island: {GREEN}{display_name(self.island)}{GRAY}\n'
                      f'Teleport: {YELLOW}{r_name}')
+
+        if self.__class__.__name__ in {'Armor', 'Bow', 'Sword', 'Pet'}:
+            for ability_id in self.abilities:
+                ability = get_ability(ability_id)
+                if ability.__class__.__name__ == 'NamedAbility':
+                    info += (f'\n\n{GOLD}{ability.name}'
+                             f'\n{GRAY}{ability.description}')
+                elif ability.__class__.__name__ == 'AnonymousAbility':
+                    info += f'\n\n{GRAY}{ability.description}'
 
         while '\n' in info and info.split('\n')[1] == '':
             info = '\n'.join([info.split('\n')[0]] + info.split('\n')[2:])
