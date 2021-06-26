@@ -58,6 +58,12 @@ ABILITIES = [
         description=(
             f'Rebound {GREEN}+33.0%{GRAY} of the damage\n'
             f'you take back at your enemy.')),
+    NamedAbility(
+        id='speester_bonus',
+        name='Full Set Bonus: Bonus Speed',
+        description=(
+            f"Increases {STAT_COLORS['speed']} Speed{GRAY} by\n"
+            f'{GREEN}+20{GRAY}.')),
 
     NamedAbility(
         id='miners_outfit_haste',

@@ -393,10 +393,10 @@ def profile_display(cls):
 
     cls.display_shop = display_shop
 
-    def display_stats(self, /):
+    def display_stats(self, index: Optional[int] = None, /):
         green('Your SkyBlock Profile')
         for stat_name in ALL_STAT:
-            value = self.get_stat(stat_name)
+            value = self.get_stat(stat_name, index)
             if value == 0 and stat_name in HIDDEN_STATS:
                 continue
             color = STAT_COLORS[stat_name]

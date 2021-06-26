@@ -158,7 +158,7 @@ Slay mobs.
 > split <from-index> <to-index> <amount>
 Split items to another slot.
 
-> stats
+> stats [item_index=none]
 Get information about your stats.
 
 > talkto <npc>

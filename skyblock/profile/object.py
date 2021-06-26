@@ -194,14 +194,14 @@ class Profile:
                 self.buy(chosen_trade, amount)
 
             elif words[0] == 'cheat':
-                item = get_item('ender_helmet')
-                self.recieve_item(item)
-                item = get_item('ender_chestplate')
-                self.recieve_item(item)
-                item = get_item('ender_leggings')
-                self.recieve_item(item)
-                item = get_item('ender_boots')
-                self.recieve_item(item)
+                # item = get_item('speedster_helmet')
+                # self.recieve_item(item)
+                # item = get_item('speedster_chestplate')
+                # self.recieve_item(item)
+                # item = get_item('speedster_leggings')
+                # self.recieve_item(item)
+                # item = get_item('speedster_boots')
+                # self.recieve_item(item)
                 ...
 
             elif words[0] == 'clear':
@@ -633,7 +633,14 @@ class Profile:
                 self.split(index_1, index_2, amount)
 
             elif words[0] == 'stats':
-                self.display_stats()
+                if len(words) == 2:
+                    index = self.parse_index(words[1])
+                    if index is None:
+                        continue
+                else:
+                    index = None
+
+                self.display_stats(index)
 
             elif words[0] == 'talkto':
                 name = words[1]

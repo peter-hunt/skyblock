@@ -197,7 +197,8 @@ MOBS = [
         coins=100, combat_xp=100, exp=0,
         drops=[
             (Item('sorrow'), 1, 'rare', 0.0012),
-            (Item('plasma'), 1, 'legendary', 0.001)]),
+            (Item('plasma'), 1, 'legendary', 0.001),
+            (Item('bag_of_cash'), 1, 'pray_rngesus', 0.0001)]),
 
     Mob('pack_spirit', level=35, health=7_000, damage=450,
         coins=11, combat_xp=15, exp=10,

@@ -912,7 +912,7 @@ def profile_action(cls):
                 if not random_bool(drop_chance):
                     continue
 
-                loot = item.copy()
+                loot = get_item(item.name)
                 if hasattr(loot, 'count'):
                     loot.count = 1
 
@@ -922,9 +922,9 @@ def profile_action(cls):
                     self.collect(loot.name, loot.count)
 
                 if rarity not in {'common', 'uncommon'}:
-                    rarity_str = rarity.upper()
+                    rarity_str = rarity.replace('_', ' ').upper()
                     white(f'{RARITY_COLORS[rarity]}{rarity_str} DROP! '
-                          f'{WHITE}({item.display()}{WHITE})')
+                          f'{WHITE}({loot.display()}{WHITE})')
 
             if count >= (last_cp + cp_step) * amount:
                 while count >= (last_cp + cp_step) * amount:

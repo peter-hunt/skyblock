@@ -370,7 +370,9 @@ SELL_PRICE = {
     'ender_leggings': 10_000,
     'ender_boots': 10_000,
 
-    'flaming_sword': 20}
+    'flaming_sword': 20,
+
+    'bag_of_cash': 1_000_000}
 
 # other level exp requirements
 SKILL_EXP = [

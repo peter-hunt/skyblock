@@ -251,7 +251,8 @@ OTHER_ITEMS = [
     Item('glacite_jewel', 64, 'rare'),
     Item('treasurite', 64, 'epic'),
 
-    Item('summoning_eye', 1, 'epic')]
+    Item('summoning_eye', 1, 'epic'),
+    Item('bag_of_cash', 1, 'rare')]
 
 ITEMS = (COLLECTION_ITEMS + COMPACT_ITEMS + OTHER_ITEMS
          + WEAPONS + ARMOR_PIECES + TOOLS + TRAVEL_SCROLLS + PETS)

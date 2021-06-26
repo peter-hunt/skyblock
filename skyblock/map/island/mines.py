@@ -82,7 +82,8 @@ ICE_WALLS = Region(
     'ice_walls', 0, 100,
     mobs=[get_mob('ice_walker')])
 MIST = Region(
-    'mist', 0, 40)
+    'mist', 0, 40,
+    mobs=[get_mob('ghost')])
 PALACE = Region(
     'palace', 120, 120,
     npcs=[

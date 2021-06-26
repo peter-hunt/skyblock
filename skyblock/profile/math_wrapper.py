@@ -9,6 +9,7 @@ from ..constant.util import Number
 from ..function.math import (
     calc_exp_lvl, calc_pet_lvl, calc_skill_lvl, display_skill_reward)
 from ..function.io import dark_aqua, gold, dark_gray, red, green, yellow, aqua
+from ..function.reforge import get_reforge
 from ..function.util import display_name, roman
 from ..object.collection import is_collection, get_collection, calc_coll_lvl
 from ..object.object import (
@@ -158,7 +159,7 @@ def profile_math(cls):
 
     cls.collect = collect
 
-    def get_stat(self, name: str, index: Optional[int] = None):
+    def get_stat(self, name: str, index: Optional[int] = None, /):
         value = 0
 
         pet = self.get_active_pet()
@@ -171,6 +172,9 @@ def profile_math(cls):
 
             if not isinstance(item, (Bow, Sword, Axe, Hoe, Pickaxe, Drill)):
                 item = Empty()
+
+            reforge_bonus = get_reforge(item.modifier, item.rarity)
+            value += reforge_bonus.get(name, 0)
 
             item_ench = getattr(item, 'enchantments', {})
 
@@ -224,6 +228,7 @@ def profile_math(cls):
         miners_outfit_haste = False
         lapis_armor_health = False
         glacite_armor = False
+        speedster_armor = False
         ender_armor = False
         old_blood = False
         superior_blood = False
@@ -240,6 +245,9 @@ def profile_math(cls):
             elif piece_names == ['glacite_helmet', 'glacite_chestplate',
                                  'glacite_leggings', 'glacite_boots']:
                 glacite_armor = True
+            elif piece_names == ['speedster_helmet', 'speedster_chestplate',
+                                 'speedster_leggings', 'speedster_boots']:
+                speedster_armor = True
             elif piece_names == ['ender_helmet', 'ender_chestplate',
                                  'ender_leggings', 'ender_boots']:
                 ender_armor = True
@@ -308,6 +316,9 @@ def profile_math(cls):
         elif name == 'strength':
             value += min(foraging_lvl, 14) * 1
             value += max(min(foraging_lvl - 14, 36), 0) * 2
+        elif name == 'speed':
+            if speedster_armor:
+                value += 20
         elif name == 'crit_chance':
             value += combat_lvl * 0.5
         elif name == 'intelligence':
