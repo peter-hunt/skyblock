@@ -194,14 +194,10 @@ class Profile:
                 self.buy(chosen_trade, amount)
 
             elif words[0] == 'cheat':
-                # item = get_item('speedster_helmet')
-                # self.recieve_item(item)
-                # item = get_item('speedster_chestplate')
-                # self.recieve_item(item)
-                # item = get_item('speedster_leggings')
-                # self.recieve_item(item)
-                # item = get_item('speedster_boots')
-                # self.recieve_item(item)
+                item = get_item('jungle_axe')
+                self.recieve_item(item)
+                item = get_item('treecapitator')
+                self.recieve_item(item)
                 ...
 
             elif words[0] == 'clear':

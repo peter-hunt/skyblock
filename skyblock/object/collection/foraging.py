@@ -71,7 +71,7 @@ FORAGING_COLLECTIONS = [
          (1_000, 100),
          (2_000, 200),
          (5_000, get_recipe('jungle_to_enchanted')),
-         (10_000, 1_000),
+         (10_000, get_recipe('jungle_axe')),
          (25_000, 2_500),
          (50_000, (get_recipe('uncommon_ocelot_pet'),
                    get_recipe('epic_ocelot_pet')))])]

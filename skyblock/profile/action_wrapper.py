@@ -471,15 +471,23 @@ def profile_action(cls):
                     self.harvest_resource('titanium', tool_index)
 
         elif isinstance(resource, Wood):
-            if isinstance(tool, Axe):
-                tool_speed = tool.tool_speed
-                if 'efficiency' in enchantments:
-                    tool_speed += enchantments['efficiency'] ** 2 + 1
-                time_cost = 1.5 * resource.hardness / tool_speed
+            if getattr(tool, 'name', None) == 'jungle_axe':
+                time_cost = 2
+                break_amount = 10
+            elif getattr(tool, 'name', None) == 'treecapitator':
+                time_cost = 2
+                break_amount = 35
             else:
-                tool_speed = 1
-                time_cost = 5 * resource.hardness / tool_speed
-            time_cost = ceil(time_cost * 20) / 20
+                if isinstance(tool, Axe):
+                    tool_speed = tool.tool_speed
+                    if 'efficiency' in enchantments:
+                        tool_speed += enchantments['efficiency'] ** 2 + 1
+                    time_cost = 1.5 * resource.hardness / tool_speed
+                else:
+                    tool_speed = 1
+                    time_cost = 5 * resource.hardness / tool_speed
+                time_cost = ceil(time_cost * 20) / 20
+                break_amount = 1
 
             foraging_fortune = self.get_stat('foraging_fortune', tool_index)
             fortune_mult = 1 + foraging_fortune / 100
@@ -494,15 +502,21 @@ def profile_action(cls):
             last_cp = Decimal()
             cp_step = Decimal('0.1')
             for count in range(1, amount + 1):
-                sleep(time_cost)
+                last_harvest = time()
+                sleep(max(last_harvest - time() + 2, 0))
                 drop_pool = random_int(fortune_mult)
 
-                self.recieve_item(wood_item, drop_pool)
-                self.collect(wood_name, drop_pool)
-                if random_amount((1, 5)) == 1:
-                    self.recieve_item(sapling_item, drop_pool)
+                for i in range(break_amount):
+                    if i != 0:
+                        sleep(0.02)
 
-                self.add_skill_exp('foraging', resource.foraging_exp)
+                    self.recieve_item(wood_item, drop_pool)
+                    self.collect(wood_name, drop_pool)
+                    if random_amount((1, 5)) == 1:
+                        self.recieve_item(sapling_item, drop_pool)
+
+                    self.add_skill_exp('foraging', resource.foraging_exp)
+
                 if count >= (last_cp + cp_step) * amount:
                     while count >= (last_cp + cp_step) * amount:
                         last_cp += cp_step

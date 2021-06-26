@@ -92,6 +92,8 @@ class Axe(ItemType):
     modifier: Optional[str] = None
     enchantments: Dict[str, int] = {}
 
+    abilities: List[str] = []
+
 
 @item_type
 class Pickaxe(ItemType):
@@ -189,30 +191,6 @@ class Pet(ItemType):
     ferocity: int = 0
 
     abilities: List = []
-
-
-@item_type
-class Pet(ItemType):
-    name: str
-    rarity: str
-    category: str = None
-    exp: float = 0.0
-    candy_used: int = 0
-    active: bool = False
-
-    health: int = 0
-    defense: int = 0
-    speed: int = 0
-    true_defense: int = 0
-    intelligence: int = 0
-    strength: int = 0
-    crit_chance: int = 0
-    crit_damage: int = 0
-    magic_find: int = 0
-    attack_speed: int = 0
-    ferocity: int = 0
-
-    abilities: List[str] = []
 
 
 OBJECTS = [

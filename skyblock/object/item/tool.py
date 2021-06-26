@@ -16,6 +16,11 @@ TOOLS = [
     Axe('sweet_axe', rarity='uncommon', tool_speed=6),
     Axe('efficient_axe', rarity='uncommon', tool_speed=6),
 
+    Axe('jungle_axe', rarity='uncommon', tool_speed=2,
+        abilities=['jungle_axe']),
+    Axe('treecapitator', rarity='epic', tool_speed=12,
+        abilities=['treecapitator']),
+
     Hoe('wooden_hoe', rarity='common'),
     Hoe('golden_hoe', rarity='common'),
     Hoe('stone_hoe', rarity='common'),

@@ -1,7 +1,7 @@
 from typing import Optional
 
 from ..constant.color import (
-    GOLD, GRAY, BLUE, GREEN, AQUA, RED, YELLOW, STAT_COLORS)
+    GOLD, GRAY, DARK_GRAY, BLUE, GREEN, AQUA, RED, YELLOW, STAT_COLORS)
 from ..function.io import red
 from ..function.util import get
 
@@ -135,7 +135,18 @@ ABILITIES = [
     NamedAbility(
         id='superior_blood',
         name='Full Set Bonus: Superior Blood',
-        description=f'Most of your stats are increased by {GREEN}5%{GRAY}')]
+        description=f'Most of your stats are increased by {GREEN}5%{GRAY}'),
+
+    AnonymousAbility(
+        id='jungle_axe',
+        description=(f'A powerful Wooden Axe which can\n'
+                     f'break multiple logs in a single\nhit!\n'
+                     f'{DARK_GRAY}Cooldown: {GREEN}2s{GRAY}')),
+    AnonymousAbility(
+        id='treecapitator',
+        description=(f'A powerful Gold Axe which can\n'
+                     f'break a large amount of logs in\na single hit!\n'
+                     f'{DARK_GRAY}Cooldown: {GREEN}2s{GRAY}'))]
 
 
 def get_ability(id: str, /) -> Optional[Ability]:
