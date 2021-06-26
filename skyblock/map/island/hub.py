@@ -115,7 +115,7 @@ FASHION_SHOP = Region(
             dialog=[
                 'Hello!',
                 'You look dashing today!',
-                'Would you like to buy something?']),])
+                'Would you like to buy something?']), ])
 FLOWER_HOUSE = Region('flower_house', -7, -25)
 FOREST = Region(
     'forest', -95, -40,
@@ -146,7 +146,21 @@ HUB_CASTLE = Region(
             trades=[(150_000, get_scroll('castle'))])],
     mobs=[get_mob('wolf'),
           get_mob('old_wolf')])
-LIBRARY = Region('library', 37, -111)
+LIBRARY = Region(
+    'library', 37, -111,
+    npcs=[
+        Npc('librarian',
+            init_dialog=[
+                'Greetings! Welcome to the Library!',
+                ('The Library is your one-stop shop for all things enchanting.'
+                 ' Enchant items, purchase Enchanted Books, and more'),
+                ('You can enchant items with `enchant`.'
+                 ' Enchanting costs experience levels -'
+                 ' the more levels you spend, the better enchantments'
+                 ' you will receive.'),
+                'Use `enchant` to enchant an item!'],
+            trades=[
+                (30, Item('experience_bottle'))])])
 MOUNTAIN = Region('mountain', 0, 0)
 PETS_BUILDING = Region(
     'pets_building', 24, -90,
@@ -185,6 +199,7 @@ POTION_SHOP = Region(
                 'Talk to me again to open the Alchemist Shop!'],
             trades=[
                 (10, Item('nether_wart')),
+                (6, Item('bottle')),
                 (4, Item('sugar')),
                 (10, Item('rabbit_foot')),
                 (12, Item('spider_eye')),

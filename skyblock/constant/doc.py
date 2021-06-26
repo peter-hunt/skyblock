@@ -52,8 +52,8 @@ Removes all items currently in the Stash.
 > collections [category|name]
 Display collections.
 
-> consume <index>
-> use <index>
+> consume <index> [amount=1]
+> use <index> [amount=1]
 Consume item.
 
 > craft <recipe-index> [amount=1]

@@ -248,6 +248,11 @@ OTHER_ITEMS = [
     Item('acacia_leaves', 64, 'common'),
     Item('jungle_leaves', 64, 'common'),
 
+    Item('bottle', 64, 'common'),
+    Item('experience_bottle', 64, 'common'),
+    Item('grand_experience_bottle', 64, 'uncommon'),
+    Item('titanic_experience_bottle', 64, 'rare'),
+
     Item('glacite_jewel', 64, 'rare'),
     Item('treasurite', 64, 'epic'),
 

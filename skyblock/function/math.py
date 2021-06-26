@@ -380,7 +380,7 @@ def random_amount(amount: Amount = 1, /) -> int:
     if isinstance(amount, tuple):
         return randint(amount[0], amount[1])
     else:
-        return amount
+        return random_int(amount)
 
 
 def random_bool(chance: float = 0.5, /) -> bool:

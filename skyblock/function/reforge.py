@@ -9,7 +9,9 @@ __all__ = ['get_reforge']
 
 
 def get_reforge(name: str, rarity: str, /) -> Dict[str, int]:
-    if name not in REFORGES:
+    if name is None:
+        return {}
+    elif name not in REFORGES:
         red(f'Invalid reforge: {name}')
         return
 

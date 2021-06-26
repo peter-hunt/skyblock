@@ -1,12 +1,11 @@
 from decimal import Decimal
 from math import ceil
-from random import random
+from random import randint, random
 from time import sleep, time
 from typing import Optional, Tuple
 
 from ..constant.color import (
-    RARITY_COLORS, BOLD, DARK_AQUA, GOLD, GRAY, BLUE, GREEN,
-    AQUA, RED, LIGHT_PURPLE, YELLOW, WHITE)
+    RARITY_COLORS, DARK_AQUA, GOLD, GRAY, BLUE, GREEN, AQUA, RED, YELLOW, WHITE)
 from ..constant.enchanting import (
     ENCHS, CONFLICTS, ENCH_REQUIREMENTS,
     SWORD_ENCHS, BOW_ENCHS, ARMOR_ENCHS,
@@ -80,7 +79,7 @@ def profile_action(cls):
                     self.purse -= item * amount
                     continue
                 kwargs = {}
-                for attr in ('rarity', ):
+                for attr in ('rarity',):
                     if hasattr(item, attr):
                         kwargs[attr] = getattr(item, attr)
                 self.remove_item(item[0].name, item[1] * amount, **kwargs)
@@ -94,7 +93,7 @@ def profile_action(cls):
         for item in good:
             self.recieve_item(item, amount)
             amt_str = '' if amount == 1 else f'{GRAY} x {amount}'
-            display.append(f'{item}{amt_str}')
+            display.append(f'{item.display()}{amt_str}')
 
         display_str = f'{GREEN}, '.join(display)
 
@@ -106,10 +105,14 @@ def profile_action(cls):
 
     cls.buy = buy
 
-    def consume(self, index: int, /):
+    def consume(self, index: int, amount: int = 1, /):
         item = self.inventory[index]
 
         if isinstance(item, TravelScroll):
+            if amount != 1:
+                red('Can only use 1 travel scroll at a time!')
+                return
+
             if [item.island, item.region] in self.fast_travel:
                 red('You already unlocked this fast travel!')
                 return
@@ -121,6 +124,25 @@ def profile_action(cls):
                 name += f' {GRAY}- {AQUA}{display_name(item.region)}'
             yellow('You consumed the scroll!')
             yellow(f'You may now fast travel to {GREEN}{name}{YELLOW}!')
+
+        elif item.name in {'experience_bottle', 'grand_experience_bottle',
+                           'tiantium_experience_bottle'}:
+            if amount > item.count:
+                red("You don't have enough item to do that!")
+                return
+
+            if item.name == 'experience_bottle':
+                exp_amount = 8
+            elif item.name == 'grand_experience_bottle':
+                exp_amount = 1_500
+            elif item.name == 'tiantium_experience_bottle':
+                exp_amount = 250_000
+
+            item_copy = item.copy()
+            item_copy.count = amount
+
+            gray(f'You consumed {item_copy.display()}{GRAY}!')
+            self.add_exp(exp_amount)
 
         else:
             red('This item is not consumable!')
@@ -406,7 +428,6 @@ def profile_action(cls):
             mining_fortune = self.get_stat('mining_fortune', tool_index)
             fortune_mult = 1 + mining_fortune / 100
             exp_mult = 1 + 0.125 * enchantments.get('experience', 0)
-            exp_mult *= 1 + 0.04 * enchanting_lvl
 
             lapis_exp_bonus = 1
 
@@ -415,7 +436,7 @@ def profile_action(cls):
                     break
 
                 if piece.name in {'lapis_helmet', 'lapis_chestplate',
-                                   'lapis_leggings', 'lapis_boots'}:
+                                  'lapis_leggings', 'lapis_boots'}:
                     lapis_exp_bonus += 0.5
 
             exp_mult *= lapis_exp_bonus
@@ -437,14 +458,15 @@ def profile_action(cls):
                 if is_coll:
                     self.collect(drop_item, amount_pool * drop_pool)
 
-                self.add_exp(resource.exp * random_amount(exp_mult))
+                self.add_exp(random_amount(resource.exp)
+                             * random_amount(exp_mult))
                 self.add_skill_exp('mining', resource.mining_exp)
                 if count >= (last_cp + cp_step) * amount:
                     while count >= (last_cp + cp_step) * amount:
                         last_cp += cp_step
                     gray(f'{count} / {amount} ({(last_cp * 100):.0f}%) done')
 
-                if 'mithril' in resource.name and random_amount((1, 50)) == 1:
+                if 'mithril' in resource.name and randint(1, 50) == 1:
                     white('Titanium has spawned nearby!')
                     self.harvest_resource('titanium', tool_index)
 
@@ -726,8 +748,11 @@ def profile_action(cls):
         if pumpkin_buff:
             damage *= 1.1
 
+        enchanting_lvl = calc_skill_lvl('enchanting', self.skill_xp_enchanting)
+
         execute = 0.2 * enchantments.get('execute', 0)
         experience = 1 + 0.125 * enchantments.get('experience', 0)
+        experience += 0.04 * enchanting_lvl
         first_strike = 1 + 0.25 * enchantments.get('first_strike', 0)
         giant_killer = enchantments.get('giant_killer', 0)
         life_steal = 0.005 * enchantments.get('life_steal', 0)

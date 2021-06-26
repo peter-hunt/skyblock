@@ -344,6 +344,11 @@ SELL_PRICE = {
     'acacia_leaves': 2,
     'jungle_leaves': 2,
 
+    'bottle': 2,
+    'experience_bottle': 5,
+    'grand_experience_bottle': 480,
+    'titanic_experience_bottle': 5_000,
+
     'enchanted_oak': 320,
     'enchanted_birch': 320,
     'enchanted_spruce': 320,

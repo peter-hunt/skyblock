@@ -215,7 +215,16 @@ class Profile:
                 if index is None:
                     continue
 
-                self.consume(index)
+                amount = 1
+                if len(words) == 3:
+                    amount = parse_int(words[2])
+                    if amount is None:
+                        continue
+                    if amount == 0:
+                        yellow('Can only use positive amount of items.')
+                        continue
+
+                self.consume(index, amount)
 
             elif words[0] in {'collection', 'collections'}:
                 if len(words) == 1:

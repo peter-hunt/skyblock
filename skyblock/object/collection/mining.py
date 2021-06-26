@@ -79,13 +79,13 @@ MINING_COLLECTIONS = [
     Collection(
         'lapis', 'mining',
         [(250, 25),
-         (500, 50),
+         (500, get_recipe('experience_bottle')),
          (1_000, 100),
          (2_000, get_recipe('lapis_to_enchanted')),
-         (10_000, 1_000),
+         (10_000, get_recipe('grand_experience_bottle')),
          (25_000, 2_500),
          (50_000, get_recipe('lapis_to_enchanted_block')),
-         (100_000, 10_000),
+         (100_000, get_recipe('titanic_experience_bottle')),
          (150_000, 15_000)]),
     Collection(
         'emerald', 'mining',

@@ -46,6 +46,7 @@ python -m skyblock
 * Fast Traveling
 * Islands
 * NPC buying and trading items
+* Modifiers
 * Pets
 * Simple combat system
 * Skill system
