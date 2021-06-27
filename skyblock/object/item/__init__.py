@@ -11,11 +11,18 @@ from .weapon import WEAPONS
 
 
 __all__ = [
-    'COLLECTION_ITEMS', 'COMPACT_ITEMS', 'OTHER_ITEMS',
+    'COLLECTION_ITEMS',  'OTHER_ITEMS',
     'ARMOR_PIECES', 'PETS', 'TRAVEL_SCROLLS', 'TOOLS', 'WEAPONS', 'ITEMS',
     'get_item', 'get_stack_size', 'get_scroll']
 
 COLLECTION_ITEMS = [
+    Item('hay_bale', 64, 'common'),
+    Item('enchanted_bread', 64, 'common'),
+    Item('golden_carrot', 64, 'common'),
+    Item('glistering_melon', 64, 'common'),
+    Item('mushroom_block', 64, 'common'),
+    Item('wool', 64, 'common'),
+
     Item('wheat', 64, 'common'),
     Item('carrot', 64, 'common'),
     Item('potato', 64, 'common'),
@@ -36,72 +43,6 @@ COLLECTION_ITEMS = [
     Item('rabbit_foot', 64, 'common'),
     Item('rabbit_hide', 64, 'common'),
     Item('nether_wart', 64, 'common'),
-
-    Item('cobblestone', 64, 'common'),
-    Item('coal', 64, 'common'),
-    Item('iron', 64, 'common'),
-    Item('gold', 64, 'common'),
-    Item('diamond', 64, 'common'),
-    Item('lapis', 64, 'common'),
-    Item('emerald', 64, 'common'),
-    Item('redstone', 64, 'common'),
-    Item('quartz', 64, 'common'),
-    Item('obsidian', 64, 'common'),
-    Item('glowstone', 64, 'common'),
-    Item('gravel', 64, 'common'),
-    Item('ice', 64, 'common'),
-    Item('netherrack', 64, 'common'),
-    Item('sand', 64, 'common'),
-    Item('end_stone', 64, 'common'),
-    Item('mithril', 64, 'common'),
-    Item('starfall', 64, 'rare'),
-    Item('titanium', 64, 'rare'),
-    Item('sorrow', 64, 'rare'),
-    Item('plasma', 64, 'rare'),
-
-    Item('rotten_flesh', 64, 'common'),
-    Item('bone', 64, 'common'),
-    Item('string', 64, 'common'),
-    Item('spider_eye', 64, 'common'),
-    Item('gunpowder', 64, 'common'),
-    Item('ender_pearl', 16, 'common'),
-    Item('ghast_tear', 64, 'common'),
-    Item('slime_ball', 64, 'common'),
-    Item('blaze_rod', 64, 'common'),
-    Item('magma_cream', 64, 'common'),
-
-    Item('oak_wood', 64, 'common'),
-    Item('birch_wood', 64, 'common'),
-    Item('spruce_wood', 64, 'common'),
-    Item('dark_oak_wood', 64, 'common'),
-    Item('acacia_wood', 64, 'common'),
-    Item('jungle_wood', 64, 'common'),
-
-    Item('enchanted_oak', 64, 'uncommon'),
-    Item('enchanted_birch', 64, 'uncommon'),
-    Item('enchanted_spruce', 64, 'uncommon'),
-    Item('enchanted_dark_oak', 64, 'uncommon'),
-    Item('enchanted_acacia', 64, 'uncommon'),
-    Item('enchanted_jungle', 64, 'uncommon'),
-
-    Item('fish', 64, 'common'),
-    Item('salmon', 64, 'common'),
-    Item('clownfish', 64, 'common'),
-    Item('pufferfish', 64, 'common'),
-    Item('prismarine_shard', 64, 'common'),
-    Item('prismarine_crystals', 64, 'common'),
-    Item('clay', 64, 'common'),
-    Item('lily_pad', 64, 'common'),
-    Item('ink_sack', 64, 'common'),
-    Item('sponge', 64, 'common')]
-
-COMPACT_ITEMS = [
-    Item('hay_bale', 64, 'common'),
-    Item('enchanted_bread', 64, 'common'),
-    Item('golden_carrot', 64, 'common'),
-    Item('glistering_melon', 64, 'common'),
-    Item('mushroom_block', 64, 'common'),
-    Item('wool', 64, 'common'),
 
     Item('enchanted_hay_bale', 64, 'uncommon'),
     Item('tightly_tied_hay_bale', 64, 'rare'),
@@ -138,6 +79,28 @@ COMPACT_ITEMS = [
     Item('enchanted_rabbit_hide', 64, 'uncommon'),
     Item('enchanted_nether_wart', 64, 'uncommon'),
     Item('mutant_nether_wart', 64, 'rare'),
+
+    Item('cobblestone', 64, 'common'),
+    Item('coal', 64, 'common'),
+    Item('iron', 64, 'common'),
+    Item('gold', 64, 'common'),
+    Item('diamond', 64, 'common'),
+    Item('lapis', 64, 'common'),
+    Item('emerald', 64, 'common'),
+    Item('redstone', 64, 'common'),
+    Item('quartz', 64, 'common'),
+    Item('obsidian', 64, 'common'),
+    Item('glowstone', 64, 'common'),
+    Item('gravel', 64, 'common'),
+    Item('ice', 64, 'common'),
+    Item('netherrack', 64, 'common'),
+    Item('sand', 64, 'common'),
+    Item('end_stone', 64, 'common'),
+    Item('mithril', 64, 'common'),
+    Item('starfall', 64, 'rare'),
+    Item('titanium', 64, 'rare'),
+    Item('sorrow', 64, 'rare'),
+    Item('plasma', 64, 'rare'),
 
     Item('coal_block', 64, 'common'),
     Item('iron_block', 64, 'common'),
@@ -188,6 +151,17 @@ COMPACT_ITEMS = [
     Item('golden_plate', 1, 'rare'),
     Item('drill_engine', 1, 'rare'),
 
+    Item('rotten_flesh', 64, 'common'),
+    Item('bone', 64, 'common'),
+    Item('string', 64, 'common'),
+    Item('spider_eye', 64, 'common'),
+    Item('gunpowder', 64, 'common'),
+    Item('ender_pearl', 16, 'common'),
+    Item('ghast_tear', 64, 'common'),
+    Item('slime_ball', 64, 'common'),
+    Item('blaze_rod', 64, 'common'),
+    Item('magma_cream', 64, 'common'),
+
     Item('slime_block', 64, 'common'),
 
     Item('enchanted_rotten_flesh', 64, 'uncommon'),
@@ -209,7 +183,52 @@ COMPACT_ITEMS = [
     Item('absolute_ender_pearl', 64, 'rare'),
     Item('tesselated_ender_pearl', 64, 'legendary'),
     Item('enchanted_slime_block', 64, 'rare'),
-    Item('enchanted_blaze_rod', 64, 'uncommon')]
+    Item('enchanted_blaze_rod', 64, 'uncommon'),
+
+    Item('oak_wood', 64, 'common'),
+    Item('birch_wood', 64, 'common'),
+    Item('spruce_wood', 64, 'common'),
+    Item('dark_oak_wood', 64, 'common'),
+    Item('acacia_wood', 64, 'common'),
+    Item('jungle_wood', 64, 'common'),
+
+    Item('enchanted_oak', 64, 'uncommon'),
+    Item('enchanted_birch', 64, 'uncommon'),
+    Item('enchanted_spruce', 64, 'uncommon'),
+    Item('enchanted_dark_oak', 64, 'uncommon'),
+    Item('enchanted_acacia', 64, 'uncommon'),
+    Item('enchanted_jungle', 64, 'uncommon'),
+
+    Item('oak_sapling', 64, 'common'),
+    Item('birch_sapling', 64, 'common'),
+    Item('spruce_sapling', 64, 'common'),
+    Item('dark_oak_sapling', 64, 'common'),
+    Item('acacia_sapling', 64, 'common'),
+    Item('jungle_sapling', 64, 'common'),
+
+    Item('oak_leaves', 64, 'common'),
+    Item('birch_leaves', 64, 'common'),
+    Item('spruce_leaves', 64, 'common'),
+    Item('dark_oak_leaves', 64, 'common'),
+    Item('acacia_leaves', 64, 'common'),
+    Item('jungle_leaves', 64, 'common'),
+
+    Item('dandelion', 64, 'common'),
+    Item('poppy', 64, 'common'),
+
+    Item('enchanted_dandelion', 64, 'uncommon'),
+    Item('enchanted_poppy', 64, 'uncommon'),
+
+    Item('fish', 64, 'common'),
+    Item('salmon', 64, 'common'),
+    Item('clownfish', 64, 'common'),
+    Item('pufferfish', 64, 'common'),
+    Item('prismarine_shard', 64, 'common'),
+    Item('prismarine_crystals', 64, 'common'),
+    Item('clay', 64, 'common'),
+    Item('lily_pad', 64, 'common'),
+    Item('ink_sack', 64, 'common'),
+    Item('sponge', 64, 'common')]
 
 OTHER_ITEMS = [
     Item('apple', 64, 'common'),
@@ -234,20 +253,6 @@ OTHER_ITEMS = [
     Item('stick', 64, 'common'),
     Item('sugar', 64, 'common'),
 
-    Item('oak_sapling', 64, 'common'),
-    Item('birch_sapling', 64, 'common'),
-    Item('spruce_sapling', 64, 'common'),
-    Item('dark_oak_sapling', 64, 'common'),
-    Item('acacia_sapling', 64, 'common'),
-    Item('jungle_sapling', 64, 'common'),
-
-    Item('oak_leaves', 64, 'common'),
-    Item('birch_leaves', 64, 'common'),
-    Item('spruce_leaves', 64, 'common'),
-    Item('dark_oak_leaves', 64, 'common'),
-    Item('acacia_leaves', 64, 'common'),
-    Item('jungle_leaves', 64, 'common'),
-
     Item('glass', 64, 'common'),
     Item('bottle', 64, 'common'),
     Item('experience_bottle', 64, 'common'),
@@ -260,8 +265,8 @@ OTHER_ITEMS = [
     Item('summoning_eye', 1, 'epic'),
     Item('bag_of_cash', 1, 'rare')]
 
-ITEMS = (COLLECTION_ITEMS + COMPACT_ITEMS + OTHER_ITEMS
-         + WEAPONS + ARMOR_PIECES + TOOLS + TRAVEL_SCROLLS + PETS)
+ITEMS = (COLLECTION_ITEMS + OTHER_ITEMS + WEAPONS
+         + ARMOR_PIECES + TOOLS + TRAVEL_SCROLLS + PETS)
 
 
 def get_item(name: str, **kwargs) -> ItemType:

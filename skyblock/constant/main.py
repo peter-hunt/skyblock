@@ -337,6 +337,11 @@ SELL_PRICE = {
     'acacia_sapling': 0.2,
     'jungle_sapling': 0.2,
 
+    'dandelion': 1,
+    'poppy': 1,
+    'enchanted_dandelion': 160,
+    'enchanted_poppy': 576,
+
     'oak_leaves': 2,
     'birch_leaves': 2,
     'spruce_leaves': 2,

@@ -471,7 +471,12 @@ def profile_action(cls):
                     self.gather_resource('titanium', tool_index)
 
         elif isinstance(resource, Wood):
-            if getattr(tool, 'name', None) == 'jungle_axe':
+            is_wood = True
+            if 'wood' not in resource.name:
+                time_cost = 0.5
+                break_amount = 1
+                is_wood = False
+            elif getattr(tool, 'name', None) == 'jungle_axe':
                 time_cost = 2
                 break_amount = 10
             elif getattr(tool, 'name', None) == 'treecapitator':
@@ -496,14 +501,16 @@ def profile_action(cls):
             wood_item = get_item(wood_name)
             wood_item.count = 1
 
-            sapling_item = get_item(f'{wood_name[:-5]}_sapling')
-            sapling_item.count = 1
+            if is_wood:
+                sapling_item = get_item(f'{wood_name[:-5]}_sapling')
+                sapling_item.count = 1
 
             last_cp = Decimal()
             cp_step = Decimal('0.1')
+            last_harvest = time()
             for count in range(1, amount + 1):
+                sleep(max(last_harvest - time() + time_cost, 0))
                 last_harvest = time()
-                sleep(max(last_harvest - time() + 2, 0))
                 drop_pool = random_int(fortune_mult)
 
                 for i in range(break_amount):
@@ -511,9 +518,10 @@ def profile_action(cls):
                         sleep(0.02)
 
                     self.recieve_item(wood_item, drop_pool)
-                    self.collect(wood_name, drop_pool)
-                    if random_amount((1, 5)) == 1:
-                        self.recieve_item(sapling_item, drop_pool)
+                    if is_wood:
+                        self.collect(wood_name, drop_pool)
+                        if random_amount((1, 5)) == 1:
+                            self.recieve_item(sapling_item, drop_pool)
 
                     self.add_skill_exp('foraging', resource.foraging_exp)
 
@@ -533,7 +541,7 @@ def profile_action(cls):
         region = get(island.regions, self.region)
 
         if not includes(island.regions, dest):
-            red('Unknown destination! Use /look to view options!')
+            red('Unknown destination! Use `look` to view options!')
             return
         if region.name == dest:
             yellow(f'Already at {AQUA}{display_name(dest)}{YELLOW}!')

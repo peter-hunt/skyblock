@@ -168,7 +168,6 @@ def item_type(cls: type, /) -> type:
 
             if self.modifier is not None:
                 reforge_bonus = get_reforge(self.modifier, self.rarity)
-                print(reforge_bonus)
             else:
                 reforge_bonus = {}
 

@@ -1527,7 +1527,14 @@ RECIPES = [
            [(Item('enchanted_jungle'), 512),
             (Item('super_enchanted_egg'), 1)],
            (get_item('ocelot_pet', rarity='epic'), 1),
-           collection_req=('jungle_wood', 9))]
+           collection_req=('jungle_wood', 9)),
+
+    Recipe('dandelion_to_enchanted', 'foraging',
+           [(Item('dandelion'), 160)],
+           (Item('enchanted_dandelion'), 1)),
+    Recipe('poppy_to_enchanted', 'foraging',
+           [(Item('poppy'), 576)],
+           (Item('enchanted_poppy'), 1))]
 
 
 def get_recipe(name: str, **kwargs) -> Optional[Recipe]:

@@ -116,7 +116,9 @@ FASHION_SHOP = Region(
                 'Hello!',
                 'You look dashing today!',
                 'Would you like to buy something?']), ])
-FLOWER_HOUSE = Region('flower_house', -7, -25)
+FLOWER_HOUSE = Region(
+    'flower_house', -7, -25,
+    resources=[get_resource('dandelion'), get_resource('poppy')])
 FOREST = Region(
     'forest', -95, -40,
     resources=[get_resource('oak_wood')],

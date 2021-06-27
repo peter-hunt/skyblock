@@ -70,7 +70,10 @@ RESOURCES = [
     Wood('spruce_wood', hardness=2, foraging_exp=6),
     Wood('dark_oak_wood', hardness=2, foraging_exp=6),
     Wood('acacia_wood', hardness=2, foraging_exp=6),
-    Wood('jungle_wood', hardness=2, foraging_exp=6)]
+    Wood('jungle_wood', hardness=2, foraging_exp=6),
+
+    Wood('dandelion', hardness=0, foraging_exp=1),
+    Wood('poppy', hardness=0, foraging_exp=1)]
 
 
 def get_resource(name: str, **kwargs) -> Optional[ItemType]:
