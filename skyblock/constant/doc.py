@@ -78,8 +78,13 @@ Exit to the menu.
 > exp
 Display your vanilla experience.
 
-> get <resource> [amount=1] [tool=hand]
-Get resources.
+> fish <rod-index> [iteration=1]
+Fish for worthy.
+
+> gather <resource> [tool-index=hand] [amount=1]
+> get <resource> [tool-index=hand] [amount=1]
+> mine <resource> [tool-index=hand] [amount=1]
+Gather resources.
 
 > goto <region>
 Go to a region.
@@ -89,6 +94,10 @@ Display detailed informatioon about the item.
 
 > item <id>
 Display information of any item.
+
+> kill <mob> [weapon-index=hand] [amount=1]
+> slay <mob> [weapon-index=hand] [amount=1]
+Slay mobs.
 
 > ls
 List all the items in the inventory.
@@ -152,12 +161,10 @@ Show trades in recently opened shop.
 > skills [skill=all]
 Get information about your skills.
 
-> slay <mob> [amount=1] [weapon=hand]
-Slay mobs.
-
 > split <from-index> <to-index> <amount>
 Split items to another slot.
 
+> stat [item_index=none]
 > stats [item_index=none]
 Get information about your stats.
 

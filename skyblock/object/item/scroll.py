@@ -20,7 +20,8 @@ TRAVEL_SCROLLS = [
     TravelScroll('nether', 'magma', rarity='epic'),
     TravelScroll('end'),
     TravelScroll('end', 'drag', rarity='epic'),
-    TravelScroll('mines')]
+    TravelScroll('mines'),
+]
 
 
 def get_scroll(name: str) -> TravelScroll:

@@ -498,4 +498,18 @@ ARMOR_PIECES = [
           strength=10, crit_chance=2, crit_damage=10,
           health=80, defense=110, intelligence=25, speed=3,
           combat_skill_req=20,
-          abilities=['superior_blood'])]
+          abilities=['superior_blood']),
+
+    Armor('fairys_fedora', rarity='uncommon', part='helmet',
+          health=1, defense=1, intelligence=-1, speed=10,
+          abilities=['fairys_outfit']),
+    Armor('fairys_polo', rarity='uncommon', part='chestplate',
+          health=1, defense=1, intelligence=-1, speed=10,
+          abilities=['fairys_outfit']),
+    Armor('fairys_trousers', rarity='uncommon', part='leggings',
+          health=1, defense=1, intelligence=-1, speed=10,
+          abilities=['fairys_outfit']),
+    Armor('fairys_galoshes', rarity='uncommon', part='boots',
+          health=1, defense=1, intelligence=-1, speed=10,
+          abilities=['fairys_outfit']),
+]

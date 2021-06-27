@@ -77,7 +77,6 @@ def init_type(cls: type, /) -> type:
             init_str += f', {key}={default[key]!r}'
         else:
             init_str += f', {key}'
-
     init_str += ': ('
     for key in anno:
         init_str += f'setattr(self, {key!r}, {key}), '

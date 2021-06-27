@@ -27,6 +27,8 @@ class Item(ItemType):
     # mythic | supreme | special | very_special
     rarity: str = 'common'
 
+    abilities: List[str] = []
+
 
 @item_type
 class Empty(ItemType):
@@ -129,6 +131,21 @@ class Hoe(ItemType):
 
 
 @item_type
+class FishingRod(ItemType):
+    name: str
+    rarity: str
+
+    fishing_speed: int = 0
+    sea_creature_chance: int = 0
+
+    modifier: Optional[str] = None
+    enchantments: Dict[str, int] = {}
+    fishing_skill_req: Optional[int] = None
+
+    abilities: List[str] = []
+
+
+@item_type
 class Armor(ItemType):
     name: str
     rarity: str
@@ -194,7 +211,8 @@ class Pet(ItemType):
 
 
 OBJECTS = [
-    Item, Empty, Sword, Bow, Axe, Hoe, Pickaxe, Drill, Armor, TravelScroll, Pet,
+    Item, Empty, Sword, Bow, Axe, Hoe, Pickaxe, Drill, FishingRod,
+    Armor, TravelScroll, Pet,
 ]
 
 

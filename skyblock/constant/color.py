@@ -43,7 +43,11 @@ RARITY_COLORS = {
     'very_special': f'{BOLD}{RED}',
 
     'rngesus': f'{BOLD}{LIGHT_PURPLE}',
-    'pray_rngesus': f'{BOLD}{LIGHT_PURPLE}'}
+    'pray_rngesus': f'{BOLD}{LIGHT_PURPLE}',
+
+    'good_catch': f'{BOLD}{GREEN}',
+    'great_catch': f'{BOLD}{LIGHT_PURPLE}',
+}
 
 # colors and symbols for more convenient statistics displaying
 STAT_COLORS = {
@@ -64,4 +68,5 @@ STAT_COLORS = {
     'ferocity': f'{RED}⫽',
     'mining_fortune': f'{GOLD}☘',
     'farming_fortune': f'{GOLD}☘',
-    'foraging_fortune': f'{GOLD}☘'}
+    'foraging_fortune': f'{GOLD}☘',
+}

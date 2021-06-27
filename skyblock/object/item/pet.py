@@ -208,4 +208,27 @@ PETS = [
     Pet('ocelot_pet', rarity='epic', category='foraging',
         speed=50, ferocity=10),
     Pet('ocelot_pet', rarity='legendary', category='foraging',
-        speed=50, ferocity=10)]
+        speed=50, ferocity=10),
+
+    Pet('guardian_pet', rarity='common', category='fishing',
+        defense=50, intelligence=100),
+    Pet('guardian_pet', rarity='uncommon', category='fishing',
+        defense=50, intelligence=100),
+    Pet('guardian_pet', rarity='rare', category='fishing',
+        defense=50, intelligence=100),
+    Pet('guardian_pet', rarity='epic', category='fishing',
+        defense=50, intelligence=100),
+    Pet('guardian_pet', rarity='legendary', category='fishing',
+        defense=50, intelligence=100),
+
+    Pet('squid_pet', rarity='common', category='fishing',
+        health=50, intelligence=50),
+    Pet('squid_pet', rarity='uncommon', category='fishing',
+        health=50, intelligence=50),
+    Pet('squid_pet', rarity='rare', category='fishing',
+        health=50, intelligence=50),
+    Pet('squid_pet', rarity='epic', category='fishing',
+        health=50, intelligence=50),
+    Pet('squid_pet', rarity='legendary', category='fishing',
+        health=50, intelligence=50),
+]

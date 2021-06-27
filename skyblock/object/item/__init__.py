@@ -1,7 +1,7 @@
 from ...function.io import red
 from ...function.util import get, includes
 
-from ..object import ItemType, Item
+from ..object import ItemType, Item, Sword, Bow, Armor, Pet
 
 from .armor import ARMOR_PIECES
 from .pet import PETS
@@ -13,7 +13,7 @@ from .weapon import WEAPONS
 __all__ = [
     'COLLECTION_ITEMS',  'OTHER_ITEMS',
     'ARMOR_PIECES', 'PETS', 'TRAVEL_SCROLLS', 'TOOLS', 'WEAPONS', 'ITEMS',
-    'get_item', 'get_stack_size', 'get_scroll']
+    'get_item', 'get_stack_size', 'get_scroll', 'validify_item']
 
 COLLECTION_ITEMS = [
     Item('hay_bale', 64, 'common'),
@@ -255,9 +255,12 @@ OTHER_ITEMS = [
 
     Item('glass', 64, 'common'),
     Item('bottle', 64, 'common'),
-    Item('experience_bottle', 64, 'common'),
-    Item('grand_experience_bottle', 64, 'uncommon'),
-    Item('titanic_experience_bottle', 64, 'rare'),
+    Item('experience_bottle', 64, 'common',
+         abilities=['exp_bottle']),
+    Item('grand_experience_bottle', 64, 'uncommon',
+         abilities=['exp_bottle']),
+    Item('titanic_experience_bottle', 64, 'rare',
+         abilities=['exp_bottle']),
 
     Item('glacite_jewel', 64, 'rare'),
     Item('treasurite', 64, 'epic'),
@@ -278,3 +281,20 @@ def get_item(name: str, **kwargs) -> ItemType:
 
 def get_stack_size(name: str, /) -> int:
     return getattr(get_item(name), 'count', 1)
+
+
+def validify_item(item: ItemType, /) -> ItemType:
+    attrs = {}
+    kwargs = {}
+    if getattr(item, 'enchantments', {}) != {}:
+        attrs['enchantments'] = item.enchantments.copy()
+
+    if getattr(item, 'rarity', {}) != {}:
+        if isinstance(item, (Sword, Bow, Armor, Pet)):
+            kwargs['rarity'] = item.rarity
+
+    item_copy = get_item(item.name, **kwargs)
+    for key, value in attrs.items():
+        setattr(item_copy, key, value)
+
+    return item_copy

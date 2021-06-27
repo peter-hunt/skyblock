@@ -20,11 +20,12 @@ from ..function.util import (
     checkpoint, display_name, display_number, get, get_ench, includes,
     roman, shorten_number)
 from ..object.collection import is_collection
-from ..object.item import get_item
+from ..object.fishing import FISHING_TABLE
+from ..object.item import get_item, validify_item
 from ..object.mob import get_mob
 from ..object.object import (
     Item, Empty, Bow, Sword, Armor,
-    Axe, Hoe, Pickaxe, Drill, TravelScroll, Pet,
+    Axe, Hoe, Pickaxe, Drill, FishingRod, TravelScroll, Pet,
     Crop, Mineral, Wood, Mob)
 from ..object.recipe import RECIPES
 from ..object.resource import get_resource
@@ -91,9 +92,10 @@ def profile_action(cls):
         display = []
 
         for item in good:
-            self.recieve_item(item, amount)
+            item_copy = validify_item(item)
+            self.recieve_item(item_copy, amount)
             amt_str = '' if amount == 1 else f'{GRAY} x {amount}'
-            display.append(f'{item.display()}{amt_str}')
+            display.append(f'{item_copy.display()}{amt_str}')
 
         display_str = f'{GREEN}, '.join(display)
 
@@ -143,6 +145,10 @@ def profile_action(cls):
 
             gray(f'You consumed {item_copy.display()}{GRAY}!')
             self.add_exp(exp_amount)
+
+            self.inventory[index].count -= amount
+            if self.inventory[index].count == 0:
+                self.inventory[index] = Empty()
 
         else:
             red('This item is not consumable!')
@@ -364,11 +370,67 @@ def profile_action(cls):
     cls.enchant = enchant
 
     @checkpoint
-    def gather_resource(self, name: str, tool_index: Optional[int],
-                        amount: Optional[int] = 1, /):
+    def fish(self, rod_index: int, iteration: int = 1, /):
+        rod = Empty() if rod_index is None else self.inventory[rod_index]
+
+        if not isinstance(rod, (Empty, FishingRod)):
+            rod = Empty()
+
+        enchantments = getattr(rod, 'enchantments', {})
+
+        time_multiplier = 1
+        if 'lure' in enchantments:
+            time_multiplier -= enchantments['lure'] * 0.05
+
+        total_weight = 0
+        for choice in FISHING_TABLE:
+            total_weight += choice[3]
+
+        last_cp = Decimal()
+        cp_step = Decimal('0.1')
+        for i in range(1, iteration + 1):
+            sleep(random_amount((5, 30)) * time_multiplier)
+
+            pool = random() * total_weight
+            for drop, amount, rarity, weight, exp in FISHING_TABLE:
+                if pool < weight:
+                    break
+
+            if isinstance(drop, (int, float, tuple)):
+                self.purse += random_amount(drop)
+            else:
+                if isinstance(drop, Item):
+                    item_type = get_item(drop.name)
+                else:
+                    item_type = drop.copy()
+                if getattr(item_type, 'count', 1) != 1:
+                    item_type.count = 1
+                self.recieve_item(item_type, amount)
+                if is_collection(drop.name):
+                    self.collect(drop.name, amount)
+
+                if 'catch' in rarity:
+                    rarity_display = rarity.upper().replace('_', ' ')
+                    a_an = 'an' if item_type.name[0] in 'aeiou' else 'a'
+                    gray(f'{RARITY_COLORS[rarity]}{rarity_display}! {AQUA}'
+                         f'You found {a_an} {item_type.display()}{AQUA}.')
+
+            self.add_skill_exp('fishing', exp)
+            self.add_exp(random_amount((1, 6)))
+
+            if i >= (last_cp + cp_step) * iteration:
+                while i >= (last_cp + cp_step) * iteration:
+                    last_cp += cp_step
+                gray(f'{i} / {iteration} ({(last_cp * 100):.0f}%) done')
+
+    cls.fish = fish
+
+    @checkpoint
+    def gather(self, name: str, tool_index: Optional[int],
+               iteration: Optional[int] = 1, /):
         resource = get_resource(name)
         tool = Empty() if tool_index is None else self.inventory[tool_index]
-        amount = 1 if amount is None else amount
+        iteration = 1 if iteration is None else iteration
 
         if not isinstance(tool, (Empty, Axe, Hoe, Pickaxe, Drill)):
             tool = Empty()
@@ -386,7 +448,7 @@ def profile_action(cls):
             last_cp = Decimal()
             cp_step = Decimal('0.1')
             is_coll = is_collection(drop_item)
-            for count in range(1, amount + 1):
+            for i in range(1, iteration + 1):
                 sleep(time_cost)
                 amount_pool = random_amount(default_amount)
                 drop_pool = random_int(fortune_mult)
@@ -405,10 +467,10 @@ def profile_action(cls):
                         self.collect('seeds', seeds_pool * drop_pool)
 
                 self.add_skill_exp('farming', resource.farming_exp)
-                if count >= (last_cp + cp_step) * amount:
-                    while count >= (last_cp + cp_step) * amount:
+                if i >= (last_cp + cp_step) * iteration:
+                    while i >= (last_cp + cp_step) * iteration:
                         last_cp += cp_step
-                    gray(f'{count} / {amount} ({(last_cp * 100):.0f}%) done')
+                    gray(f'{i} / {iteration} ({(last_cp * 100):.0f}%) done')
 
         elif isinstance(resource, Mineral):
             breaking_power = getattr(tool, 'breaking_power', 0)
@@ -421,9 +483,6 @@ def profile_action(cls):
                 return
 
             time_cost = 30 * resource.hardness / mining_speed
-
-            enchanting_lvl = calc_skill_lvl('enchanting',
-                                            self.skill_xp_enchanting)
 
             mining_fortune = self.get_stat('mining_fortune', tool_index)
             fortune_mult = 1 + mining_fortune / 100
@@ -447,7 +506,7 @@ def profile_action(cls):
             last_cp = Decimal()
             cp_step = Decimal('0.1')
             is_coll = is_collection(drop_item)
-            for count in range(1, amount + 1):
+            for i in range(1, iteration + 1):
                 sleep(time_cost)
                 amount_pool = random_amount(default_amount)
                 drop_pool = random_int(fortune_mult)
@@ -461,14 +520,14 @@ def profile_action(cls):
                 self.add_exp(random_amount(resource.exp)
                              * random_amount(exp_mult))
                 self.add_skill_exp('mining', resource.mining_exp)
-                if count >= (last_cp + cp_step) * amount:
-                    while count >= (last_cp + cp_step) * amount:
+                if i >= (last_cp + cp_step) * iteration:
+                    while i >= (last_cp + cp_step) * iteration:
                         last_cp += cp_step
-                    gray(f'{count} / {amount} ({(last_cp * 100):.0f}%) done')
+                    gray(f'{i} / {iteration} ({(last_cp * 100):.0f}%) done')
 
                 if 'mithril' in resource.name and randint(1, 50) == 1:
                     white('Titanium has spawned nearby!')
-                    self.gather_resource('titanium', tool_index)
+                    self.gather('titanium', tool_index)
 
         elif isinstance(resource, Wood):
             is_wood = True
@@ -508,7 +567,7 @@ def profile_action(cls):
             last_cp = Decimal()
             cp_step = Decimal('0.1')
             last_harvest = time()
-            for count in range(1, amount + 1):
+            for i in range(1, iteration + 1):
                 sleep(max(last_harvest - time() + time_cost, 0))
                 last_harvest = time()
                 drop_pool = random_int(fortune_mult)
@@ -525,15 +584,15 @@ def profile_action(cls):
 
                     self.add_skill_exp('foraging', resource.foraging_exp)
 
-                if count >= (last_cp + cp_step) * amount:
-                    while count >= (last_cp + cp_step) * amount:
+                if i >= (last_cp + cp_step) * iteration:
+                    while i >= (last_cp + cp_step) * iteration:
                         last_cp += cp_step
-                    gray(f'{count} / {amount} ({(last_cp * 100):.0f}%) done')
+                    gray(f'{i} / {iteration} ({(last_cp * 100):.0f}%) done')
 
         else:
             red('Unknown resource type.')
 
-    cls.gather_resource = gather_resource
+    cls.gather = gather
 
     @checkpoint
     def goto(self, dest: str, /):
@@ -822,8 +881,8 @@ def profile_action(cls):
             healed = (round((time_cost // 2) * (1.5 + health / 100), 1)
                       * (1 + (rejuvenate / 100)))
             if holy_blood:
-                health *= 3
-            hp = min(hp - healed, health)
+                healed *= 3
+            hp = min(hp - + healed, health)
             if healed != 0:
                 gray(f'You healed for {GREEN}{shorten_number(healed)}'
                      f'{RED}❤{GRAY}.\n'
@@ -959,9 +1018,7 @@ def profile_action(cls):
                 if not random_bool(drop_chance):
                     continue
 
-                loot = get_item(item.name)
-                if hasattr(loot, 'count'):
-                    loot.count = 1
+                loot = validify_item(item)
 
                 self.recieve_item(loot, random_amount(count))
 

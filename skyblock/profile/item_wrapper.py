@@ -4,7 +4,7 @@ from typing import Union
 from ..constant.color import GOLD, DARK_GRAY, GREEN, AQUA, YELLOW, WHITE
 from ..function.io import gray, red, green, yellow
 from ..function.util import display_int, display_name, includes
-from ..object.item import ITEMS, get_item, get_stack_size
+from ..object.item import ITEMS, get_item, get_stack_size, validify_item
 from ..object.object import ItemType, Item, Empty, Pet
 
 
@@ -25,6 +25,25 @@ def profile_item(cls):
         return Empty()
 
     cls.get_active_pet = get_active_pet
+
+    def has_item(self, name: str, count: int = 1, /, **kwargs):
+        counter = 0
+
+        for _item in self.inventory:
+            if not hasattr(_item, 'name') or _item.name != name:
+                continue
+            for key in kwargs:
+                if (not hasattr(_item, key)
+                        or getattr(_item, key) != kwargs[key]):
+                    break
+            else:
+                counter += getattr(_item, 'count', 1)
+                if counter >= count:
+                    return True
+
+        return False
+
+    cls.has_item = has_item
 
     def merge(self, index_1: int, index_2: int, /):
         item_from = self.inventory[index_1]
@@ -103,7 +122,7 @@ def profile_item(cls):
         if isinstance(item, Empty):
             return
 
-        item_copy = item.copy()
+        item_copy = validify_item(item)
         stack_count = get_stack_size(item.name)
         counter = count
 
@@ -178,25 +197,6 @@ def profile_item(cls):
             gray(f'- {WHITE}{display_name(name)}{count_str}')
 
     cls.remove_item = remove_item
-
-    def has_item(self, name: str, count: int = 1, /, **kwargs):
-        counter = 0
-
-        for _item in self.inventory:
-            if not hasattr(_item, 'name') or _item.name != name:
-                continue
-            for key in kwargs:
-                if (not hasattr(_item, key)
-                        or getattr(_item, key) != kwargs[key]):
-                    break
-            else:
-                counter += getattr(_item, 'count', 1)
-                if counter >= count:
-                    return True
-
-        return False
-
-    cls.has_item = has_item
 
     def split(self, index_1: int, index_2: int, amount: int, /):
         item_1 = self.inventory[index_1]

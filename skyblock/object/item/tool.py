@@ -1,4 +1,4 @@
-from ..object import Axe, Hoe, Pickaxe, Drill
+from ..object import Axe, Hoe, Pickaxe, Drill, FishingRod
 
 
 __all__ = ['TOOLS']
@@ -75,4 +75,7 @@ TOOLS = [
     Drill('titanium_drill_455', rarity='epic',
           breaking_power=8, mining_speed=900, mining_fortune=15),
     Drill('titanium_drill_555', rarity='epic',
-          breaking_power=9, mining_speed=1_200, mining_fortune=15)]
+          breaking_power=9, mining_speed=1_200, mining_fortune=15),
+
+    FishingRod('fishing_rod', rarity='common'),
+]

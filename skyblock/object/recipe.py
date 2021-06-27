@@ -1534,7 +1534,13 @@ RECIPES = [
            (Item('enchanted_dandelion'), 1)),
     Recipe('poppy_to_enchanted', 'foraging',
            [(Item('poppy'), 576)],
-           (Item('enchanted_poppy'), 1))]
+           (Item('enchanted_poppy'), 1)),
+
+    Recipe('fishing_rod', 'fishing',
+           [(Item('stick'), 3),
+            (Item('string'), 2)],
+           (get_item('fishing_rod'), 1)),
+]
 
 
 def get_recipe(name: str, **kwargs) -> Optional[Recipe]:

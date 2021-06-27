@@ -54,12 +54,11 @@ python -m skyblock
 
 ## Features Planned:
 * Abilities (mainly for Swords and Pets)
-* Anvil and Reforging
+* Anvil and Reforging (Armor, Bow reforges and reforge stones)
 * Collections (fishing, boss)
 * Combat while mining
 * Dungeons
 * Fishing
-* Flower (Foraging resource at Hub)
 * Forging (Dwarven Mines)
 * HoTM Skill Tree (Dwarven Mines)
 * Minions

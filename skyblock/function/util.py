@@ -73,15 +73,18 @@ def generate_help(doc: str, /) -> Dict[str, str]:
 def get(ls: List[Any], /, name: Optional[str] = None,
         default: Optional[Any] = None, **kwargs) -> Any:
     attrs = {}
+    args = {}
+    for key, value in kwargs.items():
+        if key in {'count', 'enchantments'}:
+            attrs[key] = value
+        else:
+            args[key] = value
 
     for item in ls:
         if name is not None and item.name != name:
             continue
-        for kwarg in kwargs:
-            if kwarg in {'count', 'enchantments', 'hot_potato'}:
-                attrs[kwarg] = kwargs[kwarg]
-                continue
-            if getattr(item, kwarg, None) != kwargs[kwarg]:
+        for key, value in args.items():
+            if getattr(item, key, None) != value:
                 break
         else:
             result = item.copy() if hasattr(item, 'copy') else item

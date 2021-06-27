@@ -118,6 +118,7 @@ def item_type(cls: type, /) -> type:
 
     def info(self, player, /):
         combat_lvl = calc_skill_lvl('combat', player.skill_xp_combat)
+        fishing_lvl = calc_skill_lvl('fishing', player.skill_xp_fishing)
         cata_lvl = calc_skill_lvl('catacombs', player.skill_xp_catacombs)
         rarity_color = RARITY_COLORS[self.rarity]
 
@@ -158,9 +159,14 @@ def item_type(cls: type, /) -> type:
 
         if self.__class__.__name__ in {'Pickaxe', 'Drill'}:
             info += (f'\n{DARK_GRAY}Breaking Power '
-                     f"{getattr(self, 'breaking_power')}{CLN}\n"
+                     f'{self.breaking_power}{CLN}\n'
                      f'\n{GRAY}Mining Speed: {GREEN}+'
-                     f"{getattr(self, 'mining_speed')}{CLN}")
+                     f'{self.mining_speed}{CLN}')
+
+        elif self.__class__.__name__ == 'FishingRod':
+            if self.sea_creature_chance != 0:
+                info += (f'\n{DARK_GRAY}Sea Creature Chance: '
+                         f'{self.sea_creature_chance}{CLN}')
 
         elif self.__class__.__name__ in {'Bow', 'Sword'}:
             enchantments = getattr(self, 'enchantments', {})
@@ -385,16 +391,18 @@ def item_type(cls: type, /) -> type:
                      f'Island: {GREEN}{display_name(self.island)}{GRAY}\n'
                      f'Teleport: {YELLOW}{r_name}')
 
-        for ability_id in getattr(self, 'abilities', []):
-            ability = get_ability(ability_id)
-            if ability.__class__.__name__ == 'NamedAbility':
-                info += (f'\n\n{GOLD}{ability.name}'
-                         f'\n{GRAY}{ability.description}')
-            elif ability.__class__.__name__ == 'AnonymousAbility':
-                info += f'\n\n{GRAY}{ability.description}'
+        abilities = getattr(self, 'abilities', [])
+        if len(abilities) != 0:
+            ability_str = []
+            for ability_id in abilities:
+                ability = get_ability(ability_id)
+                if ability.__class__.__name__ == 'NamedAbility':
+                    ability_str.append(f'{GOLD}{ability.name}'
+                                       f'\n{GRAY}{ability.description}')
+                elif ability.__class__.__name__ == 'AnonymousAbility':
+                    ability_str.append(f'{GRAY}{ability.description}')
 
-        while '\n' in info and info.split('\n')[1] == '':
-            info = '\n'.join([info.split('\n')[0]] + info.split('\n')[2:])
+            info += '\n' + '\n\n'.join(ability_str)
 
         if getattr(self, 'enchantments', {}) != {}:
             ench_str_list = []
@@ -439,25 +447,31 @@ def item_type(cls: type, /) -> type:
 
             info += '\n\n' + '\n'.join(ench_str_list)
 
-        info += '\n'
+        info += '\n\n'
         if hasattr(self, 'modifier') and self.modifier is None:
-            info += (f'\n{DARK_GRAY}This item can be reforged!{CLN}')
+            info += f'{DARK_GRAY}This item can be reforged!{CLN}'
 
         if getattr(self, 'combat_skill_req', None) is not None:
             if combat_lvl < self.combat_skill_req:
-                info += (f'\n{DARK_RED}❣ {RED}Requires '
-                         f'{GREEN}Combat Skill {self.combat_skill_req}{CLN}')
+                info += (f'{DARK_RED}❣ {RED}Requires {GREEN}'
+                         f'Combat Skill {self.combat_skill_req}{CLN}')
         if getattr(self, 'dungeon_skill_req', None) is not None:
             if cata_lvl < self.dungeon_skill_req:
-                info += (f'\n{DARK_RED}❣ {RED}Requires '
-                         f'{GREEN}Catacombs Skill {self.dungeon_skill_req}{CLN}')
+                info += (f'{DARK_RED}❣ {RED}Requires {GREEN}'
+                         f'Catacombs Skill {self.dungeon_skill_req}{CLN}')
         if getattr(self, 'dungeon_completion_req', None) is not None:
-            info += (f'\n{DARK_RED}❣ {RED}Requires {GREEN}Catacombs Floor '
+            info += (f'{DARK_RED}❣ {RED}Requires {GREEN}Catacombs Floor '
                      f'{roman(self.dungeon_completion_req)} Completion{CLN}')
+        if getattr(self, 'fishing_skill_req', None) is not None:
+            if fishing_lvl < self.fishing_skill_req:
+                info += (f'{DARK_RED}❣ {RED}Requires {GREEN}'
+                         f'Fishing Skill {self.fishing_skill_req}{CLN}')
 
         if self.__class__.__name__ == 'Armor':
             type_name = self.part.upper()
-        elif self.__class__.__name__ in {'Pet', 'TravelScroll'}:
+        elif self.__class__.__name__ == 'FishingRod':
+            type_name = 'FISHING ROD'
+        elif self.__class__.__name__ in {'Item', 'Pet', 'TravelScroll'}:
             type_name = ''
         else:
             type_name = self.__class__.__name__.upper()
@@ -469,9 +483,6 @@ def item_type(cls: type, /) -> type:
             info += '\n'
         info += f'\n{rarity_color}{self.rarity.upper()} {type_name}'.rstrip()
         info += CLN
-
-        # while '\n\n\n' in info:
-        #     info = info.replace('\n\n\n', '\n\n')
 
         return info
 

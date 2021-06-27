@@ -94,6 +94,11 @@ SPECIAL_NAMES = {
     'growth_leggings': "Leggings of Growth",
     'growth_boots': "Boots of Growth",
 
+    'fairys_fedora': "Fairy's Fedora",
+    'fairys_polo': "Fairy's Polo",
+    'fairys_trousers': "Fairy's Trousers",
+    'fairys_galoshes': "Fairy's Galoshes",
+
     'mithril_drill_226': 'Mithril Drill SX-R226',
     'mithril_drill_326': 'Mithril Drill SX-R326',
     'titanium_drill_355': 'Titanium Drill DR-X355',
@@ -101,7 +106,8 @@ SPECIAL_NAMES = {
     'titanium_drill_555': 'Titanium Drill DR-X555',
 
     'pray_rngesus': 'Pray RNGesus',
-    'rngesus': 'RNGesus'}
+    'rngesus': 'RNGesus',
+}
 
 # words ignored by capitalization
 IGNORED_WORDS = ('from', 'of', 'the', 'to')

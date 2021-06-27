@@ -30,6 +30,10 @@ class NamedAbility(Ability):
 
 
 ABILITIES = [
+    AnonymousAbility(
+        id='exp_bottle',
+        description=f'Smash it open to recieve\nexperience!'),
+
     NamedAbility(
         id='farm_armor_speed',
         name='Full Set Bonus: Bonus Speed',
@@ -137,6 +141,13 @@ ABILITIES = [
         name='Full Set Bonus: Superior Blood',
         description=f'Most of your stats are increased by {GREEN}5%{GRAY}'),
 
+    NamedAbility(
+        id='fairys_outfit',
+        name="Full Set Bonus: Fairy's Outfit",
+        description=(
+            f"Increases {STAT_COLORS['speed']} Speed{GRAY} by\n"
+            f'{GREEN}+10%{GRAY}.')),
+
     AnonymousAbility(
         id='jungle_axe',
         description=(f'A powerful Wooden Axe which can\n'
@@ -144,9 +155,10 @@ ABILITIES = [
                      f'{DARK_GRAY}Cooldown: {GREEN}2s{GRAY}')),
     AnonymousAbility(
         id='treecapitator',
-        description=(f'A powerful Gold Axe which can\n'
+        description=(f'A forceful Gold Axe which can\n'
                      f'break a large amount of logs in\na single hit!\n'
-                     f'{DARK_GRAY}Cooldown: {GREEN}2s{GRAY}'))]
+                     f'{DARK_GRAY}Cooldown: {GREEN}2s{GRAY}')),
+]
 
 
 def get_ability(id: str, /) -> Optional[Ability]:

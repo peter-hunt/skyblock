@@ -201,6 +201,7 @@ def profile_math(cls):
         farming_lvl = calc_skill_lvl('farming', self.skill_xp_farming)
         enchanting_lvl = calc_skill_lvl('enchanting', self.skill_xp_enchanting)
         foraging_lvl = calc_skill_lvl('foraging', self.skill_xp_foraging)
+        fishing_lvl = calc_skill_lvl('fishing', self.skill_xp_fishing)
         mining_lvl = calc_skill_lvl('mining', self.skill_xp_mining)
 
         if name == 'health':
@@ -225,41 +226,38 @@ def profile_math(cls):
 
             value += getattr(piece, name, 0)
 
-        miners_outfit_haste = False
-        lapis_armor_health = False
-        glacite_armor = False
-        speedster_armor = False
-        ender_armor = False
-        old_blood = False
-        superior_blood = False
+        full_set_bonus = ''
 
         if full_set:
             piece_names = [piece.name for piece in self.armor]
             if piece_names == [
                     'miners_outfit_helmet', 'miners_outfit_chestplate',
                     'miners_outfit_leggings', 'miners_outfit_boots']:
-                miners_outfit_haste = True
+                full_set_bonus = 'miners_outfit'
             elif piece_names == ['lapis_helmet', 'lapis_chestplate',
                                  'lapis_leggings', 'lapis_boots']:
-                lapis_armor_health = True
+                full_set_bonus = 'lapis_armor'
             elif piece_names == ['glacite_helmet', 'glacite_chestplate',
                                  'glacite_leggings', 'glacite_boots']:
-                glacite_armor = True
+                full_set_bonus = 'glacite_armor'
             elif piece_names == ['speedster_helmet', 'speedster_chestplate',
                                  'speedster_leggings', 'speedster_boots']:
-                speedster_armor = True
+                full_set_bonus = 'speedster_armor'
             elif piece_names == ['ender_helmet', 'ender_chestplate',
                                  'ender_leggings', 'ender_boots']:
-                ender_armor = True
+                full_set_bonus = 'ender_armor'
             elif piece_names == [
                     'old_dragon_helmet', 'old_dragon_chestplate',
                     'old_dragon_leggings', 'old_dragon_boots']:
-                old_blood = True
+                full_set_bonus = 'old_dragon_armor'
             elif piece_names == ['superior_dragon_helmet',
                                  'superior_dragon_chestplate',
                                  'superior_dragon_leggings',
                                  'superior_dragon_boots']:
-                superior_blood = True
+                full_set_bonus = 'superior_dragon_armor'
+            elif piece_names == ['fairys_fedora', 'fairys_polo',
+                                 'fairys_trousers', 'fairys_galoshes']:
+                full_set_bonus = 'fairy_armor'
 
         for piece in self.armor:
             if not isinstance(piece, Armor):
@@ -270,23 +268,23 @@ def profile_math(cls):
 
             if name == 'health':
                 delta += piece.hot_potato
-                if old_blood:
+                if full_set_bonus == 'old_dragon_armor':
                     delta += armor_ench.get('growth', 0) * 25
                 else:
                     delta += armor_ench.get('growth', 0) * 15
             elif name == 'defense':
                 delta += piece.hot_potato
-                if old_blood:
+                if full_set_bonus == 'old_dragon_armor':
                     delta += armor_ench.get('protection', 0) * 5
                 else:
                     delta += armor_ench.get('protection', 0) * 3
             elif name == 'true_defense':
-                if old_blood:
+                if full_set_bonus == 'old_dragon_armor':
                     delta += armor_ench.get('true_protection', 0) * 5
                 else:
                     delta += armor_ench.get('true_protection', 0) * 3
             elif name == 'speed':
-                if old_blood:
+                if full_set_bonus == 'old_dragon_armor':
                     delta += armor_ench.get('sugar_rush', 0) * 2
                 else:
                     delta += armor_ench.get('sugar_rush', 0) * 4
@@ -294,10 +292,10 @@ def profile_math(cls):
                 delta += armor_ench.get('big_brain', 0) * 5
                 delta += armor_ench.get('smarty_pants', 0) * 5
 
-            if ender_armor:
+            if full_set_bonus == 'ender_armor':
                 if self.island == 'end':
                     delta *= 2
-            if glacite_armor and name == 'defense':
+            if full_set_bonus == 'glacite_armor' and name == 'defense':
                 if self.island in {'gold', 'deep', 'mines'}:
                     delta *= 2
 
@@ -308,7 +306,11 @@ def profile_math(cls):
             value += max(min(farming_lvl - 14, 5), 0) * 3
             value += max(min(farming_lvl - 19, 6), 0) * 4
             value += max(min(farming_lvl - 25, 35), 0) * 5
-            if lapis_armor_health:
+            value += min(fishing_lvl, 14) * 2
+            value += max(min(fishing_lvl - 14, 5), 0) * 3
+            value += max(min(fishing_lvl - 19, 6), 0) * 4
+            value += max(min(fishing_lvl - 25, 35), 0) * 5
+            if full_set_bonus == 'lapis_armor':
                 value += 60
         elif name == 'defense':
             value += min(mining_lvl, 14) * 1
@@ -317,7 +319,7 @@ def profile_math(cls):
             value += min(foraging_lvl, 14) * 1
             value += max(min(foraging_lvl - 14, 36), 0) * 2
         elif name == 'speed':
-            if speedster_armor:
+            if full_set_bonus == 'speedster_armor':
                 value += 20
         elif name == 'crit_chance':
             value += combat_lvl * 0.5
@@ -325,9 +327,9 @@ def profile_math(cls):
             value += min(enchanting_lvl, 14) * 1
             value += max(min(enchanting_lvl - 14, 46), 0) * 2
         elif name == 'mining_speed':
-            if miners_outfit_haste:
+            if full_set_bonus == 'miners_outfit':
                 value += 100
-            if glacite_armor:
+            if full_set_bonus == 'glacite_armor':
                 value += 2 * mining_lvl
         elif name == 'mining_fortune':
             value += mining_lvl * 4
@@ -340,8 +342,10 @@ def profile_math(cls):
             lvl_mult = calc_pet_lvl(pet.rarity, pet.exp) / 100
             value += getattr(pet, name, 0) * lvl_mult
 
-        if superior_blood:
+        if full_set_bonus == 'superior_dragon_armor':
             value *= 1.05
+        if full_set_bonus == 'fairy_armor' and name == 'speed':
+            value *= 1.1
 
         return value
 

@@ -258,6 +258,7 @@ VILLAGE = Region(
                  ' rod, or treasure you can find!'),
                 'Click me again to open the Fisherman Shop!'],
             trades=[
+                (100, get_item('fishing_rod', enchantments={'magnet': 1})),
                 (20, Item('raw_fish')),
                 (30, Item('raw_salmon')),
                 (100, Item('clownfish')),

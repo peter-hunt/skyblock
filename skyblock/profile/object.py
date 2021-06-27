@@ -16,7 +16,7 @@ from ..object.collection import COLLECTIONS, is_collection
 from ..object.item import ITEMS, get_item, get_scroll
 from ..object.mob import get_mob
 from ..object.object import (
-    Item, Empty, Bow, Sword, Armor, Axe, Hoe, Pickaxe, Drill, Pet)
+    Item, Empty, Bow, Sword, Armor, Axe, Hoe, Pickaxe, Drill, FishingRod, Pet)
 from ..object.recipe import RECIPES
 from ..object.resource import get_resource
 from ..map.island import ISLANDS
@@ -374,7 +374,35 @@ class Profile:
                        f'/{YELLOW}{shorten_number(gap)}'
                        f' {GRAY}to the next level.')
 
-            elif words[0] == 'get':
+            elif words[0] == 'fish':
+                if self.region not in {
+                        'birch', 'farm', 'mountain',
+                        'oasis', 'upper', 'wilderness'}:
+                    red("There's no water for you to fish at!")
+                    continue
+
+                rod_index = self.parse_index(words[1])
+                if rod_index is None:
+                    continue
+
+                rod_item = self.inventory[rod_index]
+                if not isinstance(rod_item, FishingRod):
+                    yellow(f'Can only use fishing rod to fish!')
+                    continue
+
+                iteration = 1
+
+                if len(words) == 3:
+                    iteration = parse_int(words[2])
+                    if iteration is None:
+                        continue
+                    if iteration == 0:
+                        red(f'Iteration must be a positive integer.')
+                        continue
+
+                self.fish(rod_index, iteration)
+
+            elif words[0] in {'gather', 'get', 'mine'}:
                 name = words[1]
                 if get_resource(name) is None:
                     continue
@@ -406,7 +434,7 @@ class Profile:
                         red(f'Amount must be a positive integer.')
                         continue
 
-                self.gather_resource(name, tool_index, amount)
+                self.gather(name, tool_index, amount)
 
             elif words[0] == 'goto':
                 self.goto(words[1])
@@ -438,6 +466,40 @@ class Profile:
                         if isinstance(item, Pet):
                             item.exp = calc_pet_exp(item.rarity, 100)
                         self.display_item(item)
+
+            elif words[0] in {'kill', 'slay'}:
+                name = words[1]
+                if get_mob(name) is None:
+                    red(f'Mob not found: {name!r}')
+                    continue
+                if get(region.mobs, name) is None:
+                    red(f'Mob not avaliable at {region}: {name!r}')
+                    continue
+
+                weapon_index = None
+
+                if len(words) >= 3:
+                    weapon_index = self.parse_index(words[2])
+                    if weapon_index is None:
+                        continue
+
+                    weapon_item = self.inventory[weapon_index]
+                    if not isinstance(weapon_item, (Empty, Bow, Sword)):
+                        yellow(f'{weapon_item.name} item is not weapon.\n'
+                               f'Using barehand by default.')
+                        weapon_index = None
+
+                amount = 1
+
+                if len(words) == 4:
+                    amount = parse_int(words[3])
+                    if amount is None:
+                        continue
+                    if amount == 0:
+                        red(f'Amount must be a positive integer.')
+                        continue
+
+                self.slay(name, weapon_index, amount)
 
             elif words[0] == 'look':
                 self.display_location()
@@ -592,40 +654,6 @@ class Profile:
 
                 self.display_skill(skill)
 
-            elif words[0] == 'slay':
-                name = words[1]
-                if get_mob(name) is None:
-                    red(f'Mob not found: {name!r}')
-                    continue
-                if get(region.mobs, name) is None:
-                    red(f'Mob not avaliable at {region}: {name!r}')
-                    continue
-
-                weapon_index = None
-
-                if len(words) >= 3:
-                    weapon_index = self.parse_index(words[2])
-                    if weapon_index is None:
-                        continue
-
-                    weapon_item = self.inventory[weapon_index]
-                    if not isinstance(weapon_item, (Empty, Bow, Sword)):
-                        yellow(f'{weapon_item.name} item is not weapon.\n'
-                               f'Using barehand by default.')
-                        weapon_index = None
-
-                amount = 1
-
-                if len(words) == 4:
-                    amount = parse_int(words[3])
-                    if amount is None:
-                        continue
-                    if amount == 0:
-                        red(f'Amount must be a positive integer.')
-                        continue
-
-                self.slay(name, weapon_index, amount)
-
             elif words[0] == 'split':
                 index_1 = self.parse_index(words[1])
                 index_2 = self.parse_index(words[2])
@@ -638,7 +666,7 @@ class Profile:
 
                 self.split(index_1, index_2, amount)
 
-            elif words[0] == 'stats':
+            elif words[0] in {'stat', 'stats'}:
                 if len(words) == 2:
                     index = self.parse_index(words[1])
                     if index is None:
