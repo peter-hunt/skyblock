@@ -231,4 +231,11 @@ PETS = [
         health=50, intelligence=50),
     Pet('squid_pet', rarity='legendary', category='fishing',
         health=50, intelligence=50),
+
+    Pet('flying_fish_pet', rarity='rare', category='fishing',
+        health=40, defense=40),
+    Pet('flying_fish_pet', rarity='epic', category='fishing',
+        health=40, defense=40),
+    Pet('flying_fish_pet', rarity='legendary', category='fishing',
+        health=40, defense=40),
 ]

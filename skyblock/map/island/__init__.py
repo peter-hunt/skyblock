@@ -13,6 +13,7 @@ from .spider import SPIDER
 __all__ = [
     'ISLANDS',
     'HUB', 'BARN', 'DESERT', 'GOLD', 'DEEP', 'MINES',
-    'NETHER', 'PARK', 'SPIDER', 'END']
+    'NETHER', 'PARK', 'SPIDER', 'END',
+]
 
 ISLANDS = [HUB, BARN, DESERT, GOLD, DEEP, MINES, PARK, SPIDER, NETHER, END]

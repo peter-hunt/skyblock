@@ -6,14 +6,17 @@ from ..object import Collection
 
 from .combat import COMBAT_COLLECTIONS
 from .farming import FARMING_COLLECTIONS
+from .fishing import FISHING_COLLECTIONS
 from .foraging import FORAGING_COLLECTIONS
 from .mining import MINING_COLLECTIONS
 
 
 __all__ = ['COLLECTIONS', 'is_collection', 'get_collection', 'calc_coll_lvl']
 
-COLLECTIONS = (FARMING_COLLECTIONS + MINING_COLLECTIONS
-               + COMBAT_COLLECTIONS + FORAGING_COLLECTIONS)
+COLLECTIONS = (
+    COMBAT_COLLECTIONS + FARMING_COLLECTIONS + FISHING_COLLECTIONS
+    + FORAGING_COLLECTIONS + MINING_COLLECTIONS
+)
 
 
 def is_collection(name: str) -> bool:

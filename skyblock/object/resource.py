@@ -73,7 +73,8 @@ RESOURCES = [
     Wood('jungle_wood', hardness=2, foraging_exp=6),
 
     Wood('dandelion', hardness=0, foraging_exp=1),
-    Wood('poppy', hardness=0, foraging_exp=1)]
+    Wood('poppy', hardness=0, foraging_exp=1),
+]
 
 
 def get_resource(name: str, **kwargs) -> Optional[ItemType]:

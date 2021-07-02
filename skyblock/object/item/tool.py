@@ -78,4 +78,26 @@ TOOLS = [
           breaking_power=9, mining_speed=1_200, mining_fortune=15),
 
     FishingRod('fishing_rod', rarity='common'),
+
+    FishingRod('speedster_rod', rarity='uncommon',
+               damage=30, strength=15, fishing_speed=30),
+    FishingRod('prismarine_rod', rarity='common',
+               damage=15, strength=10, fishing_speed=10),
+    FishingRod('farmers_rod', rarity='uncommon',
+               damage=50, strength=20, fishing_speed=40),
+    FishingRod('challenging_rod', rarity='rare',
+               damage=60, strength=60,
+               fishing_speed=50, sea_creature_chance=2),
+    FishingRod('rod_of_champions', rarity='rare',
+               damage=90, strength=80,
+               fishing_speed=60, sea_creature_chance=4),
+    FishingRod('rod_of_legends', rarity='rare',
+               damage=130, strength=120,
+               fishing_speed=70, sea_creature_chance=6),
+    FishingRod('sponge_rod', rarity='common',
+               damage=20, strength=15,
+               fishing_speed=20),
+
+    FishingRod('shredder', rarity='legendary',
+               damage=120, ferocity=50, fishing_speed=75),
 ]

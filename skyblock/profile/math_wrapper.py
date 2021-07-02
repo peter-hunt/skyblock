@@ -3,17 +3,20 @@ from os import get_terminal_size
 from typing import Optional
 
 from ..constant.color import (
-    BOLD, DARK_AQUA, GRAY, BLUE, GREEN, YELLOW, RARITY_COLORS)
+    BOLD, DARK_AQUA, GRAY, BLUE, GREEN, YELLOW, RARITY_COLORS,
+)
 from ..constant.main import SKILL_EXP
 from ..constant.util import Number
 from ..function.math import (
-    calc_exp_lvl, calc_pet_lvl, calc_skill_lvl, display_skill_reward)
+    calc_exp_lvl, calc_pet_lvl, calc_skill_lvl, display_skill_reward,
+)
 from ..function.io import dark_aqua, gold, dark_gray, red, green, yellow, aqua
 from ..function.reforge import get_reforge
 from ..function.util import display_name, roman
 from ..object.collection import is_collection, get_collection, calc_coll_lvl
 from ..object.object import (
-    Empty, Bow, Sword, Axe, Hoe, Pickaxe, Drill, Armor, Pet, Recipe)
+    Empty, Bow, Sword, Axe, Hoe, Pickaxe, Drill, Armor, Pet, Recipe,
+)
 
 
 __all__ = ['profile_math']
@@ -173,27 +176,31 @@ def profile_math(cls):
             if not isinstance(item, (Bow, Sword, Axe, Hoe, Pickaxe, Drill)):
                 item = Empty()
 
+        if getattr(item, 'modifier', None) is None:
+            reforge_bonus = {}
+        else:
             reforge_bonus = get_reforge(item.modifier, item.rarity)
-            value += reforge_bonus.get(name, 0)
+        value += reforge_bonus.get(name, 0)
 
-            item_ench = getattr(item, 'enchantments', {})
+        item_ench = getattr(item, 'enchantments', {})
 
-            if name == 'strength':
-                value += getattr(item, 'hot_potato', 0)
-            if name == 'crit_damage':
-                value += item_ench.get('critical', 0) * 10
-            elif name == 'mining_speed':
-                if item_ench.get('efficiency', 0) != 0:
-                    value += 10 + item_ench['efficiency'] * 20
-            elif name == 'sea_creature_chance':
-                value += item_ench.get('expertise', 0) * 0.6
-            elif name == 'mining_fortune':
-                value += item_ench.get('fortune', 0) * 10
-            elif name == 'ferocity':
-                value += item_ench.get('vicious', 0)
-            elif name == 'farming_fortune':
-                value += item_ench.get('cultivating', 0)
-                value += item_ench.get('harvesting', 0) * 12.6
+        if name == 'strength':
+            value += getattr(item, 'hot_potato', 0)
+        if name == 'crit_damage':
+            value += item_ench.get('critical', 0) * 10
+        elif name == 'mining_speed':
+            if item_ench.get('efficiency', 0) != 0:
+                value += 10 + item_ench['efficiency'] * 20
+        elif name == 'sea_creature_chance':
+            value += item_ench.get('angler', 0)
+            value += item_ench.get('expertise', 0) * 0.6
+        elif name == 'ferocity':
+            value += item_ench.get('vicious', 0)
+        elif name == 'mining_fortune':
+            value += item_ench.get('fortune', 0) * 10
+        elif name == 'farming_fortune':
+            value += item_ench.get('cultivating', 0)
+            value += item_ench.get('harvesting', 0) * 12.6
 
         value += getattr(item, name, 0)
 

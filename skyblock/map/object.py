@@ -30,10 +30,11 @@ class Region:
     name: str
     x: int
     z: int
+    portal: Optional[str] = None
+    fishable: bool = False
     npcs: List[Npc] = field(default_factory=list)
     resources: List[Resource] = field(default_factory=list)
     mobs: List[Mob] = field(default_factory=list)
-    portal: Optional[str] = None
     skill_req: Optional[Tuple[str, int]] = None
 
     def __repr__(self):

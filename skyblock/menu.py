@@ -97,17 +97,19 @@ def main():
 
         elif words[0] == 'help':
             if len(words) == 1:
-                gray(menu_doc)
+                gray(f'\n{menu_doc}\n')
                 continue
 
             phrase = ' '.join(words[1:])
-            if phrase not in menu_help:
+            help_found = []
+            for key, pair in menu_help.items():
+                if key.startswith(phrase):
+                    usage, description = pair
+                    help_found.append(f'{usage}\n{description}')
+            if len(help_found) != 0:
+                gray('\n' + '\n\n'.join(help_found) + '\n')
+            else:
                 red(f'Command not found: {phrase!r}.')
-                continue
-
-            usage, description = menu_help[phrase]
-            gray(usage)
-            gray(description)
 
         elif words[0] == 'ls':
             ls()

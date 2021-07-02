@@ -63,8 +63,9 @@ class Bow(ItemType):
 class Sword(ItemType):
     name: str
     rarity: str
-    damage: int
     count: int = 1
+
+    damage: int = 0
 
     strength: int = 0
     crit_chance: int = 0
@@ -135,11 +136,17 @@ class FishingRod(ItemType):
     name: str
     rarity: str
 
+    damage: int = 0
+    strength: int = 0
+    ferocity: int = 0
+
     fishing_speed: int = 0
     sea_creature_chance: int = 0
 
     modifier: Optional[str] = None
     enchantments: Dict[str, int] = {}
+    hot_potato: int = 0
+    stars: Optional[int] = None
     fishing_skill_req: Optional[int] = None
 
     abilities: List[str] = []
@@ -265,9 +272,10 @@ class Mob:
     health: int
     damage: int
     coins: int
-    combat_xp: int
     exp: int
-    drops: List[Tuple[ItemType, Amount, str, Number]]
+    combat_xp: int = 0
+    fishing_xp: int = 0
+    drops: List[Tuple[ItemType, Amount, str, Number]] = []
 
 
 @init_type

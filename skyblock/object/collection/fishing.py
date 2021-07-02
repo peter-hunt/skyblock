@@ -1,0 +1,145 @@
+from ..object import Collection
+from ..recipe import get_recipe
+
+
+__all__ = ['FISHING_COLLECTIONS']
+
+FISHING_COLLECTIONS = [
+    Collection(
+        'fish', 'fishing',
+        [
+            (20, get_recipe('fish_hat')),
+            (50, 5),
+            (100, 10),
+            (250, 25),
+            (500, (get_recipe('angler_helmet'), get_recipe('angler_chestplate'),
+                   get_recipe('angler_leggings'), get_recipe('angler_boots'))),
+            (1_000, get_recipe('fish_to_enchanted')),
+            (2_500, 250),
+            (15_000, get_recipe('fish_to_enchanted_cooked')),
+            (30_000, 3_000),
+            (45_000, 4_500),
+            (60_000, 6_000),
+        ],
+    ),
+    Collection(
+        'salmon', 'fishing',
+        [
+            (20, 2),
+            (50, 5),
+            (100, 10),
+            (250, get_recipe('salmon_to_enchanted')),
+            (500, get_recipe('speedster_rod')),
+            (1_000, 100),
+            (2_500, 250),
+            (5_000, get_recipe('salmon_to_enchanted_cooked')),
+            (10_000, (get_recipe('salmon_helmet'),
+                      get_recipe('salmon_chestplate'),
+                      get_recipe('salmon_leggings'),
+                      get_recipe('salmon_boots'))),
+        ],
+    ),
+    Collection(
+        'clownfish', 'fishing',
+        [
+            (10, get_recipe('clownfish_hat')),
+            (25, 2.5),
+            (50, 5),
+            (100, 10),
+            (200, 20),
+            (400, 40),
+            (800, 80),
+        ],
+    ),
+    Collection(
+        'pufferfish', 'fishing',
+        [
+            (20, get_recipe('pufferfish_hat')),
+            (50, get_recipe('pufferfish_to_enchanted')),
+            (100, 10),
+            (150, 15),
+            (400, 40),
+            (800, 80),
+            (2_400, 240),
+            (4_800, 480),
+            (9_000, 900),
+        ],
+    ),
+    Collection(
+        'prismarine_shard', 'fishing',
+        [
+            (10, 1),
+            (25, get_recipe('prismarine_blade')),
+            (50, get_recipe('prismarine_shard_to_enchanted')),
+            (100, get_recipe('prismarine_rod')),
+            (200, get_recipe('prismarine_bow')),
+        ],
+    ),
+    Collection(
+        'prismarine_crystals', 'fishing',
+        [
+            (10, 1),
+            (25, 2.5),
+            (50, get_recipe('prismarine_crystals_to_enchanted')),
+            (100, 10),
+            (200, get_recipe('guardian_chestplate')),
+            (400, 40),
+            (800, 80),
+        ],
+    ),
+    Collection(
+        'clay', 'fishing',
+        [
+            (50, 5),
+            (100, get_recipe('clay_to_enchanted')),
+            (250, 25),
+            (1_000, 100),
+            (2_500, 250),
+        ],
+    ),
+    Collection(
+        'lily_pad', 'fishing',
+        [
+            (10, 1),
+            (50, get_recipe('blobfish_hat')),
+            (100, 10),
+            (200, get_recipe('lily_pad_to_enchanted')),
+            (500, get_recipe('challenging_rod')),
+            (1_500, 150),
+            (3_000, get_recipe('rod_of_champions')),
+            (6_000, 600),
+            (10_000, get_recipe('rod_of_legends')),
+        ],
+    ),
+    Collection(
+        'ink_sack', 'fishing',
+        [
+            (20, get_recipe('squid_hat')),
+            (40, 4),
+            (100, get_recipe('ink_sack_to_enchanted')),
+            (200, 20),
+            (400, 40),
+            (800, 80),
+            (1_500, 150),
+            (2_500, 250),
+            (4_000, get_recipe('ink_wand')),
+        ],
+    ),
+    Collection(
+        'sponge', 'fishing',
+        [
+            (20, get_recipe('sponge_rod')),
+            (40, 4),
+            (100, get_recipe('sponge_to_enchanted')),
+            (200, 20),
+            (400, get_recipe('stereo_pants')),
+            (800, 80),
+            (1_500, get_recipe('sponge_to_enchanted_wet')),
+            (2_500, 250),
+            (4_000, (get_recipe('sponge_helmet'),
+                     get_recipe('sponge_chestplate'),
+                     get_recipe('sponge_leggings'),
+                     get_recipe('sponge_boots'))),
+        ],
+    ),
+]

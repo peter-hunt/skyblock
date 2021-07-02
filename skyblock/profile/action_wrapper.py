@@ -5,28 +5,34 @@ from time import sleep, time
 from typing import Optional, Tuple
 
 from ..constant.color import (
-    RARITY_COLORS, DARK_AQUA, GOLD, GRAY, BLUE, GREEN, AQUA, RED, YELLOW, WHITE)
+    RARITY_COLORS, DARK_AQUA, GOLD, GRAY, BLUE, GREEN, AQUA, RED, YELLOW, WHITE,
+)
 from ..constant.enchanting import (
-    ENCHS, CONFLICTS, ENCH_REQUIREMENTS,
-    SWORD_ENCHS, BOW_ENCHS, ARMOR_ENCHS,
-    AXE_ENCHS, HOE_ENCHS, PICKAXE_ENCHS)
+    ENCHS, CONFLICTS, ENCH_REQUIREMENTS, SWORD_ENCHS, BOW_ENCHS, ARMOR_ENCHS,
+    AXE_ENCHS, HOE_ENCHS, PICKAXE_ENCHS, FISHING_ROD_ENCHS,
+)
 from ..constant.main import INTEREST_TABLE, SELL_PRICE
-from ..constant.mob import CUBISM_EFT, ENDER_SLAYER_EFT, BOA_EFT, SMITE_EFT
+from ..constant.mob import (
+    CUBISM_EFT, ENDER_SLAYER_EFT, BOA_EFT, SMITE_EFT, IMPALING_EFT,
+)
 from ..function.io import gray, red, green, yellow, blue, aqua, white
 from ..function.math import (
     calc_exp_lvl, calc_exp, calc_skill_lvl,
-    random_amount, random_bool, random_int)
+    random_amount, random_bool, random_int,
+)
 from ..function.util import (
     checkpoint, display_name, display_number, get, get_ench, includes,
-    roman, shorten_number)
+    roman, shorten_number,
+)
 from ..object.collection import is_collection
-from ..object.fishing import FISHING_TABLE
+from ..object.fishing import FISHING_TABLE, SEA_CREATURES
 from ..object.item import get_item, validify_item
 from ..object.mob import get_mob
 from ..object.object import (
     Item, Empty, Bow, Sword, Armor,
     Axe, Hoe, Pickaxe, Drill, FishingRod, TravelScroll, Pet,
-    Crop, Mineral, Wood, Mob)
+    Crop, Mineral, Wood, Mob,
+)
 from ..object.recipe import RECIPES
 from ..object.resource import get_resource
 from ..map.island import ISLANDS
@@ -68,7 +74,7 @@ def profile_action(cls):
                         return
                     continue
                 kwargs = {}
-                for attr in ('rarity', ):
+                for attr in ('rarity',):
                     if hasattr(item, attr):
                         kwargs[attr] = getattr(item, attr)
                 if not self.has_item(item[0].name, item[1] * amount, **kwargs):
@@ -265,6 +271,8 @@ def profile_action(cls):
             table = HOE_ENCHS
         elif isinstance(item, (Pickaxe, Drill)):
             table = PICKAXE_ENCHS
+        elif isinstance(item, FishingRod):
+            table = FISHING_ROD_ENCHS
         else:
             red('Cannot Enchant Item!')
             gray('This item cannot be enchanted!')
@@ -376,47 +384,111 @@ def profile_action(cls):
         if not isinstance(rod, (Empty, FishingRod)):
             rod = Empty()
 
+        fishing_lvl = calc_skill_lvl('fishing', self.skill_xp_fishing)
+
         enchantments = getattr(rod, 'enchantments', {})
 
-        time_multiplier = 1
-        if 'lure' in enchantments:
-            time_multiplier -= enchantments['lure'] * 0.05
+        time_mult = 1 - enchantments.get('lure', 0) * 0.05
+        time_mult /= 1 + getattr(rod, 'fishing_speed', 0) / 100
+        blessing = 0.05 * enchantments.get('blessing', 0)
+        expertise = 1 + 0.02 * enchantments.get('expertise', 0)
+        frail = 1 - 0.05 * enchantments.get('frail', 0)
+        luck = 1 + 0.01 * enchantments.get('luck_of_the_sea', 0)
+        luck += fishing_lvl * 0.002
+        magnet = enchantments.get('magnet', 0)
+
+        sea_creature_chance = self.get_stat('sea_creature_chance')
+
+        region = self.region
+        table = [
+            line[:-1] for line in FISHING_TABLE
+            if len(line[-1]) == 0 or region in line[-1]
+        ]
 
         total_weight = 0
-        for choice in FISHING_TABLE:
-            total_weight += choice[3]
+        for choice in table:
+            if 'catch' in choice[2]:
+                total_weight += choice[3] * luck
+            else:
+                total_weight += choice[3]
 
         last_cp = Decimal()
         cp_step = Decimal('0.1')
         for i in range(1, iteration + 1):
-            sleep(random_amount((5, 30)) * time_multiplier)
+            sleep(random_amount((5, 30)) * time_mult)
+            if i != 1:
+                print()
 
-            pool = random() * total_weight
-            for drop, amount, rarity, weight, exp in FISHING_TABLE:
-                if pool < weight:
-                    break
+            is_sc = random_bool(sea_creature_chance / 100)
+            if is_sc and fishing_lvl >= 1:
+                avaliable_sc = [
+                    line for line in SEA_CREATURES
+                    if line[2] <= fishing_lvl
+                ]
+                total_sc_weight = sum(line[1] for line in avaliable_sc)
 
-            if isinstance(drop, (int, float, tuple)):
-                self.purse += random_amount(drop)
+                pool = random() * total_sc_weight
+                for mob, weight, _, text in avaliable_sc:
+                    if pool < weight:
+                        break
+                    pool -= weight
+
+                green(text)
+                sleep(1)
+
+                mob_copy = mob.copy()
+                mob_copy.health *= frail
+
+                alive = self.slay(mob_copy, rod_index)
+                if not alive:
+                    return
+
             else:
-                if isinstance(drop, Item):
-                    item_type = get_item(drop.name)
+                pool = random() * total_weight
+                for drop, amount, rarity, weight, exp in table:
+                    if 'catch' in rarity:
+                        weight *= luck
+                    if pool < weight:
+                        break
+                    pool -= weight
+
+                if isinstance(drop, (int, float, tuple)):
+                    if isinstance(drop, tuple):
+                        drop = random_amount(drop)
+                    if random_bool(blessing):
+                        green('Your Blessing enchant got you double drops!')
+                        drop *= 2
+
+                    self.purse += drop
+
+                    drop_display = display_number(drop)
+                    if drop_display.endswith('.0'):
+                        drop_display = drop_display[:-2]
+
+                    if 'catch' in rarity:
+                        rarity_display = rarity.upper().replace('_', ' ')
+                        gray(f'{RARITY_COLORS[rarity]}{rarity_display}! {AQUA}'
+                             f'You found {GOLD}{display_number(drop)} Coins{AQUA}.')
                 else:
                     item_type = drop.copy()
-                if getattr(item_type, 'count', 1) != 1:
-                    item_type.count = 1
-                self.recieve_item(item_type, amount)
-                if is_collection(drop.name):
-                    self.collect(drop.name, amount)
+                    if getattr(item_type, 'count', 1) != 1:
+                        item_type.count = 1
 
-                if 'catch' in rarity:
-                    rarity_display = rarity.upper().replace('_', ' ')
-                    a_an = 'an' if item_type.name[0] in 'aeiou' else 'a'
-                    gray(f'{RARITY_COLORS[rarity]}{rarity_display}! {AQUA}'
-                         f'You found {a_an} {item_type.display()}{AQUA}.')
+                    if random_bool(blessing):
+                        green('Your Blessing enchant got you double drops!')
+                        amount *= 2
 
-            self.add_skill_exp('fishing', exp)
-            self.add_exp(random_amount((1, 6)))
+                    self.recieve_item(item_type, amount)
+                    if is_collection(drop.name):
+                        self.collect(drop.name, amount)
+
+                    if 'catch' in rarity:
+                        rarity_display = rarity.upper().replace('_', ' ')
+                        gray(f'{RARITY_COLORS[rarity]}{rarity_display}! {AQUA}'
+                             f'You found a {item_type.display()}{AQUA}.')
+
+                self.add_skill_exp('fishing', exp * expertise)
+                self.add_exp(random_amount((1, 6)) + magnet)
 
             if i >= (last_cp + cp_step) * iteration:
                 while i >= (last_cp + cp_step) * iteration:
@@ -456,7 +528,7 @@ def profile_action(cls):
                 item_type = get_item(drop_item)
                 if getattr(item_type, 'count', 1) != 1:
                     item_type.count = 1
-                self.recieve_item(item_type, drop_pool)
+                self.recieve_item(item_type, amount_pool * drop_pool)
                 if is_coll:
                     self.collect(drop_item, amount_pool * drop_pool)
 
@@ -693,19 +765,16 @@ def profile_action(cls):
     cls.sell = sell
 
     @checkpoint
-    def slay(self, name: str, weapon_index: Optional[int], amount: int = 1, /):
-        mob = get_mob(name)
-        mob_name = display_name(mob.name)
+    def slay(self, mob: Mob, weapon_index: Optional[int], amount: int = 1,
+             /) -> bool:
+        name = mob.name
+        mob_name = display_name(name)
 
         weapon = (Empty() if weapon_index is None
                   else self.inventory[weapon_index])
 
-        if not isinstance(weapon, (Empty, Bow, Sword)):
+        if not isinstance(weapon, (Empty, Bow, Sword, FishingRod)):
             weapon = Empty()
-
-        if not isinstance(mob, Mob):
-            red('Unknown mob type.')
-            return
 
         health = self.get_stat('health', weapon_index)
         defense = self.get_stat('defense', weapon_index)
@@ -736,7 +805,7 @@ def profile_action(cls):
         holy_blood = False
         young_blood = False
 
-        if isinstance(weapon, (Bow, Sword)):
+        if not isinstance(weapon, Empty):
             ultimate_jerry = enchantments.get('ultimate_jerry', 0) * 50
             damage = weapon.damage + ultimate_jerry + 5
 
@@ -787,13 +856,9 @@ def profile_action(cls):
             if enchantments.get('one_for_all', 0) != 0:
                 damage *= 3.1
 
-            strength += weapon.hot_potato
-            crit_chance += weapon.crit_chance
-            crit_damage += weapon.crit_damage
-            ferocity += weapon.ferocity
-
             damage *= 1 + 0.08 * enchantments.get('power', 0)
             damage *= 1 + 0.05 * enchantments.get('sharpness', 0)
+            damage *= 1 + 0.05 * enchantments.get('spiked_hook', 0)
             if name in CUBISM_EFT:
                 damage *= 1 + 0.1 * enchantments.get('cubism', 0)
             if name in ENDER_SLAYER_EFT:
@@ -802,6 +867,8 @@ def profile_action(cls):
                 damage *= 1 + 0.08 * enchantments.get('bane_of_arthropods', 0)
             if name in SMITE_EFT:
                 damage *= 1 + 0.08 * enchantments.get('smite', 0)
+            if name in IMPALING_EFT:
+                damage *= 1 + 0.125 * enchantments.get('impaling', 0)
 
             crit_damage += 10 * enchantments.get('critical', 0)
             ferocity += enchantments.get('vicious', 0)
@@ -887,7 +954,7 @@ def profile_action(cls):
                 gray(f'You healed for {GREEN}{shorten_number(healed)}'
                      f'{RED}❤{GRAY}.\n'
                      f'Your HP: {GREEN}{shorten_number(hp)}{GRAY}/'
-                     f'{GREEN}{shorten_number(health)}{RED}❤\n')
+                     f'{GREEN}{shorten_number(health)}{RED}❤')
             healed = 0
 
             mob_hp = mob.health
@@ -925,7 +992,7 @@ def profile_action(cls):
 
                     mob_hp = max(mob_hp - damage_dealt, 0)
                     gray(f"You've dealt {YELLOW}{shorten_number(damage_dealt)}"
-                         f'{GRAY} {crit}damage to the {mob_name}!\n\n')
+                         f'{GRAY} {crit}damage to the {mob_name}!')
 
                     if life_steal != 0:
                         healed += life_steal * health
@@ -942,7 +1009,7 @@ def profile_action(cls):
 
                     gray(f"{mob_name}'s HP: "
                          f'{GREEN}{shorten_number(mob_hp)}{GRAY}'
-                         f'/{GREEN}{shorten_number(mob.health)}{RED}❤\n')
+                         f'/{GREEN}{shorten_number(mob.health)}{RED}❤')
 
                 if killed:
                     break
@@ -961,9 +1028,7 @@ def profile_action(cls):
                     hp = max(hp - damage_recieved, 0)
                     gray(f"You've recieved {YELLOW}"
                          f'{shorten_number(damage_recieved)}{GRAY}'
-                         f' damage from the {mob_name}{GRAY}!\n'
-                         f'Your HP: {GREEN}{shorten_number(hp)}{GRAY}/'
-                         f'{GREEN}{shorten_number(health)}{RED}❤\n')
+                         f' damage from the {mob_name}{GRAY}!')
 
                 exp_npng = 0
                 for npng_chance in no_pain_no_gain:
@@ -975,7 +1040,7 @@ def profile_action(cls):
                 if hp <= 0:
                     if self.die():
                         red(f' ☠ {GRAY}You were killed by {mob_name}.')
-                    return
+                    return False
 
                 if random_bool(0.5) and thorns != 0:
                     thorns_damage = (thorns / 100) * damage_recieved
@@ -985,14 +1050,14 @@ def profile_action(cls):
                         a_an = 'an' if mob.name[0] in 'aeiou' else 'a'
                         green(f"You've killed {a_an} {mob_name}{GRAY}!\n"
                               f'Your HP: {GREEN}{shorten_number(hp)}{GRAY}/'
-                              f'{GREEN}{shorten_number(health)}{RED}❤\n')
+                              f'{GREEN}{shorten_number(health)}{RED}❤')
                         break
 
                 gray(f'Your HP: {GREEN}{shorten_number(hp)}{GRAY}/'
                      f'{GREEN}{shorten_number(health)}{RED}❤\n'
                      f"{mob_name}'s HP: "
                      f'{GREEN}{shorten_number(mob_hp)}{GRAY}'
-                     f'/{GREEN}{shorten_number(mob.health)}{RED}❤\n\n')
+                     f'/{GREEN}{shorten_number(mob.health)}{RED}❤\n')
 
                 strike_count += 1
 
@@ -1000,16 +1065,14 @@ def profile_action(cls):
                 delta = (health - hp) * (vampirism / 100)
                 hp += delta
 
-                gray(f'Your {BLUE}Vampirism{GRAY} enchantment healed you for '
-                     f'{AQUA}{shorten_number(delta)}{RED}❤{GRAY}!\n'
-                     f'Your HP: {GREEN}{shorten_number(hp)}{GRAY}/'
-                     f'{GREEN}{shorten_number(health)}{RED}❤\n')
-
             self.purse += mob.coins + scavenger
             self.add_exp(mob.exp * random_int(experience))
-            self.add_skill_exp('combat', mob.combat_xp)
+            if getattr(mob, 'combat_xp', 0) != 0:
+                self.add_skill_exp('combat', mob.combat_xp)
+            if getattr(mob, 'fishing_xp', 0) != 0:
+                self.add_skill_exp('fishing', mob.fishing_xp)
 
-            for item, count, rarity, drop_chance in mob.drops:
+            for item, loot_amount, rarity, drop_chance in mob.drops:
                 drop_chance *= looting
                 drop_chance *= 1 + magic_find / 100
                 if isinstance(item, Armor):
@@ -1020,10 +1083,10 @@ def profile_action(cls):
 
                 loot = validify_item(item)
 
-                self.recieve_item(loot, random_amount(count))
+                self.recieve_item(loot, random_amount(loot_amount))
 
                 if is_coll[loot.name]:
-                    self.collect(loot.name, loot.count)
+                    self.collect(loot.name, random_amount(loot_amount))
 
                 if rarity not in {'common', 'uncommon'}:
                     rarity_str = rarity.replace('_', ' ').upper()
@@ -1036,6 +1099,8 @@ def profile_action(cls):
                 gray(f'{count} / {amount} ({(last_cp * 100):.0f}%) killed')
 
             gray('\n')
+
+        return True
 
     cls.slay = slay
 

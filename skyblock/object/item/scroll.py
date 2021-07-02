@@ -7,10 +7,12 @@ __all__ = ['TRAVEL_SCROLLS', 'get_scroll']
 
 TRAVEL_SCROLLS = [
     TravelScroll('hub', 'castle', rarity='epic'),
+    TravelScroll('hub', 'crypt', rarity='epic'),
     TravelScroll('barn'),
     TravelScroll('desert'),
     TravelScroll('gold'),
     TravelScroll('deep'),
+    TravelScroll('mines'),
     TravelScroll('park'),
     TravelScroll('park', 'howl', rarity='epic'),
     TravelScroll('park', 'jungle', rarity='epic'),
@@ -20,7 +22,6 @@ TRAVEL_SCROLLS = [
     TravelScroll('nether', 'magma', rarity='epic'),
     TravelScroll('end'),
     TravelScroll('end', 'drag', rarity='epic'),
-    TravelScroll('mines'),
 ]
 
 

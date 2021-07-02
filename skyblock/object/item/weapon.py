@@ -24,6 +24,9 @@ WEAPONS = [
 
     Bow('savanna_bow', 'uncommon', damage=50),
 
+    Bow('prismarine_bow', 'uncommon', damage=50,
+        strength=25),
+
     Bow('mosquito_bow', 'legendary', damage=251,
         strength=151, crit_damage=39),
     Bow('souls_rebound', 'epic', damage=450),
@@ -72,6 +75,11 @@ WEAPONS = [
     Sword('aspect_of_the_end', 'rare', damage=100,
           strength=100),
     Sword('silver_fang', 'uncommon', count=64, damage=100),
+
+    Sword('prismarine_blade', 'uncommon', damage=50,
+          strength=25),
+    Sword('ink_wand', 'epic', damage=130,
+          strength=90),
 
     Sword('aspect_of_the_dragons', 'legendary', damage=225,
           strength=100,

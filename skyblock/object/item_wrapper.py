@@ -3,13 +3,16 @@ from math import floor
 from ..constant.color import (
     RARITY_COLORS,
     CLN, BOLD, DARK_RED, GOLD, GRAY, DARK_GRAY,
-    BLUE, GREEN, RED, LIGHT_PURPLE, YELLOW, WHITE)
+    BLUE, GREEN, RED, LIGHT_PURPLE, YELLOW, WHITE,
+)
 from ..constant.enchanting import ULTIMATE_ENCHS
 from ..function.math import (
-    calc_pet_lvl, calc_pet_upgrade_exp, calc_skill_lvl, dung_stat)
+    calc_pet_lvl, calc_pet_upgrade_exp, calc_skill_lvl, dung_stat,
+)
 from ..function.reforge import get_reforge
 from ..function.util import (
-    display_int, display_name, roman, shorten_number)
+    display_int, display_name, roman, shorten_number,
+)
 from .ability import get_ability
 
 
@@ -164,9 +167,67 @@ def item_type(cls: type, /) -> type:
                      f'{self.mining_speed}{CLN}')
 
         elif self.__class__.__name__ == 'FishingRod':
-            if self.sea_creature_chance != 0:
-                info += (f'\n{DARK_GRAY}Sea Creature Chance: '
-                         f'{self.sea_creature_chance}{CLN}')
+            enchantments = getattr(self, 'enchantments', {})
+            is_dungeon = self.stars is not None
+
+            basic_stats = []
+            for stat_name in ('damage', 'strength', 'sea_creature_chance'):
+
+                display_stat = display_name(stat_name)
+                ext = '%' if 'sea' in stat_name[0] else ''
+                value = getattr(self, stat_name)
+
+                bonus = ''
+                if stat_name[0] in 'ds' and self.hot_potato != 0:
+                    value += self.hot_potato
+                    bonus += f' {YELLOW}(+{self.hot_potato})'
+
+                if stat_name == 'damage':
+                    if enchantments.get('one_for_all', 0) != 0:
+                        value *= 3.1
+                elif stat_name == 'sea_creature_chance':
+                    value += enchantments.get('angler', 0)
+                if is_dungeon:
+                    dungeon_value = dung_stat(value, cata_lvl, self.stars)
+                    if value != dungeon_value:
+                        value_str = f'{dungeon_value:.1f}'
+                        if value_str.endswith('.0'):
+                            value_str = value_str[:-2]
+                        bonus += f' {DARK_GRAY}(+{value_str}{ext})'
+
+                if value <= 0:
+                    continue
+
+                basic_stats.append(f'{display_stat}: {RED}'
+                                   f'+{value:.0f}{ext}{bonus}')
+
+            if len(basic_stats) != 0:
+                info += '\n' + '\n'.join(f'{GRAY}{stat}'
+                                         for stat in basic_stats)
+
+            bonus_stats = []
+            for stat_name in ('ferocity',):
+                display_stat = display_name(stat_name)
+                value = getattr(self, stat_name)
+
+                if is_dungeon:
+                    dungeon_value = dung_stat(value, cata_lvl, self.stars)
+                    if value != dungeon_value:
+                        value_str = f'{dungeon_value:.1f}'
+                        if value_str.endswith('.0'):
+                            value_str = value_str[:-2]
+                        bonus += f' {DARK_GRAY}(+{value_str})'
+
+                if value <= 0:
+                    continue
+
+                bonus_stats.append(f'{display_stat}: {GREEN}+{value}{bonus}')
+
+            if len(bonus_stats) != 0:
+                if len(basic_stats) != 0:
+                    info += '\n'
+                info += '\n' + '\n'.join(f'{GRAY}{stat}'
+                                         for stat in bonus_stats)
 
         elif self.__class__.__name__ in {'Bow', 'Sword'}:
             enchantments = getattr(self, 'enchantments', {})
@@ -239,8 +300,6 @@ def item_type(cls: type, /) -> type:
 
                 if is_dungeon:
                     dungeon_value = dung_stat(value, cata_lvl, self.stars)
-                    if stat_name in {'crit_chance', 'attack_speed'}:
-                        dungeon_value = min(dungeon_value, 100)
                     if value != dungeon_value:
                         value_str = f'{dungeon_value:.1f}'
                         if value_str.endswith('.0'):
@@ -253,6 +312,8 @@ def item_type(cls: type, /) -> type:
                 bonus_stats.append(f'{display_stat}: {GREEN}+{value}{bonus}')
 
             if len(bonus_stats) != 0:
+                if len(basic_stats) != 0:
+                    info += '\n'
                 info += '\n' + '\n'.join(f'{GRAY}{stat}'
                                          for stat in bonus_stats)
 
@@ -327,6 +388,8 @@ def item_type(cls: type, /) -> type:
                                    f'+{value}{ext}{hot_potato}{dung}')
 
             if len(bonus_stats) != 0:
+                if len(basic_stats) != 0:
+                    info += '\n'
                 info += '\n' + '\n'.join(f'{GRAY}{stat}'
                                          for stat in bonus_stats)
 
@@ -470,7 +533,10 @@ def item_type(cls: type, /) -> type:
         if self.__class__.__name__ == 'Armor':
             type_name = self.part.upper()
         elif self.__class__.__name__ == 'FishingRod':
-            type_name = 'FISHING ROD'
+            if getattr(self, 'damage', 0) != 0:
+                type_name = 'FISHING WEAPON'
+            else:
+                type_name = 'FISHING ROD'
         elif self.__class__.__name__ in {'Item', 'Pet', 'TravelScroll'}:
             type_name = ''
         else:

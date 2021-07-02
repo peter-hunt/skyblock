@@ -9,7 +9,7 @@ from ..object import Island, Npc, Region, add_dist
 __all__ = ['END']
 
 END_ENTRENCE = Region(
-    'end_entrence', -540, -300,
+    'end_entrence', -540, -300, portal='spider',
     npcs=[
         Npc('pearl_dealer',
             init_dialog=[
@@ -24,33 +24,39 @@ END_ENTRENCE = Region(
             trades=[
                 (10, Item('end_stone')),
                 (50, Item('obsidian')),
-                (499_999, get_item('stonk'))])],
+                (499_999, get_item('stonk')),
+            ]),
+    ],
     resources=[get_resource('end_stone'),
                get_resource('obsidian')],
     mobs=[get_mob('enderman', level=42)],
-    portal='spider')
+)
 END_TUNNEL = Region(
     'end_tunnel', -560, -300,
     resources=[get_resource('end_stone'),
                get_resource('obsidian')],
-    mobs=[get_mob('enderman', level=45)])
+    mobs=[get_mob('enderman', level=45)],
+)
 END_CAVES = Region(
     'end_caves', -580, -290,
     resources=[get_resource('end_stone'),
                get_resource('obsidian')],
-    mobs=[get_mob('enderman', level=50)])
+    mobs=[get_mob('enderman', level=50)],
+)
 DRAGONS_NEST = Region(
     'drag', -600, -280,
     resources=[get_resource('end_stone')],
     mobs=[get_mob('watcher'),
           get_mob('obsidian_defender'),
-          get_mob('zealot')])
+          get_mob('zealot')],
+)
 
 END_JOINTS = [END_ENTRENCE, END_TUNNEL, END_CAVES, DRAGONS_NEST]
 END_CONNS = [
     (DRAGONS_NEST, END_CAVES),
     (END_ENTRENCE, END_TUNNEL),
-    (END_CAVES, END_TUNNEL)]
+    (END_CAVES, END_TUNNEL),
+]
 
 END_DISTS = {}
 
@@ -59,4 +65,5 @@ for conn in END_CONNS:
 
 END = Island(
     'end', 'end_entrence', END_JOINTS, END_CONNS, END_DISTS,
-    skill_req=('combat', 12))
+    skill_req=('combat', 12),
+)

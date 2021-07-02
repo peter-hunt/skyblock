@@ -13,7 +13,8 @@ from .weapon import WEAPONS
 __all__ = [
     'COLLECTION_ITEMS',  'OTHER_ITEMS',
     'ARMOR_PIECES', 'PETS', 'TRAVEL_SCROLLS', 'TOOLS', 'WEAPONS', 'ITEMS',
-    'get_item', 'get_stack_size', 'get_scroll', 'validify_item']
+    'get_item', 'get_stack_size', 'get_scroll', 'validify_item',
+]
 
 COLLECTION_ITEMS = [
     Item('hay_bale', 64, 'common'),
@@ -228,7 +229,22 @@ COLLECTION_ITEMS = [
     Item('clay', 64, 'common'),
     Item('lily_pad', 64, 'common'),
     Item('ink_sack', 64, 'common'),
-    Item('sponge', 64, 'common')]
+    Item('sponge', 64, 'common'),
+
+    Item('enchanted_fish', 64, 'uncommon'),
+    Item('enchanted_salmon', 64, 'uncommon'),
+    Item('enchanted_pufferfish', 64, 'uncommon'),
+    Item('enchanted_prismarine_shard', 64, 'uncommon'),
+    Item('enchanted_prismarine_crystals', 64, 'uncommon'),
+    Item('enchanted_clay', 64, 'uncommon'),
+    Item('enchanted_lily_pad', 64, 'uncommon'),
+    Item('enchanted_ink_sack', 64, 'uncommon'),
+    Item('enchanted_sponge', 64, 'uncommon'),
+
+    Item('enchanted_cooked_fish', 64, 'rare'),
+    Item('enchanted_cooked_salmon', 64, 'rare'),
+    Item('enchanted_wet_sponge', 64, 'rare'),
+]
 
 OTHER_ITEMS = [
     Item('apple', 64, 'common'),
@@ -266,7 +282,10 @@ OTHER_ITEMS = [
     Item('treasurite', 64, 'epic'),
 
     Item('summoning_eye', 1, 'epic'),
-    Item('bag_of_cash', 1, 'rare')]
+    Item('bag_of_cash', 1, 'rare'),
+
+    Item('emperors_skull', 64, 'rare'),
+]
 
 ITEMS = (COLLECTION_ITEMS + OTHER_ITEMS + WEAPONS
          + ARMOR_PIECES + TOOLS + TRAVEL_SCROLLS + PETS)

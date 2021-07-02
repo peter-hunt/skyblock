@@ -7,7 +7,7 @@ from ..object import Island, Npc, Region, add_dist
 __all__ = ['GOLD']
 
 GOLD_GATE = Region(
-    'gold_gate', 0, -300,
+    'gold_gate', 0, -300, portal='hub',
     npcs=[
         Npc('gold_forger',
             init_dialog=[
@@ -19,7 +19,8 @@ GOLD_GATE = Region(
                 (16, get_item('golden_chestplate')),
                 (14, get_item('golden_leggings')),
                 (9, get_item('golden_boots')),
-                (80, get_item('fancy_sword'))]),
+                (80, get_item('fancy_sword')),
+            ]),
         Npc('iron_forger',
             init_dialog=[
                 "For my wares, you'll have to pay the iron price!",
@@ -31,17 +32,18 @@ GOLD_GATE = Region(
                 (50, get_item('chainmail_helmet')),
                 (100, get_item('chainmail_chestplate')),
                 (75, get_item('chainmail_leggings')),
-                (100, get_item('chainmail_boots'))])],
-    portal='hub')
+                (100, get_item('chainmail_boots')),
+            ]),
+    ],
+)
 GOLD_MINE = Region(
-    'gold_mine', 0, -360,
+    'gold_mine', 0, -360, portal='deep',
     resources=[get_resource('stone'), get_resource('coal_ore'),
                get_resource('iron_ore'), get_resource('gold_ore')],
-    portal='deep')
+)
 
 GOLD_JOINTS = [GOLD_GATE, GOLD_MINE]
-GOLD_CONNS = [
-    (GOLD_GATE, GOLD_MINE)]
+GOLD_CONNS = [(GOLD_GATE, GOLD_MINE)]
 
 GOLD_DISTS = {}
 
@@ -50,4 +52,5 @@ for conn in GOLD_CONNS:
 
 GOLD = Island(
     'gold', 'gold_gate', GOLD_JOINTS, GOLD_CONNS, GOLD_DISTS,
-    skill_req=('mining', 1))
+    skill_req=('mining', 1),
+)

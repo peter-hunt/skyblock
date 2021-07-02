@@ -1,7 +1,4 @@
-from ...constant.color import LIGHT_PURPLE, WHITE
-from ...object.item import get_item
 from ...object.mob import get_mob
-from ...object.object import Item
 from ...object.resource import get_resource
 from ..object import Island, Npc, Region, add_dist
 
@@ -9,7 +6,7 @@ from ..object import Island, Npc, Region, add_dist
 __all__ = ['NETHER']
 
 FORTRESS = Region(
-    'fortress', -320, -400,
+    'fortress', -320, -400, portal='spider',
     npcs=[
         Npc('elle_of_the_nether',
             dialog=[
@@ -19,31 +16,36 @@ FORTRESS = Region(
                  ' potions that will aid to your journey.'),
                 ("I don't know what would I do without my "
                  "Fire Resistance Potions. Probably burn."),
-                'I told you not to come crying to me'])],
+                'I told you not to come crying to me',
+            ]),
+    ],
     resources=[get_resource('nether_wart')],
     mobs=[get_mob('mini_blaze'),
           get_mob('blaze'),
           get_mob('wither_skeleton')],
-    portal='spider')
+)
 MAGMA_FIELD = Region(
     'magma', -200, -650,
     resources=[get_resource('netherrack')],
     mobs=[get_mob('small_magma_cube'),
           get_mob('medium_magma_cube'),
           get_mob('large_magma_cube'),
-          get_mob('ghast')])
+          get_mob('ghast')],
+)
 NETHER_CAVES = Region(
     'nether_caves', -400, -500,
     resources=[get_resource('glowstone'),
                get_resource('netherrack'),
                get_resource('quartz_ore')],
-    mobs=[get_mob('zombie_pigman')])
+    mobs=[get_mob('zombie_pigman')],
+)
 
 NETHER_JOINTS = [FORTRESS, MAGMA_FIELD, NETHER_CAVES]
 NETHER_CONNS = [
     (FORTRESS, MAGMA_FIELD),
     (FORTRESS, NETHER_CAVES),
-    (MAGMA_FIELD, NETHER_CAVES)]
+    (MAGMA_FIELD, NETHER_CAVES),
+]
 
 NETHER_DISTS = {}
 
@@ -52,4 +54,5 @@ for conn in NETHER_CONNS:
 
 NETHER = Island(
     'nether', 'fortress', NETHER_JOINTS, NETHER_CONNS, NETHER_DISTS,
-    skill_req=('combat', 5))
+    skill_req=('combat', 5),
+)

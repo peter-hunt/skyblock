@@ -5,7 +5,8 @@ Constant about enchantments, and enchanting information.
 __all__ = [
     'ULTIMATE_ENCHS', 'CONFLICTS', 'ENCHS', 'ENCH_REQUIREMENTS',
     'SWORD_ENCHS', 'BOW_ENCHS', 'ARMOR_ENCHS',
-    'AXE_ENCHS', 'HOE_ENCHS', 'PICKAXE_ENCHS', 'FISHING_ROD_ENCHS']
+    'AXE_ENCHS', 'HOE_ENCHS', 'PICKAXE_ENCHS', 'FISHING_ROD_ENCHS',
+]
 
 # list of ultimate enchantments
 ULTIMATE_ENCHS = [
@@ -16,7 +17,8 @@ ULTIMATE_ENCHS = [
     'no_pain_no_gain',
     'one_for_all',
     'soul_eater',
-    'ultimate_jerry']
+    'ultimate_jerry',
+]
 
 # groups of enchantements which cannot be applied to a single item
 CONFLICTS = [
@@ -29,7 +31,8 @@ CONFLICTS = [
 
     # ('rejuvenate', 'respite'),
     ('blast_protection', 'fire_protection',
-     'projectile_protection', 'protection')]
+     'projectile_protection', 'protection'),
+]
 
 # enchantments and level costs enchanting at the table
 ENCHS = [
@@ -92,7 +95,8 @@ ENCHS = [
     ('luck_of_the_sea', 5, 5, 5),
     ('lure', 5, 5, 5),
     ('magnet', 5, (20, 25, 30, 40, 50)),
-    ('spiked_hook', 5, 10, 0)]
+    ('spiked_hook', 5, 10, 0),
+]
 
 ENCHS = sorted(ENCHS, key=lambda pair: pair[0])
 
@@ -153,7 +157,8 @@ ENCH_REQUIREMENTS = [
     ('overload', 33),  # more information needed
     ('legion', 34),
     ('swarm', 35),
-    ('soul_eater', 36)]
+    ('soul_eater', 36),
+]
 
 # list of sword enchantments (used by enchanting table)
 SWORD_ENCHS = [
@@ -189,7 +194,8 @@ SWORD_ENCHS = [
     # 'combo',
     'one_for_all',
     'soul_eater',
-    'ultimate_jerry']
+    'ultimate_jerry',
+]
 
 # list of bow enchantments (used by enchanting table)
 BOW_ENCHS = [
@@ -203,7 +209,8 @@ BOW_ENCHS = [
     # 'overload',
     'power',
     'punch',
-    'snipe']
+    'snipe',
+]
 
 # list of armor enchantments (used by enchanting table)
 ARMOR_ENCHS = [
@@ -223,23 +230,27 @@ ARMOR_ENCHS = [
     'sugar_rush',
 
     'last_stand',
-    'no_pain_no_gain']
+    'no_pain_no_gain',
+]
 
 # list of axe enchantments (used by enchanting table)
 AXE_ENCHS = [
-    'efficiency']
+    'efficiency',
+]
 
 # list of hoe enchantments (used by enchanting table)
 HOE_ENCHS = [
     # 'cultivating',
     'experience',
-    'harvesting']
+    'harvesting',
+]
 
 # list of pickaxe enchantments (used by enchanting table)
 PICKAXE_ENCHS = [
     # 'compact',
     'efficiency',
-    'experience']
+    'experience',
+]
 
 # list of fishing rod enchantments (used by enchanting table)
 FISHING_ROD_ENCHS = [
@@ -252,4 +263,5 @@ FISHING_ROD_ENCHS = [
     'luck_of_the_sea',
     'lure',
     'magnet',
-    'spiked_hook']
+    'spiked_hook',
+]

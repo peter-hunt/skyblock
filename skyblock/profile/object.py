@@ -11,12 +11,14 @@ from ..function.math import calc_pet_exp, calc_exp_lvl, calc_exp, calc_skill_lvl
 from ..function.io import gray, red, green, yellow
 from ..function.util import (
     checkpoint, clear, display_int, display_number, generate_help,
-    get, includes, is_valid_usage, parse_int, roman, shorten_number)
+    get, includes, is_valid_usage, parse_int, roman, shorten_number,
+)
 from ..object.collection import COLLECTIONS, is_collection
 from ..object.item import ITEMS, get_item, get_scroll
 from ..object.mob import get_mob
 from ..object.object import (
-    Item, Empty, Bow, Sword, Armor, Axe, Hoe, Pickaxe, Drill, FishingRod, Pet)
+    Item, Empty, Bow, Sword, Armor, Axe, Hoe, Pickaxe, Drill, FishingRod, Pet,
+)
 from ..object.recipe import RECIPES
 from ..object.resource import get_resource
 from ..map.island import ISLANDS
@@ -116,6 +118,7 @@ class Profile:
         else:
             self.npc_silent(npc)
 
+    @checkpoint
     def mainloop(self):
         last_shop: Optional[str] = None
 
@@ -194,10 +197,8 @@ class Profile:
                 self.buy(chosen_trade, amount)
 
             elif words[0] == 'cheat':
-                # item = get_item('jungle_axe')
-                # self.recieve_item(item)
-                # item = get_item('treecapitator')
-                # self.recieve_item(item)
+                item = get_item('shredder')
+                self.recieve_item(item)
                 ...
 
             elif words[0] == 'clear':
@@ -375,9 +376,7 @@ class Profile:
                        f' {GRAY}to the next level.')
 
             elif words[0] == 'fish':
-                if self.region not in {
-                        'birch', 'farm', 'mountain',
-                        'oasis', 'upper', 'wilderness'}:
+                if not region.fishable:
                     red("There's no water for you to fish at!")
                     continue
 
@@ -441,14 +440,17 @@ class Profile:
 
             elif words[0] == 'help':
                 if len(words) == 1:
-                    gray(profile_doc)
+                    gray(f'\n{profile_doc}\n')
                     continue
 
                 phrase = ' '.join(words[1:])
-                if phrase in profile_help:
-                    usage, description = profile_help[phrase]
-                    gray(usage)
-                    gray(description)
+                help_found = []
+                for key, pair in profile_help.items():
+                    if key.startswith(phrase):
+                        usage, description = pair
+                        help_found.append(f'{usage}\n{description}')
+                if len(help_found) != 0:
+                    gray('\n' + '\n\n'.join(help_found) + '\n')
                 else:
                     red(f'Command not found: {phrase!r}.')
 
@@ -469,7 +471,7 @@ class Profile:
 
             elif words[0] in {'kill', 'slay'}:
                 name = words[1]
-                if get_mob(name) is None:
+                if (mob := get_mob(name)) is None:
                     red(f'Mob not found: {name!r}')
                     continue
                 if get(region.mobs, name) is None:
@@ -484,7 +486,10 @@ class Profile:
                         continue
 
                     weapon_item = self.inventory[weapon_index]
-                    if not isinstance(weapon_item, (Empty, Bow, Sword)):
+                    if (isinstance(weapon_item, FishingRod) and
+                            getattr(weapon_item, 'damage', 0) != 0):
+                        pass
+                    elif not isinstance(weapon_item, (Empty, Bow, Sword)):
                         yellow(f'{weapon_item.name} item is not weapon.\n'
                                f'Using barehand by default.')
                         weapon_index = None
@@ -499,7 +504,7 @@ class Profile:
                         red(f'Amount must be a positive integer.')
                         continue
 
-                self.slay(name, weapon_index, amount)
+                self.slay(mob, weapon_index, amount)
 
             elif words[0] == 'look':
                 self.display_location()

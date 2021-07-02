@@ -6,14 +6,16 @@ from typing import Iterable, Optional
 from ..constant.color import (
     BOLD, DARK_AQUA, DARK_RED, GOLD, GRAY, DARK_GRAY,
     GREEN, AQUA, RED, YELLOW, WHITE,
-    STAT_COLORS, RARITY_COLORS)
+    STAT_COLORS, RARITY_COLORS,
+)
 from ..constant.main import ARMOR_PARTS
 from ..constant.stat import ALL_STAT, HIDDEN_STATS, PERC_STATS
 from ..function.io import gray, dark_gray, red, green, yellow, white
 from ..function.math import calc_skill_lvl_info, display_skill_reward
 from ..function.util import (
     display_int, display_name, display_number,
-    get, index, roman, shorten_number)
+    get, index, roman, shorten_number,
+)
 from ..object.collection import COLLECTIONS, get_collection
 from ..object.item import get_item
 from ..object.object import Empty, ItemType, Recipe

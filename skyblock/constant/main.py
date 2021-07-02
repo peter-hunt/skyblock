@@ -7,7 +7,8 @@ from typing import List
 
 __all__ = [
     'ARMOR_PARTS', 'DUNGEON_EXP', 'INTEREST_TABLE', 'SELL_PRICE',
-    'SKILL_EXP', 'SKILL_LIMITS']
+    'SKILL_EXP', 'SKILL_LIMITS',
+]
 
 # names of armor parts used by iterating and displaying
 ARMOR_PARTS = ['helmet', 'chestplate', 'leggings', 'boots']
@@ -323,6 +324,11 @@ SELL_PRICE = {
     'enchanted_blaze_rod': 230_400,
     'enchanted_magma_cream': 1_280,
 
+    'blaze_powder': 4,
+
+    'enchanted_ender_pearl': 140,
+    'enchanted_eye_of_ender': 3_520,
+
     'oak_wood': 2,
     'birch_wood': 2,
     'spruce_wood': 2,
@@ -349,11 +355,6 @@ SELL_PRICE = {
     'acacia_leaves': 2,
     'jungle_leaves': 2,
 
-    'bottle': 2,
-    'experience_bottle': 5,
-    'grand_experience_bottle': 480,
-    'titanic_experience_bottle': 5_000,
-
     'enchanted_oak': 320,
     'enchanted_birch': 320,
     'enchanted_spruce': 320,
@@ -361,14 +362,38 @@ SELL_PRICE = {
     'enchanted_acacia': 320,
     'enchanted_jungle': 320,
 
-    'blaze_powder': 4,
+    'fish': 6,
+    'salmon': 10,
+    'clownfish': 20,
+    'pufferfish': 15,
+    'prismarine_shard': 5,
+    'prismarine_crystals': 5,
+    'clay': 3,
+    'lily_pad': 10,
+    'ink_sack': 2,
+    'sponge': 50,
 
-    'enchanted_ender_pearl': 140,
-    'enchanted_eye_of_ender': 3_520,
+    'enchanted_fish': 960,
+    'enchanted_cooked_fish': 150_000,
+    'enchanted_salmon': 1_600,
+    'enchanted_cooked_salmon': 256_000,
+    'enchanted_pufferfish': 2_400,
+    'enchanted_prismarine_shard': 400,
+    'enchanted_prismarine_crystals': 400,
+    'enchanted_clay': 480,
+    'enchanted_lily_pad': 1_600,
+    'enchanted_ink_sack': 160,
+    'enchanted_sponge': 2_000,
+    'enchanted_wet_sponge': 80_000,
 
     'rookie_axe': 6,
     'sweet_axe': 25,
     'efficient_axe': 25,
+
+    'bottle': 2,
+    'experience_bottle': 5,
+    'grand_experience_bottle': 480,
+    'titanic_experience_bottle': 5_000,
 
     'lapis_helmet': 1_000,
     'lapis_chestplate': 1_000,
@@ -382,7 +407,8 @@ SELL_PRICE = {
 
     'flaming_sword': 20,
 
-    'bag_of_cash': 1_000_000}
+    'bag_of_cash': 1_000_000,
+}
 
 # other level exp requirements
 SKILL_EXP = [
@@ -446,7 +472,8 @@ SKILL_EXP = [
     (57, 6_100_000, 91_572_425, 600_000),
     (58, 6_400_000, 97_972_425, 700_000),
     (59, 6_700_000, 104_672_425, 800_000),
-    (60, 7_000_000, 111_672_425, 1_000_000)]
+    (60, 7_000_000, 111_672_425, 1_000_000),
+]
 
 # maximum levels for each skill
 SKILL_LIMITS = {
@@ -458,4 +485,5 @@ SKILL_LIMITS = {
     'enchanting': 60,
     'alchemy': 50,
     'taming': 50,
-    'dungeoneering': 50}
+    'dungeoneering': 50,
+}

@@ -99,11 +99,20 @@ SPECIAL_NAMES = {
     'fairys_trousers': "Fairy's Trousers",
     'fairys_galoshes': "Fairy's Galoshes",
 
+    'emperors_skull': "Emperor's Skull",
+
+    'divers_mask': "Diver's Mask",
+    'divers_shirt': "Diver's Shirt",
+    'divers_trunks': "Diver's Trunks",
+    'divers_boots': "Diver's Boots",
+
     'mithril_drill_226': 'Mithril Drill SX-R226',
     'mithril_drill_326': 'Mithril Drill SX-R326',
     'titanium_drill_355': 'Titanium Drill DR-X355',
     'titanium_drill_455': 'Titanium Drill DR-X455',
     'titanium_drill_555': 'Titanium Drill DR-X555',
+
+    'farmers_rod': "Farmer's Rod",
 
     'pray_rngesus': 'Pray RNGesus',
     'rngesus': 'RNGesus',
