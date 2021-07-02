@@ -1,17 +1,17 @@
 from math import ceil
 from typing import Union
 
-from ..constant.color import GOLD, DARK_GRAY, GREEN, AQUA, YELLOW, WHITE
+from ..constant.color import DARK_GRAY, WHITE
 from ..function.io import gray, red, green, yellow
 from ..function.util import display_int, display_name, includes
 from ..object.item import ITEMS, get_item, get_stack_size, validify_item
 from ..object.object import ItemType, Item, Empty, Pet
 
 
-__all__ = ['profile_item']
+__all__ = ['profile_item_wrapper']
 
 
-def profile_item(cls):
+def profile_item_wrapper(cls):
     def clearstash(self, /):
         self.stash.clear()
         green('You have cleared your stash!')

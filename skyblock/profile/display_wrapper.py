@@ -24,10 +24,10 @@ from ..map.island import ISLANDS
 from ..map.object import Npc
 
 
-__all__ = ['profile_display']
+__all__ = ['profile_display_wrapper']
 
 
-def profile_display(cls):
+def profile_display_wrapper(cls):
     def display_armor(self, part: Optional[str] = None, /):
         if part:
             item = self.armor[ARMOR_PARTS.index(part)]

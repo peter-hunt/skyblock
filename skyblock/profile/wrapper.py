@@ -11,11 +11,16 @@ from ..function.util import display_name, parse_int
 from ..object.object import Empty, load_item
 from ..map.object import Npc
 
+from .action_wrapper import profile_action_wrapper
+from .display_wrapper import profile_display_wrapper
+from .item_wrapper import profile_item_wrapper
+from .math_wrapper import profile_math_wrapper
 
-__all__ = ['profile_type']
+
+__all__ = ['profile_basic_wrapper', 'profile_wrapper']
 
 
-def profile_type(cls):
+def profile_basic_wrapper(cls):
     anno = [key for key in getattr(cls, '__annotations__', {})
             if key != 'name']
 
@@ -101,5 +106,15 @@ def profile_type(cls):
         return index - 1
 
     cls.parse_index = parse_index
+
+    return cls
+
+
+def profile_wrapper(cls):
+    cls = profile_basic_wrapper(cls)
+    cls = profile_action_wrapper(cls)
+    cls = profile_display_wrapper(cls)
+    cls = profile_item_wrapper(cls)
+    cls = profile_math_wrapper(cls)
 
     return cls

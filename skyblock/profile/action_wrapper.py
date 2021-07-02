@@ -42,10 +42,10 @@ from ..map.island import ISLANDS
 from ..map.object import calc_dist, path_find
 
 
-__all__ = ['profile_action']
+__all__ = ['profile_action_wrapper']
 
 
-def profile_action(cls):
+def profile_action_wrapper(cls):
     def add_pet(self, index: int, /):
         item = self.inventory[index]
 

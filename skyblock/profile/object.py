@@ -24,11 +24,7 @@ from ..object.resource import get_resource
 from ..map.island import get_island
 from ..map.object import Npc
 
-from .action_wrapper import profile_action
-from .display_wrapper import profile_display
-from .item_wrapper import profile_item
-from .math_wrapper import profile_math
-from .wrapper import profile_type
+from .wrapper import profile_wrapper
 
 
 __all__ = ['Profile']
@@ -36,11 +32,7 @@ __all__ = ['Profile']
 profile_help = generate_help(profile_doc)
 
 
-@profile_action
-@profile_display
-@profile_item
-@profile_math
-@profile_type
+@profile_wrapper
 class Profile:
     name: str
     last_update: int = 0

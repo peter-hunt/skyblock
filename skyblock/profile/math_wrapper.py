@@ -19,10 +19,10 @@ from ..object.object import (
 )
 
 
-__all__ = ['profile_math']
+__all__ = ['profile_math_wrapper']
 
 
-def profile_math(cls):
+def profile_math_wrapper(cls):
     def add_exp(self, amount: Number, /):
         enchanting_lvl = self.get_skill_lvl('enchanting')
         original_lvl = calc_exp_lvl(self.experience)
