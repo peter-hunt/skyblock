@@ -1,12 +1,12 @@
 from ...object.item import get_item
 from ...object.object import Item
 from ...object.resource import get_resource
-from ..object import Island, Npc, Region, add_dist
+from ..object import Island, Npc, Zone, add_dist
 
 
 __all__ = ['GOLD']
 
-GOLD_GATE = Region(
+GOLD_GATE = Zone(
     'gold_gate', 0, -300, portal='hub',
     npcs=[
         Npc('gold_forger',
@@ -36,7 +36,7 @@ GOLD_GATE = Region(
             ]),
     ],
 )
-GOLD_MINE = Region(
+GOLD_MINE = Zone(
     'gold_mine', 0, -360, portal='deep',
     resources=[get_resource('stone'), get_resource('coal_ore'),
                get_resource('iron_ore'), get_resource('gold_ore')],

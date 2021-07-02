@@ -3,12 +3,12 @@ from ...object.item import get_item
 from ...object.mob import get_mob
 from ...object.object import Item
 from ...object.resource import get_resource
-from ..object import Island, Npc, Region, add_dist
+from ..object import Island, Npc, Zone, add_dist
 
 
 __all__ = ['END']
 
-END_ENTRENCE = Region(
+END_ENTRENCE = Zone(
     'end_entrence', -540, -300, portal='spider',
     npcs=[
         Npc('pearl_dealer',
@@ -31,19 +31,19 @@ END_ENTRENCE = Region(
                get_resource('obsidian')],
     mobs=[get_mob('enderman', level=42)],
 )
-END_TUNNEL = Region(
+END_TUNNEL = Zone(
     'end_tunnel', -560, -300,
     resources=[get_resource('end_stone'),
                get_resource('obsidian')],
     mobs=[get_mob('enderman', level=45)],
 )
-END_CAVES = Region(
+END_CAVES = Zone(
     'end_caves', -580, -290,
     resources=[get_resource('end_stone'),
                get_resource('obsidian')],
     mobs=[get_mob('enderman', level=50)],
 )
-DRAGONS_NEST = Region(
+DRAGONS_NEST = Zone(
     'drag', -600, -280,
     resources=[get_resource('end_stone')],
     mobs=[get_mob('watcher'),

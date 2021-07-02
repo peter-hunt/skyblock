@@ -24,7 +24,7 @@ __all__ = ['profile_math']
 
 def profile_math(cls):
     def add_exp(self, amount: Number, /):
-        enchanting_lvl = calc_skill_lvl('enchanting', self.skill_xp_enchanting)
+        enchanting_lvl = self.get_skill_lvl('enchanting')
         original_lvl = calc_exp_lvl(self.experience)
         self.experience += amount * (1 + 0.04 * enchanting_lvl)
         current_lvl = calc_exp_lvl(self.experience)
@@ -194,11 +194,9 @@ def profile_math(cls):
             if not isinstance(item, (Bow, Sword, Axe, Hoe, Pickaxe, Drill)):
                 item = Empty()
 
-        if getattr(item, 'modifier', None) is None:
-            reforge_bonus = {}
-        else:
+        if getattr(item, 'modifier', None) is not None:
             reforge_bonus = get_reforge(item.modifier, item.rarity)
-        value += reforge_bonus.get(name, 0)
+            value += reforge_bonus.get(name, 0)
 
         item_ench = getattr(item, 'enchantments', {})
 
@@ -222,12 +220,12 @@ def profile_math(cls):
 
         value += getattr(item, name, 0)
 
-        combat_lvl = calc_skill_lvl('combat', self.skill_xp_combat)
-        farming_lvl = calc_skill_lvl('farming', self.skill_xp_farming)
-        enchanting_lvl = calc_skill_lvl('enchanting', self.skill_xp_enchanting)
-        foraging_lvl = calc_skill_lvl('foraging', self.skill_xp_foraging)
-        fishing_lvl = calc_skill_lvl('fishing', self.skill_xp_fishing)
-        mining_lvl = calc_skill_lvl('mining', self.skill_xp_mining)
+        combat_lvl = self.get_skill_lvl('combat')
+        farming_lvl = self.get_skill_lvl('farming')
+        enchanting_lvl = self.get_skill_lvl('enchanting')
+        foraging_lvl = self.get_skill_lvl('foraging')
+        fishing_lvl = self.get_skill_lvl('fishing')
+        mining_lvl = self.get_skill_lvl('mining')
 
         if name == 'health':
             value += 100
@@ -250,6 +248,10 @@ def profile_math(cls):
                 continue
 
             value += getattr(piece, name, 0)
+
+            if getattr(piece, 'modifier', None) is not None:
+                reforge_bonus = get_reforge(piece.modifier, piece.rarity)
+                value += reforge_bonus.get(name, 0)
 
         full_set_bonus = ''
 

@@ -1,12 +1,12 @@
 from ...object.mob import get_mob
 from ...object.resource import get_resource
 
-from ..object import Npc, Region, Island, add_dist
+from ..object import Npc, Zone, Island, add_dist
 
 
 __all__ = ['DESERT']
 
-DESERT_SETTLEMENT = Region(
+DESERT_SETTLEMENT = Zone(
     'desert_settlement', 180, -380, portal='barn',
     resources=[get_resource('cactus'),
                get_resource('sand')],
@@ -31,14 +31,14 @@ DESERT_SETTLEMENT = Region(
                  " but I always hear that no one finds treasure"),
             ])],
 )
-GLOWING_MUSHROOM_CAVE = Region(
+GLOWING_MUSHROOM_CAVE = Zone(
     'glowing_mushroom_cave', 245, -500,
     resources=[get_resource('mushroom'),
                get_resource('sand')],
     mobs=[get_mob('mooshroom')],
 )
-JAKES_HOUSE = Region('jakes_house', 255, -565)
-MUSHROOM_GORGE = Region(
+JAKES_HOUSE = Zone('jakes_house', 255, -565)
+MUSHROOM_GORGE = Zone(
     'mushroom_gorge', 205, -480,
     resources=[get_resource('mushroom'),
                get_resource('sand')],
@@ -55,19 +55,19 @@ MUSHROOM_GORGE = Region(
             ]),
     ],
 )
-OASIS = Region(
+OASIS = Zone(
     'oasis', 165, -410, fishable=True,
     resources=[get_resource('cocoa'),
                get_resource('sugar_cane')],
     mobs=[get_mob('rabbit'), get_mob('sheep')],
 )
-OVERGROWN_MUSHROOM_CAVE = Region(
+OVERGROWN_MUSHROOM_CAVE = Zone(
     'overgrown_mushroom_cave', 270, -365,
     resources=[get_resource('mushroom'),
                get_resource('sand')],
     mobs=[get_mob('mooshroom')],
 )
-SHEPHERDS_KEEP = Region(
+SHEPHERDS_KEEP = Zone(
     'shepherds_keep', 360, -370,
     resources=[get_resource('cactus'),
                get_resource('sand')],
@@ -86,8 +86,8 @@ SHEPHERDS_KEEP = Region(
             ]),
     ],
 )
-TRAPPERS_DEN = Region('trappers_den', 285, -570)
-TREASURE_HUNTER_CAMP = Region(
+TRAPPERS_DEN = Zone('trappers_den', 285, -570)
+TREASURE_HUNTER_CAMP = Zone(
     'treasure_hunter_camp', 200, -430,
     npcs=[
         Npc('treasure_hunter',

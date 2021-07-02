@@ -3,11 +3,11 @@ from .mob import get_mob
 from .object import Item
 
 
-__all__ = ['FISHING_TABLE']
+__all__ = ['FISHING_TABLE', 'SEA_CREATURES']
 
 FISHING_TABLE = [
     # item, amount, rarity,
-    # weight, fishing exp, locations
+    # weight, fishing exp, avaliable zones
     (Item('clay'), 1, 'normal',
      0.04, 30, ()),
     (Item('fish'), 1, 'normal',

@@ -8,7 +8,7 @@ from ..object.object import ItemType, Resource, Mob
 
 
 __all__ = [
-    'Npc', 'Region', 'Island', 'calc_dist', 'add_dist', 'path_find']
+    'Npc', 'Zone', 'Island', 'calc_dist', 'add_dist', 'path_find']
 
 
 @dataclass
@@ -26,7 +26,7 @@ class Npc:
 
 
 @dataclass(order=True)
-class Region:
+class Zone:
     name: str
     x: int
     z: int
@@ -44,29 +44,29 @@ class Region:
         return hash(self.name)
 
 
-def calc_dist(region_1: Region, region_2: Region) -> Decimal:
+def calc_dist(zone_1: Zone, zone_2: Zone) -> Decimal:
     return round(Decimal(
-        dist((region_1.x, region_1.z), (region_2.x, region_2.z))
+        dist((zone_1.x, zone_1.z), (zone_2.x, zone_2.z))
     ), 2)
 
 
-def add_dist(region_1: Region, region_2: Region, DISTS: Dict) -> None:
-    DISTS[tuple(sorted((region_1, region_2)))] = calc_dist(region_1, region_2)
+def add_dist(zone_1: Zone, zone_2: Zone, DISTS: Dict) -> None:
+    DISTS[tuple(sorted((zone_1, zone_2)))] = calc_dist(zone_1, zone_2)
 
 
-def path_find(start_region: Region, end_region: Region,
+def path_find(start_zone: Zone, end_zone: Zone,
               conns: List, dists: Dict) -> Tuple[List, Decimal]:
     paths = []
     for conn in conns:
-        if start_region in conn:
-            other_region = conn[0] if conn[1] == start_region else conn[1]
-            if other_region == end_region:
-                return [start_region, end_region], calc_dist(start_region, end_region)
+        if start_zone in conn:
+            other_zone = conn[0] if conn[1] == start_zone else conn[1]
+            if other_zone == end_zone:
+                return [start_zone, end_zone], calc_dist(start_zone, end_zone)
             paths.append(  # tuple([*places], accum_dist, heuri_dist)
                 (
-                    [start_region, other_region],
+                    [start_zone, other_zone],
                     dists[tuple(conn)],
-                    calc_dist(other_region, end_region),
+                    calc_dist(other_zone, end_zone),
                 )
             )
     paths = sorted(paths, key=lambda group: group[1] + group[2])
@@ -78,24 +78,24 @@ def path_find(start_region: Region, end_region: Region,
         first_end = first[0][-1]
         for conn in conns:
             if first_end in conn:
-                other_region = conn[0] if conn[1] == first_end else conn[1]
-                if other_region in first[0]:
+                other_zone = conn[0] if conn[1] == first_end else conn[1]
+                if other_zone in first[0]:
                     continue
                 path = (
-                    first[0] + [other_region],
+                    first[0] + [other_zone],
                     first[1] + dists[tuple(conn)],
-                    calc_dist(other_region, end_region),
+                    calc_dist(other_zone, end_zone),
                 )
                 slower = False
                 for other_path in paths:
-                    if other_region == other_path[0][-1]:
+                    if other_zone == other_path[0][-1]:
                         if path[1] >= other_path[1]:
                             slower = True
                             break
                 if slower:
                     continue
                 else:
-                    if other_region == end_region:
+                    if other_zone == end_zone:
                         if best_found and path[1] >= best_dist:
                             continue
                         best_found = True
@@ -106,7 +106,7 @@ def path_find(start_region: Region, end_region: Region,
                         if path[1] + path[2] >= best_dist:
                             continue
                     paths = [other_path for other_path in paths
-                             if other_region != other_path[0][-1]]
+                             if other_zone != other_path[0][-1]]
                     paths.append(path)
 
         paths = sorted(paths, key=lambda group: group[1] + group[2])
@@ -118,9 +118,9 @@ def path_find(start_region: Region, end_region: Region,
 class Island:
     name: str
     spawn: str
-    regions: List[Region]
-    conns: List[Tuple[Region, Region]]
-    dists: Dict[Tuple[Region, Region], Decimal]
+    zones: List[Zone]
+    conns: List[Tuple[Zone, Zone]]
+    dists: Dict[Tuple[Zone, Zone], Decimal]
     skill_req: Optional[Tuple[str, int]] = None
 
     def __repr__(self):

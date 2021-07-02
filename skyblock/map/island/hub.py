@@ -4,14 +4,14 @@ from ...object.object import Item
 from ...object.mob import get_mob
 from ...object.resource import get_resource
 
-from ..object import Npc, Region, Island, add_dist
+from ..object import Npc, Zone, Island, add_dist
 
 
 __all__ = ['HUB']
 
-AUCTION_HOUSE = Region('auction_house', -18, -90)
-BANK = Region('bank', -20, -65)
-BAZAAR_ALLEY = Region(
+AUCTION_HOUSE = Zone('auction_house', -18, -90)
+BANK = Zone('bank', -20, -65)
+BAZAAR_ALLEY = Zone(
     'bazaar_alley', -32, -76,
     npcs=[
         Npc('adventurer',
@@ -47,8 +47,8 @@ BAZAAR_ALLEY = Region(
             ]),
     ],
 )
-BLACKSMITH = Region('blacksmith', -28, -125)
-BUILDERS_HOUSE = Region(
+BLACKSMITH = Zone('blacksmith', -28, -125)
+BUILDERS_HOUSE = Zone(
     'builders_house', -50, -36,
     npcs=[
         Npc('builder',
@@ -63,22 +63,22 @@ BUILDERS_HOUSE = Region(
             ]),
     ],
 )
-COAL_MINE = Region(
+COAL_MINE = Zone(
     'coal_mine', -20, -160, portal='gold',
     resources=[get_resource('stone'), get_resource('coal_ore')],
 )
-COLOSSEUM = Region('colosseum', -58, -58)
-COMMUNITY_CENTER = Region('community_center', 0, -100)
-CRYPT = Region(
+COLOSSEUM = Zone('colosseum', -58, -58)
+COMMUNITY_CENTER = Zone('community_center', 0, -100)
+CRYPT = Zone(
     'crypt', -120, -100,
     mobs=[get_mob('crypt_ghoul'),
           get_mob('golden_ghoul')],
 )
-FARM = Region(
+FARM = Zone(
     'farm', 41, -137, portal='barn', fishable=True,
     resources=[get_resource('wheat')],
 )
-FARMHOUSE = Region(
+FARMHOUSE = Zone(
     'farmhouse', 23, -80,
     npcs=[
         Npc('farm_merchant',
@@ -109,7 +109,7 @@ FARMHOUSE = Region(
         Npc('anita'),
     ],
 )
-FASHION_SHOP = Region(
+FASHION_SHOP = Zone(
     'fashion_shop', 27, -44,
     npcs=[
         Npc('seymour',
@@ -133,15 +133,15 @@ FASHION_SHOP = Region(
             ]),
     ],
 )
-FLOWER_HOUSE = Region(
+FLOWER_HOUSE = Zone(
     'flower_house', -7, -25,
     resources=[get_resource('dandelion'), get_resource('poppy')],
 )
-FOREST = Region(
+FOREST = Zone(
     'forest', -95, -40, portal='park',
     resources=[get_resource('oak_wood')],
 )
-GRAVEYARD = Region(
+GRAVEYARD = Zone(
     'graveyard', -99, -54, portal='spider',
     npcs=[
         Npc('pat',
@@ -158,11 +158,11 @@ GRAVEYARD = Region(
     ],
     mobs=[get_mob('zombie', level=1)],
 )
-HIGH_LEVEL = Region(
+HIGH_LEVEL = Zone(
     'high_level', 0, 150,
     mobs=[get_mob('skeleton', level=6)],
 )
-HUB_CASTLE = Region(
+HUB_CASTLE = Zone(
     'castle', -280, -60,
     npcs=[
         Npc('armorsmith',
@@ -172,7 +172,7 @@ HUB_CASTLE = Region(
     mobs=[get_mob('wolf'),
           get_mob('old_wolf')],
 )
-LIBRARY = Region(
+LIBRARY = Zone(
     'library', 37, -111,
     npcs=[
         Npc('librarian',
@@ -191,8 +191,8 @@ LIBRARY = Region(
             ]),
     ],
 )
-MOUNTAIN = Region('mountain', 0, 0, fishable=True)
-PETS_BUILDING = Region(
+MOUNTAIN = Zone('mountain', 0, 0, fishable=True)
+PETS_BUILDING = Zone(
     'pets_building', 24, -90,
     npcs=[
         Npc('bea',
@@ -221,7 +221,7 @@ PETS_BUILDING = Region(
             ]),
     ],
 )
-POTION_SHOP = Region(
+POTION_SHOP = Zone(
     'potion_shop', 41, -63,
     resources=[get_resource('nether_wart')],
     npcs=[
@@ -244,13 +244,13 @@ POTION_SHOP = Region(
             ]),
     ],
 )
-RUINS = Region(
+RUINS = Zone(
     'ruins', -250, -80, fishable=True,
     mobs=[get_mob('wolf'),
           get_mob('old_wolf')],
 )
-TAVERN = Region('tavern', -85, -69)
-VILLAGE = Region(
+TAVERN = Zone('tavern', -85, -69)
+VILLAGE = Zone(
     'village', -3, -85, fishable=True,
     npcs=[
         Npc('andrew',
@@ -372,8 +372,8 @@ VILLAGE = Region(
             ]),
     ],
 )
-WILDERNESS = Region('wilderness', 75, -11, fishable=True)
-WIZARD_TOWER = Region('wizard_tower', 40, 70)
+WILDERNESS = Zone('wilderness', 75, -11, fishable=True)
+WIZARD_TOWER = Zone('wizard_tower', 40, 70)
 
 
 HUB_JOINTS = [

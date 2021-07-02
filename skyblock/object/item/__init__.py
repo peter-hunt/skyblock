@@ -307,6 +307,12 @@ def validify_item(item: ItemType, /) -> ItemType:
     kwargs = {}
     if getattr(item, 'enchantments', {}) != {}:
         attrs['enchantments'] = item.enchantments.copy()
+    if getattr(item, 'hot_potato', 0) != 0:
+        attrs['hot_potato'] = item.hot_potato
+    if getattr(item, 'modifier', None) != None:
+        attrs['modifier'] = item.modifier
+    if getattr(item, 'stars', 0) != 0:
+        attrs['stars'] = item.stars
 
     if getattr(item, 'rarity', {}) != {}:
         if isinstance(item, (Sword, Bow, Armor, Pet)):

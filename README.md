@@ -54,7 +54,7 @@ python -m skyblock
 
 ## Features Planned:
 * Accessories
-* Anvil and Reforging (Armor, Bow reforges and reforge stones)
+* Anvil and Reforging (Bow reforges and reforge stones)
 * Combat while mining
 * Dungeons
 * Forging (Dwarven Mines)

@@ -25,6 +25,68 @@ STAT_ALIASES = {
     'for_ftn': 'foraging_fortune',
 }
 
+ARMOR_REFORGES = {
+    'clean': (
+        {'hp': 5, 'def': 5, 'cc': 2}, {'hp': 7, 'def': 7, 'cc': 4},
+        {'hp': 10, 'def': 10, 'cc': 6}, {'hp': 15, 'def': 15, 'cc': 8},
+        {'hp': 20, 'def': 20, 'cc': 10}, {'hp': 25, 'def': 25, 'cc': 12},
+    ),
+    'fierce': (
+        {'str': 2, 'cc': 2, 'cd': 4}, {'str': 4, 'cc': 3, 'cd': 7},
+        {'str': 6, 'cc': 4, 'cd': 10}, {'str': 8, 'cc': 5, 'cd': 14},
+        {'str': 10, 'cc': 6, 'cd': 18}, {'str': 12, 'cc': 8, 'cd': 24},
+    ),
+    'heavy': (
+        {'def': 25, 'spd': -1, 'cd': -1}, {'def': 35, 'spd': -1, 'cd': -2},
+        {'def': 50, 'spd': -1, 'cd': -2}, {'def': 65, 'spd': -1, 'cd': -3},
+        {'def': 80, 'spd': -1, 'cd': -5}, {'def': 110, 'spd': -1, 'cd': -7},
+    ),
+    'light': (
+        {'hp': 5, 'def': 1, 'spd': 1, 'cc': 1, 'cd': 1, 'as': 1},
+        {'hp': 7, 'def': 2, 'spd': 2, 'cc': 1, 'cd': 2, 'as': 2},
+        {'hp': 10, 'def': 3, 'spd': 3, 'cc': 2, 'cd': 3, 'as': 3},
+        {'hp': 15, 'def': 4, 'spd': 4, 'cc': 2, 'cd': 4, 'as': 4},
+        {'hp': 20, 'def': 5, 'spd': 5, 'cc': 3, 'cd': 5, 'as': 5},
+        {'hp': 25, 'def': 6, 'spd': 6, 'cc': 3, 'cd': 6, 'as': 6},
+    ),
+    'mythic': (
+        {'hp': 2, 'def': 2, 'str': 2, 'spd': 2, 'cc': 1, 'int': 20},
+        {'hp': 4, 'def': 4, 'str': 4, 'spd': 2, 'cc': 2, 'int': 25},
+        {'hp': 6, 'def': 6, 'str': 6, 'spd': 2, 'cc': 3, 'int': 30},
+        {'hp': 8, 'def': 8, 'str': 8, 'spd': 2, 'cc': 4, 'int': 40},
+        {'hp': 10, 'def': 10, 'str': 10, 'spd': 2, 'cc': 5, 'int': 50},
+        {'hp': 12, 'def': 12, 'str': 12, 'spd': 2, 'cc': 6, 'int': 60},
+    ),
+    'pure': (
+        {'hp': 2, 'def': 2, 'str': 2, 'spd': 1,
+         'cc': 2, 'cd': 2, 'as': 1, 'int': 2},
+        {'hp': 3, 'def': 3, 'str': 3, 'spd': 1,
+         'cc': 4, 'cd': 3, 'as': 1, 'int': 3},
+        {'hp': 4, 'def': 4, 'str': 4, 'spd': 1,
+         'cc': 6, 'cd': 4, 'as': 2, 'int': 4},
+        {'hp': 6, 'def': 6, 'str': 6, 'spd': 1,
+         'cc': 8, 'cd': 6, 'as': 3, 'int': 6},
+        {'hp': 8, 'def': 8, 'str': 8, 'spd': 1,
+         'cc': 10, 'cd': 8, 'as': 4, 'int': 8},
+        {'hp': 10, 'def': 10, 'str': 10, 'spd': 1,
+         'cc': 12, 'cd': 8, 'as': 5, 'int': 10},
+    ),
+    'smart': (
+        {'hp': 4, 'def': 4, 'int': 20}, {'hp': 6, 'def': 6, 'int': 40},
+        {'hp': 9, 'def': 9, 'int': 60}, {'hp': 12, 'def': 12, 'int': 80},
+        {'hp': 15, 'def': 15, 'int': 100}, {'hp': 20, 'def': 20, 'int': 120},
+    ),
+    'titanic': (
+        {'hp': 10, 'def': 10}, {'hp': 15, 'def': 15}, {'hp': 20, 'def': 20},
+        {'hp': 25, 'def': 25}, {'hp': 35, 'def': 35}, {'hp': 50, 'def': 50},
+    ),
+    'smart': (
+        {'hp': 6, 'spd': 1, 'int': 25}, {'hp': 8, 'spd': 1, 'int': 50},
+        {'hp': 10, 'spd': 1, 'int': 75}, {'hp': 12, 'spd': 2, 'int': 100},
+        {'hp': 15, 'spd': 2, 'int': 125}, {'hp': 20, 'spd': 3, 'int': 150},
+    ),
+}
+
 SWORD_REFORGES = {
     'gentle': (
         {'str': 3, 'as': 8}, {'str': 5, 'as': 10}, {'str': 7, 'as': 15},
@@ -78,11 +140,4 @@ SWORD_REFORGES = {
     ),
 }
 
-SWORD_REFORGES = {
-    'gentle': (
-        {'str': 3, 'as': 8}, {'str': 5, 'as': 10}, {'str': 7, 'as': 15},
-        {'str': 10, 'as': 20}, {'str': 15, 'as': 25}, {'str': 20, 'as': 30},
-    ),
-}
-
-REFORGES = {**SWORD_REFORGES}
+REFORGES = {**ARMOR_REFORGES, **SWORD_REFORGES}

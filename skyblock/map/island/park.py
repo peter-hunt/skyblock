@@ -2,21 +2,21 @@ from ...object.item import get_item, get_scroll
 from ...object.mob import get_mob
 from ...object.resource import get_resource
 
-from ..object import Npc, Region, Island, add_dist
+from ..object import Npc, Zone, Island, add_dist
 
 
 __all__ = ['PARK']
 
-BIRCH_PARK = Region(
+BIRCH_PARK = Zone(
     'birch', -300, -20, portal='hub', fishable=True,
     resources=[get_resource('birch_wood')],
 )
-HOWLING_CAVE = Region(
+HOWLING_CAVE = Zone(
     'howl', -330, -55, fishable=True,
     mobs=[get_mob('pack_spirit'),
           get_mob('soul_of_the_alpha')],
 )
-SPRUCE_WOOD = Region(
+SPRUCE_WOOD = Zone(
     'spruce', -325, 0,
     resources=[get_resource('spruce_wood')],
     npcs=[
@@ -33,12 +33,12 @@ SPRUCE_WOOD = Region(
     ],
     skill_req=('foraging', 2),
 )
-DARK_THICKET = Region(
+DARK_THICKET = Zone(
     'dark', -330, -45,
     resources=[get_resource('dark_oak_wood')],
     skill_req=('foraging', 3),
 )
-SAVANNA_WOODLAND = Region(
+SAVANNA_WOODLAND = Zone(
     'savanna', -350, -15,
     resources=[get_resource('acacia_wood')],
     npcs=[
@@ -47,7 +47,7 @@ SAVANNA_WOODLAND = Region(
     ],
     skill_req=('foraging', 4),
 )
-JUNGLE_ISLAND = Region(
+JUNGLE_ISLAND = Zone(
     'jungle', -55, -60,
     resources=[get_resource('jungle_wood')],
     skill_req=('foraging', 5),

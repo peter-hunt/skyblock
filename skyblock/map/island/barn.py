@@ -1,26 +1,26 @@
 from ...object.mob import get_mob
 from ...object.resource import get_resource
 
-from ..object import Region, Island, add_dist
+from ..object import Zone, Island, add_dist
 
 
 __all__ = ['BARN']
 
-ANIMAL_PEN = Region(
+ANIMAL_PEN = Zone(
     'animal_pen', 90, -230,
     mobs=[get_mob('chicken'), get_mob('cow'), get_mob('pig')],
 )
-POTATO_FIELD = Region(
+POTATO_FIELD = Zone(
     'potato_field', 150, -245, portal='desert',
     resources=[get_resource('carrot'),
                get_resource('potato')],
 )
-PUMPKIN_FIELD = Region(
+PUMPKIN_FIELD = Zone(
     'pumpkin_field', 190, -225,
     resources=[get_resource('melon'),
                get_resource('pumpkin')],
 )
-WHEAT_FIELD = Region(
+WHEAT_FIELD = Zone(
     'wheat_field', 105, -220, portal='hub', fishable=True,
     resources=[get_resource('wheat')],
 )

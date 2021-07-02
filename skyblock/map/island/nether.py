@@ -1,11 +1,11 @@
 from ...object.mob import get_mob
 from ...object.resource import get_resource
-from ..object import Island, Npc, Region, add_dist
+from ..object import Island, Npc, Zone, add_dist
 
 
 __all__ = ['NETHER']
 
-FORTRESS = Region(
+FORTRESS = Zone(
     'fortress', -320, -400, portal='spider',
     npcs=[
         Npc('elle_of_the_nether',
@@ -24,7 +24,7 @@ FORTRESS = Region(
           get_mob('blaze'),
           get_mob('wither_skeleton')],
 )
-MAGMA_FIELD = Region(
+MAGMA_FIELD = Zone(
     'magma', -200, -650,
     resources=[get_resource('netherrack')],
     mobs=[get_mob('small_magma_cube'),
@@ -32,7 +32,7 @@ MAGMA_FIELD = Region(
           get_mob('large_magma_cube'),
           get_mob('ghast')],
 )
-NETHER_CAVES = Region(
+NETHER_CAVES = Zone(
     'nether_caves', -400, -500,
     resources=[get_resource('glowstone'),
                get_resource('netherrack'),

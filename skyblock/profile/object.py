@@ -3,14 +3,14 @@ from re import fullmatch
 from readline import add_history
 from typing import Dict, List, Optional
 
-from ..constant.color import GOLD, GRAY, BLUE, GREEN, YELLOW
+from ..constant.color import BOLD, GOLD, GRAY, BLUE, GREEN, YELLOW
 from ..constant.doc import profile_doc
 from ..constant.main import ARMOR_PARTS
 from ..constant.util import Number
 from ..function.math import calc_pet_exp, calc_exp_lvl, calc_exp, calc_skill_lvl
-from ..function.io import gray, red, green, yellow
+from ..function.io import dark_green, gray, red, green, yellow
 from ..function.util import (
-    checkpoint, clear, display_int, display_number, generate_help,
+    checkpoint, clear, display_int, display_name, display_number, generate_help,
     get, includes, is_valid_usage, parse_int, roman, shorten_number,
 )
 from ..object.collection import COLLECTIONS, is_collection
@@ -52,7 +52,8 @@ class Profile:
     experience: Number = 0
 
     island: str = 'hub'
-    region: str = 'village'
+    zone: str = 'village'
+    visited_zones: List[str] = []
 
     experience_skill_alchemy: float = 0.0
     experience_skill_carpentry: float = 0.0
@@ -128,14 +129,19 @@ class Profile:
                 yellow('Invalid island. Using hub as default.')
                 island = get(ISLANDS, 'hub')
 
-            region = get(island.regions, self.region)
-            if region is None:
-                yellow('Invalid region. Using island spawn as default.')
-                region = get(island.regions, island.spawn)
+            zone = get(island.zones, self.zone)
+            if zone is None:
+                yellow('Invalid zone. Using island spawn as default.')
+                zone = get(island.zones, island.spawn)
 
             if last_shop is not None:
-                if not includes(region.npcs, last_shop):
+                if not includes(zone.npcs, last_shop):
                     last_shop = None
+
+            if self.zone not in self.visited_zones:
+                dark_green(f'{BOLD}{display_name(self.zone)}')
+                green(f'New Zone Discovered!')
+                self.visited_zones.append(self.zone)
 
             self.update()
 
@@ -174,10 +180,10 @@ class Profile:
             elif words[0] == 'buy':
                 if last_shop is None:
                     red("You haven't talked to an NPC "
-                        "with trades in this region yet!")
+                        "with trades in this zone yet!")
                     continue
 
-                trades = get(region.npcs, last_shop).trades
+                trades = get(zone.npcs, last_shop).trades
 
                 trade_index = self.parse_index(words[1], len(trades))
                 if trade_index is None:
@@ -197,8 +203,8 @@ class Profile:
                 self.buy(chosen_trade, amount)
 
             elif words[0] == 'cheat':
-                item = get_item('shredder')
-                self.recieve_item(item)
+                # item = get_item('enderman_pet', rarity='mythic')
+                # self.recieve_item(item)
                 ...
 
             elif words[0] == 'clear':
@@ -261,7 +267,7 @@ class Profile:
                 yellow(f'Death Count: {BLUE}{display_int(self.death_count)}')
 
             elif words[0] in {'deposit', 'withdraw'}:
-                if self.region not in {'bank', 'dwarven_village'}:
+                if self.zone not in {'bank', 'dwarven_village'}:
                     red('You can only do that while you are '
                         'at the Bank or Dwarvin Village!')
                     continue
@@ -320,7 +326,7 @@ class Profile:
                           'in your account!')
 
             elif words[0] == 'enchant':
-                if self.region != 'library':
+                if self.zone != 'library':
                     red('You can only enchant items at the library!')
                     continue
 
@@ -341,7 +347,7 @@ class Profile:
                     continue
 
                 combat_req = armor_piece.combat_skill_req
-                combat_lvl = calc_skill_lvl('combat', self.skill_xp_combat)
+                combat_lvl = self.get_skill_lvl('combat')
 
                 if armor_piece.combat_skill_req is None:
                     pass
@@ -376,7 +382,7 @@ class Profile:
                        f' {GRAY}to the next level.')
 
             elif words[0] == 'fish':
-                if not region.fishable:
+                if not zone.fishable:
                     red("There's no water for you to fish at!")
                     continue
 
@@ -405,8 +411,8 @@ class Profile:
                 name = words[1]
                 if get_resource(name) is None:
                     continue
-                if get(region.resources, name) is None:
-                    red(f'Resource not avaliable at {region}: {name!r}')
+                if get(zone.resources, name) is None:
+                    red(f'Resource not avaliable at {zone}: {name!r}')
                     continue
 
                 tool_index = None
@@ -474,8 +480,8 @@ class Profile:
                 if (mob := get_mob(name)) is None:
                     red(f'Mob not found: {name!r}')
                     continue
-                if get(region.mobs, name) is None:
-                    red(f'Mob not avaliable at {region}: {name!r}')
+                if get(zone.mobs, name) is None:
+                    red(f'Mob not avaliable at {zone}: {name!r}')
                     continue
 
                 weapon_index = None
@@ -631,10 +637,10 @@ class Profile:
             elif words[0] == 'shop':
                 if last_shop is None:
                     red("You haven't talked to an NPC "
-                        "with trades in this region yet!")
+                        "with trades in this zone yet!")
                     continue
 
-                npc = get(region.npcs, last_shop)
+                npc = get(zone.npcs, last_shop)
 
                 if len(words) == 2:
                     trade_index = self.parse_index(words[1], len(npc.trades))
@@ -683,11 +689,11 @@ class Profile:
 
             elif words[0] == 'talkto':
                 name = words[1]
-                if not includes(region.npcs, name):
+                if not includes(zone.npcs, name):
                     red(f'Npc not found: {name!r}')
                     continue
 
-                result = self.talkto_npc(get(region.npcs, name))
+                result = self.talkto_npc(get(zone.npcs, name))
                 if result is not None:
                     last_shop = result
 

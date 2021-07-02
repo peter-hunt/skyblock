@@ -2,12 +2,12 @@ from ...constant.color import BLUE, GREEN, AQUA, RED, WHITE
 from ...object.mob import get_mob
 from ...object.resource import get_resource
 
-from ..object import Npc, Region, Island, add_dist
+from ..object import Npc, Zone, Island, add_dist
 
 
 __all__ = ['SPIDER']
 
-FOSSIL = Region(
+FOSSIL = Zone(
     'fossil', -340, -255, portal='end', fishable=True,
     npcs=[
         Npc('bramass_beastslayer',
@@ -40,7 +40,7 @@ FOSSIL = Region(
             ]),
     ],
 )
-SPIDERS_PATH = Region(
+SPIDERS_PATH = Zone(
     'spiders_path', -315, -240, portal='hub',
     npcs=[
         Npc('haysmith',
@@ -60,13 +60,13 @@ SPIDERS_PATH = Region(
     mobs=[get_mob('gravel_skeleton'),
           get_mob('rainy_slime')],
 )
-SPIDER_TOWER = Region(
+SPIDER_TOWER = Zone(
     'spider_tower', -380, -210,
     mobs=[get_mob('weaver_spider'),
           get_mob('voracious_spider'),
           get_mob('dasher_spider')],
 )
-GRAVEL_MINE = Region(
+GRAVEL_MINE = Zone(
     'gravel_mine', -250, -320, portal='nether',
     npcs=[
         Npc('rick',
@@ -78,7 +78,7 @@ GRAVEL_MINE = Region(
     ],
     resources=[get_resource('gravel')],
 )
-TOP_OF_NEST = Region(
+TOP_OF_NEST = Zone(
     'nest', -365, -220,
     mobs=[get_mob('splitter_spider'),
           get_mob('weaver_spider'),

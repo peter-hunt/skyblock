@@ -13,13 +13,26 @@ from re import compile as re_compile, error as re_error, escape
 from sys import stdout
 
 from ..constant.color import (
-    DARK_AQUA, GOLD, GRAY, DARK_GRAY, BLUE, GREEN, AQUA, RED, YELLOW, WHITE)
+    DARK_GREEN, DARK_AQUA, GOLD, GRAY, DARK_GRAY,
+    BLUE, GREEN, AQUA, RED, YELLOW, WHITE,
+)
 
 
 __all__ = [
-    'dark_aqua', 'gold', 'gray', 'dark_gray', 'blue',
+    'dark_green', 'dark_aqua', 'gold', 'gray', 'dark_gray', 'blue',
     'green', 'aqua', 'red', 'yellow', 'white',
     'input_regex']
+
+
+def dark_green(*args, sep=' ', end='\n'):
+    """
+    Print things in dark green.
+
+    Almost the same as default `print`, but colored.
+    """
+
+    string = sep.join(f'{arg}' for arg in args)
+    stdout.write(f'{DARK_GREEN}{string}{end}\x1b[0m')
 
 
 def dark_aqua(*args, sep=' ', end='\n'):

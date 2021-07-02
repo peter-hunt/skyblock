@@ -121,15 +121,15 @@ def profile_action(cls):
                 red('Can only use 1 travel scroll at a time!')
                 return
 
-            if [item.island, item.region] in self.fast_travel:
+            if [item.island, item.zone] in self.fast_travel:
                 red('You already unlocked this fast travel!')
                 return
 
-            self.fast_travel.append([item.island, item.region])
+            self.fast_travel.append([item.island, item.zone])
             self.inventory[index] = Empty()
             name = display_name(item.island)
-            if item.region is not None:
-                name += f' {GRAY}- {AQUA}{display_name(item.region)}'
+            if item.zone is not None:
+                name += f' {GRAY}- {AQUA}{display_name(item.zone)}'
             yellow('You consumed the scroll!')
             yellow(f'You may now fast travel to {GREEN}{name}{YELLOW}!')
 
@@ -217,7 +217,7 @@ def profile_action(cls):
         if self.has_item('saving_grace'):
             self.remove_item('saving_grace')
             self.island = 'hub'
-            self.region = 'village'
+            self.zone = 'village'
             green('Saving Grace has activated! '
                   'You have been revived safely.')
             return False
@@ -242,7 +242,7 @@ def profile_action(cls):
                  f'{shorten_number(saved)} coins{GRAY} for you!')
 
         red(f'You died and lost {display_number(lost_coins)} coins!')
-        self.region = get(ISLANDS, self.island).spawn
+        self.zone = get(ISLANDS, self.island).spawn
 
         return True
 
@@ -386,8 +386,8 @@ def profile_action(cls):
 
         fishing_lvl = self.get_skill_lvl('fishing')
 
-        fishing_req = getattr(rod, 'fishing_skill_req', 0)
-        if fishing_req > fishing_lvl:
+        fishing_req = getattr(rod, 'fishing_skill_req', None)
+        if fishing_req is not None and fishing_req > fishing_lvl:
             red(f'You need Fishing {roman(fishing_req)} to use it!')
             return
 
@@ -404,10 +404,10 @@ def profile_action(cls):
 
         sea_creature_chance = self.get_stat('sea_creature_chance')
 
-        region = self.region
+        zone = self.zone
         table = [
             line[:-1] for line in FISHING_TABLE
-            if len(line[-1]) == 0 or region in line[-1]
+            if len(line[-1]) == 0 or zone in line[-1]
         ]
 
         total_weight = 0
@@ -674,16 +674,16 @@ def profile_action(cls):
     @checkpoint
     def goto(self, dest: str, /):
         island = get(ISLANDS, self.island)
-        region = get(island.regions, self.region)
+        zone = get(island.zones, self.zone)
 
-        if not includes(island.regions, dest):
+        if not includes(island.zones, dest):
             red('Unknown destination! Use `look` to view options!')
             return
-        if region.name == dest:
+        if zone.name == dest:
             yellow(f'Already at {AQUA}{display_name(dest)}{YELLOW}!')
             return
 
-        path, accum_dist = path_find(region, get(island.regions, dest),
+        path, accum_dist = path_find(zone, get(island.zones, dest),
                                      island.conns, island.dists)
 
         speed = self.get_stat('speed')
@@ -703,7 +703,7 @@ def profile_action(cls):
                 speed += 70
             elif piece_names == ['farm_helmet', 'farm_chestplate',
                                  'farm_leggings', 'farm_boots']:
-                if self.island in {'barn', 'desert'} or self.region == 'farm':
+                if self.island in {'barn', 'desert'} or self.zone == 'farm':
                     speed += 25
             elif piece_names == [
                     'farm_suit_helmet', 'farm_suit_chestplate',
@@ -711,7 +711,7 @@ def profile_action(cls):
                 if self.island in {'barn', 'desert'}:
                     speed += 20
 
-        route = f'{GRAY} ➜ {AQUA}'.join(f'{region}' for region in path)
+        route = f'{GRAY} ➜ {AQUA}'.join(f'{zone}' for zone in path)
         gray(f'Route: {AQUA}{route} {GRAY}({float(accum_dist):.2f}m)')
         for target in path[1:]:
             if target.skill_req is not None:
@@ -722,13 +722,13 @@ def profile_action(cls):
                     red(f'Requires {name.capitalize()} level {roman(level)}')
                     return
 
-            dist = calc_dist(region, target)
+            dist = calc_dist(zone, target)
             time_cost = float(dist) / (5 * (speed / 100))
-            green(f'Going from {region} to {target}...')
+            green(f'Going from {zone} to {target}...')
             gray(f'(time cost: {time_cost:.1f}s)')
             sleep(time_cost)
-            self.region = target.name
-            region = get(island.regions, target.name)
+            self.zone = target.name
+            zone = get(island.zones, target.name)
 
     cls.goto = goto
 
@@ -750,9 +750,9 @@ def profile_action(cls):
             return
 
         island = get(ISLANDS, self.island)
-        region = get(island.regions, self.region)
+        zone = get(island.zones, self.zone)
 
-        if len(region.npcs) == 0:
+        if len(zone.npcs) == 0:
             red('No NPCs around to sell the item.')
             return
 
@@ -769,7 +769,7 @@ def profile_action(cls):
     cls.sell = sell
 
     @checkpoint
-    def slay(self, mob: Mob, weapon_index: Optional[int], amount: int = 1,
+    def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
              /) -> bool:
         name = mob.name
         mob_name = display_name(name)
@@ -784,16 +784,16 @@ def profile_action(cls):
         combat_lvl = self.get_skill_lvl('combat')
         fishing_lvl = self.get_skill_lvl('fishing')
 
-        combat_req = getattr(weapon, 'combat_skill_req', 0)
-        if combat_req > combat_lvl:
+        combat_req = getattr(weapon, 'combat_skill_req', None)
+        if combat_req is not None and combat_req > combat_lvl:
             red(f'You need Combat {roman(combat_req)} to use it!')
             return
-        cata_req = getattr(weapon, 'dungeon_skill_req', 0)
-        if cata_req > cata_lvl:
+        cata_req = getattr(weapon, 'dungeon_skill_req', None)
+        if cata_req is not None and cata_req > cata_lvl:
             red(f'You need Catacombs {roman(combat_req)} to use it!')
             return
-        fishing_req = getattr(weapon, 'fishing_skill_req', 0)
-        if fishing_req > fishing_lvl:
+        fishing_req = getattr(weapon, 'fishing_skill_req', None)
+        if fishing_req is not None and fishing_req > fishing_lvl:
             red(f'You need Fishing {roman(fishing_req)} to use it!')
             return
 
@@ -836,7 +836,7 @@ def profile_action(cls):
                 if piece_names == ['farm_helmet', 'farm_chestplate',
                                    'farm_leggings', 'farm_boots']:
                     if (self.island in {'barn', 'desert'}
-                            or self.region == 'farm'):
+                            or self.zone == 'farm'):
                         farm_armor_speed += True
                 elif piece_names == [
                         'farm_suit_helmet', 'farm_suit_chestplate',
@@ -954,7 +954,7 @@ def profile_action(cls):
         is_coll = {
             row[0].name: is_collection(row[0].name) for row in mob.drops}
         green(f'Slaying {mob.display()}{GREEN}:')
-        for count in range(1, amount + 1):
+        for count in range(1, iteration + 1):
             actual_speed = speed
             if young_blood and hp >= health / 2:
                 actual_speed += 70
@@ -1119,12 +1119,13 @@ def profile_action(cls):
                     white(f'{RARITY_COLORS[rarity]}{rarity_str} DROP! '
                           f'{WHITE}({loot.display()}{WHITE})')
 
-            if count >= (last_cp + cp_step) * amount:
-                while count >= (last_cp + cp_step) * amount:
+            if count >= (last_cp + cp_step) * iteration:
+                while count >= (last_cp + cp_step) * iteration:
                     last_cp += cp_step
-                gray(f'{count} / {amount} ({(last_cp * 100):.0f}%) killed')
+                gray(f'{count} / {iteration} ({(last_cp * 100):.0f}%) killed')
 
-            gray('\n')
+            if count != iteration:
+                gray('\n')
 
         return True
 
@@ -1145,6 +1146,12 @@ def profile_action(cls):
         now = int(time())
         last = now if self.last_update == 0 else self.last_update
         dt = now - last
+
+        last_save_cp = last // 300
+        now_save_cp = now // 300
+        if now_save_cp > last_save_cp:
+            self.dump()
+            green('Saved!')
 
         last_cp = last // (31 * 3600)
         now_cp = now // (31 * 3600)
@@ -1177,10 +1184,10 @@ def profile_action(cls):
                 if dest == r_name:
                     self.island = i_name
                     island = get(ISLANDS, self.island)
-                    self.region = r_name
-                    region = get(island.regions, r_name)
+                    self.zone = r_name
+                    zone = get(island.zones, r_name)
 
-                    gray(f'Warped to {AQUA}{region}{GRAY}'
+                    gray(f'Warped to {AQUA}{zone}{GRAY}'
                          f' of {AQUA}{island}{GRAY}.')
                     return
             else:
@@ -1189,7 +1196,7 @@ def profile_action(cls):
 
         island = get(ISLANDS, self.island)
         dest_island = get(ISLANDS, dest)
-        region = get(island.regions, self.region)
+        zone = get(island.zones, self.zone)
 
         if dest_island.skill_req is not None:
             name, level = dest_island.skill_req
@@ -1199,43 +1206,43 @@ def profile_action(cls):
                 red(f'Requires {name.capitalize()} level {roman(level)}')
                 return
 
-        if dest == self.island and island.spawn == self.region:
+        if dest == self.island and island.spawn == self.zone:
             yellow(f'Already at {AQUA}{display_name(dest)}{YELLOW}!')
             return
 
-        dest_region = get(dest_island.regions,
-                          default=get(dest_island.regions, dest_island.spawn),
+        dest_zone = get(dest_island.zones,
+                          default=get(dest_island.zones, dest_island.spawn),
                           portal=self.island)
 
         for i_name, r_name in self.fast_travel:
             if dest == i_name and r_name is None:
                 self.island = i_name
                 island = get(ISLANDS, self.island)
-                region = dest_region
-                self.region = region.name
+                zone = dest_zone
+                self.zone = zone.name
 
-                gray(f'Warped to {AQUA}{region}{GRAY}'
+                gray(f'Warped to {AQUA}{zone}{GRAY}'
                      f' of {AQUA}{island}{GRAY}.')
                 return
 
-        portal_region = get(island.regions, portal=dest)
+        portal_zone = get(island.zones, portal=dest)
 
-        if portal_region is None:
+        if portal_zone is None:
             red(f'Cannot warp to {dest}.')
             return
 
-        if self.region != portal_region.name:
-            self.goto(portal_region.name)
-            if self.region != portal_region.name:
+        if self.zone != portal_zone.name:
+            self.goto(portal_zone.name)
+            if self.zone != portal_zone.name:
                 return
 
         island = get(ISLANDS, dest)
-        gray(f'Warping to {AQUA}{dest_region}{GRAY}'
+        gray(f'Warping to {AQUA}{dest_zone}{GRAY}'
              f' of {AQUA}{island}{GRAY}...')
         sleep(6)
 
         self.island = dest
-        self.region = dest_region.name
+        self.zone = dest_zone.name
 
     cls.warp = warp
 

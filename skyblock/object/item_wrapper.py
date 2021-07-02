@@ -93,8 +93,8 @@ def item_type(cls: type, /) -> type:
 
         if self.__class__.__name__ == 'TravelScroll':
             name = f'Travel Scroll to {display_name(self.island)}'
-            if self.region is not None:
-                name += f' {display_name(self.region)}'
+            if self.zone is not None:
+                name += f' {display_name(self.zone)}'
         elif self.__class__.__name__ == 'Pet':
             name = display_name('_'.join(self.name.split('_')[:-1]))
         else:
@@ -139,8 +139,8 @@ def item_type(cls: type, /) -> type:
 
         if self.__class__.__name__ == 'TravelScroll':
             name = f'Travel Scroll to {display_name(self.island)}'
-            if self.region is not None:
-                name += f' {display_name(self.region)}'
+            if self.zone is not None:
+                name += f' {display_name(self.zone)}'
         elif self.__class__.__name__ == 'Pet':
             name = display_name('_'.join(self.name.split('_')[:-1]))
         else:
@@ -160,6 +160,9 @@ def item_type(cls: type, /) -> type:
         else:
             info = f'{rarity_color}{modifier}{name}{stars}'
 
+        basic_stats = []
+        bonus_stats = []
+
         if self.__class__.__name__ in {'Pickaxe', 'Drill'}:
             info += (f'\n{DARK_GRAY}Breaking Power '
                      f'{self.breaking_power}{CLN}\n'
@@ -170,9 +173,7 @@ def item_type(cls: type, /) -> type:
             enchantments = getattr(self, 'enchantments', {})
             is_dungeon = self.stars is not None
 
-            basic_stats = []
             for stat_name in ('damage', 'strength', 'sea_creature_chance'):
-
                 display_stat = display_name(stat_name)
                 ext = '%' if 'sea' in stat_name[0] else ''
                 value = getattr(self, stat_name)
@@ -205,7 +206,6 @@ def item_type(cls: type, /) -> type:
                 info += '\n' + '\n'.join(f'{GRAY}{stat}'
                                          for stat in basic_stats)
 
-            bonus_stats = []
             for stat_name in ('ferocity',):
                 display_stat = display_name(stat_name)
                 value = getattr(self, stat_name)
@@ -238,7 +238,6 @@ def item_type(cls: type, /) -> type:
             else:
                 reforge_bonus = {}
 
-            basic_stats = []
             for stat_name in ('damage', 'strength', 'crit_chance',
                               'crit_damage', 'attack_speed'):
 
@@ -275,7 +274,7 @@ def item_type(cls: type, /) -> type:
                             value_str = value_str[:-2]
                         bonus += f' {DARK_GRAY}(+{value_str}{ext})'
 
-                if value <= 0:
+                if value == 0:
                     continue
 
                 basic_stats.append(f'{display_stat}: {RED}'
@@ -285,7 +284,6 @@ def item_type(cls: type, /) -> type:
                 info += '\n' + '\n'.join(f'{GRAY}{stat}'
                                          for stat in basic_stats)
 
-            bonus_stats = []
             for stat_name in ('defense', 'intelligence', 'true_defense',
                               'ferocity', 'speed'):
                 display_stat = display_name(stat_name)
@@ -306,7 +304,7 @@ def item_type(cls: type, /) -> type:
                             value_str = value_str[:-2]
                         bonus += f' {DARK_GRAY}(+{value_str})'
 
-                if value <= 0:
+                if value == 0:
                     continue
 
                 bonus_stats.append(f'{display_stat}: {GREEN}+{value}{bonus}')
@@ -321,16 +319,23 @@ def item_type(cls: type, /) -> type:
             enchantments = getattr(self, 'enchantments', {})
             is_dungeon = self.stars is not None
 
-            basic_stats = []
-            for stat_name in ('strength', 'crit_chance', 'crit_damage'):
-                if getattr(self, stat_name, 0) == 0:
-                    continue
+            if self.modifier is not None:
+                reforge_bonus = get_reforge(self.modifier, self.rarity)
+            else:
+                reforge_bonus = {}
 
+            for stat_name in ('strength', 'crit_chance', 'crit_damage'):
                 display_stat = display_name(stat_name)
                 ext = '%' if stat_name[0] in 'ac' else ''
                 value = getattr(self, stat_name)
 
-                dung = ''
+                bonus = ''
+                if stat_name in reforge_bonus:
+                    bonus_value = reforge_bonus[stat_name]
+                    value += bonus_value
+                    bonus += (f' {BLUE}({display_name(self.modifier)}'
+                              f' +{bonus_value})')
+
                 if is_dungeon:
                     dungeon_value = dung_stat(value, cata_lvl, self.stars)
                     if stat_name == 'crit_chance':
@@ -339,16 +344,18 @@ def item_type(cls: type, /) -> type:
                         value_str = f'{dungeon_value:.1f}'
                         if value_str.endswith('.0'):
                             value_str = value_str[:-2]
-                        dung = f' {DARK_GRAY}(+{value_str}{ext})'
+                        bonus += f' {DARK_GRAY}(+{value_str}{ext})'
+
+                if value == 0:
+                    continue
 
                 basic_stats.append(f'{display_stat}: {RED}'
-                                   f'+{value}{ext}{dung}')
+                                   f'+{value}{ext}{bonus}')
 
             if len(basic_stats) != 0:
                 info += '\n' + '\n'.join(f'{GRAY}{stat}'
                                          for stat in basic_stats)
 
-            bonus_stats = []
             for stat_name in ('health', 'defense', 'intelligence', 'speed',
                               'magic_find', 'mining_speed', 'mining_fortune',
                               'true_defense', 'ferocity',
@@ -370,22 +377,28 @@ def item_type(cls: type, /) -> type:
                     value += self.hot_potato
                     hot_potato = f' {YELLOW}(+{self.hot_potato})'
 
-                if value == 0:
-                    continue
-
                 ext = ' HP' if stat_name[0] == 'h' else ''
 
-                dung = ''
+                bonus = ''
+                if stat_name in reforge_bonus:
+                    bonus_value = reforge_bonus[stat_name]
+                    value += bonus_value
+                    bonus += (f' {BLUE}({display_name(self.modifier)}'
+                              f' +{bonus_value})')
+
                 if is_dungeon:
                     dungeon_value = dung_stat(value, cata_lvl, self.stars)
                     if value != dungeon_value:
                         value_str = f'{dungeon_value:.1f}'
                         if value_str.endswith('.0'):
                             value_str = value_str[:-2]
-                        dung = f' {DARK_GRAY}(+{value_str}{ext})'
+                        bonus += f' {DARK_GRAY}(+{value_str}{ext})'
+
+                if value == 0:
+                    continue
 
                 bonus_stats.append(f'{display_stat}: {GREEN}'
-                                   f'+{value}{ext}{hot_potato}{dung}')
+                                   f'+{value}{ext}{hot_potato}{bonus}')
 
             if len(bonus_stats) != 0:
                 if len(basic_stats) != 0:
@@ -447,29 +460,31 @@ def item_type(cls: type, /) -> type:
                 )
 
         elif self.__class__.__name__ == 'TravelScroll':
-            r_name = ('Spawn' if self.region is None
-                      else display_name(self.region))
+            r_name = ('Spawn' if self.zone is None
+                      else display_name(self.zone))
             info += (f'\n{GRAY}Consume this item to add its\n'
                      f'destination to your fast travel\noptions.\n\n'
                      f'Island: {GREEN}{display_name(self.island)}{GRAY}\n'
                      f'Teleport: {YELLOW}{r_name}')
 
-        abilities = getattr(self, 'abilities', [])
-        if len(abilities) != 0:
-            ability_str = []
-            for ability_id in abilities:
-                ability = get_ability(ability_id)
-                if ability.__class__.__name__ == 'NamedAbility':
-                    ability_str.append(f'{GOLD}{ability.name}'
-                                       f'\n{GRAY}{ability.description}')
-                elif ability.__class__.__name__ == 'AnonymousAbility':
-                    ability_str.append(f'{GRAY}{ability.description}')
+        ability_list = []
 
-            info += '\n' + '\n\n'.join(ability_str)
+        for ability_id in getattr(self, 'abilities', []):
+            ability = get_ability(ability_id)
+            if ability.__class__.__name__ == 'NamedAbility':
+                ability_list.append(f'{GOLD}{ability.name}'
+                                    f'\n{GRAY}{ability.description}')
+            elif ability.__class__.__name__ == 'AnonymousAbility':
+                ability_list.append(f'{GRAY}{ability.description}')
+
+        if len(ability_list) != 0:
+            if len(basic_stats) + len(bonus_stats) != 0:
+                info += '\n'
+            info += '\n' + '\n\n'.join(ability_list)
+
+        ench_list = []
 
         if getattr(self, 'enchantments', {}) != {}:
-            ench_str_list = []
-
             enchs = self.enchantments
             ench_names = [*enchs.keys()]
             ult_ench = []
@@ -489,7 +504,7 @@ def item_type(cls: type, /) -> type:
                                   if name in ULTIMATE_ENCHS else BLUE)
                     lvl = enchs[name]
                     lvl_str = '' if lvl == 0 else f' {roman(lvl)}'
-                    ench_str_list.append(
+                    ench_list.append(
                         f'{ench_color}{display_name(name)}{lvl_str}{CLN}'
                     )
                     break
@@ -504,31 +519,35 @@ def item_type(cls: type, /) -> type:
                 lvl = enchs[name]
                 lvl_str = '' if lvl == 0 else f' {roman(lvl)}'
                 ench_str += f'{BLUE}{display_name(name)}{lvl_str}{CLN}'
-                ench_str_list.append(ench_str)
+                ench_list.append(ench_str)
 
                 ench_names = ench_names[2:]
 
-            info += '\n\n' + '\n'.join(ench_str_list)
+            info += '\n\n' + '\n'.join(ench_list)
 
-        info += '\n\n'
+        footers = []
         if hasattr(self, 'modifier') and self.modifier is None:
-            info += f'{DARK_GRAY}This item can be reforged!{CLN}'
+            footers.append(f'{DARK_GRAY}This item can be reforged!{CLN}')
 
         if getattr(self, 'combat_skill_req', None) is not None:
             if combat_lvl < self.combat_skill_req:
-                info += (f'\n{DARK_RED}❣ {RED}Requires {GREEN}'
-                         f'Combat Skill {self.combat_skill_req}{CLN}')
+                footers.append(f'{DARK_RED}❣ {RED}Requires {GREEN}'
+                               f'Combat Skill'
+                               f' {self.combat_skill_req}{CLN}')
         if getattr(self, 'dungeon_skill_req', None) is not None:
             if cata_lvl < self.dungeon_skill_req:
-                info += (f'\n{DARK_RED}❣ {RED}Requires {GREEN}'
-                         f'Catacombs Skill {self.dungeon_skill_req}{CLN}')
+                footers.append(f'{DARK_RED}❣ {RED}Requires {GREEN}'
+                               f'Catacombs Skill'
+                               f' {self.dungeon_skill_req}{CLN}')
         if getattr(self, 'dungeon_completion_req', None) is not None:
-            info += (f'\n{DARK_RED}❣ {RED}Requires {GREEN}Catacombs Floor '
-                     f'{roman(self.dungeon_completion_req)} Completion{CLN}')
+            footers.append(f'{DARK_RED}❣ {RED}Requires {GREEN}'
+                           f'Catacombs Floor'
+                           f' {roman(self.dungeon_completion_req)}'
+                           f' Completion{CLN}')
         if getattr(self, 'fishing_skill_req', None) is not None:
             if fishing_lvl < self.fishing_skill_req:
-                info += (f'\n{DARK_RED}❣ {RED}Requires {GREEN}'
-                         f'Fishing Skill {self.fishing_skill_req}{CLN}')
+                footers.append(f'{DARK_RED}❣ {RED}Requires {GREEN}'
+                               f'Fishing Skill {self.fishing_skill_req}{CLN}')
 
         if self.__class__.__name__ == 'Armor':
             type_name = self.part.upper()
@@ -541,10 +560,11 @@ def item_type(cls: type, /) -> type:
         if getattr(self, 'stars', None) is not None:
             type_name = f'DUNGEON {type_name}'
 
-        info = info.rstrip('\n')
-        if self.__class__.__name__ in {'Pet', 'TravelScroll'}:
-            info += '\n'
-        info += f'\n{rarity_color}{self.rarity.upper()} {type_name}'.rstrip()
+        footers.append(f'{rarity_color}{self.rarity.upper()}'
+                       f' {type_name}'.rstrip())
+
+        info += '\n\n' + '\n'.join(footers)
+
         info += CLN
 
         return info

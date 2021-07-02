@@ -1,49 +1,49 @@
 from ...object.mob import get_mob
 from ...object.resource import get_resource
 
-from ..object import Npc, Region, Island, add_dist
+from ..object import Npc, Zone, Island, add_dist
 
 
 __all__ = ['DEEP']
 
-DEEP_ENTRENCE = Region('deep_entrence', 0, 90, portal='gold',)
-GUNPOWDER_MINES = Region(
+DEEP_ENTRENCE = Zone('deep_entrence', 0, 90, portal='gold',)
+GUNPOWDER_MINES = Zone(
     'gunpowder_mines', 5, 20,
     resources=[get_resource('stone'), get_resource('coal_ore'),
                get_resource('iron_ore'), get_resource('gold_ore')],
     mobs=[get_mob('sneaky_creeper')],
 )
-LAPIS_QUARRY = Region(
+LAPIS_QUARRY = Zone(
     'lapis_quarry', -30, -35,
     resources=[get_resource('stone'), get_resource('lapis_ore')],
     mobs=[get_mob('lapis_zombie')],
 )
-PIGMANS_DEN = Region(
+PIGMANS_DEN = Zone(
     'pigmans_den', -10, 70,
     resources=[get_resource('stone'), get_resource('redstone_ore')],
     mobs=[get_mob('redstone_pigman')],
 )
-SLIMEHILL = Region(
+SLIMEHILL = Zone(
     'slilmehill', 20, -10,
     resources=[get_resource('stone'), get_resource('emerald_ore')],
     mobs=[get_mob('small_emerald_slime'),
           get_mob('medium_emerald_slime'),
           get_mob('large_emerald_slime')],
 )
-DIAMOND_RESERVE = Region(
+DIAMOND_RESERVE = Zone(
     'diamond_reserve', -35, 15,
     resources=[get_resource('stone'), get_resource('diamond_ore')],
     mobs=[get_mob('diamond_zombie'),
           get_mob('diamond_skeleton')],
 )
-OBSIDIAN_SANCTUARY = Region(
+OBSIDIAN_SANCTUARY = Zone(
     'obsidian_sanctuary', -10, 70, portal='mines',
     resources=[get_resource('stone'), get_resource('diamond_ore'),
                get_resource('diamond_block'), get_resource('obsidian')],
     mobs=[get_mob('enchanted_diamond_zombie'),
           get_mob('enchanted_diamond_skeleton')],
 )
-LIFT = Region(
+LIFT = Zone(
     'lift', 50, 0,
     npcs=[
         Npc('life_operator',

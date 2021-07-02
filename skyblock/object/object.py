@@ -188,7 +188,7 @@ class Armor(ItemType):
 @item_type
 class TravelScroll(ItemType):
     island: str
-    region: Optional[str] = None
+    zone: Optional[str] = None
     rarity: str = 'rare'
     name: str = 'travel_scroll'
 

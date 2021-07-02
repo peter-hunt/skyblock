@@ -4,12 +4,12 @@ from ...object.object import Item
 from ...object.mob import get_mob
 from ...object.resource import get_resource
 
-from ..object import Npc, Region, Island, add_dist
+from ..object import Npc, Zone, Island, add_dist
 
 
 __all__ = ['MINES']
 
-DWARVEN_ENTRENCE = Region(
+DWARVEN_ENTRENCE = Zone(
     'dwarven_entrence', -60, -120, portal='deep',
     npcs=[
         Npc('life_operator',
@@ -24,7 +24,7 @@ DWARVEN_ENTRENCE = Region(
             ]),
     ],
 )
-DWARVEN_VILLAGE = Region(
+DWARVEN_VILLAGE = Zone(
     'dwarven_village', 20, -140,
     resources=[get_resource('stone')],
     npcs=[
@@ -65,12 +65,12 @@ DWARVEN_VILLAGE = Region(
             )]),
     ],
 )
-FAR = Region(
+FAR = Zone(
     'far', -120, 70,
     resources=[get_resource('stone'), get_resource('gray_mithril'),
                get_resource('dark_mithril'), get_resource('light_mithril')],
 )
-FORGE = Region(
+FORGE = Zone(
     'forge', 0, -70,
     npcs=[
         Npc('jotraeline_greatforge',
@@ -84,23 +84,23 @@ FORGE = Region(
             ]),
     ],
 )
-GOBLINS = Region(
+GOBLINS = Zone(
     'goblins', -110, 110,
     resources=[get_resource('stone')],
     mobs=[get_mob('goblin')],
 )
-ICE_WALLS = Region(
+ICE_WALLS = Zone(
     'ice_walls', 0, 100,
     resources=[get_resource('stone'), get_resource('gray_mithril'),
                get_resource('dark_mithril'), get_resource('light_mithril'),
                get_resource('gold_block')],
     mobs=[get_mob('ice_walker')],
 )
-MIST = Region(
+MIST = Zone(
     'mist', 0, 40,
     mobs=[get_mob('ghost')],
 )
-PALACE = Region(
+PALACE = Zone(
     'palace', 120, 120,
     npcs=[
         Npc('brammor'),
@@ -112,28 +112,28 @@ PALACE = Region(
         Npc('thormyr'),
     ],
 )
-RAMPARTS = Region(
+RAMPARTS = Zone(
     'ramparts', -25, -50,
     resources=[get_resource('stone'), get_resource('gray_mithril'),
                get_resource('dark_mithril'), get_resource('light_mithril')],
 )
-ROYAL = Region(
+ROYAL = Zone(
     'royal', 140, 35,
     resources=[get_resource('stone'), get_resource('gray_mithril'),
                get_resource('dark_mithril'), get_resource('light_mithril'),
                get_resource('gold_block')],
 )
-SPRINGS = Region(
+SPRINGS = Zone(
     'springs', 60, -70,
     resources=[get_resource('stone'), get_resource('gray_mithril'),
                get_resource('dark_mithril'), get_resource('light_mithril')],
 )
-VEINS = Region(
+VEINS = Zone(
     'veins', 20, 0,
     resources=[get_resource('stone'), get_resource('gray_mithril'),
                get_resource('dark_mithril'), get_resource('light_mithril')],
 )
-UPPER = Region(
+UPPER = Zone(
     'upper', -125, -50, fishable=True,
     resources=[get_resource('stone'), get_resource('gray_mithril'),
                get_resource('dark_mithril'), get_resource('light_mithril')],

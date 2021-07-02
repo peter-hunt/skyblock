@@ -180,16 +180,16 @@ def profile_display(cls):
 
     def display_location(self, /):
         island = get(ISLANDS, self.island)
-        region = get(island.regions, self.region)
+        zone = get(island.zones, self.zone)
 
         gray('Location:')
-        gray(f"  You're at {AQUA}{region}{GRAY} of {AQUA}{island}{GRAY}.")
+        gray(f"  You're at {AQUA}{zone}{GRAY} of {AQUA}{island}{GRAY}.")
         gray('\nNearby places:')
         for conn in island.conns:
-            if region not in conn:
+            if zone not in conn:
                 continue
-            other = conn[0] if conn[1] == region else conn[1]
-            sx, sz, ox, oz = region.x, region.z, other.x, other.z
+            other = conn[0] if conn[1] == zone else conn[1]
+            sx, sz, ox, oz = zone.x, zone.z, other.x, other.z
             dx, dz = ox - sx, oz - sz
             direc = ''
             if dx == 0:
@@ -204,30 +204,30 @@ def profile_display(cls):
             gray(f'  {AQUA}{display_name(other.name)}{GRAY}'
                  f' on the {AQUA}{direc}{GRAY} ({other.name}).')
 
-        if len(region.resources) > 0:
+        if len(zone.resources) > 0:
             gray('\nResources:')
-            for resource in region.resources:
+            for resource in zone.resources:
                 gray(f'  {GREEN}{display_name(resource.name)}{GRAY}'
                      f' ({resource.name}).')
 
-        if len(region.mobs) > 0:
+        if len(zone.mobs) > 0:
             gray('\nMobs:')
-            for mob in region.mobs:
+            for mob in zone.mobs:
                 green(f'  {mob.display()}{GRAY} ({mob.name}).')
 
-        if len(region.npcs) > 0:
+        if len(zone.npcs) > 0:
             gray('\nNPCs:')
-            for npc in region.npcs:
+            for npc in zone.npcs:
                 gray(f'  {GREEN}{npc}{GRAY} ({npc.name}).')
 
-        if region.portal is not None:
-            gray(f'\nPortal to {AQUA}{display_name(region.portal)}{GRAY}'
-                 f' ({region.portal})')
+        if zone.portal is not None:
+            gray(f'\nPortal to {AQUA}{display_name(zone.portal)}{GRAY}'
+                 f' ({zone.portal})')
 
     cls.display_location = display_location
 
     def display_money(self, /):
-        if self.region not in {'bank', 'dwarven_village'}:
+        if self.zone not in {'bank', 'dwarven_village'}:
             white(f'Purse: {GOLD}{display_number(self.purse)} Coins')
             return
 
@@ -462,14 +462,14 @@ def profile_display(cls):
         fast_travel = [scroll.copy() for scroll in self.fast_travel]
         fast_travel = sorted(fast_travel, key=lambda item: (
             index(ISLANDS, item[0]),
-            index((island := get(ISLANDS, item[0])).regions,
+            index((island := get(ISLANDS, item[0])).zones,
                   island.spawn if item[1] is None else item[1]),
         ))
 
-        for island, region in self.fast_travel:
+        for island, zone in self.fast_travel:
             i_name = display_name(island)
-            r_name = 'Spawn' if region is None else display_name(region)
-            warp_name = island if region is None else region
+            r_name = 'Spawn' if zone is None else display_name(zone)
+            warp_name = island if zone is None else zone
             green(f'  {i_name}{GRAY} - {AQUA}{r_name}')
             dark_gray(f'  /warp {warp_name}')
 

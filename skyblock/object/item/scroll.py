@@ -27,7 +27,7 @@ TRAVEL_SCROLLS = [
 
 def get_scroll(name: str) -> TravelScroll:
     for scroll in TRAVEL_SCROLLS:
-        scroll_name = scroll.island if scroll.region is None else scroll.region
+        scroll_name = scroll.island if scroll.zone is None else scroll.zone
         if name == scroll_name:
             return scroll
     red(f'Invalid travel scroll: {name!r}')
