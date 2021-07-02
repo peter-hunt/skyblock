@@ -78,4 +78,11 @@ SWORD_REFORGES = {
     ),
 }
 
+SWORD_REFORGES = {
+    'gentle': (
+        {'str': 3, 'as': 8}, {'str': 5, 'as': 10}, {'str': 7, 'as': 15},
+        {'str': 10, 'as': 20}, {'str': 15, 'as': 25}, {'str': 20, 'as': 30},
+    ),
+}
+
 REFORGES = {**SWORD_REFORGES}

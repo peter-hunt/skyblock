@@ -250,7 +250,7 @@ def profile_action(cls):
 
     @checkpoint
     def enchant(self, item_index: int, /):
-        enchanting_lvl = calc_skill_lvl('enchanting', self.skill_xp_enchanting)
+        enchanting_lvl = self.get_skill_lvl('enchanting')
         exp_lvl = calc_exp_lvl(self.experience)
 
         item = self.inventory[item_index]
@@ -384,7 +384,12 @@ def profile_action(cls):
         if not isinstance(rod, (Empty, FishingRod)):
             rod = Empty()
 
-        fishing_lvl = calc_skill_lvl('fishing', self.skill_xp_fishing)
+        fishing_lvl = self.get_skill_lvl('fishing')
+
+        fishing_req = getattr(rod, 'fishing_skill_req', 0)
+        if fishing_req > fishing_lvl:
+            red(f'You need Fishing {roman(fishing_req)} to use it!')
+            return
 
         enchantments = getattr(rod, 'enchantments', {})
 
@@ -711,8 +716,7 @@ def profile_action(cls):
         for target in path[1:]:
             if target.skill_req is not None:
                 name, level = target.skill_req
-                skill_exp = getattr(self, f'skill_xp_{name}')
-                exp_lvl = calc_skill_lvl(name, skill_exp)
+                exp_lvl = self.get_skill_lvl(name)
                 if exp_lvl < level:
                     red(f'Cannot go to {dest}!')
                     red(f'Requires {name.capitalize()} level {roman(level)}')
@@ -776,6 +780,23 @@ def profile_action(cls):
         if not isinstance(weapon, (Empty, Bow, Sword, FishingRod)):
             weapon = Empty()
 
+        cata_lvl = self.get_skill_lvl('catacombs')
+        combat_lvl = self.get_skill_lvl('combat')
+        fishing_lvl = self.get_skill_lvl('fishing')
+
+        combat_req = getattr(weapon, 'combat_skill_req', 0)
+        if combat_req > combat_lvl:
+            red(f'You need Combat {roman(combat_req)} to use it!')
+            return
+        cata_req = getattr(weapon, 'dungeon_skill_req', 0)
+        if cata_req > cata_lvl:
+            red(f'You need Catacombs {roman(combat_req)} to use it!')
+            return
+        fishing_req = getattr(weapon, 'fishing_skill_req', 0)
+        if fishing_req > fishing_lvl:
+            red(f'You need Fishing {roman(fishing_req)} to use it!')
+            return
+
         health = self.get_stat('health', weapon_index)
         defense = self.get_stat('defense', weapon_index)
         # true_defense = self.get_stat('true_defense', weapon_index)
@@ -792,8 +813,6 @@ def profile_action(cls):
 
         last_stand = 0
         no_pain_no_gain = []
-
-        combat_lvl = calc_skill_lvl('combat', self.skill_xp_combat)
 
         enchantments = getattr(weapon, 'enchantments', {})
 
@@ -896,13 +915,14 @@ def profile_action(cls):
         if pumpkin_buff:
             damage *= 1.1
 
-        enchanting_lvl = calc_skill_lvl('enchanting', self.skill_xp_enchanting)
+        enchanting_lvl = self.get_skill_lvl('enchanting')
 
         execute = 0.2 * enchantments.get('execute', 0)
         experience = 1 + 0.125 * enchantments.get('experience', 0)
         experience += 0.04 * enchanting_lvl
         first_strike = 1 + 0.25 * enchantments.get('first_strike', 0)
         giant_killer = enchantments.get('giant_killer', 0)
+        infinite_quiver = enchantments.get('infinite_quiver', 0)
         life_steal = 0.005 * enchantments.get('life_steal', 0)
         if isinstance(weapon, Bow):
             looting = 1 + 0.15 * enchantments.get('chance', 0)
@@ -959,6 +979,12 @@ def profile_action(cls):
 
             mob_hp = mob.health
             while True:
+                if isinstance(weapon, Bow) and infinite_quiver != 10:
+                    if not self.has_item('arrow', 1):
+                        red("You don't have any arrows left!")
+                        return
+                    if random_bool(1 - infinite_quiver / 10):
+                        self.remove_item('arrow', 1)
                 strike_count = 0
 
                 killed = False
@@ -1167,9 +1193,8 @@ def profile_action(cls):
 
         if dest_island.skill_req is not None:
             name, level = dest_island.skill_req
-            skill_exp = getattr(self, f'skill_xp_{name}')
-            exp_lvl = calc_skill_lvl(name, skill_exp)
-            if exp_lvl < level:
+            skill_lvl = self.get_skill_lvl(name)
+            if skill_lvl < level:
                 red(f'Cannot warp to {dest}!')
                 red(f'Requires {name.capitalize()} level {roman(level)}')
                 return

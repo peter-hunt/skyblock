@@ -34,14 +34,14 @@ def profile_math(cls):
     cls.add_exp = add_exp
 
     def add_skill_exp(self, name: str, amount: Number, /):
-        if not hasattr(self, f'skill_xp_{name}'):
+        if not hasattr(self, f'experience_skill_{name}'):
             red(f'Skill not found: {name}')
             return
 
-        exp = getattr(self, f'skill_xp_{name}')
+        exp = self.get_skill_exp(name)
         original_lvl = calc_skill_lvl(name, exp)
         exp += amount
-        setattr(self, f'skill_xp_{name}', exp)
+        setattr(self, f'experience_skill_{name}', exp)
         current_lvl = calc_skill_lvl(name, exp)
         if current_lvl > original_lvl:
             coins_reward = 0
@@ -161,6 +161,24 @@ def profile_math(cls):
                 self.add_skill_exp(coll.category, reward)
 
     cls.collect = collect
+
+    def get_skill_exp(self, name: str, /) -> int:
+        if not hasattr(self, f'experience_skill_{name}'):
+            red(f'Skill not found: {name}')
+            return
+
+        return getattr(self, f'experience_skill_{name}')
+
+    cls.get_skill_exp = get_skill_exp
+
+    def get_skill_lvl(self, name: str, /) -> int:
+        if not hasattr(self, f'experience_skill_{name}'):
+            red(f'Skill not found: {name}')
+            return
+
+        return calc_exp_lvl(getattr(self, f'experience_skill_{name}'))
+
+    cls.get_skill_lvl = get_skill_lvl
 
     def get_stat(self, name: str, index: Optional[int] = None, /):
         value = 0

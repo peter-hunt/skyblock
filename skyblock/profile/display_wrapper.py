@@ -419,7 +419,7 @@ def profile_display(cls):
 
         yellow(f"{BOLD}{'':-^{width}}")
 
-        exp = getattr(self, f'skill_xp_{name}')
+        exp = self.get_skill_exp(name)
         lvl, exp_left, exp_to_next = calc_skill_lvl_info(name, exp)
         green(f'{display_name(name)} {roman(lvl)}')
 

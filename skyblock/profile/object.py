@@ -54,16 +54,16 @@ class Profile:
     island: str = 'hub'
     region: str = 'village'
 
-    skill_xp_alchemy: float = 0.0
-    skill_xp_carpentry: float = 0.0
-    skill_xp_catacombs: float = 0.0
-    skill_xp_combat: float = 0.0
-    skill_xp_enchanting: float = 0.0
-    skill_xp_farming: float = 0.0
-    skill_xp_fishing: float = 0.0
-    skill_xp_foraging: float = 0.0
-    skill_xp_mining: float = 0.0
-    skill_xp_taming: float = 0.0
+    experience_skill_alchemy: float = 0.0
+    experience_skill_carpentry: float = 0.0
+    experience_skill_catacombs: float = 0.0
+    experience_skill_combat: float = 0.0
+    experience_skill_enchanting: float = 0.0
+    experience_skill_farming: float = 0.0
+    experience_skill_fishing: float = 0.0
+    experience_skill_foraging: float = 0.0
+    experience_skill_mining: float = 0.0
+    experience_skill_taming: float = 0.0
     collection: Dict[str, int] = {
         collection.name: 0
         for collection in COLLECTIONS

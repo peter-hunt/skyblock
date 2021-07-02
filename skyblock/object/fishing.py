@@ -67,7 +67,7 @@ SEA_CREATURES = [
     (get_mob('squid'), 0.12, 1,
      'A Squid appeared.'),
     (get_mob('sea_walker'), 0.07, 2,
-     'You caught a sea walker.'),
+     'You caught a Sea Walker.'),
     (get_mob('night_squid'), 0.06, 3,
      "Pitch Darkness reveals you've caught a Night Squid."),
     (get_mob('sea_guardian'), 0.05, 5,

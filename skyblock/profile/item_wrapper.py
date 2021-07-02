@@ -78,7 +78,7 @@ def profile_item(cls):
 
     def pickupstash(self, /):
         if len(self.stash) == 0:
-            red('Your stash is already empty!')
+            red("Your stash isn't holding any item!")
             return
         stash = [item.copy() for item in self.stash]
         self.stash = []
@@ -111,10 +111,8 @@ def profile_item(cls):
         for item in self.stash:
             stack_count = get_stack_size(item.name)
             items += ceil(getattr(item, 'count', 1) / stack_count)
-        yellow(f'You have {GREEN}{display_int(materials)} materials{YELLOW}'
-               f' totalling {AQUA}{display_int(items)} items{YELLOW}'
-               f' stashed away!!')
-        yellow(f'Use {GOLD}`pickupstash`{YELLOW} to pick it all up!')
+        red("An item didn't fit in your inventory and was added to your item\n"
+            " stash! Use `pickupstash` to get it back!")
 
     cls.put_stash = put_stash
 

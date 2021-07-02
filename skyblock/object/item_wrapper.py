@@ -120,9 +120,9 @@ def item_type(cls: type, /) -> type:
     cls.display = display
 
     def info(self, player, /):
-        combat_lvl = calc_skill_lvl('combat', player.skill_xp_combat)
-        fishing_lvl = calc_skill_lvl('fishing', player.skill_xp_fishing)
-        cata_lvl = calc_skill_lvl('catacombs', player.skill_xp_catacombs)
+        combat_lvl = player.get_skill_lvl('combat')
+        fishing_lvl = player.get_skill_lvl('fishing')
+        cata_lvl = player.get_skill_lvl('catacombs')
         rarity_color = RARITY_COLORS[self.rarity]
 
         for armor_piece in player.armor:
@@ -516,27 +516,24 @@ def item_type(cls: type, /) -> type:
 
         if getattr(self, 'combat_skill_req', None) is not None:
             if combat_lvl < self.combat_skill_req:
-                info += (f'{DARK_RED}❣ {RED}Requires {GREEN}'
+                info += (f'\n{DARK_RED}❣ {RED}Requires {GREEN}'
                          f'Combat Skill {self.combat_skill_req}{CLN}')
         if getattr(self, 'dungeon_skill_req', None) is not None:
             if cata_lvl < self.dungeon_skill_req:
-                info += (f'{DARK_RED}❣ {RED}Requires {GREEN}'
+                info += (f'\n{DARK_RED}❣ {RED}Requires {GREEN}'
                          f'Catacombs Skill {self.dungeon_skill_req}{CLN}')
         if getattr(self, 'dungeon_completion_req', None) is not None:
-            info += (f'{DARK_RED}❣ {RED}Requires {GREEN}Catacombs Floor '
+            info += (f'\n{DARK_RED}❣ {RED}Requires {GREEN}Catacombs Floor '
                      f'{roman(self.dungeon_completion_req)} Completion{CLN}')
         if getattr(self, 'fishing_skill_req', None) is not None:
             if fishing_lvl < self.fishing_skill_req:
-                info += (f'{DARK_RED}❣ {RED}Requires {GREEN}'
+                info += (f'\n{DARK_RED}❣ {RED}Requires {GREEN}'
                          f'Fishing Skill {self.fishing_skill_req}{CLN}')
 
         if self.__class__.__name__ == 'Armor':
             type_name = self.part.upper()
         elif self.__class__.__name__ == 'FishingRod':
-            if getattr(self, 'damage', 0) != 0:
-                type_name = 'FISHING WEAPON'
-            else:
-                type_name = 'FISHING ROD'
+            type_name = 'FISHING ROD'
         elif self.__class__.__name__ in {'Item', 'Pet', 'TravelScroll'}:
             type_name = ''
         else:
