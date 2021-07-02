@@ -21,7 +21,8 @@ from ..constant.color import (
 __all__ = [
     'dark_green', 'dark_aqua', 'gold', 'gray', 'dark_gray', 'blue',
     'green', 'aqua', 'red', 'yellow', 'white',
-    'input_regex']
+    'input_regex',
+]
 
 
 def dark_green(*args, sep=' ', end='\n'):

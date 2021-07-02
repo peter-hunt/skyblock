@@ -8,7 +8,8 @@ from ..object.object import ItemType, Resource, Mob
 
 
 __all__ = [
-    'Npc', 'Zone', 'Island', 'calc_dist', 'add_dist', 'path_find']
+    'Npc', 'Zone', 'Island', 'calc_dist', 'add_dist', 'path_find',
+]
 
 
 @dataclass
@@ -81,11 +82,9 @@ def path_find(start_zone: Zone, end_zone: Zone,
                 other_zone = conn[0] if conn[1] == first_end else conn[1]
                 if other_zone in first[0]:
                     continue
-                path = (
-                    first[0] + [other_zone],
-                    first[1] + dists[tuple(conn)],
-                    calc_dist(other_zone, end_zone),
-                )
+                path = (first[0] + [other_zone],
+                        first[1] + dists[tuple(conn)],
+                        calc_dist(other_zone, end_zone))
                 slower = False
                 for other_path in paths:
                     if other_zone == other_path[0][-1]:

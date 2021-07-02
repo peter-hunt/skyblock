@@ -5,7 +5,8 @@ from time import sleep, time
 from typing import Optional, Tuple
 
 from ..constant.color import (
-    RARITY_COLORS, DARK_AQUA, GOLD, GRAY, BLUE, GREEN, AQUA, RED, YELLOW, WHITE,
+    RARITY_COLORS,
+    BOLD, DARK_AQUA, GOLD, GRAY, BLUE, GREEN, AQUA, RED, YELLOW, WHITE,
 )
 from ..constant.enchanting import (
     ENCHS, CONFLICTS, ENCH_REQUIREMENTS, SWORD_ENCHS, BOW_ENCHS, ARMOR_ENCHS,
@@ -15,7 +16,9 @@ from ..constant.main import INTEREST_TABLE, SELL_PRICE
 from ..constant.mob import (
     CUBISM_EFT, ENDER_SLAYER_EFT, BOA_EFT, SMITE_EFT, IMPALING_EFT,
 )
-from ..function.io import gray, red, green, yellow, blue, aqua, white
+from ..function.io import (
+    dark_green, gray, red, green, yellow, blue, aqua, white,
+)
 from ..function.math import (
     calc_exp_lvl, calc_exp, calc_skill_lvl,
     random_amount, random_bool, random_int,
@@ -354,11 +357,13 @@ def profile_action(cls):
 
             if current == level + 1:
                 green(f'You removed {BLUE}{display_name(name)}'
-                      f' {roman(level + 1)} from your {item.display()}!')
+                      f' {roman(level + 1)}{GREEN}'
+                      f' from your {item.display()}!')
                 item.enchantments.pop(name)
             else:
                 green(f'You applied {BLUE}{display_name(name)}'
-                      f' {roman(level + 1)} to your {item.display()}!')
+                      f' {roman(level + 1)}{GREEN}'
+                      f' to your {item.display()}!')
                 item.enchantments[name] = level + 1
 
                 for conf in CONFLICTS:
@@ -730,6 +735,11 @@ def profile_action(cls):
             self.zone = target.name
             zone = get(island.zones, target.name)
 
+            if self.zone not in self.visited_zones:
+                dark_green(f'{BOLD}{display_name(self.zone)}')
+                green(f'New Zone Discovered!')
+                self.visited_zones.append(self.zone)
+
     cls.goto = goto
 
     def remove_pet(self, index: int, /):
@@ -981,7 +991,7 @@ def profile_action(cls):
             while True:
                 if isinstance(weapon, Bow) and infinite_quiver != 10:
                     if not self.has_item('arrow', 1):
-                        red("You don't have any arrows left!")
+                        red("You don't have any arrows in your inventory!")
                         return
                     if random_bool(1 - infinite_quiver / 10):
                         self.remove_item('arrow', 1)
@@ -1211,8 +1221,8 @@ def profile_action(cls):
             return
 
         dest_zone = get(dest_island.zones,
-                          default=get(dest_island.zones, dest_island.spawn),
-                          portal=self.island)
+                        default=get(dest_island.zones, dest_island.spawn),
+                        portal=self.island)
 
         for i_name, r_name in self.fast_travel:
             if dest == i_name and r_name is None:

@@ -243,7 +243,7 @@ def item_type(cls: type, /) -> type:
 
                 display_stat = display_name(stat_name)
                 ext = '%' if stat_name[0] in 'ac' else ''
-                value = getattr(self, stat_name)
+                value = getattr(self, stat_name, 0)
 
                 bonus = ''
                 if stat_name[0] in 'ds' and self.hot_potato != 0:
@@ -287,7 +287,7 @@ def item_type(cls: type, /) -> type:
             for stat_name in ('defense', 'intelligence', 'true_defense',
                               'ferocity', 'speed'):
                 display_stat = display_name(stat_name)
-                value = getattr(self, stat_name)
+                value = getattr(self, stat_name, 0)
 
                 bonus = ''
                 if stat_name in reforge_bonus:

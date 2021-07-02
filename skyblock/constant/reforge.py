@@ -87,6 +87,53 @@ ARMOR_REFORGES = {
     ),
 }
 
+BOW_REFORGES = {
+    'deadly': (
+        {'cc': 10, 'cd': 5}, {'cc': 13, 'cd': 10}, {'cc': 16, 'cd': 18},
+        {'cc': 19, 'cd': 32}, {'cc': 22, 'cd': 50}, {'cc': 25, 'cd': 78},
+    ),
+    'fine': (
+        {'str': 3, 'cc': 5, 'cd': 2}, {'str': 7, 'cc': 7, 'cd': 4},
+        {'str': 12, 'cc': 9, 'cd': 7}, {'str': 18, 'cc': 12, 'cd': 10},
+        {'str': 25, 'cc': 15, 'cd': 15}, {'str': 33, 'cc': 18, 'cd': 20},
+    ),
+    'grand': (
+        {'str': 25}, {'str': 32}, {'str': 40},
+        {'str': 50}, {'str': 60}, {'str': 75},
+    ),
+    'hasty': (
+        {'str': 3, 'cc': 20}, {'str': 5, 'cc': 25}, {'str': 7, 'cc': 30},
+        {'str': 10, 'cc': 40}, {'str': 15, 'cc': 50}, {'str': 20, 'cc': 75},
+    ),
+    'neat': (
+        {'cc': 10, 'cd': 4, 'int': 3}, {'cc': 12, 'cd': 8, 'int': 6},
+        {'cc': 14, 'cd': 14, 'int': 10}, {'cc': 17, 'cd': 20, 'int': 15},
+        {'cc': 20, 'cd': 20, 'int': 30}, {'cc': 25, 'cd': 25, 'int': 40},
+    ),
+    'rapid': (
+        {'str': 2, 'cd': 35}, {'str': 3, 'cd': 45}, {'str': 4, 'cd': 55},
+        {'str': 7, 'cd': 65}, {'str': 10, 'cd': 75}, {'str': 15, 'cd': 90},
+    ),
+    'unreal': (
+        {'str': 3, 'cc': 8, 'cd': 5}, {'str': 7, 'cc': 9, 'cd': 10},
+        {'str': 12, 'cc': 10, 'cd': 18}, {'str': 18, 'cc': 11, 'cd': 32},
+        {'str': 25, 'cc': 13, 'cd': 50}, {'str': 34, 'cc': 15, 'cd': 70},
+    ),
+    'awkward': (
+        {'cc': 10, 'cd': 5, 'int': -5}, {'cc': 12, 'cd': 10, 'int': -10},
+        {'cc': 15, 'cd': 15, 'int': -18}, {'cc': 20, 'cd': 22, 'int': -32},
+        {'cc': 25, 'cd': 30, 'int': -50}, {'cc': 30, 'cd': 35, 'int': -72},
+    ),
+    'rich': (
+        {'str': 2, 'cc': 10, 'cd': 1, 'int': 20},
+        {'str': 3, 'cc': 12, 'cd': 2, 'int': 25},
+        {'str': 4, 'cc': 14, 'cd': 4, 'int': 30},
+        {'str': 7, 'cc': 17, 'cd': 7, 'int': 40},
+        {'str': 10, 'cc': 20, 'cd': 10, 'int': 50},
+        {'str': 15, 'cc': 25, 'cd': 15, 'int': 60},
+    ),
+}
+
 SWORD_REFORGES = {
     'gentle': (
         {'str': 3, 'as': 8}, {'str': 5, 'as': 10}, {'str': 7, 'as': 15},
@@ -140,4 +187,4 @@ SWORD_REFORGES = {
     ),
 }
 
-REFORGES = {**ARMOR_REFORGES, **SWORD_REFORGES}
+REFORGES = {**ARMOR_REFORGES, **BOW_REFORGES, **SWORD_REFORGES}

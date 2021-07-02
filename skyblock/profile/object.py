@@ -203,8 +203,10 @@ class Profile:
                 self.buy(chosen_trade, amount)
 
             elif words[0] == 'cheat':
-                # item = get_item('enderman_pet', rarity='mythic')
+                # item = get_item('runaans_bow')
                 # self.recieve_item(item)
+                # item = get_item('arrow')
+                # self.recieve_item(item, 64)
                 ...
 
             elif words[0] == 'clear':
@@ -332,7 +334,7 @@ class Profile:
 
                 index = self.parse_index(words[1])
                 if index is None:
-                    pass
+                    continue
 
                 self.enchant(index)
 
