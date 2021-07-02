@@ -1,7 +1,8 @@
-from ...object.item import get_item, get_scroll
+from ...object.item import get_item
 from ...object.mob import get_mob
 from ...object.resource import get_resource
 
+from ..npc import get_npc
 from ..object import Npc, Zone, Island, add_dist
 
 
@@ -19,18 +20,7 @@ HOWLING_CAVE = Zone(
 SPRUCE_WOOD = Zone(
     'spruce', -325, 0,
     resources=[get_resource('spruce_wood')],
-    npcs=[
-        Npc('melancholic_viking',
-            init_dialog=[
-                "For my wares, you'll have to pay the iron price!",
-                'Seriously though, I accept Coins',
-                'Talk to me again to open the Iron Forger Shop!',
-            ],
-            trades=[
-                (130_000, get_item('raider_axe')),
-                (70_000, get_scroll('jungle')),
-            ]),
-    ],
+    npcs=[get_npc('melancholic_viking')],
     skill_req=('foraging', 2),
 )
 DARK_THICKET = Zone(
@@ -41,10 +31,7 @@ DARK_THICKET = Zone(
 SAVANNA_WOODLAND = Zone(
     'savanna', -350, -15,
     resources=[get_resource('acacia_wood')],
-    npcs=[
-        Npc('master_tactician_funk',
-            trades=[(35_000, get_item('tacticians_sword'))]),
-    ],
+    npcs=[get_npc('master_tactician_funk')],
     skill_req=('foraging', 4),
 )
 JUNGLE_ISLAND = Zone(

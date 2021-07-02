@@ -21,7 +21,7 @@ from ..object.object import (
 )
 from ..object.recipe import RECIPES
 from ..object.resource import get_resource
-from ..map.island import ISLANDS
+from ..map.island import get_island
 from ..map.object import Npc
 
 from .action_wrapper import profile_action
@@ -124,10 +124,10 @@ class Profile:
         last_shop: Optional[str] = None
 
         while True:
-            island = get(ISLANDS, self.island)
+            island = get_island(self.island)
             if island is None:
                 yellow('Invalid island. Using hub as default.')
-                island = get(ISLANDS, 'hub')
+                island = get_island('hub')
 
             zone = get(island.zones, self.zone)
             if zone is None:

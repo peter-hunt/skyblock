@@ -293,7 +293,7 @@ ITEMS = (COLLECTION_ITEMS + OTHER_ITEMS + WEAPONS
 
 def get_item(name: str, **kwargs) -> ItemType:
     if not includes(ITEMS, name):
-        red(f'Invalid item: {name!r}')
+        red(f'Item not found: {name!r}')
         exit()
     return get(ITEMS, name, **kwargs)
 

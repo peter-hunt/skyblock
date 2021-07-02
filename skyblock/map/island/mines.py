@@ -1,69 +1,24 @@
-from ...constant.color import GOLD, GREEN, WHITE
-from ...object.item import get_item
-from ...object.object import Item
 from ...object.mob import get_mob
 from ...object.resource import get_resource
 
-from ..object import Npc, Zone, Island, add_dist
+from ..npc import get_npc
+from ..object import Zone, Island, add_dist
 
 
 __all__ = ['MINES']
 
 DWARVEN_ENTRENCE = Zone(
     'dwarven_entrence', -60, -120, portal='deep',
-    npcs=[
-        Npc('life_operator',
-            dialog=[
-                'Hey Feller!',
-                'I control this lift here behind me.',
-                ("Once you've explored an area"
-                 " I can give you a safe ride back there."),
-                ("Be careful not to fall down the shaft though,"
-                 " it's a long fall!"),
-                'Good luck on your adventures.',
-            ]),
-    ],
+    npcs=[get_npc('life_operator')],
 )
 DWARVEN_VILLAGE = Zone(
     'dwarven_village', 20, -140,
     resources=[get_resource('stone')],
-    npcs=[
-        Npc('bubu',
-            trades=[
-                (10_000,
-                 get_item('fractured_mithril_pickaxe')),
-                ((100_000,
-                  (Item('mithril'), 200)),
-                 get_item('bandaged_mithril_pickaxe')),
-                ((1_000_000,
-                  (Item('titanium'), 100),
-                  (Item('bejeweled_handle'), 1)),
-                 get_item('titanium_pickaxe')),
-                (((Item('titanium_pickaxe'), 1),
-                  (Item('refined_titanium'), 3)),
-                 get_item('refined_titanium_pickaxe')),
-            ]),
-        Npc('gimley',
-            dialog=[(
-                'Burp', 'Buurp', 'Buuuuurp', 'Buuuuuuuuuuuuuurp',
-                'BURP', 'BUURRPPP', '‎*Inception BRRRAAWWWWWBRBRBB noises*',
-            )]),
-        Npc('hornum',
-            dialog=[(
-                'Burp', 'Buurp', 'Buuuuurp', 'Buuuuuuuuuuuuuurp',
-                'BURP', 'BUURRPPP', '‎*Inception BRRRAAWWWWWBRBRBB noises*',
-            )]),
-        Npc('sargwyn',
-            dialog=[(
-                'Burp', 'Buurp', 'Buuuuurp', 'Buuuuuuuuuuuuuurp',
-                'BURP', 'BUURRPPP', '‎*Inception BRRRAAWWWWWBRBRBB noises*',
-            )]),
-        Npc('tarwen',
-            dialog=[(
-                'Burp', 'Buurp', 'Buuuuurp', 'Buuuuuuuuuuuuuurp',
-                'BURP', 'BUURRPPP', '‎*Inception BRRRAAWWWWWBRBRBB noises*',
-            )]),
-    ],
+    npcs=[get_npc('bubu'),
+          get_npc('gimley'),
+          get_npc('hornum'),
+          get_npc('sargwyn'),
+          get_npc('tarwen')],
 )
 FAR = Zone(
     'far', -120, 70,
@@ -72,17 +27,7 @@ FAR = Zone(
 )
 FORGE = Zone(
     'forge', 0, -70,
-    npcs=[
-        Npc('jotraeline_greatforge',
-            dialog=[
-                (f"Drills are sweet! Too bad you don't have one."
-                 f" I hear you can create them in the {GOLD}Forge{WHITE}!"),
-                (f'Come back to me when you have '
-                 f'a {GREEN}Drill{WHITE} in your inventory!'),
-                (f'What are you doing talking to me without '
-                 f'a {GREEN}Drill{WHITE}? Come back when you have one!'),
-            ]),
-    ],
+    npcs=[get_npc('jotraeline_greatforge'), ],
 )
 GOBLINS = Zone(
     'goblins', -110, 110,
@@ -102,15 +47,9 @@ MIST = Zone(
 )
 PALACE = Zone(
     'palace', 120, 120,
-    npcs=[
-        Npc('brammor'),
-        Npc('emkam'),
-        Npc('emmor'),
-        Npc('erren'),
-        Npc('grandan'),
-        Npc('redos'),
-        Npc('thormyr'),
-    ],
+    npcs=[get_npc('brammor'), get_npc('emkam'), get_npc('emmor'),
+          get_npc('erren'), get_npc('grandan'), get_npc('redos'),
+          get_npc('thormyr')],
 )
 RAMPARTS = Zone(
     'ramparts', -25, -50,

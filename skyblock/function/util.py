@@ -1,4 +1,5 @@
 from re import fullmatch
+from subprocess import call
 from textwrap import wrap
 from typing import Any, Dict, List, Optional, Tuple, Union
 from types import FunctionType
@@ -29,7 +30,7 @@ def checkpoint(func: FunctionType, /) -> FunctionType:
 
 
 def clear():
-    print('\x1b[2J', end='')
+    call(['clear'])
 
 
 def display_int(number: Union[int, float], /) -> str:
@@ -109,15 +110,15 @@ def get_ench(name: str, /) -> Tuple[str, Tuple[int]]:
 
 
 def includes(ls: List[Any], name: str, /) -> bool:
-    for item in ls:
-        if item.name == name:
+    for obj in ls:
+        if obj.name == name:
             return True
     return False
 
 
 def index(ls: List[Any], name: str, /) -> bool:
-    for i, item in enumerate(ls):
-        if item.name == name:
+    for i, obj in enumerate(ls):
+        if obj.name == name:
             return i
     raise ValueError(f'{name!r} is not in list')
 

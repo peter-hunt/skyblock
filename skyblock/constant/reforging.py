@@ -1,8 +1,13 @@
 """
-Constants of reforge stats.
+Constants of reforging stats.
 """
 
-__all__ = ['STAT_ALIASES', 'SWORD_REFORGES', 'REFORGES']
+__all__ = [
+    'STAT_ALIASES',
+    'ARMOR_REFORGES', 'BOW_REFORGES', 'SWORD_REFORGES',
+    'ARMOR_MODIFIERS', 'BOW_MODIFIERS', 'SWORD_MODIFIERS',
+    'MODIFIERS',
+]
 
 STAT_ALIASES = {
     'hp': 'health',
@@ -25,7 +30,12 @@ STAT_ALIASES = {
     'for_ftn': 'foraging_fortune',
 }
 
-ARMOR_REFORGES = {
+ARMOR_REFORGES = (
+    'clean', 'fierce', 'heavy', 'light', 'mythic',
+    'pure', 'smart', 'titanic', 'wise',
+)
+
+ARMOR_MODIFIERS = {
     'clean': (
         {'hp': 5, 'def': 5, 'cc': 2}, {'hp': 7, 'def': 7, 'cc': 4},
         {'hp': 10, 'def': 10, 'cc': 6}, {'hp': 15, 'def': 15, 'cc': 8},
@@ -80,14 +90,19 @@ ARMOR_REFORGES = {
         {'hp': 10, 'def': 10}, {'hp': 15, 'def': 15}, {'hp': 20, 'def': 20},
         {'hp': 25, 'def': 25}, {'hp': 35, 'def': 35}, {'hp': 50, 'def': 50},
     ),
-    'smart': (
+    'wise': (
         {'hp': 6, 'spd': 1, 'int': 25}, {'hp': 8, 'spd': 1, 'int': 50},
         {'hp': 10, 'spd': 1, 'int': 75}, {'hp': 12, 'spd': 2, 'int': 100},
         {'hp': 15, 'spd': 2, 'int': 125}, {'hp': 20, 'spd': 3, 'int': 150},
     ),
 }
 
-BOW_REFORGES = {
+BOW_REFORGES = (
+    'deadly', 'fine', 'grand', 'hasty', 'neat',
+    'rapid', 'unreal', 'awkward', 'rich',
+)
+
+BOW_MODIFIERS = {
     'deadly': (
         {'cc': 10, 'cd': 5}, {'cc': 13, 'cd': 10}, {'cc': 16, 'cd': 18},
         {'cc': 19, 'cd': 32}, {'cc': 22, 'cd': 50}, {'cc': 25, 'cd': 78},
@@ -134,7 +149,12 @@ BOW_REFORGES = {
     ),
 }
 
-SWORD_REFORGES = {
+SWORD_REFORGES = (
+    'gentle', 'odd', 'fast', 'fair', 'epic',
+    'sharp', 'heroic', 'spicy', 'legendary',
+)
+
+SWORD_MODIFIERS = {
     'gentle': (
         {'str': 3, 'as': 8}, {'str': 5, 'as': 10}, {'str': 7, 'as': 15},
         {'str': 10, 'as': 20}, {'str': 15, 'as': 25}, {'str': 20, 'as': 30},
@@ -187,4 +207,4 @@ SWORD_REFORGES = {
     ),
 }
 
-REFORGES = {**ARMOR_REFORGES, **BOW_REFORGES, **SWORD_REFORGES}
+MODIFIERS = {**ARMOR_MODIFIERS, **BOW_MODIFIERS, **SWORD_MODIFIERS}

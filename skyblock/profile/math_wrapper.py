@@ -11,7 +11,7 @@ from ..function.math import (
     calc_exp_lvl, calc_pet_lvl, calc_skill_lvl, display_skill_reward,
 )
 from ..function.io import dark_aqua, gold, dark_gray, red, green, yellow, aqua
-from ..function.reforge import get_reforge
+from ..function.reforging import get_modifier
 from ..function.util import display_name, roman
 from ..object.collection import is_collection, get_collection, calc_coll_lvl
 from ..object.object import (
@@ -195,8 +195,8 @@ def profile_math(cls):
                 item = Empty()
 
         if getattr(item, 'modifier', None) is not None:
-            reforge_bonus = get_reforge(item.modifier, item.rarity)
-            value += reforge_bonus.get(name, 0)
+            modifier_bonus = get_modifier(item.modifier, item.rarity)
+            value += modifier_bonus.get(name, 0)
 
         item_ench = getattr(item, 'enchantments', {})
 
@@ -250,8 +250,8 @@ def profile_math(cls):
             value += getattr(piece, name, 0)
 
             if getattr(piece, 'modifier', None) is not None:
-                reforge_bonus = get_reforge(piece.modifier, piece.rarity)
-                value += reforge_bonus.get(name, 0)
+                modifier_bonus = get_modifier(piece.modifier, piece.rarity)
+                value += modifier_bonus.get(name, 0)
 
         full_set_bonus = ''
 

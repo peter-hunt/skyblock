@@ -102,6 +102,8 @@ def profile_action(cls):
 
         for item in good:
             item_copy = validify_item(item)
+            if getattr(item_copy, 'count', 1) != 1:
+                item_copy.count = 1
             self.recieve_item(item_copy, amount)
             amt_str = '' if amount == 1 else f'{GRAY} x {amount}'
             display.append(f'{item_copy.display()}{amt_str}')

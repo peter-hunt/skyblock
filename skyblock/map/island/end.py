@@ -1,54 +1,32 @@
-from ...constant.color import LIGHT_PURPLE, WHITE
-from ...object.item import get_item
 from ...object.mob import get_mob
-from ...object.object import Item
 from ...object.resource import get_resource
-from ..object import Island, Npc, Zone, add_dist
+
+from ..npc import get_npc
+from ..object import Island, Zone, add_dist
 
 
 __all__ = ['END']
 
 END_ENTRENCE = Zone(
     'end_entrence', -540, -300, portal='spider',
-    npcs=[
-        Npc('pearl_dealer',
-            init_dialog=[
-                (f"Ender Pearls attract the attention of Endermen,"
-                 f" but {LIGHT_PURPLE}Silent Pearls{WHITE} don't!"
-                 f" You can get them in my shop."),
-                ('The End has endless End Stone and Obsidian.'
-                 ' You may find a special type of these'
-                 ' resources deep in the caves'),
-                ('The items in my shop may be of help as you'
-                 ' descend into the depths of The End')],
-            trades=[
-                (10, Item('end_stone')),
-                (50, Item('obsidian')),
-                (499_999, get_item('stonk')),
-            ]),
-    ],
-    resources=[get_resource('end_stone'),
-               get_resource('obsidian')],
+    npcs=[get_npc('pearl_dealer')],
+    resources=[get_resource('end_stone'), get_resource('obsidian')],
     mobs=[get_mob('enderman', level=42)],
 )
 END_TUNNEL = Zone(
     'end_tunnel', -560, -300,
-    resources=[get_resource('end_stone'),
-               get_resource('obsidian')],
+    resources=[get_resource('end_stone'), get_resource('obsidian')],
     mobs=[get_mob('enderman', level=45)],
 )
 END_CAVES = Zone(
     'end_caves', -580, -290,
-    resources=[get_resource('end_stone'),
-               get_resource('obsidian')],
+    resources=[get_resource('end_stone'), get_resource('obsidian')],
     mobs=[get_mob('enderman', level=50)],
 )
 DRAGONS_NEST = Zone(
     'drag', -600, -280,
     resources=[get_resource('end_stone')],
-    mobs=[get_mob('watcher'),
-          get_mob('obsidian_defender'),
-          get_mob('zealot')],
+    mobs=[get_mob('watcher'), get_mob('obsidian_defender'), get_mob('zealot')],
 )
 
 END_JOINTS = [END_ENTRENCE, END_TUNNEL, END_CAVES, DRAGONS_NEST]

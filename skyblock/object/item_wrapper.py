@@ -7,9 +7,9 @@ from ..constant.color import (
 )
 from ..constant.enchanting import ULTIMATE_ENCHS
 from ..function.math import (
-    calc_pet_lvl, calc_pet_upgrade_exp, calc_skill_lvl, dung_stat,
+    calc_pet_lvl, calc_pet_upgrade_exp, dung_stat,
 )
-from ..function.reforge import get_reforge
+from ..function.reforging import get_modifier
 from ..function.util import (
     display_int, display_name, roman, shorten_number,
 )
@@ -234,9 +234,9 @@ def item_type(cls: type, /) -> type:
             is_dungeon = self.stars is not None
 
             if self.modifier is not None:
-                reforge_bonus = get_reforge(self.modifier, self.rarity)
+                modifier_bonus = get_modifier(self.modifier, self.rarity)
             else:
-                reforge_bonus = {}
+                modifier_bonus = {}
 
             for stat_name in ('damage', 'strength', 'crit_chance',
                               'crit_damage', 'attack_speed'):
@@ -250,8 +250,8 @@ def item_type(cls: type, /) -> type:
                     value += self.hot_potato
                     bonus += f' {YELLOW}(+{self.hot_potato})'
 
-                if stat_name in reforge_bonus:
-                    bonus_value = reforge_bonus[stat_name]
+                if stat_name in modifier_bonus:
+                    bonus_value = modifier_bonus[stat_name]
                     value += bonus_value
                     bonus += (f' {BLUE}({display_name(self.modifier)}'
                               f' +{bonus_value}{ext})')
@@ -290,8 +290,8 @@ def item_type(cls: type, /) -> type:
                 value = getattr(self, stat_name, 0)
 
                 bonus = ''
-                if stat_name in reforge_bonus:
-                    bonus_value = reforge_bonus[stat_name]
+                if stat_name in modifier_bonus:
+                    bonus_value = modifier_bonus[stat_name]
                     value += bonus_value
                     bonus += (f' {BLUE}({display_name(self.modifier)}'
                               f' +{bonus_value})')
@@ -320,9 +320,9 @@ def item_type(cls: type, /) -> type:
             is_dungeon = self.stars is not None
 
             if self.modifier is not None:
-                reforge_bonus = get_reforge(self.modifier, self.rarity)
+                modifier_bonus = get_modifier(self.modifier, self.rarity)
             else:
-                reforge_bonus = {}
+                modifier_bonus = {}
 
             for stat_name in ('strength', 'crit_chance', 'crit_damage'):
                 display_stat = display_name(stat_name)
@@ -330,8 +330,8 @@ def item_type(cls: type, /) -> type:
                 value = getattr(self, stat_name)
 
                 bonus = ''
-                if stat_name in reforge_bonus:
-                    bonus_value = reforge_bonus[stat_name]
+                if stat_name in modifier_bonus:
+                    bonus_value = modifier_bonus[stat_name]
                     value += bonus_value
                     bonus += (f' {BLUE}({display_name(self.modifier)}'
                               f' +{bonus_value})')
@@ -380,8 +380,8 @@ def item_type(cls: type, /) -> type:
                 ext = ' HP' if stat_name[0] == 'h' else ''
 
                 bonus = ''
-                if stat_name in reforge_bonus:
-                    bonus_value = reforge_bonus[stat_name]
+                if stat_name in modifier_bonus:
+                    bonus_value = modifier_bonus[stat_name]
                     value += bonus_value
                     bonus += (f' {BLUE}({display_name(self.modifier)}'
                               f' +{bonus_value})')

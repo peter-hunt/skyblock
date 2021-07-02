@@ -1,106 +1,49 @@
 from ...object.mob import get_mob
 from ...object.resource import get_resource
 
-from ..object import Npc, Zone, Island, add_dist
+from ..npc import get_npc
+from ..object import Zone, Island, add_dist
 
 
 __all__ = ['DESERT']
 
 DESERT_SETTLEMENT = Zone(
     'desert_settlement', 180, -380, portal='barn',
-    resources=[get_resource('cactus'),
-               get_resource('sand')],
-    npcs=[
-        Npc('beth',
-            dialog=[
-                'That Jake fellow is a bit suspicious.',
-                ("He says he can't leave his house"
-                 "but I've seen him walking around all the time..."),
-            ]),
-        Npc('friendly_hiker',
-            dialog=[
-                'My hiking buddy has been missing for a few couple days...',
-                ('He said he was going to explore the gorge,'
-                 ' but that was a while ago'),
-                "I'm getting worried, could you go check on him?",
-            ]),
-        Npc('mason',
-            dialog=[
-                'I think the Treasure Hunter is a scammer.',
-                ("He's always selling information about treasure locations"
-                 " but I always hear that no one finds treasure"),
-            ])],
+    resources=[get_resource('cactus'), get_resource('sand')],
+    npcs=[get_npc('beth'), get_npc('friendly_hiker'), get_npc('mason')],
 )
 GLOWING_MUSHROOM_CAVE = Zone(
     'glowing_mushroom_cave', 245, -500,
-    resources=[get_resource('mushroom'),
-               get_resource('sand')],
+    resources=[get_resource('mushroom'), get_resource('sand')],
     mobs=[get_mob('mooshroom')],
 )
 JAKES_HOUSE = Zone('jakes_house', 255, -565)
 MUSHROOM_GORGE = Zone(
     'mushroom_gorge', 205, -480,
-    resources=[get_resource('mushroom'),
-               get_resource('sand')],
+    resources=[get_resource('mushroom'), get_resource('sand')],
     mobs=[get_mob('mooshroom')],
-    npcs=[
-        Npc('hungry_hiker',
-            init_dialog=[
-                'Hello there stranger!',
-                ("I fell down into this ravine "
-                 "a couple days ago and can't climb out"),
-                ("My friend Jake said he would come get me "
-                 "but he hasn't arrived yet"),
-                'Could you bring me some food until he gets here?',
-            ]),
-    ],
+    npcs=[get_npc('hungry_hiker')],
 )
 OASIS = Zone(
     'oasis', 165, -410, fishable=True,
-    resources=[get_resource('cocoa'),
-               get_resource('sugar_cane')],
+    resources=[get_resource('cocoa'), get_resource('sugar_cane')],
     mobs=[get_mob('rabbit'), get_mob('sheep')],
 )
 OVERGROWN_MUSHROOM_CAVE = Zone(
     'overgrown_mushroom_cave', 270, -365,
-    resources=[get_resource('mushroom'),
-               get_resource('sand')],
+    resources=[get_resource('mushroom'), get_resource('sand')],
     mobs=[get_mob('mooshroom')],
 )
 SHEPHERDS_KEEP = Zone(
     'shepherds_keep', 360, -370,
-    resources=[get_resource('cactus'),
-               get_resource('sand')],
+    resources=[get_resource('cactus'), get_resource('sand')],
     mobs=[get_mob('sheep')],
-    npcs=[
-        Npc('shepherd',
-            init_dialog=[
-                'Hello traveller!',
-                ('Welcome to my keep, my sheep are'
-                 ' some of the best in the world.'),
-                ('They have regenerative properties that allow for them '
-                 'the regenerate their wool faster than normal!'),
-                "I'm feeling tired today.",
-                'Could you shear all my sheep at once?',
-                'I will have a reward if you do so!',
-            ]),
-    ],
+    npcs=[get_npc('shepherd')],
 )
 TRAPPERS_DEN = Zone('trappers_den', 285, -570)
 TREASURE_HUNTER_CAMP = Zone(
     'treasure_hunter_camp', 200, -430,
-    npcs=[
-        Npc('treasure_hunter',
-            dialog=[
-                'Hello adventurer!',
-                ("I'm the Treasure Hunter, "
-                 "I've been searching for treasure all over this island."),
-                ('Rumor has it that there are rare stones and other valuable'
-                 ' bounty hidden in the ground all over the island.'),
-                ("Tell you what, for a small price"
-                 " I'll give you the info I know about."),
-            ]),
-    ],
+    npcs=[get_npc('treasure_hunter')],
 )
 
 DESERT_JOINTS = [

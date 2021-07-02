@@ -1,21 +1,21 @@
 from typing import Dict
 
-from ..constant import STAT_ALIASES, REFORGES
+from ..constant import STAT_ALIASES, MODIFIERS
 
 from .io import red
 
 
-__all__ = ['get_reforge']
+__all__ = ['get_modifier']
 
 
-def get_reforge(name: str, rarity: str, /) -> Dict[str, int]:
+def get_modifier(name: str, rarity: str, /) -> Dict[str, int]:
     if name is None:
         return {}
-    elif name not in REFORGES:
-        red(f'Invalid reforge: {name}')
+    elif name not in MODIFIERS:
+        red(f'Invalid modifier: {name}')
         return
 
-    bonuses = REFORGES[name]
+    bonuses = MODIFIERS[name]
     if rarity == 'mythic':
         rarity = 'l'
 

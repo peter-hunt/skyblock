@@ -1,12 +1,13 @@
 from ...object.mob import get_mob
 from ...object.resource import get_resource
 
-from ..object import Npc, Zone, Island, add_dist
+from ..npc import get_npc
+from ..object import Zone, Island, add_dist
 
 
 __all__ = ['DEEP']
 
-DEEP_ENTRENCE = Zone('deep_entrence', 0, 90, portal='gold',)
+DEEP_ENTRENCE = Zone('deep_entrence', 0, 90, portal='gold')
 GUNPOWDER_MINES = Zone(
     'gunpowder_mines', 5, 20,
     resources=[get_resource('stone'), get_resource('coal_ore'),
@@ -45,18 +46,7 @@ OBSIDIAN_SANCTUARY = Zone(
 )
 LIFT = Zone(
     'lift', 50, 0,
-    npcs=[
-        Npc('life_operator',
-            dialog=[
-                'Hey Feller!',
-                'I control this lift here behind me.',
-                ("Once you've explored an area"
-                 " I can give you a safe ride back there."),
-                ("Be careful not to fall down the shaft though,"
-                 " it's a long fall!"),
-                'Good luck on your adventures.',
-            ]),
-    ],
+    npcs=[get_npc('life_operator')],
 )
 
 DEEP_JOINTS = [
