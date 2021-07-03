@@ -12,6 +12,7 @@ GOLD_GATE = Zone(
 )
 GOLD_MINE = Zone(
     'gold_mine', 0, -360, portal='deep',
+    npcs=[get_npc('blacksmith')],
     resources=[get_resource('stone'), get_resource('coal_ore'),
                get_resource('iron_ore'), get_resource('gold_ore')],
 )

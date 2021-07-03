@@ -46,7 +46,7 @@ python -m skyblock
 * Fast Traveling
 * Islands
 * NPC buying and trading items
-* Modifiers
+* Modifiers and Basic Reforging
 * Pets
 * Simple combat system
 * Skill system
@@ -54,7 +54,7 @@ python -m skyblock
 
 ## Features Planned:
 * Accessories
-* Anvil and Reforging (Bow reforges and reforge stones)
+* Anvil (enchanted books and reforge stones)
 * Combat while mining
 * Dungeons
 * Forging (Dwarven Mines)

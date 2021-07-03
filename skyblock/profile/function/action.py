@@ -419,7 +419,7 @@ def goto(self, dest: str, /):
         dist = calc_dist(zone, target)
         time_cost = float(dist) / (5 * (speed / 100))
         green(f'Going from {zone} to {target}...')
-        gray(f'(time cost: {time_cost:.1f}s)')
+        gray(f'(eta: {time_cost:.1f}s)')
         sleep(time_cost)
         self.zone = target.name
         zone = get(island.zones, target.name)
@@ -484,6 +484,8 @@ def talkto_npc(self, npc: Npc, /) -> Optional[str]:
                 self.npc_speak(npc.name, npc.dialog)
             elif isinstance(npc.dialog, tuple):
                 self.npc_speak(npc.name, choice(npc.dialog))
+        elif npc.function is not None:
+            npc.function()
         elif npc.trades is not None:
             self.display_shop(npc, None)
             return npc.name
@@ -501,6 +503,8 @@ def talkto_npc(self, npc: Npc, /) -> Optional[str]:
             self.npc_speak(npc.name, npc.dialog)
         elif isinstance(npc.dialog, tuple):
             self.npc_speak(npc.name, choice(npc.dialog))
+    elif npc.function is not None:
+        npc.function(self)
     else:
         self.npc_silent(npc)
 

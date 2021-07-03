@@ -1,6 +1,7 @@
 from decimal import Decimal
 from dataclasses import dataclass, field
 from math import dist, inf
+from types import FunctionType
 from typing import Dict, List, Optional, Tuple, Union
 
 from ..function.util import format_name
@@ -21,6 +22,7 @@ class Npc:
     trades: Optional[List[Tuple[Union[Tuple[int, ItemType], int],
                                 Union[ItemType, List[ItemType]]]]] = None
     claim_item: Optional[ItemType] = None
+    function: Optional[FunctionType] = None
 
     def __repr__(self):
         return format_name(self.name)

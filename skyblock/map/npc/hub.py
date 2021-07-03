@@ -4,6 +4,8 @@ from ...object.object import Item
 
 from ..object import Npc
 
+from .function import reforge
+
 
 HUB_NPCS = [
     Npc('adventurer',
@@ -95,7 +97,7 @@ HUB_NPCS = [
               (Item('enchanted_gold_block'), 8)),
              get_item('bee_pet', rarity='legendary')),
         ]),
-    Npc('blacksmith'),
+    Npc('blacksmith', function=reforge),
     Npc('builder',
         init_dialog=[
             'If you build, they will come!',
