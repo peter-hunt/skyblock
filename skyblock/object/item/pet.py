@@ -199,6 +199,12 @@ PETS = [
     Pet('zombie_pet', rarity='legendary', category='combat',
         health=100, crit_damage=30),
 
+    Pet('phoenix_pet', rarity='epic', category='combat',
+        intelligence=50, strength=10),
+    Pet('phoenix_pet', rarity='legendary', category='combat',
+        intelligence=50, strength=10,
+        abilities=['eternal_coins']),
+
     Pet('ocelot_pet', rarity='common', category='foraging',
         speed=50, ferocity=10),
     Pet('ocelot_pet', rarity='uncommon', category='foraging',

@@ -210,26 +210,28 @@ def die(self, /) -> bool:
               'You have been revived safely.')
         return False
 
-    bank = 0
+    perc_lost = 1
 
     for piece in self.armor:
         if not isinstance(piece, Armor):
             continue
 
         ench = getattr(piece, 'enchantments', {})
-        bank += ench.get('bank', 0) * 10
+        perc_lost -= ench.get('bank', 0) / 10
 
-    original = self.purse / 2
-    saved = original * min(bank / 100, 1)
-    lost_coins = original - saved
+    if self.pet.name == 'phoenix_pet' and self.pet.rarity == 'legendary':
+        perc_lost = 0
+
+    perc_lost = max(perc_lost, 0)
+
+    lost_coins = self.purse / 2 * perc_lost
     self.purse -= lost_coins
     self.death_count += 1
 
-    if bank != 0:
-        gray(f'Your {BLUE}Bank{GRAY} enchantment saved {GOLD}'
-             f'{format_short(saved)} coins{GRAY} for you!')
-
-    red(f'You died and lost {format_number(lost_coins)} coins!')
+    if perc_lost == 0:
+        red(f'You died!')
+    else:
+        red(f'You died and lost {format_number(lost_coins)} coins!')
     self.zone = get(ISLANDS, self.island).spawn
 
     return True

@@ -10,7 +10,7 @@ from ...constant.color import (
 from ...constant.mob import (
     CUBISM_EFT, ENDER_SLAYER_EFT, BOA_EFT, SMITE_EFT, IMPALING_EFT,
 )
-from ...function.io import gray, red, green, white
+from ...function.io import gray, red, green, yellow, white
 from ...function.math import random_amount, random_bool, random_int
 from ...function.util import (
     checkpoint, format_name, format_number, format_roman, format_short,
@@ -675,6 +675,14 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                 rarity_str = rarity.replace('_', ' ').upper()
                 white(f'{RARITY_COLORS[rarity]}{rarity_str} DROP! '
                       f'{WHITE}({loot.display()}{WHITE})')
+
+        phoenix_pool = random()
+        if phoenix_pool <= 0.0000008:
+            self.recieve_item(get_item('phoenix_pet', rarity='epic'))
+            yellow(f'Wow! You found a {RED}Phoenix{YELLOW} pet!')
+        elif phoenix_pool <= 0.000001:
+            self.recieve_item(get_item('phoenix_pet', rarity='legendary'))
+            yellow(f'Wow! You found a {RED}Phoenix{YELLOW} pet!')
 
         if count >= (last_cp + cp_step) * iteration:
             while count >= (last_cp + cp_step) * iteration:

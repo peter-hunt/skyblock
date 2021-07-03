@@ -274,8 +274,7 @@ def item_type(cls: type, /) -> type:
                 info += '\n' + '\n'.join(f'{GRAY}{stat}'
                                          for stat in basic_stats)
 
-            for stat_name in ('defense', 'intelligence',
-                              'ferocity', 'speed'):
+            for stat_name in ('defense', 'intelligence', 'ferocity', 'speed'):
                 display_stat = format_name(stat_name)
                 value = getattr(self, stat_name, 0)
 
@@ -547,6 +546,8 @@ def item_type(cls: type, /) -> type:
 
         if len(ability_list) != 0:
             if len(basic_stats) + len(bonus_stats) != 0:
+                info += '\n'
+            elif ability.__class__.__name__ == 'Pet':
                 info += '\n'
             info += '\n' + '\n\n'.join(ability_list)
 

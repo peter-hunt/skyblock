@@ -191,6 +191,12 @@ ABILITIES = [
                      f'break a large amount of logs in\na single hit!\n'
                      f'{DARK_GRAY}Cooldown: {GREEN}2s{GRAY}'),
     ),
+
+    NamedAbility(
+        id='eternal_coins',
+        name='Eternal Coins',
+        description=f"Don't lose {GOLD}coins{GRAY} from death.",
+    ),
 ]
 
 
