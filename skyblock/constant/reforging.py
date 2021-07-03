@@ -4,8 +4,8 @@ Constants of reforging stats.
 
 __all__ = [
     'STAT_ALIASES',
-    'ARMOR_REFORGES', 'BOW_REFORGES', 'SWORD_REFORGES',
-    'ARMOR_MODIFIERS', 'BOW_MODIFIERS', 'SWORD_MODIFIERS',
+    'ARMOR_REFORGES', 'BOW_REFORGES', 'MELEE_REFORGES',
+    'ARMOR_MODIFIERS', 'BOW_MODIFIERS', 'MELEE_MODIFIERS',
     'MODIFIERS',
 ]
 
@@ -149,12 +149,12 @@ BOW_MODIFIERS = {
     ),
 }
 
-SWORD_REFORGES = (
+MELEE_REFORGES = (
     'gentle', 'odd', 'fast', 'fair', 'epic',
     'sharp', 'heroic', 'spicy', 'legendary',
 )
 
-SWORD_MODIFIERS = {
+MELEE_MODIFIERS = {
     'gentle': (
         {'str': 3, 'as': 8}, {'str': 5, 'as': 10}, {'str': 7, 'as': 15},
         {'str': 10, 'as': 20}, {'str': 15, 'as': 25}, {'str': 20, 'as': 30},
@@ -207,4 +207,4 @@ SWORD_MODIFIERS = {
     ),
 }
 
-MODIFIERS = {**ARMOR_MODIFIERS, **BOW_MODIFIERS, **SWORD_MODIFIERS}
+MODIFIERS = {**ARMOR_MODIFIERS, **BOW_MODIFIERS, **MELEE_MODIFIERS}

@@ -418,6 +418,16 @@ MOBS = [
             (Item('enchanted_obsidian'), 1, 'rare', 0.01),
             (get_item('obsidian_chestplate'), 1, 'legendary', 0.001),
         ]),
+    Mob('endermite', level=37, health=2_000, damage=400,
+        coins=10, exp=36, combat_xp=25,
+        drops=[
+            (Item('end_stone'), (1, 2), 'common', 1),
+        ]),
+    Mob('endermite', level=40, health=2_300, damage=475,
+        coins=11, exp=38, combat_xp=28,
+        drops=[
+            (Item('end_stone'), (2, 4), 'common', 1),
+        ]),
 
     # sea creatures
     Mob('squid', level=1, health=2_000, damage=0,

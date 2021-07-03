@@ -18,6 +18,7 @@ from ...function.util import (
 from ...object.collection import is_collection
 from ...object.fishing import FISHING_TABLE, SEA_CREATURES
 from ...object.item import get_item, validify_item
+from ...object.mob import get_mob
 from ...object.object import (
     Item, Empty, Bow, Sword, Armor, Axe, Hoe, Pickaxe, Drill, FishingRod,
     Crop, Mineral, Wood, Mob,
@@ -247,6 +248,10 @@ def gather(self, name: str, tool_index: Optional[int],
             self.add_exp(random_amount(resource.exp)
                          * random_amount(exp_mult))
             self.add_skill_exp('mining', resource.mining_exp)
+
+            if resource.name == 'end_stone' and random_bool(0.1):
+                self.slay(get_mob('endermite', level=37))
+
             if i >= (last_cp + cp_step) * iteration:
                 while i >= (last_cp + cp_step) * iteration:
                     last_cp += cp_step

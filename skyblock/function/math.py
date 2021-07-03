@@ -336,7 +336,7 @@ def display_skill_reward(name: str, original: Number, current: Number):
               f' {WHITE}while in {RED}The Catacombs{WHITE}.')
 
     if name != 'catacombs':
-        gray(f'  +{GOLD}{display_int(coins_reward)}{GRAY} Coins')
+        gray(f'  +{GOLD}{format_number(coins_reward)}{GRAY} Coins')
 
 
 # 5l*4% + 5l*5% + 5l*6% + 5l*7% + 5l*8% + 5l*9% +

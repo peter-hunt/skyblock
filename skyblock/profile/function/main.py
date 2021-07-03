@@ -217,10 +217,10 @@ def mainloop(self):
                 self.balance += coins
 
                 green(f'You have deposited {GOLD}'
-                        f'{format_number(coins)} Coins{GREEN}! '
-                        f'You now have {GOLD}'
-                        f'{format_number(self.balance)} Coins{GREEN} '
-                        'in your account!')
+                      f'{format_number(coins)} Coins{GREEN}! '
+                      f'You now have {GOLD}'
+                      f'{format_number(self.balance)} Coins{GREEN} '
+                      'in your account!')
             else:
                 if self.balance == 0:
                     red("You don't have any coins in your bank account!")
@@ -232,10 +232,10 @@ def mainloop(self):
                 self.purse += coins
 
                 green(f'You have withdrawn {GOLD}'
-                        f'{format_number(coins)} Coins{GREEN}! '
-                        f'You now have {GOLD}'
-                        f'{format_number(self.balance)} Coins{GREEN} '
-                        'in your account!')
+                      f'{format_number(coins)} Coins{GREEN}! '
+                      f'You now have {GOLD}'
+                      f'{format_number(self.balance)} Coins{GREEN} '
+                      'in your account!')
 
         elif words[0] == 'enchant':
             if self.zone != 'library':
@@ -290,8 +290,8 @@ def mainloop(self):
 
             gray(f'Experience: {BLUE}{format_number(lvl)} Levels')
             yellow(f'{format_short(left)}{GOLD}'
-                    f'/{YELLOW}{format_short(gap)}'
-                    f' {GRAY}to the next level.')
+                   f'/{YELLOW}{format_short(gap)}'
+                   f' {GRAY}to the next level.')
 
         elif words[0] == 'fish':
             if not zone.fishable:
@@ -336,9 +336,9 @@ def mainloop(self):
 
                 tool_item = self.inventory[tool_index]
                 if not isinstance(tool_item,
-                                    (Empty, Axe, Hoe, Pickaxe, Drill)):
+                                  (Empty, Axe, Hoe, Pickaxe, Drill)):
                     yellow(f'{tool_item.display()}{YELLOW} is not tool.\n'
-                            f'Using barehand by default.')
+                           f'Using barehand by default.')
                     tool_index = None
 
             amount = 1
@@ -404,12 +404,12 @@ def mainloop(self):
                     continue
 
                 weapon_item = self.inventory[weapon_index]
-                if (isinstance(weapon_item, FishingRod) and
+                if (isinstance(weapon_item, (FishingRod, Pickaxe, Drill)) and
                         getattr(weapon_item, 'damage', 0) != 0):
                     pass
                 elif not isinstance(weapon_item, (Empty, Bow, Sword)):
                     yellow(f'{weapon_item.name} item is not weapon.\n'
-                            f'Using barehand by default.')
+                           f'Using barehand by default.')
                     weapon_index = None
 
             amount = 1
@@ -450,11 +450,11 @@ def mainloop(self):
             self.inventory[index_1], self.inventory[index_2] = (
                 self.inventory[index_2], self.inventory[index_1])
             gray(f'Switched {self.inventory[index_2].display()}{GRAY}'
-                    f' and {self.inventory[index_1].display()}')
+                 f' and {self.inventory[index_1].display()}')
 
         elif words[0] == 'organize':
             inventory = [item.copy() for item in self.inventory
-                            if not isinstance(item, Empty)]
+                         if not isinstance(item, Empty)]
             self.inventory = [Empty() for _ in range(36)]
             for item in inventory:
                 self.recieve_item(item, getattr(item, 'count', 1))
@@ -483,7 +483,7 @@ def mainloop(self):
                             self.display_item(pet)
                             break
                     else:
-                        red("You don't have a pet summoned!")
+                        red("You don't have an active pet!")
                     continue
 
                 index = self.parse_index(words[2], len(self.pets))
@@ -579,8 +579,8 @@ def mainloop(self):
 
             skill = words[1]
             if skill not in {'farming', 'mining', 'combat', 'foraging',
-                                'fishing', 'enchanting', 'alchemy', 'taming',
-                                'catacombs'}:
+                             'fishing', 'enchanting', 'alchemy', 'taming',
+                             'catacombs'}:
                 red(f'Invalid skill: {skill!r}')
                 continue
 

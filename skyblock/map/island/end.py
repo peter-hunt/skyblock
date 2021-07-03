@@ -7,6 +7,17 @@ from ..object import Island, Zone, add_dist
 
 __all__ = ['END']
 
+DRAGONS_NEST = Zone(
+    'drag', -600, -280,
+    resources=[get_resource('end_stone'), get_resource('obsidian')],
+    mobs=[get_mob('watcher'), get_mob('obsidian_defender'),
+          get_mob('zealot'), get_mob('endermite', level=40)],
+)
+END_CAVES = Zone(
+    'end_caves', -580, -290,
+    resources=[get_resource('end_stone'), get_resource('obsidian')],
+    mobs=[get_mob('enderman', level=50)],
+)
 END_ENTRENCE = Zone(
     'end_entrence', -540, -300, portal='spider',
     npcs=[get_npc('pearl_dealer')],
@@ -18,22 +29,19 @@ END_TUNNEL = Zone(
     resources=[get_resource('end_stone'), get_resource('obsidian')],
     mobs=[get_mob('enderman', level=45)],
 )
-END_CAVES = Zone(
-    'end_caves', -580, -290,
+VOID_SEPULTURE = Zone(
+    'void_sepulture', -575, -320,
     resources=[get_resource('end_stone'), get_resource('obsidian')],
-    mobs=[get_mob('enderman', level=50)],
-)
-DRAGONS_NEST = Zone(
-    'drag', -600, -280,
-    resources=[get_resource('end_stone')],
-    mobs=[get_mob('watcher'), get_mob('obsidian_defender'), get_mob('zealot')],
 )
 
-END_JOINTS = [END_ENTRENCE, END_TUNNEL, END_CAVES, DRAGONS_NEST]
+END_JOINTS = [
+    DRAGONS_NEST, END_CAVES, END_ENTRENCE, END_TUNNEL, VOID_SEPULTURE,
+]
 END_CONNS = [
     (DRAGONS_NEST, END_CAVES),
-    (END_ENTRENCE, END_TUNNEL),
+    (DRAGONS_NEST, VOID_SEPULTURE),
     (END_CAVES, END_TUNNEL),
+    (END_ENTRENCE, END_TUNNEL),
 ]
 
 END_DISTS = {}

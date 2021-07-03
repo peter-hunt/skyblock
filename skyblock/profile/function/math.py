@@ -15,7 +15,7 @@ from ...function.reforging import get_modifier
 from ...function.util import format_name, format_roman
 from ...object.collection import is_collection, get_collection, calc_coll_lvl
 from ...object.object import (
-    Empty, Bow, Sword, Axe, Hoe, Pickaxe, Drill, Armor, Pet, Recipe,
+    Empty, Bow, Sword, Axe, Hoe, Pickaxe, Drill, FishingRod, Armor, Pet, Recipe,
 )
 
 
@@ -172,7 +172,7 @@ def get_skill_lvl(self, name: str, /) -> int:
         red(f'Skill not found: {name}')
         return
 
-    return calc_exp_lvl(getattr(self, f'experience_skill_{name}'))
+    return calc_skill_lvl(name, getattr(self, f'experience_skill_{name}'))
 
 
 def get_stat(self, name: str, index: Optional[int] = None, /):
@@ -186,7 +186,8 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
     else:
         item = self.inventory[index]
 
-        if not isinstance(item, (Bow, Sword, Axe, Hoe, Pickaxe, Drill)):
+        if not isinstance(item, (Bow, Sword, Axe, Hoe,
+                                 Pickaxe, Drill, FishingRod)):
             item = Empty()
 
     if getattr(item, 'modifier', None) is not None:
@@ -196,7 +197,8 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
     item_ench = getattr(item, 'enchantments', {})
 
     if name == 'strength':
-        value += getattr(item, 'hot_potato', 0)
+        if isinstance(item, (Bow, Sword, FishingRod)):
+            value += getattr(item, 'hot_potato', 0)
     if name == 'crit_damage':
         value += item_ench.get('critical', 0) * 10
     elif name == 'mining_speed':
@@ -307,9 +309,9 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
                 delta += armor_ench.get('true_protection', 0) * 3
         elif name == 'speed':
             if full_set_bonus == 'old_dragon_armor':
-                delta += armor_ench.get('sugar_rush', 0) * 2
-            else:
                 delta += armor_ench.get('sugar_rush', 0) * 4
+            else:
+                delta += armor_ench.get('sugar_rush', 0) * 2
         elif name == 'intelligence':
             delta += armor_ench.get('big_brain', 0) * 5
             delta += armor_ench.get('smarty_pants', 0) * 5

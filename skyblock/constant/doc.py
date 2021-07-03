@@ -128,8 +128,8 @@ List all the pets in the pet menu.
 > pet add <index>
 Add a pet to the pet menu.
 
-> pet despawn <index>
-Despawn a pet from the pet menu.
+> pet despawn
+Despawn the active pet from the pet menu.
 
 > pet info [index]
 Display info about a pet.

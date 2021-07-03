@@ -60,6 +60,7 @@ python -m skyblock
 * Forging (Dwarven Mines)
 * HoTM Skill Tree (Dwarven Mines)
 * Minions
+* NPC usage (like Blacksmith reforging)
 
 # Furthur information
 This project is a clone of [Hypixel Skyblock](https://hypixel-skyblock.fandom.com/wiki/Hypixel_SkyBlock_Wiki)

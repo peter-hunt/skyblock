@@ -106,6 +106,8 @@ class Pickaxe(ItemType):
     breaking_power: int
     mining_speed: int
 
+    damage: int = 0
+
     modifier: Optional[str] = None
     enchantments: Dict[str, int] = {}
 
@@ -118,6 +120,8 @@ class Drill(ItemType):
     breaking_power: int
     mining_speed: int
     mining_fortune: int = 0
+
+    damage: int = 0
 
     modifier: Optional[str] = None
     enchantments: Dict[str, int] = {}
