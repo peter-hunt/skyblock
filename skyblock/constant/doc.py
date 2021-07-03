@@ -36,7 +36,7 @@ profile_doc = """
 > armor [part=all]
 Display equipped armor.
 
-> buy <index> [amount=1]
+> buy <index> [amount]
 Buy item from the shop.
 
 > cheat
@@ -52,11 +52,11 @@ Removes all items currently in the Stash.
 > collections [category|name]
 Display collections.
 
-> consume <index> [amount=1]
-> use <index> [amount=1]
+> consume <index> [amount]
+> use <index> [amount]
 Consume item.
 
-> craft <recipe-index> [amount=1]
+> craft <recipe-index> [amount]
 Craft items.
 
 > deathcount
@@ -78,12 +78,12 @@ Exit to the menu.
 > exp
 Display your vanilla experience.
 
-> fish <rod-index> [iteration=1]
+> fish <rod-index> [iteration]
 Fish for worthy.
 
-> gather <resource> [tool-index=hand] [amount=1]
-> get <resource> [tool-index=hand] [amount=1]
-> mine <resource> [tool-index=hand] [amount=1]
+> gather <resource> [tool-index] [iteration]
+> get <resource> [tool-index] [iteration]
+> mine <resource> [tool-index] [iteration]
 Gather resources.
 
 > goto <region>
@@ -95,8 +95,8 @@ Display detailed informatioon about the item.
 > item <id>
 Display information of any item.
 
-> kill <mob> [weapon-index=hand] [amount=1]
-> slay <mob> [weapon-index=hand] [amount=1]
+> kill <mob> [weapon-index] [iteration]
+> slay <mob> [weapon-index] [iteration]
 Slay mobs.
 
 > ls
@@ -131,8 +131,8 @@ Add a pet to the pet menu.
 > pet despawn <index>
 Despawn a pet from the pet menu.
 
-> pet info <index>
-Display info about pet in the pet menu.
+> pet info [index]
+Display info about a pet.
 
 > pet remove <index>
 Remove a pet from the pet menu to your inventory.
@@ -151,14 +151,17 @@ Shows your current playtime.
 > recipes [category] [--all]
 Shows all recipes or recipes avaliable.
 
+> save
+Save the profile.
+
 > sell <index>
 Sell the item.
 
-> shop [index=all]
+> shop [index]
 Show trades in recently opened shop.
 
-> skill [skill=all]
-> skills [skill=all]
+> skill [name]
+> skills [name]
 Get information about your skills.
 
 > split <from-index> <to-index> <amount>
@@ -167,6 +170,7 @@ Split items to another slot.
 > stat [item_index=none]
 > stats [item_index=none]
 Get information about your stats.
+Can be done holding item.
 
 > talkto <npc>
 Talk to an npc.

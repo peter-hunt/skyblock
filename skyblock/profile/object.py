@@ -7,11 +7,11 @@ from ..constant.color import BOLD, GOLD, GRAY, BLUE, GREEN, YELLOW
 from ..constant.doc import profile_doc
 from ..constant.main import ARMOR_PARTS
 from ..constant.util import Number
-from ..function.math import calc_pet_exp, calc_exp_lvl, calc_exp, calc_skill_lvl
+from ..function.math import calc_pet_exp, calc_exp_lvl, calc_exp
 from ..function.io import dark_green, gray, red, green, yellow
 from ..function.util import (
-    checkpoint, clear, display_int, display_name, display_number, generate_help,
-    get, includes, is_valid_usage, parse_int, roman, shorten_number,
+    checkpoint, clear, format_name, format_number, format_roman, format_short,
+    generate_help, get, includes, is_valid_usage, parse_int,
 )
 from ..object.collection import COLLECTIONS, is_collection
 from ..object.item import ITEMS, get_item, get_scroll
@@ -85,12 +85,12 @@ class Profile:
     def talkto_npc(self, npc: Npc, /) -> Optional[str]:
         if npc.name not in self.npc_talked:
             if npc.init_dialog is not None:
-                self.npc_talk(npc.name, npc.init_dialog)
+                self.npc_speak(npc.name, npc.init_dialog)
             elif npc.dialog is not None:
                 if isinstance(npc.dialog, list):
-                    self.npc_talk(npc.name, npc.dialog)
+                    self.npc_speak(npc.name, npc.dialog)
                 elif isinstance(npc.dialog, tuple):
-                    self.npc_talk(npc.name, choice(npc.dialog))
+                    self.npc_speak(npc.name, choice(npc.dialog))
             elif npc.trades is not None:
                 self.display_shop(npc, None)
                 return npc.name
@@ -105,9 +105,9 @@ class Profile:
             return npc.name
         elif npc.dialog is not None:
             if isinstance(npc.dialog, list):
-                self.npc_talk(npc.name, npc.dialog)
+                self.npc_speak(npc.name, npc.dialog)
             elif isinstance(npc.dialog, tuple):
-                self.npc_talk(npc.name, choice(npc.dialog))
+                self.npc_speak(npc.name, choice(npc.dialog))
         else:
             self.npc_silent(npc)
 
@@ -131,7 +131,7 @@ class Profile:
                     last_shop = None
 
             if self.zone not in self.visited_zones:
-                dark_green(f'{BOLD}{display_name(self.zone)}')
+                dark_green(f'{BOLD}{format_name(self.zone)}')
                 green(f'New Zone Discovered!')
                 self.visited_zones.append(self.zone)
 
@@ -258,7 +258,7 @@ class Profile:
                 self.craft(index, amount)
 
             elif words[0] == 'deathcount':
-                yellow(f'Death Count: {BLUE}{display_int(self.death_count)}')
+                yellow(f'Death Count: {BLUE}{format_number(self.death_count)}')
 
             elif words[0] in {'deposit', 'withdraw'}:
                 if self.zone not in {'bank', 'dwarven_village'}:
@@ -299,9 +299,9 @@ class Profile:
                     self.balance += coins
 
                     green(f'You have deposited {GOLD}'
-                          f'{display_number(coins)} Coins{GREEN}! '
+                          f'{format_number(coins)} Coins{GREEN}! '
                           f'You now have {GOLD}'
-                          f'{display_number(self.balance)} Coins{GREEN} '
+                          f'{format_number(self.balance)} Coins{GREEN} '
                           'in your account!')
                 else:
                     if self.balance == 0:
@@ -314,9 +314,9 @@ class Profile:
                     self.purse += coins
 
                     green(f'You have withdrawn {GOLD}'
-                          f'{display_number(coins)} Coins{GREEN}! '
+                          f'{format_number(coins)} Coins{GREEN}! '
                           f'You now have {GOLD}'
-                          f'{display_number(self.balance)} Coins{GREEN} '
+                          f'{format_number(self.balance)} Coins{GREEN} '
                           'in your account!')
 
             elif words[0] == 'enchant':
@@ -346,7 +346,7 @@ class Profile:
                 if armor_piece.combat_skill_req is None:
                     pass
                 elif combat_req > combat_lvl:
-                    red(f'Requires Combat level {roman(combat_req)}')
+                    red(f'Requires Combat level {format_roman(combat_req)}')
                     continue
 
                 slot_index = ARMOR_PARTS.index(armor_piece.part)
@@ -370,9 +370,9 @@ class Profile:
                 else:
                     gap = 9 * lvl - 158
 
-                gray(f'Experience: {BLUE}{display_int(lvl)} Levels')
-                yellow(f'{shorten_number(left)}{GOLD}'
-                       f'/{YELLOW}{shorten_number(gap)}'
+                gray(f'Experience: {BLUE}{format_number(lvl)} Levels')
+                yellow(f'{format_short(left)}{GOLD}'
+                       f'/{YELLOW}{format_short(gap)}'
                        f' {GRAY}to the next level.')
 
             elif words[0] == 'fish':
@@ -559,6 +559,15 @@ class Profile:
                     self.despawn_pet()
 
                 elif words[1] == 'info':
+                    if len(words) == 2:
+                        for pet in self.pets:
+                            if pet.active:
+                                self.display_item(pet)
+                                break
+                        else:
+                            red("You don't have a pet summoned!")
+                        continue
+
                     index = self.parse_index(words[2], len(self.pets))
                     if index is None:
                         continue

@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 from math import dist, inf
 from typing import Dict, List, Optional, Tuple, Union
 
-from ..function.util import display_name
+from ..function.util import format_name
 from ..object.object import ItemType, Resource, Mob
 
 
@@ -23,7 +23,7 @@ class Npc:
     claim_item: Optional[ItemType] = None
 
     def __repr__(self):
-        return display_name(self.name)
+        return format_name(self.name)
 
 
 @dataclass(order=True)
@@ -39,7 +39,7 @@ class Zone:
     skill_req: Optional[Tuple[str, int]] = None
 
     def __repr__(self):
-        return display_name(self.name)
+        return format_name(self.name)
 
     def __hash__(self):
         return hash(self.name)
@@ -123,4 +123,4 @@ class Island:
     skill_req: Optional[Tuple[str, int]] = None
 
     def __repr__(self):
-        return display_name(self.name)
+        return format_name(self.name)

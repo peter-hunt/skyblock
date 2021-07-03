@@ -7,7 +7,7 @@ from ..constant.main import DUNGEON_EXP, SKILL_EXP, SKILL_LIMITS, PET_EXP_DIFF
 from ..constant.util import Amount, Number
 
 from .io import gray, yellow, white
-from .util import display_int, roman
+from .util import format_number, format_roman
 
 
 __all__ = [
@@ -215,7 +215,7 @@ def display_skill_reward(name: str, original: Number, current: Number):
         fh_current = fh_origin
         for lvl in range(original + 1, current + 1):
             fh_current += 4 if lvl <= 50 else 1
-        yellow(f'  Farmhand {roman(current)}')
+        yellow(f'  Farmhand {format_roman(current)}')
         white(f'   Grants {GREEN}+{GRAY}{fh_origin}->{GREEN}{fh_current}{GOLD}'
               f' ☘ Farming Fortune{WHITE},\n'
               f'   which increases your chance for multiple crops.')
@@ -229,7 +229,7 @@ def display_skill_reward(name: str, original: Number, current: Number):
         for lvl in range(original + 1, current + 1):
             def_delta += 1 if lvl <= 14 else 2
 
-        yellow(f'  Spelunker {roman(current)}')
+        yellow(f'  Spelunker {format_roman(current)}')
         white(f'   Grants {GREEN}+{GRAY}{sk_origin}->{GREEN}{sk_current}{GOLD}'
               f' ☘ Mining Fortune{WHITE},\n'
               f'   which increases your chance for multiple ore\n'
@@ -246,10 +246,10 @@ def display_skill_reward(name: str, original: Number, current: Number):
         for lvl in range(original + 1, current + 1):
             war_current += 4 if lvl <= 50 else 1
 
-        yellow(f'  Warrior {roman(current)}')
+        yellow(f'  Warrior {format_roman(current)}')
         white(f'   Deal {GRAY}{war_origin}->{GREEN}{war_current}%'
               f' {WHITE}more damage to mobs.')
-        gray(f'  +{GREEN}{display_int(0.5 * lvl_delta)}%{BLUE} ☢ Crit Chance')
+        gray(f'  +{GREEN}{format_number(0.5 * lvl_delta)}%{BLUE} ☢ Crit Chance')
 
     elif name == 'foraging':
         lg_origin = original * 4
@@ -259,7 +259,7 @@ def display_skill_reward(name: str, original: Number, current: Number):
         for lvl in range(original + 1, current + 1):
             str_delta += 1 if lvl <= 14 else 2
 
-        yellow(f'  Logger {roman(current)}')
+        yellow(f'  Logger {format_roman(current)}')
         white(f'   Grants {GREEN}+{GRAY}{lg_origin}->{GREEN}{lg_current}{GOLD}'
               f' ☘ Foraging Fortune{WHITE},\n'
               f'   which increases your chance for multiple logs\n'
@@ -281,10 +281,10 @@ def display_skill_reward(name: str, original: Number, current: Number):
             else:
                 hp_delta += 5
 
-        yellow(f'  Treasure Hunter {roman(current)}')
+        yellow(f'  Treasure Hunter {format_roman(current)}')
         white(f'   Increases the chance to find treasure when\n'
-              f'   when fishing by {GREEN}+{GRAY}{display_int(th_origin)}->'
-              f'{GREEN}{display_int(th_current)}%{WHITE}.')
+              f'   when fishing by {GREEN}+{GRAY}{format_number(th_origin)}->'
+              f'{GREEN}{format_number(th_current)}%{WHITE}.')
         gray(f'  +{GREEN}{hp_delta}{RED} ♥ Health')
 
     elif name == 'enchanting':
@@ -292,22 +292,22 @@ def display_skill_reward(name: str, original: Number, current: Number):
         for lvl in range(original + 1, current + 1):
             int_delta += 1 if lvl <= 14 else 2
 
-        yellow(f'  Conjurer {roman(current)}')
+        yellow(f'  Conjurer {format_roman(current)}')
         white(f'   Gain {GRAY}{original * 4}->{GREEN}{current * 4}%'
               f' {WHITE}more experience orbs from\n'
               f'   any source.')
-        gray(f'  +{GREEN}{display_int(int_delta)}{AQUA} ✎ Intelligence')
+        gray(f'  +{GREEN}{format_number(int_delta)}{AQUA} ✎ Intelligence')
 
     elif name == 'alchemy':
         int_delta = 0
         for lvl in range(original + 1, current + 1):
             int_delta += 1 if lvl <= 14 else 2
 
-        yellow(f'  Brewer {roman(current)}')
+        yellow(f'  Brewer {format_roman(current)}')
         white(f'   Potions that you brew have a {GRAY}{original}->'
               f'{GREEN}{current}%\n'
               f'   {WHITE}longer duration.')
-        gray(f'  +{GREEN}{display_int(int_delta)}{AQUA} ✎ Intelligence')
+        gray(f'  +{GREEN}{format_number(int_delta)}{AQUA} ✎ Intelligence')
 
     elif name == 'catacombs':
         hp_delta = current - original

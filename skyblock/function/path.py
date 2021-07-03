@@ -7,8 +7,15 @@ from .io import yellow
 __all__ = ['is_dir', 'is_file', 'is_profile']
 
 
-# shortcut to detect if directory exists in skyblock folder
 def is_dir(*names, warn: bool = False):
+    """
+    Detect if a directory exists in ~/skyblock folder.
+
+    Args:
+        *names: Path to the target directory.
+        warn: A boolean of whether to warn if the directory doesn't exist.
+    """
+
     if not Path(join(Path.home(), 'skyblock', *names)).is_dir():
         path = join('~', 'skyblock', *names)
         if warn:
@@ -17,8 +24,15 @@ def is_dir(*names, warn: bool = False):
     return True
 
 
-# shortcut to detect if file exists in skyblock folder
 def is_file(*names, warn: bool = False):
+    """
+    Detect if a file exists in ~/skyblock folder.
+
+    Args:
+        *names: Path to the target file.
+        warn: A boolean of whether to warn if the file doesn't exist.
+    """
+
     if not Path(join(Path.home(), 'skyblock', *names)).is_file():
         path = join('~', 'skyblock', *names)
         if warn:
@@ -27,7 +41,13 @@ def is_file(*names, warn: bool = False):
     return True
 
 
-# shortcut to detect if profile exists in skyblock folder
 def is_profile(name: str, /):
+    """
+    Detect if a profile exists in ~/skyblock folder.
+
+    Args:
+        name: Name of the target profile.
+    """
+
     return (is_dir() and is_dir('saves')
             and is_file('saves', f'{name}.json'))

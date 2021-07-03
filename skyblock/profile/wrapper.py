@@ -7,20 +7,17 @@ from typing import Optional
 from ..constant.color import WHITE
 from ..function.io import red, yellow
 from ..function.path import is_profile
-from ..function.util import display_name, parse_int
+from ..function.util import parse_int
 from ..object.object import Empty, load_item
 from ..map.object import Npc
 
-from .action_wrapper import profile_action_wrapper
-from .display_wrapper import profile_display_wrapper
-from .item_wrapper import profile_item_wrapper
-from .math_wrapper import profile_math_wrapper
+from .function import profile_functions
 
 
-__all__ = ['profile_basic_wrapper', 'profile_wrapper']
+__all__ = ['profile_wrapper']
 
 
-def profile_basic_wrapper(cls):
+def profile_wrapper(cls):
     anno = [key for key in getattr(cls, '__annotations__', {})
             if key != 'name']
 
@@ -87,13 +84,6 @@ def profile_basic_wrapper(cls):
 
     cls.load = classmethod(eval(load_str))
 
-    @staticmethod
-    def npc_silent(npc: Npc, /):
-        yellow(f'[NPC] {display_name(npc.name)}'
-               f"{WHITE}: ({display_name(npc.name)} said nothing)")
-
-    cls.npc_silent = npc_silent
-
     def parse_index(self, word: str, length: Optional[int] = None, /) -> Optional[int]:
         index = parse_int(word)
         if index is None:
@@ -107,14 +97,7 @@ def profile_basic_wrapper(cls):
 
     cls.parse_index = parse_index
 
-    return cls
-
-
-def profile_wrapper(cls):
-    cls = profile_basic_wrapper(cls)
-    cls = profile_action_wrapper(cls)
-    cls = profile_display_wrapper(cls)
-    cls = profile_item_wrapper(cls)
-    cls = profile_math_wrapper(cls)
+    for name, func in profile_functions.items():
+        setattr(cls, name, func)
 
     return cls

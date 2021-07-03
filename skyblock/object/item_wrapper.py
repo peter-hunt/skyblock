@@ -3,15 +3,13 @@ from math import floor
 from ..constant.color import (
     RARITY_COLORS,
     CLN, BOLD, DARK_RED, GOLD, GRAY, DARK_GRAY,
-    BLUE, GREEN, RED, LIGHT_PURPLE, YELLOW, WHITE,
+    BLUE, GREEN, AQUA, RED, LIGHT_PURPLE, YELLOW, WHITE,
 )
 from ..constant.enchanting import ULTIMATE_ENCHS
-from ..function.math import (
-    calc_pet_lvl, calc_pet_upgrade_exp, dung_stat,
-)
+from ..function.math import calc_pet_lvl, calc_pet_upgrade_exp, dung_stat
 from ..function.reforging import get_modifier
 from ..function.util import (
-    display_int, display_name, roman, shorten_number,
+    format_name, format_number, format_roman, format_short,
 )
 from .ability import get_ability
 
@@ -92,15 +90,15 @@ def item_type(cls: type, /) -> type:
             modifier = ''
 
         if self.__class__.__name__ == 'TravelScroll':
-            name = f'Travel Scroll to {display_name(self.island)}'
+            name = f'Travel Scroll to {format_name(self.island)}'
             if self.zone is not None:
-                name += f' {display_name(self.zone)}'
+                name += f' {format_name(self.zone)}'
         elif self.__class__.__name__ == 'Pet':
-            name = display_name('_'.join(self.name.split('_')[:-1]))
+            name = format_name('_'.join(self.name.split('_')[:-1]))
         else:
-            name = display_name(self.name)
+            name = format_name(self.name)
 
-        count = (f' x {display_int(self.count)}'
+        count = (f' x {format_number(self.count)}'
                  if getattr(self, 'count', 1) != 1 else '')
 
         if getattr(self, 'stars', None) is None:
@@ -138,13 +136,13 @@ def item_type(cls: type, /) -> type:
             modifier = ''
 
         if self.__class__.__name__ == 'TravelScroll':
-            name = f'Travel Scroll to {display_name(self.island)}'
+            name = f'Travel Scroll to {format_name(self.island)}'
             if self.zone is not None:
-                name += f' {display_name(self.zone)}'
+                name += f' {format_name(self.zone)}'
         elif self.__class__.__name__ == 'Pet':
-            name = display_name('_'.join(self.name.split('_')[:-1]))
+            name = format_name('_'.join(self.name.split('_')[:-1]))
         else:
-            name = display_name(self.name)
+            name = format_name(self.name)
 
         if getattr(self, 'stars', None) is None:
             stars = ''
@@ -174,7 +172,7 @@ def item_type(cls: type, /) -> type:
             is_dungeon = self.stars is not None
 
             for stat_name in ('damage', 'strength', 'sea_creature_chance'):
-                display_stat = display_name(stat_name)
+                display_stat = format_name(stat_name)
                 ext = '%' if 'sea' in stat_name[0] else ''
                 value = getattr(self, stat_name)
 
@@ -207,7 +205,7 @@ def item_type(cls: type, /) -> type:
                                          for stat in basic_stats)
 
             for stat_name in ('ferocity',):
-                display_stat = display_name(stat_name)
+                display_stat = format_name(stat_name)
                 value = getattr(self, stat_name)
 
                 if is_dungeon:
@@ -241,7 +239,7 @@ def item_type(cls: type, /) -> type:
             for stat_name in ('damage', 'strength', 'crit_chance',
                               'crit_damage', 'attack_speed'):
 
-                display_stat = display_name(stat_name)
+                display_stat = format_name(stat_name)
                 ext = '%' if stat_name[0] in 'ac' else ''
                 value = getattr(self, stat_name, 0)
 
@@ -253,7 +251,7 @@ def item_type(cls: type, /) -> type:
                 if stat_name in modifier_bonus:
                     bonus_value = modifier_bonus[stat_name]
                     value += bonus_value
-                    bonus += (f' {BLUE}({display_name(self.modifier)}'
+                    bonus += (f' {BLUE}({format_name(self.modifier)}'
                               f' +{bonus_value}{ext})')
 
                 if stat_name == 'damage':
@@ -286,14 +284,14 @@ def item_type(cls: type, /) -> type:
 
             for stat_name in ('defense', 'intelligence', 'true_defense',
                               'ferocity', 'speed'):
-                display_stat = display_name(stat_name)
+                display_stat = format_name(stat_name)
                 value = getattr(self, stat_name, 0)
 
                 bonus = ''
                 if stat_name in modifier_bonus:
                     bonus_value = modifier_bonus[stat_name]
                     value += bonus_value
-                    bonus += (f' {BLUE}({display_name(self.modifier)}'
+                    bonus += (f' {BLUE}({format_name(self.modifier)}'
                               f' +{bonus_value})')
 
                 if is_dungeon:
@@ -325,7 +323,7 @@ def item_type(cls: type, /) -> type:
                 modifier_bonus = {}
 
             for stat_name in ('strength', 'crit_chance', 'crit_damage'):
-                display_stat = display_name(stat_name)
+                display_stat = format_name(stat_name)
                 ext = '%' if stat_name[0] in 'ac' else ''
                 value = getattr(self, stat_name)
 
@@ -333,7 +331,7 @@ def item_type(cls: type, /) -> type:
                 if stat_name in modifier_bonus:
                     bonus_value = modifier_bonus[stat_name]
                     value += bonus_value
-                    bonus += (f' {BLUE}({display_name(self.modifier)}'
+                    bonus += (f' {BLUE}({format_name(self.modifier)}'
                               f' +{bonus_value})')
 
                 if is_dungeon:
@@ -361,7 +359,7 @@ def item_type(cls: type, /) -> type:
                               'true_defense', 'ferocity',
                               'sea_creature_chance'):
 
-                display_stat = display_name(stat_name)
+                display_stat = format_name(stat_name)
                 value = getattr(self, stat_name, 0)
 
                 if stat_name == 'health':
@@ -383,7 +381,7 @@ def item_type(cls: type, /) -> type:
                 if stat_name in modifier_bonus:
                     bonus_value = modifier_bonus[stat_name]
                     value += bonus_value
-                    bonus += (f' {BLUE}({display_name(self.modifier)}'
+                    bonus += (f' {BLUE}({format_name(self.modifier)}'
                               f' +{bonus_value})')
 
                 if is_dungeon:
@@ -407,7 +405,7 @@ def item_type(cls: type, /) -> type:
                                          for stat in bonus_stats)
 
         elif self.__class__.__name__ == 'Pet':
-            category = display_name(self.category)
+            category = format_name(self.category)
             info += f'\n{DARK_GRAY}{category} Pet'
 
             pet_lvl = calc_pet_lvl(self.rarity, self.exp)
@@ -421,7 +419,7 @@ def item_type(cls: type, /) -> type:
                 if getattr(self, stat_name, 0) == 0:
                     continue
 
-                display_stat = display_name(stat_name)
+                display_stat = format_name(stat_name)
                 value = getattr(self, stat_name) * lvl_mult
 
                 ext = ''
@@ -431,21 +429,15 @@ def item_type(cls: type, /) -> type:
                     ext = '%'
 
                 stats.append(f'{display_stat}: {GREEN}'
-                             f'+{display_int(floor(value))}{ext}')
+                             f'+{format_number(floor(value))}{ext}')
 
             stats_str = '\n'.join(f'{GRAY}{stat}' for stat in stats)
             info += f'\n\n{stats_str}{CLN}'
 
-            next_level = min(pet_lvl + 1, 100)
             if pet_lvl == 100:
-                exp_left, exp_to_next = calc_pet_upgrade_exp(self.rarity,
-                                                             self.exp)
-                info += (
-                    f"\n\n{GREEN}{BOLD}{'-' * 20}"
-                    f' {YELLOW}{display_int(floor(exp_left))}'
-                    f'/{shorten_number(exp_to_next)}'
-                )
+                info += f'\n\n{AQUA}MAX LEVEL'
             else:
+                next_level = min(pet_lvl + 1, 100)
                 exp_left, exp_to_next = calc_pet_upgrade_exp(self.rarity,
                                                              self.exp)
                 perc = round(exp_left / exp_to_next * 100, 1)
@@ -453,18 +445,18 @@ def item_type(cls: type, /) -> type:
                 left, right = '-' * bar, '-' * (20 - bar)
                 info += (
                     f'\n\n{GRAY}Progress to Level {next_level}:'
-                    f' {YELLOW}{display_int(perc)}%\n'
+                    f' {YELLOW}{format_number(perc)}%\n'
                     f'{GREEN}{BOLD}{left}{GRAY}{BOLD}{right}'
-                    f' {YELLOW}{display_int(floor(exp_left))}'
-                    f'/{shorten_number(exp_to_next)}'
+                    f' {YELLOW}{format_number(floor(exp_left))}'
+                    f'/{format_short(exp_to_next)}'
                 )
 
         elif self.__class__.__name__ == 'TravelScroll':
             r_name = ('Spawn' if self.zone is None
-                      else display_name(self.zone))
+                      else format_name(self.zone))
             info += (f'\n{GRAY}Consume this item to add its\n'
                      f'destination to your fast travel\noptions.\n\n'
-                     f'Island: {GREEN}{display_name(self.island)}{GRAY}\n'
+                     f'Island: {GREEN}{format_name(self.island)}{GRAY}\n'
                      f'Teleport: {YELLOW}{r_name}')
 
         ability_list = []
@@ -503,22 +495,22 @@ def item_type(cls: type, /) -> type:
                     ench_color = (f'{LIGHT_PURPLE}{BOLD}'
                                   if name in ULTIMATE_ENCHS else BLUE)
                     lvl = enchs[name]
-                    lvl_str = '' if lvl == 0 else f' {roman(lvl)}'
+                    lvl_str = '' if lvl == 0 else f' {format_roman(lvl)}'
                     ench_list.append(
-                        f'{ench_color}{display_name(name)}{lvl_str}{CLN}'
+                        f'{ench_color}{format_name(name)}{lvl_str}{CLN}'
                     )
                     break
                 name = ench_names[0]
                 ench_color = (f'{LIGHT_PURPLE}{BOLD}'
                               if name in ULTIMATE_ENCHS else BLUE)
                 lvl = enchs[name]
-                lvl_str = '' if lvl == 0 else f' {roman(lvl)}'
-                ench_str = f'{ench_color}{display_name(name)}{lvl_str}, '
+                lvl_str = '' if lvl == 0 else f' {format_roman(lvl)}'
+                ench_str = f'{ench_color}{format_name(name)}{lvl_str}, '
 
                 name = ench_names[1]
                 lvl = enchs[name]
-                lvl_str = '' if lvl == 0 else f' {roman(lvl)}'
-                ench_str += f'{BLUE}{display_name(name)}{lvl_str}{CLN}'
+                lvl_str = '' if lvl == 0 else f' {format_roman(lvl)}'
+                ench_str += f'{BLUE}{format_name(name)}{lvl_str}{CLN}'
                 ench_list.append(ench_str)
 
                 ench_names = ench_names[2:]
@@ -542,7 +534,7 @@ def item_type(cls: type, /) -> type:
         if getattr(self, 'dungeon_completion_req', None) is not None:
             footers.append(f'{DARK_RED}❣ {RED}Requires {GREEN}'
                            f'Catacombs Floor'
-                           f' {roman(self.dungeon_completion_req)}'
+                           f' {format_roman(self.dungeon_completion_req)}'
                            f' Completion{CLN}')
         if getattr(self, 'fishing_skill_req', None) is not None:
             if fishing_lvl < self.fishing_skill_req:
