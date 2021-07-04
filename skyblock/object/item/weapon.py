@@ -42,14 +42,12 @@ WEAPONS = [
     Sword('end_sword', 'uncommon', damage=35),
     Sword('spider_sword', 'common', damage=30),
 
-    Sword('flaming_sword', 'uncommon', damage=50,
-          strength=20),
-
     Sword('fancy_sword', 'common', damage=30,
           enchantments={'first_strike': 1, 'scavenger': 1,
                         'sharpness': 2, 'vampirism': 1}),
     Sword('tacticians_sword', 'rare', damage=50,
-          crit_chance=20),
+          crit_chance=20,
+          abilities=['tacticians_sword']),
 
     Sword('raider_axe', 'rare', damage=80,
           strength=50),
@@ -74,12 +72,19 @@ WEAPONS = [
           strength=100, crit_damage=25),
     Sword('aspect_of_the_end', 'rare', damage=100,
           strength=100),
+    Sword('aspect_of_the_void', 'epic', damage=120,
+          strength=100),
     Sword('silver_fang', 'uncommon', count=64, damage=100),
 
     Sword('prismarine_blade', 'uncommon', damage=50,
           strength=25),
     Sword('ink_wand', 'epic', damage=130,
           strength=90),
+
+    Sword('flaming_sword', 'uncommon', damage=50,
+          strength=20),
+    Sword('ember_rod', 'epic', damage=80,
+          strength=35, intelligence=50),
 
     Sword('aspect_of_the_dragons', 'legendary', damage=225,
           strength=100,
@@ -89,8 +94,10 @@ WEAPONS = [
           strength=60, crit_chance=100, crit_damage=50, attack_speed=50,
           dungeon_completion_req=5),
 
+    Sword('flower_of_truth', 'legendary', damage=160,
+          strength=300, stars=0),
     Sword('giants_sword', 'legendary', damage=500,
-          dungeon_completion_req=6),
+          dungeon_completion_req=6, stars=0),
 
     Sword('necrons_blade', 'legendary', damage=210,
           strength=60, defense=250, intelligence=50,

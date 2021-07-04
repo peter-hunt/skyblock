@@ -1,11 +1,13 @@
 from math import floor
 
+from ..constant.ability import SET_BONUSES
 from ..constant.color import (
     RARITY_COLORS,
     CLN, BOLD, DARK_RED, GOLD, GRAY, DARK_GRAY,
     BLUE, GREEN, AQUA, RED, LIGHT_PURPLE, YELLOW, WHITE,
 )
 from ..constant.enchanting import ULTIMATE_ENCHS
+from ..constant.util import Number
 from ..function.math import calc_pet_lvl, calc_pet_upgrade_exp, dung_stat
 from ..function.reforging import get_modifier
 from ..function.util import (
@@ -117,18 +119,11 @@ def item_type(cls: type, /) -> type:
 
     cls.display = display
 
-    def info(self, player, /):
-        combat_lvl = player.get_skill_lvl('combat')
-        fishing_lvl = player.get_skill_lvl('fishing')
-        cata_lvl = player.get_skill_lvl('catacombs')
+    def info(self, profile, /):
+        combat_lvl = profile.get_skill_lvl('combat')
+        fishing_lvl = profile.get_skill_lvl('fishing')
+        cata_lvl = profile.get_skill_lvl('catacombs')
         rarity_color = RARITY_COLORS[self.rarity]
-
-        for armor_piece in player.armor:
-            if armor_piece.__class__.__name__ == 'Empty':
-                armor_piece_names = []
-                break
-        else:
-            armor_piece_names = [piece.name for piece in player.armor]
 
         if getattr(self, 'modifier', None) is not None:
             modifier = f'{self.modifier.capitalize()} '
@@ -162,15 +157,11 @@ def item_type(cls: type, /) -> type:
         bonus_stats = []
 
         if self.__class__.__name__ in {'Pickaxe', 'Drill'}:
-            enchantments = getattr(self, 'enchantments', {})
+            info += f'\n{DARK_GRAY}Breaking Power {self.breaking_power}\n'
 
             for stat_name in ('damage',):
                 display_stat = format_name(stat_name)
-                value = getattr(self, stat_name, 0)
-
-                if stat_name == 'damage':
-                    if enchantments.get('one_for_all', 0) != 0:
-                        value *= 3.1
+                value = self.get_stat(stat_name, profile)
 
                 if value <= 0:
                     continue
@@ -181,19 +172,11 @@ def item_type(cls: type, /) -> type:
                 info += '\n' + '\n'.join(f'{GRAY}{stat}'
                                          for stat in basic_stats)
 
-            for stat_name in (
-                'breaking_power', 'mining_speed', 'mining_fortune',
-            ):
+            for stat_name in ('mining_speed', 'mining_fortune'):
                 display_stat = format_name(stat_name)
-                value = getattr(self, stat_name, 0)
+                value = self.get_stat(stat_name, profile)
 
-                if stat_name == 'mining_speed':
-                    if enchantments.get('efficiency', 0) != 0:
-                        value += 10 + 20 * enchantments['efficiency']
-                elif stat_name == 'mining_fortune':
-                    value += 10 * enchantments.get('fortune', 0)
-
-                if value <= 0:
+                if value == 0:
                     continue
 
                 bonus_stats.append(f'{display_stat}: {GREEN}+{value:.0f}')
@@ -205,14 +188,9 @@ def item_type(cls: type, /) -> type:
                                          for stat in bonus_stats)
 
         elif self.__class__.__name__ == 'Hoe':
-            enchantments = getattr(self, 'enchantments', {})
-
             for stat_name in ('farming_fortune',):
                 display_stat = format_name(stat_name)
                 value = getattr(self, stat_name, 0)
-
-                if stat_name == 'farming_fortune':
-                    value += 12.5 * enchantments.get('harvesting', 0)
 
                 if value <= 0:
                     continue
@@ -224,7 +202,6 @@ def item_type(cls: type, /) -> type:
                                          for stat in bonus_stats)
 
         elif self.__class__.__name__ == 'FishingRod':
-            enchantments = getattr(self, 'enchantments', {})
             is_dungeon = self.stars is not None
 
             if self.modifier is not None:
@@ -238,24 +215,17 @@ def item_type(cls: type, /) -> type:
             ):
                 display_stat = format_name(stat_name)
                 ext = '%' if 'sea' in stat_name[0] else ''
-                value = getattr(self, stat_name, 0)
+                value = self.get_stat(stat_name, profile)
 
                 bonus = ''
                 if stat_name[0] in 'ds' and self.hot_potato != 0:
-                    value += self.hot_potato
                     bonus += f' {YELLOW}(+{self.hot_potato})'
 
                 if stat_name in modifier_bonus:
                     bonus_value = modifier_bonus[stat_name]
-                    value += bonus_value
                     bonus += (f' {BLUE}({format_name(self.modifier)}'
                               f' +{bonus_value}{ext})')
 
-                if stat_name == 'damage':
-                    if enchantments.get('one_for_all', 0) != 0:
-                        value *= 3.1
-                elif stat_name == 'sea_creature_chance':
-                    value += enchantments.get('angler', 0)
                 if is_dungeon:
                     dungeon_value = dung_stat(value, cata_lvl, self.stars)
                     if value != dungeon_value:
@@ -276,11 +246,10 @@ def item_type(cls: type, /) -> type:
 
             for stat_name in ('defense', 'intelligence', 'ferocity', 'speed'):
                 display_stat = format_name(stat_name)
-                value = getattr(self, stat_name, 0)
+                value = self.get_stat(stat_name, profile)
 
                 if stat_name in modifier_bonus:
                     bonus_value = modifier_bonus[stat_name]
-                    value += bonus_value
                     bonus += (f' {BLUE}({format_name(self.modifier)}'
                               f' +{bonus_value}{ext})')
 
@@ -304,7 +273,6 @@ def item_type(cls: type, /) -> type:
                                          for stat in bonus_stats)
 
         elif self.__class__.__name__ in {'Bow', 'Sword'}:
-            enchantments = getattr(self, 'enchantments', {})
             is_dungeon = self.stars is not None
 
             if self.modifier is not None:
@@ -316,27 +284,17 @@ def item_type(cls: type, /) -> type:
                               'crit_damage', 'attack_speed'):
                 display_stat = format_name(stat_name)
                 ext = '%' if stat_name[0] in 'ac' else ''
-                value = getattr(self, stat_name, 0)
+                value = self.get_stat(stat_name, profile)
 
                 bonus = ''
                 if stat_name[0] in 'ds' and self.hot_potato != 0:
-                    value += self.hot_potato
                     bonus += f' {YELLOW}(+{self.hot_potato})'
 
                 if stat_name in modifier_bonus:
                     bonus_value = modifier_bonus[stat_name]
-                    value += bonus_value
                     bonus += (f' {BLUE}({format_name(self.modifier)}'
                               f' +{bonus_value}{ext})')
 
-                if stat_name == 'damage':
-                    if enchantments.get('one_for_all', 0) != 0:
-                        value *= 3.1
-                    if armor_piece_names == [
-                            'strong_dragon_helmet', 'strong_dragon_chestplate',
-                            'strong_dragon_leggings', 'strong_dragon_boots']:
-                        if self.name == 'aspect_of_the_end':
-                            value += 75
                 if is_dungeon:
                     dungeon_value = dung_stat(value, cata_lvl, self.stars)
                     if stat_name in {'crit_chance', 'attack_speed'}:
@@ -360,12 +318,11 @@ def item_type(cls: type, /) -> type:
             for stat_name in ('defense', 'intelligence', 'true_defense',
                               'ferocity', 'speed'):
                 display_stat = format_name(stat_name)
-                value = getattr(self, stat_name, 0)
+                value = self.get_stat(stat_name, profile)
 
                 bonus = ''
                 if stat_name in modifier_bonus:
                     bonus_value = modifier_bonus[stat_name]
-                    value += bonus_value
                     bonus += (f' {BLUE}({format_name(self.modifier)}'
                               f' +{bonus_value})')
 
@@ -389,7 +346,6 @@ def item_type(cls: type, /) -> type:
                                          for stat in bonus_stats)
 
         elif self.__class__.__name__ == 'Armor':
-            enchantments = getattr(self, 'enchantments', {})
             is_dungeon = self.stars is not None
 
             if self.modifier is not None:
@@ -400,12 +356,11 @@ def item_type(cls: type, /) -> type:
             for stat_name in ('strength', 'crit_chance', 'crit_damage'):
                 display_stat = format_name(stat_name)
                 ext = '%' if stat_name[0] in 'ac' else ''
-                value = getattr(self, stat_name)
+                value = self.get_stat(stat_name, profile)
 
                 bonus = ''
                 if stat_name in modifier_bonus:
                     bonus_value = modifier_bonus[stat_name]
-                    value += bonus_value
                     bonus += (f' {BLUE}({format_name(self.modifier)}'
                               f' +{bonus_value})')
 
@@ -433,29 +388,17 @@ def item_type(cls: type, /) -> type:
                               'magic_find', 'mining_speed', 'mining_fortune',
                               'true_defense', 'ferocity',
                               'sea_creature_chance'):
-
                 display_stat = format_name(stat_name)
-                value = getattr(self, stat_name, 0)
-
-                if stat_name == 'health':
-                    value += enchantments.get('growth', 0) * 15
-                elif stat_name == 'protection':
-                    value += enchantments.get('protection', 0) * 3
-                elif stat_name == 'mining_speed':
-                    if 'efficiency' in enchantments:
-                        value += 10 + enchantments['efficiency'] * 20
-
-                hot_potato = ''
-                if stat_name[0] in 'dh' and self.hot_potato != 0:
-                    value += self.hot_potato
-                    hot_potato = f' {YELLOW}(+{self.hot_potato})'
-
                 ext = ' HP' if stat_name[0] == 'h' else ''
+                value = self.get_stat(stat_name, profile)
 
                 bonus = ''
+
+                if stat_name[0] in 'dh' and self.hot_potato != 0:
+                    bonus += f' {YELLOW}(+{self.hot_potato})'
+
                 if stat_name in modifier_bonus:
                     bonus_value = modifier_bonus[stat_name]
-                    value += bonus_value
                     bonus += (f' {BLUE}({format_name(self.modifier)}'
                               f' +{bonus_value})')
 
@@ -471,7 +414,7 @@ def item_type(cls: type, /) -> type:
                     continue
 
                 bonus_stats.append(f'{display_stat}: {GREEN}'
-                                   f'+{value}{ext}{hot_potato}{bonus}')
+                                   f'+{value}{ext}{bonus}')
 
             if len(bonus_stats) != 0:
                 if len(basic_stats) != 0:
@@ -639,5 +582,67 @@ def item_type(cls: type, /) -> type:
         return info
 
     cls.info = info
+
+    def get_stat(self, name: str, profile, /) -> Number:
+        value = getattr(self, name, 0)
+        ench = getattr(self, 'enchantments', {})
+
+        set_bonus = True
+        for piece in profile.armor:
+            if piece.__class__.__name__ == 'Empty':
+                set_bonus = False
+                break
+
+            for current_ability in piece.abilities:
+                if current_ability in SET_BONUSES:
+                    break
+            else:
+                continue
+            if set_bonus is True:
+                set_bonus = current_ability
+            elif set_bonus is not False:
+                if current_ability != set_bonus:
+                    set_bonus = False
+
+        if self.__class__.__name__ == 'Armor':
+            if name in {'health', 'defense'}:
+                value += self.hot_potato
+        elif self.__class__.__name__ in {'FishingRod', 'Bow', 'Sword'}:
+            if name in {'damage', 'strength'}:
+                value += self.hot_potato
+
+        if name == 'damage':
+            if self.name == 'aspect_of_the_end':
+                for piece in profile.armor:
+                    if 'strong_blood' not in getattr(piece, 'abilities', []):
+                        break
+                else:
+                    value += 75
+            if ench.get('one_for_all', 0) != 0:
+                value *= 3.1
+        elif name == 'health':
+            value += ench.get('growth', 0) * 3
+        elif name == 'defense':
+            value += ench.get('protection', 0) * 3
+        elif name == 'true_defense':
+            value += ench.get('true_protection', 0) * 3
+        elif name == 'intelligence':
+            value += ench.get('big_brain', 0) * 5
+            value += ench.get('smarty_pants', 0) * 5
+        elif name == 'mining_speed':
+            if ench.get('efficiency', 0) != 0:
+                value += 10 + 20 * ench['efficiency']
+        elif name == 'sea_creature_chance':
+            value += ench.get('angler', 0)
+        elif name == 'ferocity':
+            value += ench.get('vicious', 0)
+
+        if getattr(self, 'modifier', None) is not None:
+            modifier_bonus = get_modifier(self.modifier, self.rarity)
+            value += modifier_bonus.get(name, 0)
+
+        return value
+
+    cls.get_stat = get_stat
 
     return cls

@@ -58,6 +58,8 @@ class Bow(ItemType):
     dungeon_skill_req: Optional[int] = None
     dungeon_completion_req: Optional[int] = None
 
+    abilities: List[str] = []
+
 
 @item_type
 class Sword(ItemType):
@@ -85,6 +87,8 @@ class Sword(ItemType):
     combat_skill_req: Optional[int] = None
     dungeon_skill_req: Optional[int] = None
     dungeon_completion_req: Optional[int] = None
+
+    abilities: List[str] = []
 
 
 @item_type

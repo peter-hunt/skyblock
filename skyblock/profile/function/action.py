@@ -393,29 +393,6 @@ def goto(self, dest: str, /):
 
     speed = self.get_stat('speed')
 
-    full_set = True
-
-    for piece in self.armor:
-        if not isinstance(piece, Armor):
-            full_set = False
-            continue
-
-    if full_set:
-        piece_names = [piece.name for piece in self.armor]
-        if piece_names == [
-                'young_dragon_helmet', 'young_dragon_chestplate',
-                'young_dragon_leggings', 'young_dragon_boots']:
-            speed += 70
-        elif piece_names == ['farm_helmet', 'farm_chestplate',
-                             'farm_leggings', 'farm_boots']:
-            if self.island in {'barn', 'desert'} or self.zone == 'farm':
-                speed += 25
-        elif piece_names == [
-                'farm_suit_helmet', 'farm_suit_chestplate',
-                'farm_suit_leggings', 'farm_suit_boots']:
-            if self.island in {'barn', 'desert'}:
-                speed += 20
-
     route = f'{GRAY} ➜ {AQUA}'.join(f'{zone}' for zone in path)
     gray(f'Route: {AQUA}{route} {GRAY}({float(accum_dist):.2f}m)')
     for target in path[1:]:

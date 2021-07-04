@@ -2,6 +2,8 @@
 Constant used throughout the profile, including maths and utilities.
 """
 
+from .ability import *
+from .ability import __all__ as __ability_all__
 from .color import *
 from .color import __all__ as __color_all__
 from .doc import *
@@ -20,5 +22,6 @@ from .util import *
 from .util import __all__ as __util_all__
 
 
-__all__ = (__color_all__ + __doc_all__ + __enchanting_all__ + __main_all__
-           + __mob_all__ + __reforging_all__ + __stat_all__ + __util_all__)
+__all__ = (__ability_all__ + __color_all__ + __doc_all__
+           + __enchanting_all__ + __main_all__ + __mob_all__
+           + __reforging_all__ + __stat_all__ + __util_all__)

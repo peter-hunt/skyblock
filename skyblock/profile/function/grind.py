@@ -4,6 +4,7 @@ from random import randint, random
 from time import sleep, time
 from typing import Optional
 
+from ...constant.ability import SET_BONUSES
 from ...constant.color import (
     RARITY_COLORS, GOLD, GRAY, GREEN, AQUA, RED, YELLOW, WHITE,
 )
@@ -370,84 +371,49 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
 
     enchantments = getattr(weapon, 'enchantments', {})
 
-    farm_armor_speed = False
-    farm_suit_speed = False
-    pumpkin_buff = False
-    deflect = False
-    protective_blood = False
-    holy_blood = False
-    young_blood = False
-
     if not isinstance(weapon, Empty):
-        ultimate_jerry = enchantments.get('ultimate_jerry', 0) * 50
-        damage = weapon.damage + ultimate_jerry + 5
-
-        for armor_piece in self.armor:
-            if not isinstance(armor_piece, Armor):
-                break
-        else:
-            piece_names = [piece.name for piece in self.armor]
-            if piece_names == ['farm_helmet', 'farm_chestplate',
-                               'farm_leggings', 'farm_boots']:
-                if (self.island in {'barn', 'desert'}
-                        or self.zone == 'farm'):
-                    farm_armor_speed += True
-            elif piece_names == [
-                    'farm_suit_helmet', 'farm_suit_chestplate',
-                    'farm_suit_leggings', 'farm_suit_boots']:
-                if self.island in {'barn', 'desert'}:
-                    farm_suit_speed = True
-            elif piece_names == ['pumpkin_helmet', 'pumpkin_chestplate',
-                                 'pumpkin_leggings', 'pumpkin_boots']:
-                pumpkin_buff = True
-            elif piece_names == ['cactus_helmet', 'cactus_chestplate',
-                                 'cactus_leggings', 'cactus_boots']:
-                deflect = True
-            elif piece_names == ['protector_dragon_helmet',
-                                 'protector_dragon_chestplate',
-                                 'protector_dragon_leggings',
-                                 'protector_dragon_boots']:
-                protective_blood = True
-            elif piece_names == [
-                    'holy_dragon_helmet', 'holy_dragon_chestplate',
-                    'holy_dragon_leggings', 'holy_dragon_boots']:
-                holy_blood = True
-            elif piece_names == [
-                    'young_dragon_helmet', 'young_dragon_chestplate',
-                    'young_dragon_leggings', 'young_dragon_boots']:
-                young_blood = True
-            elif piece_names == [
-                    'strong_dragon_helmet', 'strong_dragon_chestplate',
-                    'strong_dragon_leggings', 'strong_dragon_boots']:
-                if isinstance(weapon, Empty):
-                    pass
-                elif weapon.name == 'aspect_of_the_end':
-                    damage += 75
-
-        if isinstance(weapon, (Bow, Sword, FishingRod)):
-            damage += weapon.hot_potato
-
-        if enchantments.get('one_for_all', 0) != 0:
-            damage *= 3.1
-
-        damage *= 1 + 0.08 * enchantments.get('power', 0)
-        damage *= 1 + 0.05 * enchantments.get('sharpness', 0)
-        damage *= 1 + 0.05 * enchantments.get('spiked_hook', 0)
-        if name in CUBISM_EFT:
-            damage *= 1 + 0.1 * enchantments.get('cubism', 0)
-        if name in ENDER_SLAYER_EFT:
-            damage *= 1 + 0.12 * enchantments.get('ender_slayer', 0)
-        if name in BOA_EFT:
-            damage *= 1 + 0.08 * enchantments.get('bane_of_arthropods', 0)
-        if name in SMITE_EFT:
-            damage *= 1 + 0.08 * enchantments.get('smite', 0)
-        if name in IMPALING_EFT:
-            damage *= 1 + 0.125 * enchantments.get('impaling', 0)
-
-        crit_damage += 10 * enchantments.get('critical', 0)
-        ferocity += enchantments.get('vicious', 0)
+        damage = weapon.get_stat('damage', self)
+        if enchantments.get('ultimate_jerry', 0) != 0:
+            damage += enchantments['ultimate_jerry'] * 10
     else:
         damage = 5
+
+    set_bonus = True
+    for piece in self.armor:
+        if isinstance(piece, Armor):
+            set_bonus = False
+            break
+
+        for current_ability in piece.abilities:
+            if current_ability in SET_BONUSES:
+                break
+        else:
+            continue
+        if set_bonus is True:
+            set_bonus = current_ability
+        elif set_bonus is not False:
+            if current_ability != set_bonus:
+                set_bonus = False
+
+    if enchantments.get('one_for_all', 0) != 0:
+        damage *= 3.1
+
+    damage *= 1 + 0.08 * enchantments.get('power', 0)
+    damage *= 1 + 0.05 * enchantments.get('sharpness', 0)
+    damage *= 1 + 0.05 * enchantments.get('spiked_hook', 0)
+    if name in CUBISM_EFT:
+        damage *= 1 + 0.1 * enchantments.get('cubism', 0)
+    if name in ENDER_SLAYER_EFT:
+        damage *= 1 + 0.12 * enchantments.get('ender_slayer', 0)
+    if name in BOA_EFT:
+        damage *= 1 + 0.08 * enchantments.get('bane_of_arthropods', 0)
+    if name in SMITE_EFT:
+        damage *= 1 + 0.08 * enchantments.get('smite', 0)
+    if name in IMPALING_EFT:
+        damage *= 1 + 0.125 * enchantments.get('impaling', 0)
+
+    crit_damage += 10 * enchantments.get('critical', 0)
+    ferocity += enchantments.get('vicious', 0)
 
     rejuvenate = 0
 
@@ -461,13 +427,13 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
         last_stand += ench.get('last_stand', 0) * 5
         no_pain_no_gain.append(ench.get('no_pain_no_gain', 0) * 25)
 
-    if deflect:
+    if set_bonus == 'deflect':
         thorns += 33
 
     warrior = 0.04 * min(combat_lvl, 50)
     warrior += 0.01 * max(min(combat_lvl - 50, 10), 0)
     damage *= 1 + warrior
-    if pumpkin_buff:
+    if set_bonus == 'pumpkin_buff':
         damage *= 1.1
 
     enchanting_lvl = self.get_skill_lvl('enchanting')
@@ -509,18 +475,14 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
 
     for count in range(1, iteration + 1):
         actual_speed = speed
-        if young_blood and hp >= health / 2:
+        if set_bonus == 'young_blood' and hp >= health / 2:
             actual_speed += 70
-        if farm_armor_speed:
-            actual_speed += 25
-        if farm_suit_speed:
-            actual_speed += 20
         time_cost = 10 / (5 * actual_speed / 100)
         sleep(time_cost)
 
         healed = (round((time_cost // 2) * (1.5 + health / 100), 1)
                   * (1 + (rejuvenate / 100)))
-        if holy_blood:
+        if set_bonus == 'holy_blood':
             healed *= 3
         hp = min(hp - + healed, health)
         if healed != 0:
@@ -591,7 +553,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                 break
 
             actual_defense = defense
-            if protective_blood:
+            if set_bonus == 'protective_blood':
                 actual_defense *= 1 + (1 - hp / health)
 
             if last_stand != 0 and hp / health < 0.4:
@@ -599,7 +561,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
 
             if mob.damage != 0:
                 damage_recieved = mob.damage / (1 + defense / 100)
-                if pumpkin_buff:
+                if set_bonus == 'pumpkin_buff':
                     damage_recieved *= 0.9
                 hp = max(hp - damage_recieved, 0)
                 gray(f"You've recieved {YELLOW}"

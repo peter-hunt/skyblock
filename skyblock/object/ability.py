@@ -192,6 +192,13 @@ ABILITIES = [
                      f'{DARK_GRAY}Cooldown: {GREEN}2s{GRAY}'),
     ),
 
+    AnonymousAbility(
+        id='tacticians_sword',
+        description=(f'Gains {RED}+15 Damage{GRAY} for\n'
+                     f'each Combat collection of\n'
+                     f'Tier VII and over of its\nwielder.'),
+    ),
+
     NamedAbility(
         id='eternal_coins',
         name='Eternal Coins',
