@@ -63,31 +63,38 @@ def add_skill_exp(self, name: str, amount: Number, /):
         display_skill_reward(name, original_lvl, current_lvl)
         dark_aqua(f"{BOLD}{'':-^{width}}")
 
-    for pet_index, pet in enumerate(self.pets):
-        if pet.active:
-            break
-    else:
-        pet_index = None
+    if name != 'taming':
+        taming_lvl = self.get_skill_lvl('taming')
 
-    if pet_index is not None:
-        pet_exp = pet.exp
-
-        original_pet_lvl = calc_pet_lvl(pet.rarity, pet_exp)
-
-        if pet.category == name:
-            pet_exp += amount
-        elif name in {'alchemy', 'enchanting'}:
-            pet_exp += amount / 12
+        for pet_index, pet in enumerate(self.pets):
+            if pet.active:
+                break
         else:
-            pet_exp += amount / 4
+            pet_index = None
 
-        self.pets[pet_index].exp = pet_exp
-        current_pet_lvl = calc_pet_lvl(pet.rarity, pet_exp)
+        if pet_index is not None:
+            pet_exp = pet.exp
 
-        if current_pet_lvl > original_pet_lvl:
-            pet_str = pet.display().split(']')[1].lstrip()
-            green(f'Your {pet_str}{GREEN} levelled up to'
-                  f' level {BLUE}{current_pet_lvl}{GREEN}!')
+            original_pet_lvl = calc_pet_lvl(pet.rarity, pet_exp)
+
+            if pet.category == name:
+                pass
+            elif name in {'alchemy', 'enchanting'}:
+                amount /= 12
+            else:
+                amount /= 4
+            amount *= 1 + taming_lvl / 100
+
+            pet_exp += amount
+            add_skill_exp('taming', amount / 2)
+
+            self.pets[pet_index].exp = pet_exp
+            current_pet_lvl = calc_pet_lvl(pet.rarity, pet_exp)
+
+            if current_pet_lvl > original_pet_lvl:
+                pet_str = pet.display().split(']')[1].lstrip()
+                green(f'Your {pet_str}{GREEN} levelled up to'
+                      f' level {BLUE}{current_pet_lvl}{GREEN}!')
 
 
 def coll_amount(self, name: str, /) -> Optional[int]:
@@ -223,6 +230,7 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
     foraging_lvl = self.get_skill_lvl('foraging')
     fishing_lvl = self.get_skill_lvl('fishing')
     mining_lvl = self.get_skill_lvl('mining')
+    taming_lvl = self.get_skill_lvl('taming')
 
     if name == 'health':
         value += 100
@@ -350,6 +358,8 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
     elif name == 'intelligence':
         value += min(enchanting_lvl, 14) * 1
         value += max(min(enchanting_lvl - 14, 46), 0) * 2
+    elif name == 'pet_luck':
+        value += taming_lvl
     elif name == 'mining_speed':
         if full_set_bonus == 'miners_outfit':
             value += 100

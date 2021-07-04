@@ -2,7 +2,9 @@ from itertools import count
 from random import randint, random
 from typing import Optional, Tuple
 
-from ..constant.color import GOLD, GRAY, BLUE, WHITE, GREEN, RED, AQUA
+from ..constant.color import (
+    GOLD, GRAY, BLUE, WHITE, GREEN, RED, AQUA, STAT_COLORS,
+)
 from ..constant.main import DUNGEON_EXP, SKILL_EXP, SKILL_LIMITS, PET_EXP_DIFF
 from ..constant.util import Amount, Number
 
@@ -219,7 +221,8 @@ def display_skill_reward(name: str, original: Number, current: Number):
         white(f'   Grants {GREEN}+{GRAY}{fh_origin}->{GREEN}{fh_current}{GOLD}'
               f' ☘ Farming Fortune{WHITE},\n'
               f'   which increases your chance for multiple crops.')
-        gray(f'  +{GREEN}{hp_delta} HP{RED} ♥ Health')
+        health = STAT_COLORS['health']
+        gray(f'  +{GREEN}{hp_delta} HP {health} Health')
 
     elif name == 'mining':
         sk_origin = original * 4
@@ -234,7 +237,8 @@ def display_skill_reward(name: str, original: Number, current: Number):
               f' ☘ Mining Fortune{WHITE},\n'
               f'   which increases your chance for multiple ore\n'
               f'   drops')
-        gray(f'  +{GREEN}{def_delta} ☘ Defense')
+        defense = STAT_COLORS['defense']
+        gray(f'  +{GREEN}{def_delta} {defense} Defense')
 
     elif name == 'combat':
         lvl_delta = current - original
@@ -249,7 +253,9 @@ def display_skill_reward(name: str, original: Number, current: Number):
         yellow(f'  Warrior {format_roman(current)}')
         white(f'   Deal {GRAY}{war_origin}->{GREEN}{war_current}%'
               f' {WHITE}more damage to mobs.')
-        gray(f'  +{GREEN}{format_number(0.5 * lvl_delta)}%{BLUE} ☢ Crit Chance')
+        crit_chance = STAT_COLORS['crit_chance']
+        gray(f'  +{GREEN}{format_number(0.5 * lvl_delta)}%'
+             f' {crit_chance} Crit Chance')
 
     elif name == 'foraging':
         lg_origin = original * 4
@@ -264,7 +270,8 @@ def display_skill_reward(name: str, original: Number, current: Number):
               f' ☘ Foraging Fortune{WHITE},\n'
               f'   which increases your chance for multiple logs\n'
               f'   drops')
-        gray(f'  +{GREEN}{str_delta}{RED} ❁ Strength')
+        strength = STAT_COLORS['strength']
+        gray(f'  +{GREEN}{str_delta} {strength} Strength')
 
     elif name == 'fishing':
         th_origin = original * 0.2
@@ -285,7 +292,8 @@ def display_skill_reward(name: str, original: Number, current: Number):
         white(f'   Increases the chance to find treasure when\n'
               f'   when fishing by {GREEN}+{GRAY}{format_number(th_origin)}->'
               f'{GREEN}{format_number(th_current)}%{WHITE}.')
-        gray(f'  +{GREEN}{hp_delta}{RED} ♥ Health')
+        health = STAT_COLORS['health']
+        gray(f'  +{GREEN}{hp_delta} {health} Health')
 
     elif name == 'enchanting':
         int_delta = 0
@@ -296,7 +304,9 @@ def display_skill_reward(name: str, original: Number, current: Number):
         white(f'   Gain {GRAY}{original * 4}->{GREEN}{current * 4}%'
               f' {WHITE}more experience orbs from\n'
               f'   any source.')
-        gray(f'  +{GREEN}{format_number(int_delta)}{AQUA} ✎ Intelligence')
+        intelligence = STAT_COLORS['intelligence']
+        gray(f'  +{GREEN}{format_number(int_delta)}{AQUA}'
+             f' {intelligence} Intelligence')
 
     elif name == 'alchemy':
         int_delta = 0
@@ -307,7 +317,18 @@ def display_skill_reward(name: str, original: Number, current: Number):
         white(f'   Potions that you brew have a {GRAY}{original}->'
               f'{GREEN}{current}%\n'
               f'   {WHITE}longer duration.')
-        gray(f'  +{GREEN}{format_number(int_delta)}{AQUA} ✎ Intelligence')
+        intelligence = STAT_COLORS['intelligence']
+        gray(f'  +{GREEN}{format_number(int_delta)}{AQUA}'
+             f' {intelligence} Intelligence')
+
+    elif name == 'taming':
+        pl_delta = current - original
+
+        yellow(f'  Zoologist {format_roman(current)}')
+        white(f'   Gain {GRAY}{original}->'
+              f'{GREEN}{current}%{WHITE} extra pet exp.')
+        pet_luck = STAT_COLORS['pet_luck']
+        gray(f'  +{GREEN}{format_number(pl_delta)} {pet_luck} Pet Luck')
 
     elif name == 'catacombs':
         hp_delta = current - original
