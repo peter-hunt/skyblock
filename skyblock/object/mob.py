@@ -32,7 +32,7 @@ MOBS = [
             (get_item('hound_pet', rarity='legendary'),
              1, 'pray_rngesus', 0.000003),
         ]),
-    Mob('old_wolf', level=50, health=15_000, damage=720,
+    Mob('old_wolf', level=50, health=15000, damage=720,
         coins=40, exp=40, combat_exp=4,
         drops=[
             (Item('bone'), 1, 'common', 1),
@@ -41,7 +41,7 @@ MOBS = [
             (get_item('hound_pet', rarity='legendary'),
              1, 'pray_rngesus', 0.000003),
         ]),
-    Mob('crypt_ghoul', level=30, health=2_000, damage=200,
+    Mob('crypt_ghoul', level=30, health=2000, damage=200,
         coins=13, exp=32, combat_exp=30,
         drops=[
             (Item('rotten_flesh'), (1, 2), 'common', 1),
@@ -90,7 +90,7 @@ MOBS = [
             (Item('rabbit_foot'), 1, 'uncommon', 0.1),
         ]),
 
-    Mob('golden_ghoul', level=60, health=45_000, damage=500,
+    Mob('golden_ghoul', level=60, health=45000, damage=500,
         coins=100, exp=50, combat_exp=30,
         drops=[
             (Item('rotten_flesh'), 2, 'common', 1),
@@ -200,7 +200,7 @@ MOBS = [
             (get_item('goblin_boots'),
              1, 'pray_rngesus', 0.00075),
         ]),
-    Mob('ice_walker', level=45, health=8_880, damage=500,
+    Mob('ice_walker', level=45, health=8880, damage=500,
         coins=40, exp=40, combat_exp=75,
         drops=[
             (get_item('glacite_helmet'),
@@ -212,13 +212,13 @@ MOBS = [
             (get_item('glacite_boots'),
              1, 'pray_rngesus', 0.0025),
         ]),
-    Mob('treasure_hoarder', level=70, health=22_000, damage=750,
+    Mob('treasure_hoarder', level=70, health=22000, damage=750,
         coins=50, exp=70, combat_exp=100,
         drops=[
             (Item('starfall'), (1, 2), 'common', 1),
             (Item('treasurite'), 1, 'rare', 0.005),
         ]),
-    Mob('ghost', level=100, health=1_000_000, damage=1_000,
+    Mob('ghost', level=100, health=1000000, damage=1000,
         coins=100, exp=100, combat_exp=0,
         drops=[
             (Item('sorrow'), 1, 'rare', 0.0012),
@@ -226,7 +226,7 @@ MOBS = [
             (Item('bag_of_cash'), 1, 'pray_rngesus', 0.0001),
         ]),
 
-    Mob('pack_spirit', level=35, health=7_000, damage=450,
+    Mob('pack_spirit', level=35, health=7000, damage=450,
         coins=11, exp=15, combat_exp=10,
         drops=[
             (Item('spruce'), 1, 'uncommon', 0.15),
@@ -238,7 +238,7 @@ MOBS = [
             (get_item('hound_pet', rarity='legendary'),
              1, 'pray_rngesus', 0.0001 / 6),
         ]),
-    Mob('soul_of_the_alpha', level=55, health=31_150, damage=1150,
+    Mob('soul_of_the_alpha', level=55, health=31150, damage=1150,
         coins=50, exp=50, combat_exp=15,
         drops=[
             (Item('jungle'), 1, 'common', 1),
@@ -261,7 +261,7 @@ MOBS = [
             (Item('string'), 1, 'common', 1),
             (Item('spider_eye'), 1, 'uncommon', 0.1),
         ]),
-    Mob('voracious_spider', level=10, health=1_000, damage=100,
+    Mob('voracious_spider', level=10, health=1000, damage=100,
         coins=2, exp=10, combat_exp=3,
         drops=[
             (Item('string'), 1, 'common', 1),
@@ -348,7 +348,7 @@ MOBS = [
             (Item('ghast_tear'), 1, 'common', 1),
         ]),
 
-    Mob('enderman', level=42, health=4_500, damage=500,
+    Mob('enderman', level=42, health=4500, damage=500,
         coins=10, combat_exp=40.8, exp=8,
         drops=[
             (Item('ender_pearl'), (1, 3), 'common', 1),
@@ -364,7 +364,7 @@ MOBS = [
             (get_item('ender_leggings'), 1, 'legendary', 0.00025),
             (get_item('ender_helmet'), 1, 'legendary', 0.00025),
         ]),
-    Mob('enderman', level=45, health=6_000, damage=600,
+    Mob('enderman', level=45, health=6000, damage=600,
         coins=12, combat_exp=40.8, exp=9,
         drops=[
             (Item('ender_pearl'), (1, 3), 'common', 1),
@@ -380,7 +380,7 @@ MOBS = [
             (get_item('ender_leggings'), 1, 'legendary', 0.00025 / 3),
             (get_item('ender_helmet'), 1, 'legendary', 0.00025 / 3),
         ]),
-    Mob('enderman', level=50, health=9_000, damage=700,
+    Mob('enderman', level=50, health=9000, damage=700,
         coins=15, combat_exp=40.8, exp=10,
         drops=[
             (Item('ender_pearl'), (1, 2), 'common', 1),
@@ -396,14 +396,14 @@ MOBS = [
             (get_item('ender_leggings'), 1, 'legendary', 0.00005),
             (get_item('ender_helmet'), 1, 'legendary', 0.00005),
         ]),
-    Mob('zealot', level=55, health=13_000, damage=1250,
+    Mob('zealot', level=55, health=13000, damage=1250,
         coins=15, exp=40, combat_exp=10,
         drops=[
             (Item('ender_pearl'), (2, 4), 'common', 1),
             (Item('enchanted_ender_pearl'), 1, 'rare', 0.02),
             (Item('summoning_eye'), 1, 'legendary', 1 / 420),
         ]),
-    Mob('watcher', level=55, health=9_500, damage=475,
+    Mob('watcher', level=55, health=9500, damage=475,
         coins=15, exp=40, combat_exp=10,
         drops=[
             (Item('arrow'), (1, 4), 'common', 1),
@@ -411,53 +411,66 @@ MOBS = [
             (Item('enchanted_bone'), 1, 'rare', 0.01),
             (get_item('end_stone_bow'), 1, 'legendary', 0.001),
         ]),
-    Mob('obsidian_defender', level=55, health=10_000, damage=200,
+    Mob('obsidian_defender', level=55, health=10000, damage=200,
         coins=15, exp=40, combat_exp=10,
         drops=[
             (Item('obsidian'), (2, 3), 'common', 1),
             (Item('enchanted_obsidian'), 1, 'rare', 0.01),
             (get_item('obsidian_chestplate'), 1, 'legendary', 0.001),
         ]),
-    Mob('endermite', level=37, health=2_000, damage=400,
+    Mob('endermite', level=37, health=2000, damage=400,
         coins=10, exp=36, combat_exp=25,
         drops=[
             (Item('end_stone'), (1, 2), 'common', 1),
         ]),
-    Mob('endermite', level=40, health=2_300, damage=475,
+    Mob('endermite', level=40, health=2300, damage=475,
         coins=11, exp=38, combat_exp=28,
         drops=[
             (Item('end_stone'), (2, 4), 'common', 1),
         ]),
 
+    Mob('voidling_fanatic', level=85, health=750000, damage=3500,
+        coins=20, combat_exp=110, exp=30,
+        drops=[
+            (Item('ender_pearl'), (4, 5), 'common', 1),
+            (Item('enchanted_ender_pearl'), 1, 'rare', 0.01),
+        ]),
+    Mob('voidling_extremist', level=100, health=8000000, damage=13500,
+        coins=100, combat_exp=500, exp=70,
+        drops=[
+            (Item('ender_pearl'), (32, 64), 'common', 1),
+            (Item('enchanted_ender_pearl'), 1, 'rare', 0.02),
+        ]),
+
     # sea creatures
-    Mob('squid', level=1, health=2_000, damage=0,
+    Mob('squid', level=1, health=2000, damage=0,
         coins=0, exp=15, fishing_exp=41,
         drops=[
             (Item('lily_pad'), (1, 2), 'common', 1),
             (Item('ink_sack'), (2, 5), 'common', 1),
         ]),
-    Mob('sea_walker', level=4, health=1_500, damage=60,
+    Mob('sea_walker', level=4, health=1500, damage=60,
         coins=0, exp=30, fishing_exp=68,
         drops=[
             (Item('rotten_flesh'), (1, 4), 'common', 1),
             (Item('lily_pad'), (1, 6), 'common', 1),
             (Item('fish'), (1, 4), 'common', 1),
         ]),
-    Mob('night_squid', level=6, health=4_000, damage=0,
+    Mob('night_squid', level=6, health=4000, damage=0,
         coins=0, exp=28, fishing_exp=270,
         drops=[
             (Item('ink_sack'), (12, 27), 'common', 1),
             (Item('lily_pad'), (1, 4), 'common', 1),
             (get_item('squid_boots'), 1, 'rare', 0.05),
         ]),
-    Mob('sea_guardian', level=10, health=5_000, damage=150,
+    Mob('sea_guardian', level=10, health=5000, damage=150,
         coins=0, exp=32, fishing_exp=75,
         drops=[
             (Item('lily_pad'), (1, 2), 'common', 1),
             (Item('prismarine_shard'), (1, 3), 'common', 1),
             (Item('prismarine_crystals'), (1, 3), 'common', 1),
         ]),
-    Mob('sea_witch', level=15, health=6_000, damage=160,
+    Mob('sea_witch', level=15, health=6000, damage=160,
         coins=0, exp=35, fishing_exp=338,
         drops=[
             (Item('fish'), (1, 5), 'common', 1),
@@ -469,7 +482,7 @@ MOBS = [
             (get_item('fairys_trousers'), 1, 'rare', 0.01),
             (get_item('fairys_galoshes'), 1, 'rare', 0.01),
         ]),
-    Mob('sea_archer', level=15, health=7_000, damage=130,
+    Mob('sea_archer', level=15, health=7000, damage=130,
         coins=0, exp=41, fishing_exp=169,
         drops=[
             (Item('bone'), (1, 6), 'common', 1 / 7),
@@ -477,7 +490,7 @@ MOBS = [
             (Item('fish'), (2, 3), 'common', 1),
             (Item('lily_pad'), (2, 4), 'common', 1),
         ]),
-    Mob('monster_of_the_deep', level=20, health=20_000, damage=200,
+    Mob('monster_of_the_deep', level=20, health=20000, damage=200,
         coins=0, exp=41, fishing_exp=270,
         drops=[
             (Item('lily_pad'), (2, 4), 'common', 1),
@@ -486,7 +499,7 @@ MOBS = [
             (Item('enchanted_rotten_flesh'), 1, 'common', 6 / 7),
             (Item('enchanted_feather'), 1, 'common', 6 / 7),
         ]),
-    Mob('catfish', level=23, health=26_000, damage=220,
+    Mob('catfish', level=23, health=26000, damage=220,
         coins=0, exp=50, fishing_exp=405,
         drops=[
             (Item('clownfish'), (1, 2), 'common', 1),
@@ -496,7 +509,7 @@ MOBS = [
             (Item('salmon'), (1, 3), 'common', 1),
             (Item('sponge'), 1, 'common', 1),
         ]),
-    Mob('sea_leech', level=30, health=60_000, damage=300,
+    Mob('sea_leech', level=30, health=60000, damage=300,
         coins=0, exp=65, fishing_exp=675,
         drops=[
             (Item('fish'), (10, 20), 'common', 1),
@@ -504,8 +517,8 @@ MOBS = [
             (Item('lily_pad'), 3, 'common', 1),
             (Item('sponge'), 1, 'common', 1),
         ]),
-    Mob('guardian_defender', level=45, health=70_000, damage=212,
-        coins=0, exp=72, fishing_exp=1_150,
+    Mob('guardian_defender', level=45, health=70000, damage=212,
+        coins=0, exp=72, fishing_exp=1150,
         drops=[
             (Item('fish'), (15, 30), 'common', 1),
             (Item('enchanted_prismarine_shard'), 1, 'common', 1),
@@ -513,21 +526,21 @@ MOBS = [
             (Item('sponge'), (1, 2), 'common', 1),
             (Item('lily_pad'), (5, 11), 'common', 1),
         ]),
-    Mob('deep_sea_protector', level=60, health=150_000, damage=400,
-        coins=0, exp=100, fishing_exp=1_350,
+    Mob('deep_sea_protector', level=60, health=150000, damage=400,
+        coins=0, exp=100, fishing_exp=1350,
         drops=[
             (Item('clownfish'), (10, 25), 'common', 1),
             (Item('lily_pad'), (30, 40), 'common', 1),
             (Item('enchanted_iron'), (2, 4), 'common', 1),
             (Item('sponge'), (1, 3), 'common', 1),
         ]),
-    Mob('water_hydra', level=100, health=500_000, damage=500,
-        coins=0, exp=175, fishing_exp=3_000,
+    Mob('water_hydra', level=100, health=500000, damage=500,
+        coins=0, exp=175, fishing_exp=3000,
         drops=[
             (get_item('water_hydra_head'), (1, 2), 'rare', 0.05),
         ]),
-    Mob('sea_emperor', level=150, health=750_000, damage=600,
-        coins=0, exp=250, fishing_exp=3_375,
+    Mob('sea_emperor', level=150, health=750000, damage=600,
+        coins=0, exp=250, fishing_exp=3375,
         drops=[
             (Item('enchanted_lily_pad'), (1, 3), 'common', 1),
             (Item('emperors_skull'), 1, 'common', 1),

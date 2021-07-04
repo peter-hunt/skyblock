@@ -32,6 +32,7 @@ END_TUNNEL = Zone(
 VOID_SEPULTURE = Zone(
     'void_sepulture', -575, -320,
     resources=[get_resource('end_stone'), get_resource('obsidian')],
+    mobs=[get_mob('voidling_fanatic'), get_mob('voidling_extremist')],
 )
 
 END_JOINTS = [
