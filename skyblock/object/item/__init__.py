@@ -37,7 +37,7 @@ COLLECTION_ITEMS = [
     Item('feather', 64, 'common'),
     Item('beef', 64, 'common'),
     Item('leather', 64, 'common'),
-    Item('porkchop', 64, 'common'),
+    Item('pork', 64, 'common'),
     Item('chicken', 64, 'common'),
     Item('mutton', 64, 'common'),
     Item('rabbit', 64, 'common'),

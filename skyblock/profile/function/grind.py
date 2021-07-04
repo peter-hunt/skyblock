@@ -16,7 +16,6 @@ from ...function.util import (
     checkpoint, format_crit, format_name, format_number,
     format_roman, format_short,
 )
-from ...object.collection import is_collection
 from ...object.fishing import FISHING_TABLE, SEA_CREATURES
 from ...object.item import get_item, validify_item
 from ...object.mob import get_mob
@@ -137,8 +136,7 @@ def fish(self, rod_index: int, iteration: int = 1, /):
                     amount *= 2
 
                 self.recieve_item(item_type, amount)
-                if is_collection(drop.name):
-                    self.collect(drop.name, amount)
+                self.collect(drop.name, amount)
 
                 if 'catch' in rarity:
                     rarity_display = rarity.upper().replace('_', ' ')
@@ -177,7 +175,6 @@ def gather(self, name: str, tool_index: Optional[int],
 
         last_cp = Decimal()
         cp_step = Decimal('0.1')
-        is_coll = is_collection(drop_item)
         for i in range(1, iteration + 1):
             sleep(time_cost)
             amount_pool = random_amount(default_amount)
@@ -187,14 +184,12 @@ def gather(self, name: str, tool_index: Optional[int],
             if getattr(item_type, 'count', 1) != 1:
                 item_type.count = 1
             self.recieve_item(item_type, amount_pool * drop_pool)
-            if is_coll:
-                self.collect(drop_item, amount_pool * drop_pool)
+            self.collect(drop_item, amount_pool * drop_pool)
 
             if resource.name == 'wheat':
                 seeds_pool = random_amount((0, 3))
                 self.recieve_item(Item('seeds'), seeds_pool * drop_pool)
-                if is_coll:
-                    self.collect('seeds', seeds_pool * drop_pool)
+                self.collect('seeds', seeds_pool * drop_pool)
 
             self.add_skill_exp('farming', resource.farming_exp, display=True)
             dark_aqua(f'+{format_number(resource.farming_exp)} Farming')
@@ -236,7 +231,6 @@ def gather(self, name: str, tool_index: Optional[int],
 
         last_cp = Decimal()
         cp_step = Decimal('0.1')
-        is_coll = is_collection(drop_item)
         for i in range(1, iteration + 1):
             sleep(time_cost)
             amount_pool = random_amount(default_amount)
@@ -245,8 +239,7 @@ def gather(self, name: str, tool_index: Optional[int],
             if getattr(item_type, 'count', 1) != 1:
                 item_type.count = 1
             self.recieve_item(item_type, amount_pool * drop_pool)
-            if is_coll:
-                self.collect(drop_item, amount_pool * drop_pool)
+            self.collect(drop_item, amount_pool * drop_pool)
 
             self.add_exp(random_amount(resource.exp) * random_amount(exp_mult))
             self.add_skill_exp('mining', resource.mining_exp, display=True)
@@ -513,8 +506,6 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
 
     last_cp = Decimal()
     cp_step = Decimal('0.1')
-    is_coll = {row[0].name: is_collection(row[0].name)
-               for row in mob.drops}
 
     for count in range(1, iteration + 1):
         actual_speed = speed
@@ -664,11 +655,11 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                 continue
 
             loot = validify_item(item)
+            if getattr(loot, 'count', 1) != 1:
+                loot.count = 1
 
             self.recieve_item(loot, random_amount(loot_amount))
-
-            if is_coll[loot.name]:
-                self.collect(loot.name, random_amount(loot_amount))
+            self.collect(loot.name, random_amount(loot_amount))
 
             if rarity not in {'common', 'uncommon'}:
                 rarity_str = rarity.replace('_', ' ').upper()

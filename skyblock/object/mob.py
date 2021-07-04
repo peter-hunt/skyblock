@@ -74,7 +74,7 @@ MOBS = [
     Mob('pig', level=1, health=10, damage=0,
         coins=0, exp=10, combat_exp=2,
         drops=[
-            (Item('porkchop'), (1, 3), 'common', 1),
+            (Item('pork'), (1, 3), 'common', 1),
         ]),
     Mob('sheep', level=1, health=8, damage=0,
         coins=0, exp=10, combat_exp=2,

@@ -192,7 +192,7 @@ FARMING_COLLECTIONS = [
         ],
     ),
     Collection(
-        'porkchop', 'farming',
+        'pork', 'farming',
         [
             (50, 5),
             (100, 10),

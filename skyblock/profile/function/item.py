@@ -52,10 +52,10 @@ def merge(self, index_1: int, index_2: int, /):
     if item_from.name != item_to.name:
         red('Cannot merge different items.')
         return
-    if getattr(item_from, 'enchantments', {}):
+    if len(getattr(item_from, 'enchantments', {})) != 0:
         red('Cannot merge enchanted items.')
         return
-    if getattr(item_to, 'enchantments', {}):
+    if len(getattr(item_to, 'enchantments', {})) != 0:
         red('Cannot merge enchanted items.')
         return
 

@@ -228,7 +228,7 @@ def die(self, /) -> bool:
 
     if pet is None:
         pass
-    elif pet.name == 'phoenix_pet' and pet.rarity == 'legendary':
+    elif 'eternal_coins' in pet.abilities:
         perc_lost = 0
 
     perc_lost = max(perc_lost, 0)

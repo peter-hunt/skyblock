@@ -5,7 +5,7 @@ from typing import Optional
 from ...constant.color import (
     BOLD, DARK_AQUA, GRAY, BLUE, GREEN, YELLOW, RARITY_COLORS,
 )
-from ...constant.main import SKILL_EXP
+from ...constant.main import COLL_ALTER, SKILL_EXP
 from ...constant.util import Number
 from ...function.math import (
     calc_exp_lvl, calc_pet_lvl, calc_skill_lvl, display_skill_reward,
@@ -116,8 +116,12 @@ def coll_lvl(self, name: str, /) -> Optional[int]:
 
 
 def collect(self, name: str, amount: int, /):
+    if name in COLL_ALTER:
+        alter_name, alter_mult = COLL_ALTER[name]
+        self.collect(alter_name, amount * alter_mult)
+        return
+
     if not is_collection(name):
-        red(f'Unknown collection: {name!r}')
         return
 
     display = format_name(name)

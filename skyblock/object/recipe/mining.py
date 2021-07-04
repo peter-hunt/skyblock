@@ -67,10 +67,6 @@ MINING_RECIPES = [
             (Item('apple'), 1)],
            (Item('enchanted_golden_apple'), 1)),
 
-    Recipe('gold_to_nugget', 'mining',
-           [(Item('gold'), 1)],
-           (Item('gold_nugget'), 9)),
-
     Recipe('diamond_to_block', 'mining',
            [(Item('diamond'), 9)],
            (Item('diamond_block'), 1)),
@@ -99,9 +95,6 @@ MINING_RECIPES = [
            [(Item('redstone_block'), 1)],
            (Item('redstone'), 9)),
 
-    Recipe('ice_to_packed', 'mining',
-           [(Item('ice'), 9)],
-           (Item('packed_ice'), 1)),
     Recipe('glowstone_to_block', 'mining',
            [(Item('glowstone'), 4)],
            (Item('glowstone_block'), 1)),
