@@ -1,9 +1,11 @@
+from itertools import cycle
 from re import fullmatch
 from subprocess import call
 from textwrap import wrap
 from typing import Any, Dict, List, Optional, Tuple, Union
 from types import FunctionType
 
+from ..constant.color import CRIT_COLORS
 from ..constant.enchanting import ENCHS
 from ..constant.util import (
     NUMBER_SCALES, ROMAN_NUM, SPECIAL_NAMES, IGNORED_WORDS,
@@ -61,6 +63,36 @@ def _format_word(word: str, /) -> str:
     """
 
     return word.lower() if word in IGNORED_WORDS else word.capitalize()
+
+
+def format_crit(string: str, /) -> str:
+    """
+    Format a crit damage.
+
+    Args:
+        string: Formatted string to be colored.
+
+    Returns:
+        A string of the colored damage.
+    """
+
+    result = ''
+    color_iter = iter(cycle(CRIT_COLORS))
+    last_color = next(color_iter)
+    next_color = last_color
+
+    for i, char in enumerate(string):
+        if fullmatch(r'\d', char):
+            last_color = next_color
+        result += last_color
+        if i == 0:
+            result += '✧'
+        result += char
+        if fullmatch(r'\d', char):
+            next_color = next(color_iter)
+    result += '✧'
+
+    return result
 
 
 def format_name(name: str, /) -> str:

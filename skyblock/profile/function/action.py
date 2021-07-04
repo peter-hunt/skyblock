@@ -219,7 +219,16 @@ def die(self, /) -> bool:
         ench = getattr(piece, 'enchantments', {})
         perc_lost -= ench.get('bank', 0) / 10
 
-    if self.pet.name == 'phoenix_pet' and self.pet.rarity == 'legendary':
+    for i, pet in enumerate(self.pets):
+        if pet.active:
+            self.pets[i].active = False
+            break
+    else:
+        pet = None
+
+    if pet is None:
+        pass
+    elif pet.name == 'phoenix_pet' and pet.rarity == 'legendary':
         perc_lost = 0
 
     perc_lost = max(perc_lost, 0)

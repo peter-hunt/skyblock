@@ -10,10 +10,11 @@ from ...constant.color import (
 from ...constant.mob import (
     CUBISM_EFT, ENDER_SLAYER_EFT, BOA_EFT, SMITE_EFT, IMPALING_EFT,
 )
-from ...function.io import gray, red, green, yellow, white
+from ...function.io import dark_aqua, gray, red, green, yellow, white
 from ...function.math import random_amount, random_bool, random_int
 from ...function.util import (
-    checkpoint, format_name, format_number, format_roman, format_short,
+    checkpoint, format_crit, format_name, format_number,
+    format_roman, format_short,
 )
 from ...object.collection import is_collection
 from ...object.fishing import FISHING_TABLE, SEA_CREATURES
@@ -102,7 +103,7 @@ def fish(self, rod_index: int, iteration: int = 1, /):
 
         else:
             pool = random() * total_weight
-            for drop, amount, rarity, weight, exp in table:
+            for drop, amount, rarity, weight, fishing_exp in table:
                 if 'catch' in rarity:
                     weight *= luck
                 if pool < weight:
@@ -144,7 +145,8 @@ def fish(self, rod_index: int, iteration: int = 1, /):
                     gray(f'{RARITY_COLORS[rarity]}{rarity_display}! {AQUA}'
                          f'You found a {item_type.display()}{AQUA}.')
 
-            self.add_skill_exp('fishing', exp * expertise)
+            exp_gained = fishing_exp * expertise
+            self.add_skill_exp('fishing', exp_gained, display=True)
             self.add_exp(random_amount((1, 6)) + magnet)
 
         if i >= (last_cp + cp_step) * iteration:
@@ -194,7 +196,8 @@ def gather(self, name: str, tool_index: Optional[int],
                 if is_coll:
                     self.collect('seeds', seeds_pool * drop_pool)
 
-            self.add_skill_exp('farming', resource.farming_exp)
+            self.add_skill_exp('farming', resource.farming_exp, display=True)
+            dark_aqua(f'+{format_number(resource.farming_exp)} Farming')
             if i >= (last_cp + cp_step) * iteration:
                 while i >= (last_cp + cp_step) * iteration:
                     last_cp += cp_step
@@ -245,9 +248,8 @@ def gather(self, name: str, tool_index: Optional[int],
             if is_coll:
                 self.collect(drop_item, amount_pool * drop_pool)
 
-            self.add_exp(random_amount(resource.exp)
-                         * random_amount(exp_mult))
-            self.add_skill_exp('mining', resource.mining_exp)
+            self.add_exp(random_amount(resource.exp) * random_amount(exp_mult))
+            self.add_skill_exp('mining', resource.mining_exp, display=True)
 
             if resource.name == 'end_stone' and random_bool(0.1):
                 self.slay(get_mob('endermite', level=37))
@@ -314,7 +316,8 @@ def gather(self, name: str, tool_index: Optional[int],
                     if random_amount((1, 5)) == 1:
                         self.recieve_item(sapling_item, drop_pool)
 
-                self.add_skill_exp('foraging', resource.foraging_exp)
+                self.add_skill_exp('foraging', resource.foraging_exp,
+                                   display=True)
 
             if i >= (last_cp + cp_step) * iteration:
                 while i >= (last_cp + cp_step) * iteration:
@@ -334,7 +337,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
     weapon = (Empty() if weapon_index is None
               else self.inventory[weapon_index])
 
-    if not isinstance(weapon, (Empty, Bow, Sword, FishingRod)):
+    if not isinstance(weapon, (Empty, Bow, Sword, FishingRod, Pickaxe, Drill)):
         weapon = Empty()
 
     cata_lvl = self.get_skill_lvl('catacombs')
@@ -363,6 +366,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
     crit_damage = self.get_stat('crit_damage', weapon_index)
     # attack_speed = 0
     # intelligence = self.get_stat('intelligence', weapon_index)
+    attack_speed = self.get_stat('attack_speed', weapon_index)
     magic_find = self.get_stat('magic_find', weapon_index)
     ferocity = self.get_stat('ferocity', weapon_index)
 
@@ -427,7 +431,8 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                 elif weapon.name == 'aspect_of_the_end':
                     damage += 75
 
-        damage += weapon.hot_potato
+        if isinstance(weapon, (Bow, Sword, FishingRod)):
+            damage += weapon.hot_potato
 
         if enchantments.get('one_for_all', 0) != 0:
             damage *= 3.1
@@ -508,9 +513,9 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
 
     last_cp = Decimal()
     cp_step = Decimal('0.1')
-    is_coll = {
-        row[0].name: is_collection(row[0].name) for row in mob.drops}
-    green(f'Slaying {mob.display()}{GREEN}:')
+    is_coll = {row[0].name: is_collection(row[0].name)
+               for row in mob.drops}
+
     for count in range(1, iteration + 1):
         actual_speed = speed
         if young_blood and hp >= health / 2:
@@ -547,12 +552,12 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
             killed = False
 
             for _ in range(random_int(1 + ferocity / 100)):
-                crit = ''
+                is_crit = False
                 if random_bool(crit_chance / 100):
                     damage_dealt = damage * (1 + crit_damage / 100)
                     if crit_chance >= 100 and random_bool(overload * 0.1):
                         damage_dealt *= 1.1
-                    crit = 'crit '
+                    is_crit = True
                 else:
                     damage_dealt = damage
 
@@ -574,8 +579,10 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                 damage_dealt += (execute / 100) * (mob.health - mob_hp)
 
                 mob_hp = max(mob_hp - damage_dealt, 0)
-                gray(f"You've dealt {YELLOW}{format_short(damage_dealt)}"
-                     f'{GRAY} {crit}damage to the {mob_name}!')
+                damage_display = format_number(damage_dealt)
+                if is_crit:
+                    damage_display = format_crit(damage_display)
+                gray(f"You've dealt {YELLOW}{damage_display}{GRAY} damage.")
 
                 if life_steal != 0:
                     healed += life_steal * health
@@ -584,15 +591,10 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                     healed += syphon * health * (crit_damage // 100)
 
                 if mob_hp <= 0:
-                    a_an = 'an' if mob.name[0] in 'aeiou' else 'a'
-                    green(f"You've killed {a_an} {mob_name}!")
+                    green(f"\nYou've killed a {mob_name}!")
                     soul_eater_strength = mob.damage * soul_eater
                     killed = True
                     break
-
-                gray(f"{mob_name}'s HP: "
-                     f'{GREEN}{format_short(mob_hp)}{GRAY}'
-                     f'/{GREEN}{format_short(mob.health)}{RED}❤')
 
             if killed:
                 break
@@ -610,8 +612,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                     damage_recieved *= 0.9
                 hp = max(hp - damage_recieved, 0)
                 gray(f"You've recieved {YELLOW}"
-                     f'{format_short(damage_recieved)}{GRAY}'
-                     f' damage from the {mob_name}{GRAY}!')
+                     f'{format_number(damage_recieved)}{GRAY} damage.')
 
             exp_npng = 0
             for npng_chance in no_pain_no_gain:
@@ -629,31 +630,29 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                 thorns_damage = (thorns / 100) * damage_recieved
                 mob_hp -= thorns_damage
 
-                if mob_hp <= 0:
-                    a_an = 'an' if mob.name[0] in 'aeiou' else 'a'
-                    green(f"You've killed {a_an} {mob_name}{GRAY}!\n"
-                          f'Your HP: {GREEN}{format_short(hp)}{GRAY}/'
-                          f'{GREEN}{format_short(health)}{RED}❤')
-                    break
+            mob_hp = max(mob_hp, 0)
 
-            gray(f'Your HP: {GREEN}{format_short(hp)}{GRAY}/'
-                 f'{GREEN}{format_short(health)}{RED}❤\n'
+            gray(f'Your HP: {GREEN}{format_number(hp)}{GRAY}/'
+                 f'{GREEN}{format_number(health)}{RED}❤\n'
                  f"{mob_name}'s HP: "
-                 f'{GREEN}{format_short(mob_hp)}{GRAY}'
-                 f'/{GREEN}{format_short(mob.health)}{RED}❤\n')
+                 f'{GREEN}{format_number(mob_hp)}{GRAY}'
+                 f'/{GREEN}{format_number(mob.health)}{RED}❤\n')
+
+            if mob_hp <= 0:
+                green(f"\nYou've killed a {mob_name}!")
+                soul_eater_strength = mob.damage * soul_eater
+                break
 
             strike_count += 1
+
+            attack_time_cost = 1 / (1 + attack_speed / 100)
+            sleep(attack_time_cost)
 
         if vampirism != 0 and hp != health:
             delta = (health - hp) * (vampirism / 100)
             hp += delta
 
-        self.purse += mob.coins + scavenger
         self.add_exp(mob.exp * random_int(experience))
-        if getattr(mob, 'combat_xp', 0) != 0:
-            self.add_skill_exp('combat', mob.combat_xp)
-        if getattr(mob, 'fishing_xp', 0) != 0:
-            self.add_skill_exp('fishing', mob.fishing_xp)
 
         for item, loot_amount, rarity, drop_chance in mob.drops:
             drop_chance *= looting
@@ -675,6 +674,15 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                 rarity_str = rarity.replace('_', ' ').upper()
                 white(f'{RARITY_COLORS[rarity]}{rarity_str} DROP! '
                       f'{WHITE}({loot.display()}{WHITE})')
+
+        coins_recieved = mob.coins + scavenger
+        self.purse += coins_recieved
+        gray(f'+ {GOLD}{format_number(self.purse)} Coins')
+
+        if getattr(mob, 'combat_exp', 0) != 0:
+            self.add_skill_exp('combat', mob.combat_exp, display=True)
+        if getattr(mob, 'fishing_exp', 0) != 0:
+            self.add_skill_exp('fishing', mob.fishing_exp, display=True)
 
         phoenix_pool = random()
         if phoenix_pool <= 0.0000008:

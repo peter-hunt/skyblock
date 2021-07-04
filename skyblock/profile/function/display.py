@@ -9,7 +9,8 @@ from ...constant.color import (
 )
 from ...constant.main import ARMOR_PARTS
 from ...constant.stat import ALL_STAT, HIDDEN_STATS, PERC_STATS
-from ...function.io import gray, dark_gray, red, green, yellow, white
+from ...constant.util import Number
+from ...function.io import dark_aqua, gray, dark_gray, red, green, yellow, white
 from ...function.math import calc_skill_lvl_info, display_skill_reward
 from ...function.util import (
     format_name, format_number, format_roman, format_short, get, index,
@@ -27,8 +28,8 @@ __all__ = [
     'display_collections', 'display_item', 'display_inv',
     'display_location', 'display_money', 'display_pets', 'display_playtime',
     'display_recipe_info', 'display_recipe', 'display_recipes', 'display_shop',
-    'display_stats', 'display_skill', 'display_skills', 'display_warp',
-    'npc_silent', 'npc_speak',
+    'display_stats', 'display_skill_add', 'display_skill', 'display_skills',
+    'display_warp', 'npc_silent', 'npc_speak',
 ]
 
 
@@ -222,6 +223,8 @@ def display_location(self, /):
         gray(f'\nPortal to {AQUA}{format_name(zone.portal)}{GRAY}'
              f' ({zone.portal})')
 
+    gray()
+
 
 def display_money(self, /):
     if self.zone not in {'bank', 'dwarven_village'}:
@@ -399,6 +402,16 @@ def display_stats(self, index: Optional[int] = None, /):
             ext = '%' if stat_name in PERC_STATS else ''
         white(f'  {color} {format_name(stat_name)}'
               f' {WHITE}{floor(value)}{ext}')
+
+
+def display_skill_add(self, name: str, amount: Number, /):
+    name_display = format_name(name)
+
+    exp = self.get_skill_exp(name)
+    _, exp_left, exp_to_next = calc_skill_lvl_info(name, exp)
+
+    dark_aqua(f'+ {format_number(amount)} {name_display}'
+              f' ({format_number(exp_left)}/{format_number(exp_to_next)})')
 
 
 def display_skill(self, name: str, /, *,

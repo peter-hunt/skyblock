@@ -7,7 +7,7 @@ __all__ = [
     'BLACK', 'DARK_BLUE', 'DARK_GREEN', 'DARK_AQUA', 'DARK_RED', 'DARK_PURPLE',
     'GOLD', 'GRAY', 'DARK_GRAY', 'BLUE', 'GREEN', 'AQUA', 'RED', 'LIGHT_PURPLE',
     'YELLOW', 'WHITE',
-    'RARITY_COLORS', 'STAT_COLORS',
+    'RARITY_COLORS', 'STAT_COLORS', 'CRIT_COLORS',
 ]
 
 # color codes for text formatting
@@ -71,3 +71,6 @@ STAT_COLORS = {
     'farming_fortune': f'{GOLD}☘',
     'foraging_fortune': f'{GOLD}☘',
 }
+
+# colors used to display critical hit damage
+CRIT_COLORS = (WHITE, YELLOW, GOLD, RED, RED, WHITE)

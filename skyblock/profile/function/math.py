@@ -34,7 +34,7 @@ def add_exp(self, amount: Number, /):
         green(f'Reached XP level {current_lvl}.')
 
 
-def add_skill_exp(self, name: str, amount: Number, /):
+def add_skill_exp(self, name: str, amount: Number, /, *, display=False):
     if not hasattr(self, f'experience_skill_{name}'):
         red(f'Skill not found: {name}')
         return
@@ -44,6 +44,10 @@ def add_skill_exp(self, name: str, amount: Number, /):
     exp += amount
     setattr(self, f'experience_skill_{name}', exp)
     current_lvl = calc_skill_lvl(name, exp)
+
+    if display:
+        self.display_skill_add(name, amount)
+
     if current_lvl > original_lvl:
         coins_reward = 0
         if name != 'catacombs':
@@ -86,7 +90,7 @@ def add_skill_exp(self, name: str, amount: Number, /):
             amount *= 1 + taming_lvl / 100
 
             pet_exp += amount
-            add_skill_exp('taming', amount / 2)
+            self.add_skill_exp('taming', amount / 2)
 
             self.pets[pet_index].exp = pet_exp
             current_pet_lvl = calc_pet_lvl(pet.rarity, pet_exp)
@@ -205,7 +209,7 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
 
     if name == 'strength':
         if isinstance(item, (Bow, Sword, FishingRod)):
-            value += getattr(item, 'hot_potato', 0)
+            value += item.hot_potato
     if name == 'crit_damage':
         value += item_ench.get('critical', 0) * 10
     elif name == 'mining_speed':

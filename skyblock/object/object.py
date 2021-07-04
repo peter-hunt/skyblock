@@ -264,21 +264,9 @@ class Mob:
     health: int
     damage: int
     coins: int
-    combat_xp: int
     exp: int
-    drops: List[Tuple[ItemType, Amount, str, Number]]
-
-
-@mob_type
-class Mob:
-    name: str
-    level: int
-    health: int
-    damage: int
-    coins: int
-    exp: int
-    combat_xp: int = 0
-    fishing_xp: int = 0
+    combat_exp: int = 0
+    fishing_exp: int = 0
     drops: List[Tuple[ItemType, Amount, str, Number]] = []
 
 

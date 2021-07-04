@@ -8,7 +8,10 @@ from ..object import Zone, Island, add_dist
 __all__ = ['HUB']
 
 AUCTION_HOUSE = Zone('auction_house', -18, -90)
-BANK = Zone('bank', -20, -65)
+BANK = Zone(
+    'bank', -20, -65,
+    npcs=[get_npc('banker')],
+)
 BAZAAR_ALLEY = Zone(
     'bazaar_alley', -32, -76,
     npcs=[get_npc('adventurer'), get_npc('lumber_merchant')],
@@ -72,12 +75,12 @@ LIBRARY = Zone(
 MOUNTAIN = Zone('mountain', 0, 0, fishable=True)
 PETS_BUILDING = Zone(
     'pets_building', 24, -90,
-    npcs=[get_npc('bea'), ],
+    npcs=[get_npc('bea')],
 )
 POTION_SHOP = Zone(
     'potion_shop', 41, -63,
     resources=[get_resource('nether_wart')],
-    npcs=[get_npc('alchemist'), ],
+    npcs=[get_npc('alchemist')],
 )
 RUINS = Zone(
     'ruins', -250, -80, fishable=True,

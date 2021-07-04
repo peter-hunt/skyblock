@@ -73,6 +73,14 @@ HUB_NPCS = [
             (320, get_item('diamond_boots',
                            enchantments={'growth': 1})),
         ]),
+    Npc('banker',
+        dialog=[
+            'Hello there!',
+            ('You may want to store your coins in a safe place'
+             ' while you are off adventuring.'),
+            ('Leave your coins with me and you will also earn interest'
+             ' at the start of every season!'),
+        ]),
     Npc('bea',
         init_dialog=[
             'Hello! Do you have a pet?',
