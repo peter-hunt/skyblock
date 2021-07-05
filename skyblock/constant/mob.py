@@ -34,13 +34,14 @@ BOA_EFT = [
 
 # list of mobs affected by smite enchantment
 SMITE_EFT = [
-    'zombie', 'skeleton',
+    'zombie', 'zombie_villager', 'skeleton',
     'gravel_skeleton',
     'crypt_ghoul', 'golden_ghoul',
     'lapis_zombie',
     'redstone_pigman',
     'diamond_zombie', 'diamond_skeleton',
     'enchanted_diamond_zombie', 'enchanted_diamond_skeleton',
+    'sea_walker', 'sea_archer', 'monster_of_the_deep',
 ]
 
 

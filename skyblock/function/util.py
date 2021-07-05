@@ -1,4 +1,5 @@
 from itertools import cycle
+from math import isinf
 from re import fullmatch
 from subprocess import call
 from textwrap import wrap
@@ -122,6 +123,9 @@ def format_number(number: Union[int, float], /) -> str:
     Returns:
         A string of the formatted number.
     """
+
+    if isinf(number):
+        return '∞' if number > 0 else '-∞'
 
     if number % 1 == 0:
         string = f'{number:.0f}'

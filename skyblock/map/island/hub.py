@@ -57,7 +57,7 @@ FOREST = Zone(
 GRAVEYARD = Zone(
     'graveyard', -99, -54, portal='spider',
     npcs=[get_npc('pat')],
-    mobs=[get_mob('zombie', level=1)],
+    mobs=[get_mob('zombie', level=1), get_mob('zombie_villager')],
 )
 HIGH_LEVEL = Zone(
     'high_level', 0, 150,

@@ -18,6 +18,14 @@ MOBS = [
             (Item('potato'), 1, 'rare', 0.01),
             (Item('carrot'), 1, 'rare', 0.01),
         ]),
+    Mob('zombie_villager', level=1, health=120, damage=24,
+        coins=1, exp=7, combat_exp=2,
+        drops=[
+            (Item('rotten_flesh'), 1, 'common', 1),
+            (Item('poisonous_potato'), 1, 'uncommon', 0.02),
+            (Item('potato'), 1, 'rare', 0.01),
+            (Item('carrot'), 1, 'rare', 0.01),
+        ]),
     Mob('skeleton', level=6, health=200, damage=47,
         coins=2, exp=6, combat_exp=4,
         drops=[
@@ -49,6 +57,13 @@ MOBS = [
              1, 'pray_rngesus', 0.00003),
             (get_item('ghoul_pet', rarity='legendary'),
              1, 'pray_rngesus', 0.00001),
+        ]),
+    Mob('golden_ghoul', level=60, health=45000, damage=500,
+        coins=100, exp=50, combat_exp=30,
+        drops=[
+            (Item('rotten_flesh'), 2, 'common', 1),
+            (Item('gold'), (1, 10), 'common', 1),
+            (Item('golden_powder'), 1, 'legendary', 0.0005),
         ]),
 
     Mob('chicken', level=1, health=4, damage=0,
@@ -88,14 +103,6 @@ MOBS = [
             (Item('rabbit'), 1, 'common', 0.6),
             (Item('rabbit_hide'), 1, 'common', 0.3),
             (Item('rabbit_foot'), 1, 'uncommon', 0.1),
-        ]),
-
-    Mob('golden_ghoul', level=60, health=45000, damage=500,
-        coins=100, exp=50, combat_exp=30,
-        drops=[
-            (Item('rotten_flesh'), 2, 'common', 1),
-            (Item('gold'), (1, 12), 'common', 1),
-            (Item('golden_powder'), 1, 'legendary', 0.0005),
         ]),
 
     Mob('sneaky_creeper', level=3, health=120, damage=80,
@@ -227,6 +234,18 @@ MOBS = [
         ]),
 
     Mob('pack_spirit', level=35, health=7000, damage=450,
+        coins=11, exp=15, combat_exp=10,
+        drops=[
+            (Item('spruce'), 1, 'uncommon', 0.15),
+            (Item('dark'), 1, 'uncommon', 0.15),
+            (Item('acacia'), 1, 'uncommon', 0.15),
+            (get_scroll('howl'), 1, 'legendary', 0.0002),
+            (get_item('hound_pet', rarity='epic'),
+             1, 'pray_rngesus', 0.0002 / 3),
+            (get_item('hound_pet', rarity='legendary'),
+             1, 'pray_rngesus', 0.0001 / 6),
+        ]),
+    Mob('howling_spirit', level=35, health=7000, damage=450,
         coins=11, exp=15, combat_exp=10,
         drops=[
             (Item('spruce'), 1, 'uncommon', 0.15),

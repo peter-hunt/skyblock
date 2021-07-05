@@ -1,4 +1,4 @@
-from math import floor
+from math import floor, sqrt
 
 from ..constant.ability import SET_BONUSES
 from ..constant.color import (
@@ -8,7 +8,9 @@ from ..constant.color import (
 )
 from ..constant.enchanting import ULTIMATE_ENCHS
 from ..constant.util import Number
-from ..function.math import calc_pet_lvl, calc_pet_upgrade_exp, dung_stat
+from ..function.math import (
+    calc_pet_lvl, calc_pet_upgrade_exp, dung_stat, fround,
+)
 from ..function.reforging import get_modifier
 from ..function.util import (
     format_name, format_number, format_roman, format_short,
@@ -163,10 +165,12 @@ def item_type(cls: type, /) -> type:
                 display_stat = format_name(stat_name)
                 value = self.get_stat(stat_name, profile)
 
-                if value <= 0:
+                value = fround(value, 1)
+                if value == 0:
                     continue
 
-                basic_stats.append(f'{display_stat}: {RED}+{value:.0f}')
+                value_str = format_number(value)
+                basic_stats.append(f'{display_stat}: {RED}+{value_str}')
 
             if len(basic_stats) != 0:
                 info += '\n' + '\n'.join(f'{GRAY}{stat}'
@@ -179,7 +183,8 @@ def item_type(cls: type, /) -> type:
                 if value == 0:
                     continue
 
-                bonus_stats.append(f'{display_stat}: {GREEN}+{value:.0f}')
+                value_str = format_number(round(value, 1))
+                bonus_stats.append(f'{display_stat}: {GREEN}+{value_str}')
 
             if len(bonus_stats) != 0:
                 if len(basic_stats) != 0:
@@ -192,10 +197,12 @@ def item_type(cls: type, /) -> type:
                 display_stat = format_name(stat_name)
                 value = getattr(self, stat_name, 0)
 
-                if value <= 0:
+                value = fround(value, 1)
+                if value == 0:
                     continue
 
-                bonus_stats.append(f'{display_stat}: {GREEN}+{value:.0f}')
+                value_str = format_number(value)
+                bonus_stats.append(f'{display_stat}: {GREEN}+{value_str}')
 
             if len(bonus_stats) != 0:
                 info += '\n' + '\n'.join(f'{GRAY}{stat}'
@@ -234,11 +241,13 @@ def item_type(cls: type, /) -> type:
                             value_str = value_str[:-2]
                         bonus += f' {DARK_GRAY}(+{value_str}{ext})'
 
-                if value <= 0:
+                value = fround(value, 1)
+                if value == 0:
                     continue
 
+                value_str = format_number(value)
                 basic_stats.append(f'{display_stat}: {RED}'
-                                   f'+{value:.0f}{ext}{bonus}')
+                                   f'+{value_str}{ext}{bonus}')
 
             if len(basic_stats) != 0:
                 info += '\n' + '\n'.join(f'{GRAY}{stat}'
@@ -261,10 +270,13 @@ def item_type(cls: type, /) -> type:
                             value_str = value_str[:-2]
                         bonus += f' {DARK_GRAY}(+{value_str})'
 
-                if value <= 0:
+                value = fround(value, 1)
+                if value == 0:
                     continue
 
-                bonus_stats.append(f'{display_stat}: {GREEN}+{value}{bonus}')
+                value_str = format_number(value)
+                bonus_stats.append(f'{display_stat}: {GREEN}'
+                                   f'+{value_str}{bonus}')
 
             if len(bonus_stats) != 0:
                 if len(basic_stats) != 0:
@@ -305,11 +317,13 @@ def item_type(cls: type, /) -> type:
                             value_str = value_str[:-2]
                         bonus += f' {DARK_GRAY}(+{value_str}{ext})'
 
+                value = fround(value, 1)
                 if value == 0:
                     continue
 
+                value_str = format_number(value)
                 basic_stats.append(f'{display_stat}: {RED}'
-                                   f'+{value:.0f}{ext}{bonus}')
+                                   f'+{value_str}{ext}{bonus}')
 
             if len(basic_stats) != 0:
                 info += '\n' + '\n'.join(f'{GRAY}{stat}'
@@ -334,10 +348,13 @@ def item_type(cls: type, /) -> type:
                             value_str = value_str[:-2]
                         bonus += f' {DARK_GRAY}(+{value_str})'
 
+                value = fround(value, 1)
                 if value == 0:
                     continue
 
-                bonus_stats.append(f'{display_stat}: {GREEN}+{value}{bonus}')
+                value_str = format_number(value)
+                bonus_stats.append(f'{display_stat}: {GREEN}'
+                                   f'+{value_str}{bonus}')
 
             if len(bonus_stats) != 0:
                 if len(basic_stats) != 0:
@@ -374,11 +391,13 @@ def item_type(cls: type, /) -> type:
                             value_str = value_str[:-2]
                         bonus += f' {DARK_GRAY}(+{value_str}{ext})'
 
+                value = fround(value, 1)
                 if value == 0:
                     continue
 
+                value_str = format_number(value)
                 basic_stats.append(f'{display_stat}: {RED}'
-                                   f'+{value}{ext}{bonus}')
+                                   f'+{value_str}{ext}{bonus}')
 
             if len(basic_stats) != 0:
                 info += '\n' + '\n'.join(f'{GRAY}{stat}'
@@ -410,11 +429,13 @@ def item_type(cls: type, /) -> type:
                             value_str = value_str[:-2]
                         bonus += f' {DARK_GRAY}(+{value_str}{ext})'
 
+                value = fround(value, 1)
                 if value == 0:
                     continue
 
+                value_str = format_number(value)
                 bonus_stats.append(f'{display_stat}: {GREEN}'
-                                   f'+{value}{ext}{bonus}')
+                                   f'+{value_str}{ext}{bonus}')
 
             if len(bonus_stats) != 0:
                 if len(basic_stats) != 0:
@@ -434,9 +455,6 @@ def item_type(cls: type, /) -> type:
                               'intelligence', 'strength', 'crit_chance',
                               'crit_damage', 'magic_find', 'attack_speed',
                               'ferocity'):
-                if getattr(self, stat_name, 0) == 0:
-                    continue
-
                 display_stat = format_name(stat_name)
                 value = getattr(self, stat_name) * lvl_mult
 
@@ -446,8 +464,13 @@ def item_type(cls: type, /) -> type:
                 elif stat_name[0] == 'ac':
                     ext = '%'
 
+                value = fround(value, 1)
+                if value == 0:
+                    continue
+
+                value_str = format_number(value)
                 stats.append(f'{display_stat}: {GREEN}'
-                             f'+{format_number(floor(value))}{ext}')
+                             f'+{value_str}{ext}')
 
             stats_str = '\n'.join(f'{GRAY}{stat}' for stat in stats)
             info += f'\n\n{stats_str}{CLN}'
@@ -490,7 +513,7 @@ def item_type(cls: type, /) -> type:
         if len(ability_list) != 0:
             if len(basic_stats) + len(bonus_stats) != 0:
                 info += '\n'
-            elif ability.__class__.__name__ == 'Pet':
+            elif self.__class__.__name__ == 'Pet':
                 info += '\n'
             info += '\n' + '\n\n'.join(ability_list)
 
@@ -604,13 +627,6 @@ def item_type(cls: type, /) -> type:
                 if current_ability != set_bonus:
                     set_bonus = False
 
-        if self.__class__.__name__ == 'Armor':
-            if name in {'health', 'defense'}:
-                value += self.hot_potato
-        elif self.__class__.__name__ in {'FishingRod', 'Bow', 'Sword'}:
-            if name in {'damage', 'strength'}:
-                value += self.hot_potato
-
         if name == 'damage':
             if self.name == 'aspect_of_the_end':
                 for piece in profile.armor:
@@ -618,6 +634,8 @@ def item_type(cls: type, /) -> type:
                         break
                 else:
                     value += 75
+            elif self.name == 'emerald_blade':
+                value = 130 + 2.5 * sqrt(sqrt(profile.purse))
             if ench.get('one_for_all', 0) != 0:
                 value *= 3.1
         elif name == 'health':
@@ -636,6 +654,13 @@ def item_type(cls: type, /) -> type:
             value += ench.get('angler', 0)
         elif name == 'ferocity':
             value += ench.get('vicious', 0)
+
+        if self.__class__.__name__ == 'Armor':
+            if name in {'health', 'defense'}:
+                value += self.hot_potato
+        elif self.__class__.__name__ in {'FishingRod', 'Bow', 'Sword'}:
+            if name in {'damage', 'strength'}:
+                value += self.hot_potato
 
         if getattr(self, 'modifier', None) is not None:
             modifier_bonus = get_modifier(self.modifier, self.rarity)

@@ -1,4 +1,5 @@
 from itertools import count
+from math import floor, isinf
 from random import randint, random
 from typing import Optional, Tuple
 
@@ -15,8 +16,8 @@ from .util import format_number, format_roman
 __all__ = [
     'calc_exp_lvl', 'calc_exp', 'calc_pet_exp', 'calc_pet_lvl',
     'calc_pet_upgrade_exp', 'calc_skill_lvl', 'calc_skill_lvl_info',
-    'display_skill_reward', 'dung_stat', 'random_amount', 'random_bool',
-    'random_int',
+    'display_skill_reward', 'dung_stat', 'fround', 'random_amount',
+    'random_bool', 'random_int',
 ]
 
 
@@ -386,6 +387,13 @@ def dung_stat(value: Number, lvl: int, stars: int) -> float:
             mult += 0.01 * ((i - 45) + 16)
 
     return value * mult
+
+
+def fround(number: Number, digit=0, /) -> Number:
+    if isinf(number):
+        return number
+    mult = 10 ** digit
+    return floor(number * mult) / mult
 
 
 def random_amount(amount: Amount = 1, /) -> int:

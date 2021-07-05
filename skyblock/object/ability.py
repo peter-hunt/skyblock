@@ -1,7 +1,9 @@
 from typing import Optional
 
 from ..constant.color import (
-    GOLD, GRAY, DARK_GRAY, BLUE, GREEN, AQUA, RED, YELLOW, STAT_COLORS)
+    GOLD, GRAY, DARK_GRAY, BLUE, GREEN, AQUA, RED, LIGHT_PURPLE, YELLOW,
+    STAT_COLORS,
+)
 from ..function.io import red
 from ..function.util import get
 
@@ -197,6 +199,26 @@ ABILITIES = [
         description=(f'Gains {RED}+15 Damage{GRAY} for\n'
                      f'each Combat collection of\n'
                      f'Tier VII and over of its\nwielder.'),
+    ),
+    AnonymousAbility(
+        id='emerald_blade',
+        description=(f'A powerful blade made from pure\n'
+                     f'{GREEN}Emeralds{GRAY}. This blade becomes\n'
+                     f'stronger as you carry more\n'
+                     f'{GOLD}coins{GRAY} in your purse.'),
+    ),
+    AnonymousAbility(
+        id='sword_of_the_stars',
+        description=(f'{LIGHT_PURPLE}"Only those with the power to\n'
+                     f'create this world can wield this\n'
+                     f'blade.'),
+    ),
+    AnonymousAbility(
+        id='sword_of_the_universe',
+        description=(f"{YELLOW}Oi you! Yes you. What are you\n"
+                     f"looking at? Yes this sword has ∞\n"
+                     f"damage. Kinda overkill? I'm lazy\n"
+                     f"ok. {RED}(╯°□°)╯{GRAY}︵ ┻━┻"),
     ),
 
     NamedAbility(

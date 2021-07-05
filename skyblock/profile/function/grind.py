@@ -575,8 +575,8 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                 self.add_exp(exp_npng)
 
             if hp <= 0:
-                if self.die():
-                    red(f' ☠ {GRAY}You were killed by {mob_name}.')
+                red(f' ☠ {GRAY}You were killed by {mob_name}.')
+                self.die()
                 return False
 
             if random_bool(0.5) and thorns != 0:
@@ -630,7 +630,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
 
         coins_recieved = mob.coins + scavenger
         self.purse += coins_recieved
-        gray(f'+ {GOLD}{format_number(self.purse)} Coins')
+        gray(f'+ {GOLD}{format_number(coins_recieved)} Coins')
 
         if getattr(mob, 'combat_exp', 0) != 0:
             self.add_skill_exp('combat', mob.combat_exp, display=True)

@@ -14,7 +14,7 @@ BIRCH_PARK = Zone(
 )
 HOWLING_CAVE = Zone(
     'howl', -330, -55, fishable=True,
-    mobs=[get_mob('pack_spirit'),
+    mobs=[get_mob('pack_spirit'), get_mob('howling_spirit'),
           get_mob('soul_of_the_alpha')],
 )
 SPRUCE_WOOD = Zone(

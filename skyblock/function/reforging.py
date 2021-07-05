@@ -27,7 +27,8 @@ def get_modifier(name: Optional[str], rarity: str, /) -> Dict[str, int]:
         return
 
     bonuses = MODIFIERS[name]
-    if rarity == 'mythic':
+    rarity = rarity[0]
+    if rarity in {'m', 's', 'v'}:
         rarity = 'l'
 
     result = {}

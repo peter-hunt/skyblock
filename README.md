@@ -1,4 +1,4 @@
-# Skyblock
+# Skyblock Alpha
 ![](https://img.shields.io/github/repo-size/peter-hunt/skyblock)
 ![](https://img.shields.io/github/license/peter-hunt/skyblock)
 

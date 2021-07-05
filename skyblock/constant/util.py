@@ -106,6 +106,11 @@ SPECIAL_NAMES = {
     'divers_trunks': "Diver's Trunks",
     'divers_boots': "Diver's Boots",
 
+    'titans_helmet': "Titan's Helmet",
+    'titans_chestplate': "Titan's Chestplate",
+    'titans_leggings': "Titan's Leggings",
+    'titans_boots': "Titan's Boots",
+
     'mithril_drill_226': 'Mithril Drill SX-R226',
     'mithril_drill_326': 'Mithril Drill SX-R326',
     'titanium_drill_355': 'Titanium Drill DR-X355',

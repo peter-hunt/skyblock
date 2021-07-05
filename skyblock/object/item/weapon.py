@@ -1,3 +1,5 @@
+from math import inf
+
 from ..object import Bow, Sword
 
 
@@ -59,7 +61,8 @@ WEAPONS = [
           strength=125, defense=25),
     Sword('cleaver', 'uncommon', damage=40,
           strength=10),
-    Sword('emerald_blade', 'epic', damage=130),
+    Sword('emerald_blade', 'epic', damage=130,
+          abilities=['emerald_blade']),
     Sword('frozen_scythe', 'rare', damage=80),
     Sword('end_stone_sword', 'epic', damage=120,
           strength=80),
@@ -117,4 +120,11 @@ WEAPONS = [
     Sword('valkyrie', 'legendary', damage=270,
           strength=145, intelligence=60, ferocity=60,
           dungeon_completion_req=7, stars=0),
+
+    # admin swords
+    Sword('sword_of_the_stars', 'special', damage=99999,
+          abilities=['sword_of_the_stars']),
+
+    Sword('sword_of_the_universe', 'special', damage=inf,
+          abilities=['sword_of_the_universe']),
 ]
