@@ -50,11 +50,8 @@ def item_type(cls: type, /) -> type:
         for key in anno:
             if key == 'enchantments':
                 ench = getattr(self, key)
-                ench = {
-                    ench_name: ench[ench_name]
-                    for ench_name in sorted(ench)
-                }
-                result[key] = ench
+                result[key] = {ench_name: ench[ench_name]
+                               for ench_name in sorted(ench)}
             else:
                 result[key] = getattr(self, key)
 

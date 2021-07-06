@@ -1,10 +1,11 @@
-from json import dump as json_dump, load
+from json import load as json_load
 from os.path import join
 from pathlib import Path
 from re import sub
 from typing import Optional
 
 from ..constant.color import WHITE
+from ..data import dump as json_dump
 from ..function.io import red, yellow
 from ..function.path import is_profile
 from ..function.util import parse_int
@@ -66,7 +67,7 @@ def profile_wrapper(cls):
     lambda cls, name: ((
         file := open(join(Path.home(), 'skyblock',
                           'saves', f'{name}.json')),
-        obj := load(file),
+        obj := json_load(file),
         result := cls(name, %s),
         file.close(),
         result,
