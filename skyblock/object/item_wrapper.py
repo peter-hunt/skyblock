@@ -1,4 +1,5 @@
 from math import floor, sqrt
+from typing import Any, Dict
 
 from ..constant.ability import SET_BONUSES
 from ..constant.color import (
@@ -6,7 +7,7 @@ from ..constant.color import (
     CLN, BOLD, DARK_RED, GOLD, GRAY, DARK_GRAY,
     BLUE, GREEN, AQUA, RED, LIGHT_PURPLE, YELLOW, WHITE,
 )
-from ..constant.enchanting import ULTIMATE_ENCHS
+from ..constant.enchanting import ENCH_LVLS, ULTIMATE_ENCHS
 from ..constant.util import Number
 from ..function.math import (
     calc_pet_lvl, calc_pet_upgrade_exp, dung_stat, fround,
@@ -41,15 +42,26 @@ def item_type(cls: type, /) -> type:
 
     cls.__init__ = eval(init_str)
 
-    if cls.__name__ == 'Empty':
-        to_obj_str = 'lambda self: {}'
-    else:
-        to_obj_str = 'lambda self: {'
-        for key in anno:
-            to_obj_str += f'{key!r}: self.{key}, '
-        to_obj_str += f"'type': {cls.__name__.lower()!r}}}"
+    def to_obj(self, /) -> Dict[str, Any]:
+        if cls.__name__ == 'Empty':
+            return {}
 
-    cls.to_obj = eval(to_obj_str)
+        result = {}
+        for key in anno:
+            if key == 'enchantments':
+                ench = getattr(self, key)
+                ench = {
+                    ench_name: ench[ench_name]
+                    for ench_name in sorted(ench)
+                }
+                result[key] = ench
+            else:
+                result[key] = getattr(self, key)
+
+        result['type'] = cls.__name__.lower()
+        return result
+
+    cls.to_obj = to_obj
 
     from_obj_str = 'lambda cls, obj: cls('
     from_obj_str += ', '.join(
@@ -273,7 +285,8 @@ def item_type(cls: type, /) -> type:
                     continue
 
                 value_str = format_number(value, sign=True)
-                bonus_stats.append(f'{display_stat}: {GREEN}{value_str}{bonus}')
+                bonus_stats.append(
+                    f'{display_stat}: {GREEN}{value_str}{bonus}')
 
             if len(bonus_stats) != 0:
                 if len(basic_stats) != 0:
@@ -350,7 +363,8 @@ def item_type(cls: type, /) -> type:
                     continue
 
                 value_str = format_number(value, sign=True)
-                bonus_stats.append(f'{display_stat}: {GREEN}{value_str}{bonus}')
+                bonus_stats.append(
+                    f'{display_stat}: {GREEN}{value_str}{bonus}')
 
             if len(bonus_stats) != 0:
                 if len(basic_stats) != 0:
@@ -528,25 +542,37 @@ def item_type(cls: type, /) -> type:
             while len(ench_names) != 0:
                 if len(ench_names) == 1:
                     name = ench_names[0]
-                    ench_color = (f'{LIGHT_PURPLE}{BOLD}'
-                                  if name in ULTIMATE_ENCHS else BLUE)
                     lvl = enchs[name]
+                    if name in ULTIMATE_ENCHS:
+                        ench_color = f'{LIGHT_PURPLE}{BOLD}'
+                    elif name in ENCH_LVLS and ENCH_LVLS[name] < lvl:
+                        ench_color = GOLD
+                    else:
+                        ench_color = BLUE
                     lvl_str = '' if lvl == 0 else f' {format_roman(lvl)}'
                     ench_list.append(
                         f'{ench_color}{format_name(name)}{lvl_str}{CLN}'
                     )
                     break
                 name = ench_names[0]
-                ench_color = (f'{LIGHT_PURPLE}{BOLD}'
-                              if name in ULTIMATE_ENCHS else BLUE)
                 lvl = enchs[name]
+                if name in ULTIMATE_ENCHS:
+                    ench_color = f'{LIGHT_PURPLE}{BOLD}'
+                elif name in ENCH_LVLS and ENCH_LVLS[name] < lvl:
+                    ench_color = GOLD
+                else:
+                    ench_color = BLUE
                 lvl_str = '' if lvl == 0 else f' {format_roman(lvl)}'
-                ench_str = f'{ench_color}{format_name(name)}{lvl_str}, '
+                ench_str = f'{ench_color}{format_name(name)}{lvl_str}{BLUE}, '
 
                 name = ench_names[1]
                 lvl = enchs[name]
+                if name in ENCH_LVLS and ENCH_LVLS[name] < lvl:
+                    ench_color = GOLD
+                else:
+                    ench_color = BLUE
                 lvl_str = '' if lvl == 0 else f' {format_roman(lvl)}'
-                ench_str += f'{BLUE}{format_name(name)}{lvl_str}{CLN}'
+                ench_str += f'{ench_color}{format_name(name)}{lvl_str}{CLN}'
                 ench_list.append(ench_str)
 
                 ench_names = ench_names[2:]
@@ -621,6 +647,9 @@ def item_type(cls: type, /) -> type:
                     set_bonus = False
 
         if name == 'damage':
+            if self.name == 'aspect_of_the_jerry':
+                if ench.get('ultimate_jerry', 0) != 0:
+                    value *= ench.get('ultimate_jerry', 0) * 10
             if self.name == 'aspect_of_the_end':
                 if set_bonus == 'strong_blood':
                     value += 75
@@ -637,6 +666,8 @@ def item_type(cls: type, /) -> type:
         elif name == 'intelligence':
             value += ench.get('big_brain', 0) * 5
             value += ench.get('smarty_pants', 0) * 5
+        elif name == 'speed':
+            value += ench.get('sugar_rush', 0) * 2
         elif name == 'mining_speed':
             if ench.get('efficiency', 0) != 0:
                 value += 10 + 20 * ench['efficiency']

@@ -113,9 +113,9 @@ def format_name(name: str, /) -> str:
         if result.endswith(original):
             result = result.replace(original, alternative)
             break
-
-    result = result.replace('_', ' ')
-    result = ' '.join(_format_word(word) for word in result.split(' '))
+    else:
+        result = result.replace('_', ' ')
+        result = ' '.join(_format_word(word) for word in result.split(' '))
 
     for original, alternative in SPECIAL_ALTER.items():
         if result.startswith(original):

@@ -113,7 +113,7 @@ def mainloop(self):
             self.buy(chosen_trade, amount)
 
         elif words[0] == 'cheat':
-            # item = get_item('emerald_blade')
+            # item = get_item('necrons_helmet')
             # self.recieve_item(item)
             ...
 

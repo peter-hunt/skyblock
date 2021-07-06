@@ -8,6 +8,7 @@ from ..constant.color import WHITE
 from ..function.io import red, yellow
 from ..function.path import is_profile
 from ..function.util import parse_int
+from ..object.collection import COLLECTIONS
 from ..object.object import Empty, load_item
 from ..map.object import Npc
 
@@ -48,6 +49,12 @@ def profile_wrapper(cls):
                            'potion_bag', 'quiver', 'stash', 'talisman_bag',
                            'wardrobe'}:
                     obj[key] = [item.to_obj() for item in getattr(self, key)]
+                elif key == 'collection':
+                    obj[key] = {
+                        coll_name: coll_value
+                        for coll_name, coll_value in self.collection.items()
+                        if coll_value != 0
+                    }
                 else:
                     obj[key] = getattr(self, key)
 
@@ -68,17 +75,23 @@ def profile_wrapper(cls):
         None,
     ))[-1]
     '''
-    content = ', '.join(
-        (
-            f'{key}=[load_item(item) for item in obj.get({key!r}, {default[key]!r})]'
-            if key in {'armor', 'pets', 'ender_chest', 'inventory',
-                       'potion_bag', 'quiver', 'stash', 'talisman_bag',
-                       'wardrobe'}
-            else f'{key}=obj.get({key!r}, {default[key]!r})'
-        )
-        if key in default
-        else f'{key}=obj[{key!r}]' for key in anno
-    )
+    content = ''
+    for i, key in enumerate(default):
+        if i != 0:
+            content += ', '
+
+        if key in {'armor', 'pets', 'ender_chest', 'inventory',
+                   'potion_bag', 'quiver', 'stash', 'talisman_bag',
+                   'wardrobe'}:
+            content += (f'{key}=[load_item(item)'
+                        f' for item in obj.get({key!r}, {default[key]!r})]')
+        elif key == 'collection':
+            coll_names = [coll.name for coll in COLLECTIONS]
+            content += (f'collection={{coll: obj.get({key!r},'
+                        f' {{}}).get(coll, 0)'
+                        f' for coll in {coll_names}}}')
+        else:
+            content += f'{key}=obj.get({key!r}, {default[key]!r})'
     load_str = load_str.replace('%s', content)
     load_str = sub(r'\n\s+', '', load_str)
 

@@ -33,6 +33,8 @@ WEAPONS = [
         strength=151, crit_damage=39),
     Bow('souls_rebound', 'epic', damage=450),
 
+    Sword('aspect_of_the_jerry', 'common', damage=1),
+
     Sword('wooden_sword', 'common', damage=20),
     Sword('golden_sword', 'common', damage=20),
     Sword('stone_sword', 'common', damage=25),

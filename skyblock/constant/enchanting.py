@@ -3,7 +3,7 @@ Constant about enchantments, and enchanting information.
 """
 
 __all__ = [
-    'ULTIMATE_ENCHS', 'CONFLICTS', 'ENCHS', 'ENCH_REQUIREMENTS',
+    'ULTIMATE_ENCHS', 'CONFLICTS', 'ENCHS', 'ENCH_LVLS', 'ENCH_REQUIREMENTS',
     'SWORD_ENCHS', 'BOW_ENCHS', 'ARMOR_ENCHS',
     'AXE_ENCHS', 'HOE_ENCHS', 'PICKAXE_ENCHS', 'FISHING_ROD_ENCHS',
 ]
@@ -75,7 +75,6 @@ ENCHS = [
     # ('snipe', 3, 5, 15),
 
     ('blast_protection', 5, 5, 5),
-    # ('feather_falling', 5, 5, 5),
     ('fire_protection', 5, 5, 5),
     ('growth', 5, 10, 0),
     ('respiration', 3, 10, 0),
@@ -86,7 +85,6 @@ ENCHS = [
     ('efficiency', 5, 5, 5),
     ('fortune', 3, 15, 0),
     ('harvesting', 5, 5, 0),
-    # ('rainbow', 1, 10, 0),
 
     ('angler', 5, 10, 0),
     ('blessing', 5, 10, 0),
@@ -100,6 +98,77 @@ ENCHS = [
 
 ENCHS = sorted(ENCHS, key=lambda pair: pair[0])
 
+ENCH_LVLS = {
+    'bane_of_arthropods': 5,
+    'cleave': 5,
+    'critical': 5,
+    'cubism': 5,
+    'dragon_hunter': 5,
+    'ender_slayer': 5,
+    'execute': 5,
+    'experience': 3,
+    'fire_aspect': 2,
+    'first_strike': 4,
+    'giant_killer': 5,
+    'impaling': 3,
+    'knockback': 2,
+    'lethality': 5,
+    'life_steal': 3,
+    'looting': 3,
+    'luck': 5,
+    'mana_steal': 3,
+    'prosecute': 5,
+    'scavenger': 3,
+    'sharpness': 5,
+    'smite': 5,
+    'syphon': 3,
+    'thunderbolt': 5,
+    'thunderlord': 5,
+    'titan_killer': 4,
+    'triple_strike': 4,
+    'vampirism': 5,
+    'venomous': 5,
+    'vicious': 3,
+
+    'chance': 3,
+    'dragon_tracer': 5,
+    'flame': 1,
+    'infinite_quiver': 5,
+    'piercing': 1,
+    'overload': 5,
+    'power': 5,
+    'punch': 2,
+    'snipe': 3,
+
+    'big_brain': 5,
+    'blast_protection': 5,
+    'counter_strike': 5,
+    'counter_strike': 5,
+    'fire_protection': 5,
+    'growth': 5,
+    'projectile_protection': 5,
+    'protection': 5,
+    'rejuvenate': 5,
+    'respite': 5,
+    'thorns': 3,
+    'true_protection': 1,
+    'smarty_pants': 5,
+    'sugar_rush': 0,
+
+    'efficiency': 5,
+    'fortune': 3,
+    'harvesting': 5,
+
+    'angler': 5,
+    'blessing': 5,
+    'caster': 5,
+    'expertise': 10,
+    'frail': 5,
+    'luck_of_the_sea': 5,
+    'lure': 5,
+    'magnet': 5,
+}
+
 # enchanting skill level requirements for certain enchantments
 ENCH_REQUIREMENTS = [
     ('scavenger', 1),
@@ -112,7 +181,6 @@ ENCH_REQUIREMENTS = [
     ('life_steal', 5),
     ('growth', 5),
     ('snipe', 6),
-    ('rainbow', 6),
     ('sugar_rush', 7),
     ('giant_killer', 8),
     ('dragon_tracer', 8),
@@ -173,7 +241,7 @@ SWORD_ENCHS = [
     'first_strike',
     'giant_killer',
     'impaling',
-    'knockback',
+    'lethality',
     # 'lethality',
     'life_steal',
     'looting',
@@ -217,7 +285,6 @@ ARMOR_ENCHS = [
     'big_brain',
     'blast_protection',
     'counter_strike',
-    # 'feather_falling',
     'fire_protection',
     'growth',
     'projectile_protection',

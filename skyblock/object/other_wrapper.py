@@ -1,5 +1,5 @@
 from ..constant.color import GRAY, GREEN, RED
-from ..function.util import format_name, format_short
+from ..function.util import format_name, format_number, format_short
 
 
 __all__ = ['collection_type', 'mob_type', 'init_type']
@@ -56,8 +56,12 @@ def mob_type(cls):
     cls.copy = eval(copy_str)
 
     def display(self):
+        if self.health < 100_000:
+            health_str = format_number(self.health)
+        else:
+            health_str = format_short(self.health)
         return (f'{GRAY}Lv{self.level} {RED}{format_name(self.name)}'
-                f' {GREEN}{format_short(self.health)}{RED}❤{GREEN}')
+                f' {GREEN}{health_str}{RED}❤{GREEN}')
 
     cls.display = display
 
