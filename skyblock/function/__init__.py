@@ -3,18 +3,15 @@ Functions commonly used throughout the menu and profile.
 """
 
 from .io import *
-from .io import __all__ as __io_all__
+from .io import __all__ as __io__
 from .math import *
-from .math import __all__ as __math_all__
+from .math import __all__ as __math__
 from .path import *
-from .path import __all__ as __path_all__
+from .path import __all__ as ___path__
 from .reforging import *
-from .reforging import __all__ as __reforging_all__
+from .reforging import __all__ as __reforging__
 from .util import *
-from .util import __all__ as __util_all__
+from .util import __all__ as __util__
 
 
-__all__ = (
-    __io_all__ + __math_all__ + __path_all__
-    + __reforging_all__ + __util_all__
-)
+__all__ = __io__ + __math__ + ___path__ + __reforging__ + __util__

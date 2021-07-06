@@ -3,7 +3,7 @@ from ...function.util import get, includes
 
 from ..object import ItemType, Item, Sword, Bow, Armor, Pet
 
-from .armor import ARMOR_PIECES
+from .armor import ARMOR
 from .pet import PETS
 from .scroll import TRAVEL_SCROLLS, get_scroll
 from .tool import TOOLS
@@ -12,7 +12,7 @@ from .weapon import WEAPONS
 
 __all__ = [
     'COLLECTION_ITEMS',  'OTHER_ITEMS',
-    'ARMOR_PIECES', 'PETS', 'TRAVEL_SCROLLS', 'TOOLS', 'WEAPONS', 'ITEMS',
+    'ARMOR', 'PETS', 'TRAVEL_SCROLLS', 'TOOLS', 'WEAPONS', 'ITEMS',
     'get_item', 'get_stack_size', 'get_scroll', 'validify_item',
 ]
 
@@ -288,7 +288,7 @@ OTHER_ITEMS = [
 ]
 
 ITEMS = (COLLECTION_ITEMS + OTHER_ITEMS + WEAPONS
-         + ARMOR_PIECES + TOOLS + TRAVEL_SCROLLS + PETS)
+         + ARMOR + TOOLS + TRAVEL_SCROLLS + PETS)
 
 
 def get_item(name: str, **kwargs) -> ItemType:

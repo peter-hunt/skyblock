@@ -9,7 +9,7 @@ from types import FunctionType
 from ..constant.color import CRIT_COLORS
 from ..constant.enchanting import ENCHS
 from ..constant.util import (
-    NUMBER_SCALES, ROMAN_NUM, SPECIAL_NAMES, IGNORED_WORDS,
+    NUMBER_SCALES, ROMAN_NUM, SPECIAL_NAMES, SPECIAL_ALTER, IGNORED_WORDS,
 )
 
 from .io import red, yellow
@@ -107,13 +107,25 @@ def format_name(name: str, /) -> str:
         A string of the formatted name.
     """
 
-    if name in SPECIAL_NAMES:
-        return SPECIAL_NAMES[name]
-    else:
-        return ' '.join(_format_word(word) for word in name.split('_'))
+    result = name
+
+    for original, alternative in SPECIAL_NAMES.items():
+        if result.endswith(original):
+            result = result.replace(original, alternative)
+            break
+
+    result = result.replace('_', ' ')
+    result = ' '.join(_format_word(word) for word in result.split(' '))
+
+    for original, alternative in SPECIAL_ALTER.items():
+        if result.startswith(original):
+            result = result.replace(original, alternative)
+            break
+
+    return result
 
 
-def format_number(number: Union[int, float], /) -> str:
+def format_number(number: Union[int, float], /, *, sign: bool = False) -> str:
     """
     Format an number with commas for readability.
 
@@ -125,17 +137,24 @@ def format_number(number: Union[int, float], /) -> str:
     """
 
     if isinf(number):
-        return '∞' if number > 0 else '-∞'
+        if sign:
+            return '+∞' if number > 0 else '-∞'
+        else:
+            return '∞' if number > 0 else '-∞'
 
     if number % 1 == 0:
         string = f'{number:.0f}'
         string = ','.join(part[::-1] for part in wrap(string[::-1], 3)[::-1])
-        return string
     else:
         string = f'{number:.1f}'
         integer, floating = string.split('.')
         integer = ','.join(part[::-1] for part in wrap(integer[::-1], 3)[::-1])
-        return f'{integer}.{floating}'
+        string = f'{integer}.{floating}'
+
+    if sign and number > 0:
+        string = '+' + string
+
+    return string
 
 
 def format_roman(number: int, /) -> str:

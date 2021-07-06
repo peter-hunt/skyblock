@@ -6,28 +6,27 @@ from ...function.util import includes, get
 from ..object import Recipe
 
 from .combat import *
-from .combat import __all__ as __combat_all__
+from .combat import __all__ as __combat__
 from .farming import *
-from .farming import __all__ as __farming_all__
+from .farming import __all__ as __farming__
 from .foraging import *
-from .foraging import __all__ as __foraging_all__
+from .foraging import __all__ as __foraging__
 from .fishing import *
-from .fishing import __all__ as __fishing_all__
+from .fishing import __all__ as __fishing__
 from .mining import *
-from .mining import __all__ as __mining_all__
+from .mining import __all__ as __mining__
 from .misc import *
-from .misc import __all__ as __misc_all__
+from .misc import __all__ as __misc__
 
 
 __all__ = (
-    __combat_all__ + __farming_all__ + __fishing_all__ + __foraging_all__
-    + __mining_all__ + __misc_all__
-    + ['get_recipe']
+    __combat__ + __farming__ + __fishing__ + __foraging__
+    + __mining__ + __misc__ + ['get_recipe']
 )
 
 RECIPES = (
-    COMBAT_RECIPES + FARMING_RECIPES + FISHING_RECIPES + FORAGING_RECIPES
-    + MINING_RECIPES + MISC_RECIPES
+    COMBAT_RECIPES + FARMING_RECIPES + FISHING_RECIPES
+    + FORAGING_RECIPES + MINING_RECIPES + MISC_RECIPES
 )
 
 

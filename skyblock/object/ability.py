@@ -201,7 +201,7 @@ ABILITIES = [
                      f'Tier VII and over of its\nwielder.'),
     ),
     AnonymousAbility(
-        id='emerald_blade',
+        id='pure_emerald',
         description=(f'A powerful blade made from pure\n'
                      f'{GREEN}Emeralds{GRAY}. This blade becomes\n'
                      f'stronger as you carry more\n'

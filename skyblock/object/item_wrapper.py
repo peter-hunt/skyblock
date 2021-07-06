@@ -88,17 +88,15 @@ def item_type(cls: type, /) -> type:
 
         color = RARITY_COLORS[self.rarity]
 
-        if getattr(self, 'modifier', None) is not None:
-            modifier = f'{self.modifier.capitalize()} '
-        else:
-            modifier = ''
-
         if self.__class__.__name__ == 'TravelScroll':
             name = f'Travel Scroll to {format_name(self.island)}'
             if self.zone is not None:
                 name += f' {format_name(self.zone)}'
         elif self.__class__.__name__ == 'Pet':
             name = format_name('_'.join(self.name.split('_')[:-1]))
+        elif getattr(self, 'modifier', None) is not None:
+            fullname = f'{self.modifier.capitalize()} {self.name}'
+            name = format_name(fullname)
         else:
             name = format_name(self.name)
 
@@ -117,7 +115,7 @@ def item_type(cls: type, /) -> type:
             lvl = calc_pet_lvl(self.rarity, self.exp)
             return (f'{GRAY}[Lvl {lvl}] {color}{name}')
         else:
-            return f'{color}{modifier}{name}{stars}{DARK_GRAY}{count}{CLN}'
+            return f'{color}{name}{stars}{DARK_GRAY}{count}{CLN}'
 
     cls.display = display
 
@@ -183,8 +181,8 @@ def item_type(cls: type, /) -> type:
                 if value == 0:
                     continue
 
-                value_str = format_number(round(value, 1))
-                bonus_stats.append(f'{display_stat}: {GREEN}+{value_str}')
+                value_str = format_number(round(value, 1), sign=True)
+                bonus_stats.append(f'{display_stat}: {GREEN}{value_str}')
 
             if len(bonus_stats) != 0:
                 if len(basic_stats) != 0:
@@ -201,8 +199,8 @@ def item_type(cls: type, /) -> type:
                 if value == 0:
                     continue
 
-                value_str = format_number(value)
-                bonus_stats.append(f'{display_stat}: {GREEN}+{value_str}')
+                value_str = format_number(value, sign=True)
+                bonus_stats.append(f'{display_stat}: {GREEN}{value_str}')
 
             if len(bonus_stats) != 0:
                 info += '\n' + '\n'.join(f'{GRAY}{stat}'
@@ -230,24 +228,24 @@ def item_type(cls: type, /) -> type:
 
                 if stat_name in modifier_bonus:
                     bonus_value = modifier_bonus[stat_name]
+                    bonus_str = format_number(bonus_value, sign=True)
                     bonus += (f' {BLUE}({format_name(self.modifier)}'
-                              f' +{bonus_value}{ext})')
+                              f' {bonus_str}{ext})')
 
                 if is_dungeon:
-                    dungeon_value = dung_stat(value, cata_lvl, self.stars)
-                    if value != dungeon_value:
-                        value_str = f'{dungeon_value:.1f}'
-                        if value_str.endswith('.0'):
-                            value_str = value_str[:-2]
-                        bonus += f' {DARK_GRAY}(+{value_str}{ext})'
+                    dung_value = dung_stat(value, cata_lvl, self.stars)
+                    if value != dung_value:
+                        dung_str = format_number(fround(dung_value, 1),
+                                                 sign=True)
+                        bonus += f' {DARK_GRAY}({dung_str}{ext})'
 
                 value = fround(value, 1)
                 if value == 0:
                     continue
 
-                value_str = format_number(value)
+                value_str = format_number(value, sign=True)
                 basic_stats.append(f'{display_stat}: {RED}'
-                                   f'+{value_str}{ext}{bonus}')
+                                   f'{value_str}{ext}{bonus}')
 
             if len(basic_stats) != 0:
                 info += '\n' + '\n'.join(f'{GRAY}{stat}'
@@ -259,24 +257,23 @@ def item_type(cls: type, /) -> type:
 
                 if stat_name in modifier_bonus:
                     bonus_value = modifier_bonus[stat_name]
+                    bonus_str = format_number(bonus_value, sign=True)
                     bonus += (f' {BLUE}({format_name(self.modifier)}'
-                              f' +{bonus_value}{ext})')
+                              f' {bonus_str})')
 
                 if is_dungeon:
-                    dungeon_value = dung_stat(value, cata_lvl, self.stars)
-                    if value != dungeon_value:
-                        value_str = f'{dungeon_value:.1f}'
-                        if value_str.endswith('.0'):
-                            value_str = value_str[:-2]
-                        bonus += f' {DARK_GRAY}(+{value_str})'
+                    dung_value = dung_stat(value, cata_lvl, self.stars)
+                    if value != dung_value:
+                        dung_str = format_number(fround(dung_value, 1),
+                                                 sign=True)
+                        bonus += f' {DARK_GRAY}({dung_str})'
 
                 value = fround(value, 1)
                 if value == 0:
                     continue
 
-                value_str = format_number(value)
-                bonus_stats.append(f'{display_stat}: {GREEN}'
-                                   f'+{value_str}{bonus}')
+                value_str = format_number(value, sign=True)
+                bonus_stats.append(f'{display_stat}: {GREEN}{value_str}{bonus}')
 
             if len(bonus_stats) != 0:
                 if len(basic_stats) != 0:
@@ -304,26 +301,26 @@ def item_type(cls: type, /) -> type:
 
                 if stat_name in modifier_bonus:
                     bonus_value = modifier_bonus[stat_name]
+                    bonus_str = format_number(bonus_value, sign=True)
                     bonus += (f' {BLUE}({format_name(self.modifier)}'
-                              f' +{bonus_value}{ext})')
+                              f' {bonus_str}{ext})')
 
                 if is_dungeon:
-                    dungeon_value = dung_stat(value, cata_lvl, self.stars)
+                    dung_value = dung_stat(value, cata_lvl, self.stars)
                     if stat_name in {'crit_chance', 'attack_speed'}:
-                        dungeon_value = min(dungeon_value, 100)
-                    if value != dungeon_value:
-                        value_str = f'{dungeon_value:.1f}'
-                        if value_str.endswith('.0'):
-                            value_str = value_str[:-2]
-                        bonus += f' {DARK_GRAY}(+{value_str}{ext})'
+                        dung_value = min(dung_value, 100)
+                    if value != dung_value:
+                        dung_str = format_number(fround(dung_value, 1),
+                                                 sign=True)
+                        bonus += f' {DARK_GRAY}({dung_str}{ext})'
 
                 value = fround(value, 1)
                 if value == 0:
                     continue
 
-                value_str = format_number(value)
+                value_str = format_number(value, sign=True)
                 basic_stats.append(f'{display_stat}: {RED}'
-                                   f'+{value_str}{ext}{bonus}')
+                                   f'{value_str}{ext}{bonus}')
 
             if len(basic_stats) != 0:
                 info += '\n' + '\n'.join(f'{GRAY}{stat}'
@@ -337,24 +334,23 @@ def item_type(cls: type, /) -> type:
                 bonus = ''
                 if stat_name in modifier_bonus:
                     bonus_value = modifier_bonus[stat_name]
+                    bonus_str = format_number(bonus_value, sign=True)
                     bonus += (f' {BLUE}({format_name(self.modifier)}'
-                              f' +{bonus_value})')
+                              f' {bonus_str})')
 
                 if is_dungeon:
-                    dungeon_value = dung_stat(value, cata_lvl, self.stars)
-                    if value != dungeon_value:
-                        value_str = f'{dungeon_value:.1f}'
-                        if value_str.endswith('.0'):
-                            value_str = value_str[:-2]
-                        bonus += f' {DARK_GRAY}(+{value_str})'
+                    dung_value = dung_stat(value, cata_lvl, self.stars)
+                    if value != dung_value:
+                        dung_str = format_number(fround(dung_value, 1),
+                                                 sign=True)
+                        bonus += f' {DARK_GRAY}({dung_str})'
 
                 value = fround(value, 1)
                 if value == 0:
                     continue
 
-                value_str = format_number(value)
-                bonus_stats.append(f'{display_stat}: {GREEN}'
-                                   f'+{value_str}{bonus}')
+                value_str = format_number(value, sign=True)
+                bonus_stats.append(f'{display_stat}: {GREEN}{value_str}{bonus}')
 
             if len(bonus_stats) != 0:
                 if len(basic_stats) != 0:
@@ -378,26 +374,24 @@ def item_type(cls: type, /) -> type:
                 bonus = ''
                 if stat_name in modifier_bonus:
                     bonus_value = modifier_bonus[stat_name]
+                    bonus_str = format_number(bonus_value, sign=True)
                     bonus += (f' {BLUE}({format_name(self.modifier)}'
-                              f' +{bonus_value})')
+                              f' {bonus_str})')
 
                 if is_dungeon:
-                    dungeon_value = dung_stat(value, cata_lvl, self.stars)
-                    if stat_name == 'crit_chance':
-                        dungeon_value = min(dungeon_value, 100)
-                    if value != dungeon_value:
-                        value_str = f'{dungeon_value:.1f}'
-                        if value_str.endswith('.0'):
-                            value_str = value_str[:-2]
-                        bonus += f' {DARK_GRAY}(+{value_str}{ext})'
+                    dung_value = dung_stat(value, cata_lvl, self.stars)
+                    if value != dung_value:
+                        dung_str = format_number(fround(dung_value, 1),
+                                                 sign=True)
+                        bonus += f' {DARK_GRAY}({dung_str}{ext})'
 
                 value = fround(value, 1)
                 if value == 0:
                     continue
 
-                value_str = format_number(value)
+                value_str = format_number(value, sign=True)
                 basic_stats.append(f'{display_stat}: {RED}'
-                                   f'+{value_str}{ext}{bonus}')
+                                   f'{value_str}{ext}{bonus}')
 
             if len(basic_stats) != 0:
                 info += '\n' + '\n'.join(f'{GRAY}{stat}'
@@ -418,24 +412,24 @@ def item_type(cls: type, /) -> type:
 
                 if stat_name in modifier_bonus:
                     bonus_value = modifier_bonus[stat_name]
+                    bonus_str = format_number(bonus_value, sign=True)
                     bonus += (f' {BLUE}({format_name(self.modifier)}'
-                              f' +{bonus_value})')
+                              f' {bonus_str})')
 
                 if is_dungeon:
-                    dungeon_value = dung_stat(value, cata_lvl, self.stars)
-                    if value != dungeon_value:
-                        value_str = f'{dungeon_value:.1f}'
-                        if value_str.endswith('.0'):
-                            value_str = value_str[:-2]
-                        bonus += f' {DARK_GRAY}(+{value_str}{ext})'
+                    dung_value = dung_stat(value, cata_lvl, self.stars)
+                    if value != dung_value:
+                        dung_str = format_number(fround(dung_value, 1),
+                                                 sign=True)
+                        bonus += f' {DARK_GRAY}({dung_str}{ext})'
 
                 value = fround(value, 1)
                 if value == 0:
                     continue
 
-                value_str = format_number(value)
+                value_str = format_number(value, sign=True)
                 bonus_stats.append(f'{display_stat}: {GREEN}'
-                                   f'+{value_str}{ext}{bonus}')
+                                   f'{value_str}{ext}{bonus}')
 
             if len(bonus_stats) != 0:
                 if len(basic_stats) != 0:
@@ -468,9 +462,8 @@ def item_type(cls: type, /) -> type:
                 if value == 0:
                     continue
 
-                value_str = format_number(value)
-                stats.append(f'{display_stat}: {GREEN}'
-                             f'+{value_str}{ext}')
+                value_str = format_number(value, sign=True)
+                stats.append(f'{display_stat}: {GREEN}{value_str}{ext}')
 
             stats_str = '\n'.join(f'{GRAY}{stat}' for stat in stats)
             info += f'\n\n{stats_str}{CLN}'
@@ -629,13 +622,10 @@ def item_type(cls: type, /) -> type:
 
         if name == 'damage':
             if self.name == 'aspect_of_the_end':
-                for piece in profile.armor:
-                    if 'strong_blood' not in getattr(piece, 'abilities', []):
-                        break
-                else:
+                if set_bonus == 'strong_blood':
                     value += 75
-            elif self.name == 'emerald_blade':
-                value = 130 + 2.5 * sqrt(sqrt(profile.purse))
+            elif 'pure_emerald' in self.abilities:
+                value += 2.5 * sqrt(sqrt(profile.purse))
             if ench.get('one_for_all', 0) != 0:
                 value *= 3.1
         elif name == 'health':

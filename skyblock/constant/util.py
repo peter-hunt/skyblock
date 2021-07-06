@@ -7,7 +7,8 @@ from typing import Tuple, Union
 
 __all__ = [
     'Amount', 'Number', 'NUMBER_SCALES', 'ROMAN_NUM',
-    'SPECIAL_NAMES', 'IGNORED_WORDS']
+    'SPECIAL_NAMES', 'SPECIAL_ALTER', 'IGNORED_WORDS',
+]
 
 # util type notation classes
 Amount = Union[Tuple[int, int], int]
@@ -106,6 +107,26 @@ SPECIAL_NAMES = {
     'divers_trunks': "Diver's Trunks",
     'divers_boots': "Diver's Boots",
 
+    'goldors_helmet': "Goldor's Helmet",
+    'goldors_chestplate': "Goldor's Chestplate",
+    'goldors_leggings': "Goldor's Leggings",
+    'goldors_boots': "Goldor's Boots",
+
+    'storms_helmet': "Storm's Helmet",
+    'storms_chestplate': "Storm's Chestplate",
+    'storms_leggings': "Storm's Leggings",
+    'storms_boots': "Storm's Boots",
+
+    'necrons_helmet': "Necron's Helmet",
+    'necrons_chestplate': "Necron's Chestplate",
+    'necrons_leggings': "Necron's Leggings",
+    'necrons_boots': "Necron's Boots",
+
+    'maxors_helmet': "Maxor's Helmet",
+    'maxors_chestplate': "Maxor's Chestplate",
+    'maxors_leggings': "Maxor's Leggings",
+    'maxors_boots': "Maxor's Boots",
+
     'titans_helmet': "Titan's Helmet",
     'titans_chestplate': "Titan's Chestplate",
     'titans_leggings': "Titan's Leggings",
@@ -121,6 +142,16 @@ SPECIAL_NAMES = {
 
     'pray_rngesus': 'Pray RNGesus',
     'rngesus': 'RNGesus',
+}
+
+SPECIAL_ALTER = {
+    'Wise Wise Dragon': 'Very Wise',
+    'Strong Strong Dragon': 'Very Strong',
+    'Superior Superior Dragon': 'Highly Superior',
+    'Heavy Heavy': 'Extremely Heavy',
+    'Heavy Super Heavy': 'Thicc Super Heavy',
+    'Perfect Perfect': 'Absolutely Perfect',
+    'Refined Refined': 'Even more Refined',
 }
 
 # words ignored by capitalization
