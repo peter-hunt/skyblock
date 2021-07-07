@@ -95,6 +95,82 @@ ARMOR_MODIFIERS = {
         {'hp': 10, 'spd': 1, 'int': 75}, {'hp': 12, 'spd': 2, 'int': 100},
         {'hp': 15, 'spd': 2, 'int': 125}, {'hp': 20, 'spd': 3, 'int': 150},
     ),
+
+    'perfect': (
+        {'def': 25}, {'def': 35}, {'def': 50},
+        {'def': 65}, {'def': 80}, {'def': 110},
+    ),
+    'necrotic': (
+        {'int': 30}, {'int': 60}, {'int': 90},
+        {'int': 120}, {'int': 150}, {'int': 200},
+    ),
+    'ancient': (
+        {'hp': 7, 'def': 7, 'str': 4, 'cc': 3, 'int': 6},
+        {'hp': 7, 'def': 7, 'str': 8, 'cc': 5, 'int': 9},
+        {'hp': 7, 'def': 7, 'str': 12, 'cc': 7, 'int': 12},
+        {'hp': 7, 'def': 7, 'str': 18, 'cc': 9, 'int': 16},
+        {'hp': 7, 'def': 7, 'str': 25, 'cc': 12, 'int': 20},
+        {'hp': 7, 'def': 7, 'str': 35, 'cc': 15, 'int': 25},
+    ),
+    'spiked': (
+        {'hp': 2, 'def': 2, 'str': 3, 'spd': 1,
+         'cc': 2, 'cd': 2, 'as': 1, 'int': 3},
+        {'hp': 3, 'def': 3, 'str': 4, 'spd': 1,
+         'cc': 4, 'cd': 3, 'as': 1, 'int': 4},
+        {'hp': 4, 'def': 4, 'str': 6, 'spd': 1,
+         'cc': 6, 'cd': 6, 'as': 2, 'int': 6},
+        {'hp': 6, 'def': 6, 'str': 8, 'spd': 1,
+         'cc': 8, 'cd': 8, 'as': 3, 'int': 8},
+        {'hp': 8, 'def': 8, 'str': 10, 'spd': 1,
+         'cc': 10, 'cd': 10, 'as': 4, 'int': 10},
+        {'hp': 10, 'def': 10, 'str': 12, 'spd': 1,
+         'cc': 12, 'cd': 12, 'as': 5, 'int': 12},
+    ),
+    'renowned': (
+        {'hp': 2, 'def': 2, 'str': 3, 'spd': 1,
+         'cc': 2, 'cd': 3, 'as': 1, 'int': 3},
+        {'hp': 3, 'def': 3, 'str': 4, 'spd': 1,
+         'cc': 4, 'cd': 4, 'as': 1, 'int': 4},
+        {'hp': 4, 'def': 4, 'str': 6, 'spd': 1,
+         'cc': 6, 'cd': 6, 'as': 2, 'int': 6},
+        {'hp': 6, 'def': 6, 'str': 8, 'spd': 1,
+         'cc': 8, 'cd': 8, 'as': 3, 'int': 8},
+        {'hp': 8, 'def': 8, 'str': 10, 'spd': 1,
+         'cc': 10, 'cd': 10, 'as': 4, 'int': 10},
+        {'hp': 10, 'def': 10, 'str': 12, 'spd': 1,
+         'cc': 12, 'cd': 12, 'as': 5, 'int': 12},
+    ),
+    'cubic': (
+        {'hp': 5, 'str': 3}, {'hp': 7, 'str': 5}, {'hp': 10, 'str': 7},
+        {'hp': 15, 'str': 10}, {'hp': 20, 'str': 12}, {'hp': 25, 'str': 15},
+    ),
+    'warped': (
+        {'str': 2, 'spd': 1, 'as': 2}, {'str': 4, 'spd': 1, 'as': 3},
+        {'str': 6, 'spd': 2, 'as': 4}, {'str': 7, 'spd': 2, 'as': 5},
+        {'str': 10, 'spd': 3, 'as': 6}, {'str': 12, 'spd': 3, 'as': 7},
+    ),
+    'reinforced': (
+        {'def': 25}, {'def': 35}, {'def': 50},
+        {'def': 65}, {'def': 80}, {'def': 110},
+    ),
+    'loving': (
+        {'hp': 4, 'def': 4, 'int': 20}, {'hp': 5, 'def': 5, 'int': 40},
+        {'hp': 6, 'def': 6, 'int': 60}, {'hp': 8, 'def': 8, 'int': 80},
+        {'hp': 10, 'def': 10, 'int': 100}, {'hp': 14, 'def': 14, 'int': 120},
+    ),
+    'ridiculous': (
+        {'hp': 10, 'def': 10, 'cc': 1}, {'hp': 15, 'def': 15, 'cc': 2},
+        {'hp': 20, 'def': 20, 'cc': 3}, {'hp': 25, 'def': 25, 'cc': 4},
+        {'hp': 35, 'def': 35, 'cc': 5}, {'hp': 50, 'def': 50, 'cc': 6},
+    ),
+    'giant': (
+        {'hp': 50}, {'hp': 60}, {'hp': 80},
+        {'hp': 120}, {'hp': 180}, {'hp': 240},
+    ),
+    'submerged': (
+        {'cc': 2, 'scc': 0.5}, {'cc': 4, 'scc': 0.6}, {'cc': 6, 'scc': 0.7},
+        {'cc': 8, 'scc': 0.8}, {'cc': 10, 'scc': 0.9}, {'cc': 12, 'scc': 1},
+    ),
 }
 
 BOW_REFORGES = (
@@ -146,6 +222,22 @@ BOW_MODIFIERS = {
         {'str': 7, 'cc': 17, 'cd': 7, 'int': 40},
         {'str': 10, 'cc': 20, 'cd': 10, 'int': 50},
         {'str': 15, 'cc': 25, 'cd': 15, 'int': 60},
+    ),
+
+    'precise': (
+        {'str': 3, 'cc': 8, 'cd': 5}, {'str': 7, 'cc': 9, 'cd': 10},
+        {'str': 12, 'cc': 10, 'cd': 18}, {'str': 18, 'cc': 11, 'cd': 32},
+        {'str': 25, 'cc': 13, 'cd': 50}, {'str': 34, 'cc': 15, 'cd': 70},
+    ),
+    'spiritual': (
+        {'str': 4, 'cc': 7, 'cd': 10}, {'str': 8, 'cc': 8, 'cd': 15},
+        {'str': 14, 'cc': 9, 'cd': 23}, {'str': 20, 'cc': 10, 'cd': 37},
+        {'str': 28, 'cc': 12, 'cd': 55}, {'str': 38, 'cc': 14, 'cd': 75},
+    ),
+    'headstrong': (
+        {'str': 2, 'cc': 10, 'cd': 4}, {'str': 5, 'cc': 11, 'cd': 8},
+        {'str': 10, 'cc': 12, 'cd': 16}, {'str': 16, 'cc': 13, 'cd': 18},
+        {'str': 23, 'cc': 15, 'cd': 42}, {'str': 33, 'cc': 17, 'cd': 60},
     ),
 }
 
@@ -204,6 +296,26 @@ MELEE_MODIFIERS = {
         {'str': 18, 'cc': 12, 'cd': 12, 'int': 18, 'as': 7},
         {'str': 25, 'cc': 15, 'cd': 15, 'int': 25, 'as': 10},
         {'str': 32, 'cc': 18, 'cd': 18, 'int': 35, 'as': 15},
+    ),
+
+    'dirty': (
+        {'str': 2, 'as': 2, 'fer': 2}, {'str': 4, 'as': 3, 'fer': 3},
+        {'str': 6, 'as': 5, 'fer': 6}, {'str': 10, 'as': 10, 'fer': 9},
+        {'str': 12, 'as': 15, 'fer': 12}, {'str': 15, 'as': 20, 'fer': 15},
+    ),
+    'fabled': (
+        {'str': 30, 'cd': 15}, {'str': 35, 'cd': 20},
+        {'str': 40, 'cd': 25}, {'str': 50, 'cd': 32},
+        {'str': 60, 'cd': 40}, {'str': 75, 'cd': 50},
+    ),
+    'suspicious': (
+        {'cc': 1, 'cd': 30}, {'cc': 2, 'cd': 40},
+        {'cc': 3, 'cd': 50}, {'cc': 5, 'cd': 65},
+        {'cc': 7, 'cd': 85}, {'cc': 10, 'cd': 110},
+    ),
+    'withered': (
+        {'str': 60}, {'str': 75}, {'str': 90},
+        {'str': 110}, {'str': 135}, {'str': 170},
     ),
 }
 

@@ -9,7 +9,8 @@ from types import FunctionType
 from ..constant.color import CRIT_COLORS
 from ..constant.enchanting import ENCHS
 from ..constant.util import (
-    NUMBER_SCALES, ROMAN_NUM, SPECIAL_NAMES, SPECIAL_ALTER, IGNORED_WORDS,
+    NUMBER_SCALES, ROMAN_NUM, SPECIAL_ZONES, SPECIAL_NAMES,
+    SPECIAL_ALTER, IGNORED_WORDS,
 )
 
 from .io import red, yellow
@@ -17,7 +18,7 @@ from .io import red, yellow
 
 __all__ = [
     'checkpoint', 'clear', 'format_name', 'format_number', 'format_roman',
-    'format_short',  'get', 'generate_help', 'includes', 'index',
+    'format_short', 'format_zone',  'get', 'generate_help', 'includes', 'index',
     'is_valid_usage',
 ]
 
@@ -198,6 +199,24 @@ def format_short(number: Union[int, float], /) -> str:
     if string.endswith('.0'):
         string = string[:-2]
     return f'{string}{letter}'
+
+
+def format_zone(name: str, /) -> str:
+    """
+    Format a zone name.
+
+    Args:
+        name: A zone name to format.
+
+    Returns:
+        A string of the formatted zone name.
+    """
+
+    if name in SPECIAL_ZONES:
+        return SPECIAL_ZONES[name]
+    else:
+        result = name.replace('_', ' ')
+        return ' '.join(_format_word(word) for word in result.split(' '))
 
 
 def generate_help(doc: str, /) -> Dict[str, str]:

@@ -14,7 +14,7 @@ from ..function.math import (
 )
 from ..function.reforging import get_modifier
 from ..function.util import (
-    format_name, format_number, format_roman, format_short,
+    format_name, format_number, format_roman, format_short, format_zone,
 )
 from .ability import get_ability
 
@@ -98,9 +98,9 @@ def item_type(cls: type, /) -> type:
         color = RARITY_COLORS[self.rarity]
 
         if self.__class__.__name__ == 'TravelScroll':
-            name = f'Travel Scroll to {format_name(self.island)}'
+            name = f'Travel Scroll to {format_zone(self.island)}'
             if self.zone is not None:
-                name += f' {format_name(self.zone)}'
+                name += f' {format_zone(self.zone)}'
         elif self.__class__.__name__ == 'Pet':
             name = format_name('_'.join(self.name.split('_')[:-1]))
         elif getattr(self, 'modifier', None) is not None:
@@ -228,7 +228,7 @@ def item_type(cls: type, /) -> type:
                 'attack_speed', 'sea_creature_chance',
             ):
                 display_stat = format_name(stat_name)
-                ext = '%' if 'sea' in stat_name[0] else ''
+                ext = '%' if 'sea' in stat_name or stat_name[0] in 'ac' else ''
                 value = self.get_stat(stat_name, profile)
 
                 bonus = ''
@@ -317,7 +317,7 @@ def item_type(cls: type, /) -> type:
 
                 if is_dungeon:
                     dung_value = dung_stat(value, cata_lvl, self.stars)
-                    if stat_name in {'crit_chance', 'attack_speed'}:
+                    if stat_name == 'crit_chance':
                         dung_value = min(dung_value, 100)
                     if value != dung_value:
                         dung_str = format_number(fround(dung_value, 1),
@@ -377,9 +377,10 @@ def item_type(cls: type, /) -> type:
             else:
                 modifier_bonus = {}
 
-            for stat_name in ('strength', 'crit_chance', 'crit_damage'):
+            for stat_name in ('strength', 'crit_chance', 'crit_damage',
+                              'attack_speed', 'sea_creature_chance'):
                 display_stat = format_name(stat_name)
-                ext = '%' if stat_name[0] in 'ac' else ''
+                ext = '%' if stat_name[0] in 'acs' else ''
                 value = self.get_stat(stat_name, profile)
 
                 bonus = ''
@@ -387,7 +388,7 @@ def item_type(cls: type, /) -> type:
                     bonus_value = modifier_bonus[stat_name]
                     bonus_str = format_number(bonus_value, sign=True)
                     bonus += (f' {BLUE}({format_name(self.modifier)}'
-                              f' {bonus_str})')
+                              f' {bonus_str}{ext})')
 
                 if is_dungeon:
                     dung_value = dung_stat(value, cata_lvl, self.stars)
@@ -410,8 +411,7 @@ def item_type(cls: type, /) -> type:
 
             for stat_name in ('health', 'defense', 'intelligence', 'speed',
                               'magic_find', 'mining_speed', 'mining_fortune',
-                              'true_defense', 'ferocity',
-                              'sea_creature_chance'):
+                              'true_defense', 'ferocity'):
                 display_stat = format_name(stat_name)
                 ext = ' HP' if stat_name[0] == 'h' else ''
                 value = self.get_stat(stat_name, profile)

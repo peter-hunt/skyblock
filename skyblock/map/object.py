@@ -4,7 +4,7 @@ from math import dist, inf
 from types import FunctionType
 from typing import Dict, List, Optional, Tuple, Union
 
-from ..function.util import format_name
+from ..function.util import format_name, format_zone
 from ..object.object import ItemType, Resource, Mob
 
 
@@ -41,7 +41,7 @@ class Zone:
     skill_req: Optional[Tuple[str, int]] = None
 
     def __repr__(self):
-        return format_name(self.name)
+        return format_zone(self.name)
 
     def __hash__(self):
         return hash(self.name)
@@ -125,4 +125,4 @@ class Island:
     skill_req: Optional[Tuple[str, int]] = None
 
     def __repr__(self):
-        return format_name(self.name)
+        return format_zone(self.name)

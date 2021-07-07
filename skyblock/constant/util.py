@@ -7,7 +7,7 @@ from typing import Tuple, Union
 
 __all__ = [
     'Amount', 'Number', 'NUMBER_SCALES', 'ROMAN_NUM',
-    'SPECIAL_NAMES', 'SPECIAL_ALTER', 'IGNORED_WORDS',
+    'SPECIAL_ZONES', 'SPECIAL_NAMES', 'SPECIAL_ALTER', 'IGNORED_WORDS',
 ]
 
 # util type notation classes
@@ -16,32 +16,21 @@ Number = Union[float, int]
 
 # used to display numbers in short
 NUMBER_SCALES = [
-    ('', 1), ('K', 10 ** 3), ('M', 10 ** 6), ('B', 10 ** 9), ('T', 10 ** 12)]
+    ('', 1), ('K', 10 ** 3), ('M', 10 ** 6), ('B', 10 ** 9), ('T', 10 ** 12),
+]
 
 # used to display numbers in roman numeral
 ROMAN_NUM = [
     ('I', 1), ('IV', 4), ('V', 5), ('IX', 9), ('X', 10),
     ('XL', 40), ('L', 50), ('XC', 90), ('C', 100),
-    ('CD', 400), ('D', 500), ('CM', 900), ('M', 1000)]
+    ('CD', 400), ('D', 500), ('CM', 900), ('M', 1000),
+]
 
-# names with special translation from id to displayed name
-SPECIAL_NAMES = {
-    'attack_speed': 'Bonus Attack Speed',
-
-    'counter_strike': 'Counter-Strike',
-    'first_strike': 'First-Strike',
-    'triple_strike': 'Triple-Strike',
-
+# zone names to be translated
+SPECIAL_ZONES = {
     'builders_house': "Builder's House",
     'castle': 'Hub Castle',
     'crypt': 'Hub Crypts',
-
-    'skeletons_helmet': "Skeleton's Helmet",
-    'spiders_boots': "Spider's Boots",
-    'ranchers_boots': "Rancher's Boots",
-    'tightly_tied_hay_bale': 'Tightly-Tied Hay Bale',
-    'runaans_bow': "Runaan's Bow",
-    'zombies_heart': "Zombie's Heart",
 
     'barn': 'The Barn',
 
@@ -63,11 +52,12 @@ SPECIAL_NAMES = {
     'drag': "Dragon's Nest",
 
     'park': 'The Park',
+    'howl': 'Howling Cave',
     'birch': 'Birch Park',
-    'dark': 'Dark Thicket',
-    'jungle': 'Jungle Island',
-    'savanna': 'Savanna Woodland',
     'spruce': 'Spruce Wood',
+    'dark': 'Dark Thicket',
+    'savanna': 'Savanna Woodland',
+    'jungle': 'Jungle Island',
 
     'mines': 'Dwarven Mines',
     'veins': 'Cliffside Veins',
@@ -80,6 +70,22 @@ SPECIAL_NAMES = {
     'royal': 'Royal Mines',
     'springs': 'Lava Springs',
     'upper': 'Upper Mines',
+}
+
+# names with special translation from id to displayed name
+SPECIAL_NAMES = {
+    'attack_speed': 'Bonus Attack Speed',
+
+    'counter_strike': 'Counter-Strike',
+    'first_strike': 'First-Strike',
+    'triple_strike': 'Triple-Strike',
+
+    'skeletons_helmet': "Skeleton's Helmet",
+    'spiders_boots': "Spider's Boots",
+    'ranchers_boots': "Rancher's Boots",
+    'tightly_tied_hay_bale': 'Tightly-Tied Hay Bale',
+    'runaans_bow': "Runaan's Bow",
+    'zombies_heart': "Zombie's Heart",
 
     'giants_sword': "Giant's Sword",
     'necrons_blade': "Necron's Blade",
@@ -141,7 +147,6 @@ SPECIAL_NAMES = {
     'farmers_rod': "Farmer's Rod",
 
     'pray_rngesus': 'Pray RNGesus',
-    'rngesus': 'RNGesus',
 }
 
 SPECIAL_ALTER = {

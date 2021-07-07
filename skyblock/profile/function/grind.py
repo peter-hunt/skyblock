@@ -1,17 +1,18 @@
 from decimal import Decimal
 from math import ceil
+from os import get_terminal_size
 from random import randint, random
 from time import sleep, time
 from typing import Optional
 
 from ...constant.ability import SET_BONUSES
 from ...constant.color import (
-    RARITY_COLORS, GOLD, GRAY, GREEN, AQUA, RED, YELLOW, WHITE,
+    BOLD, GOLD, GRAY, GREEN, AQUA, RED, YELLOW, WHITE, RARITY_COLORS,
 )
 from ...constant.mob import (
     CUBISM_EFT, ENDER_SLAYER_EFT, BOA_EFT, SMITE_EFT, IMPALING_EFT,
 )
-from ...function.io import dark_aqua, gray, red, green, yellow, white
+from ...function.io import dark_aqua, gray, red, green, aqua, yellow, white
 from ...function.math import random_amount, random_bool, random_int
 from ...function.util import (
     checkpoint, format_crit, format_name, format_number,
@@ -479,6 +480,11 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
             actual_speed += 70
         time_cost = 10 / (5 * actual_speed / 100)
         sleep(time_cost)
+
+        if count != 1:
+            width, _ = get_terminal_size()
+            width = ceil(width * 0.85)
+            aqua(f"{BOLD}{'':-^{width}}")
 
         healed = (round((time_cost // 2) * (1.5 + health / 100), 1)
                   * (1 + (rejuvenate / 100)))

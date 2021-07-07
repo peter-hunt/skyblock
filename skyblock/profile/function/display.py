@@ -13,7 +13,8 @@ from ...constant.util import Number
 from ...function.io import dark_aqua, gray, dark_gray, red, green, yellow, white
 from ...function.math import calc_skill_lvl_info, display_skill_reward
 from ...function.util import (
-    format_name, format_number, format_roman, format_short, get, index,
+    format_name, format_number, format_roman, format_short, format_zone,
+    get, index,
 )
 from ...object.collection import COLLECTIONS, get_collection
 from ...object.item import get_item
@@ -200,13 +201,13 @@ def display_location(self, /):
                 direc += 'South' if dz > 0 else 'North'
             if dz / dx < tan(radians(60)):
                 direc += 'East' if dx > 0 else 'West'
-        gray(f'  {AQUA}{format_name(other.name)}{GRAY}'
+        gray(f'  {AQUA}{format_zone(other.name)}{GRAY}'
              f' on the {AQUA}{direc}{GRAY} ({other.name}).')
 
     if len(zone.resources) > 0:
         gray('\nResources:')
         for resource in zone.resources:
-            gray(f'  {GREEN}{format_name(resource.name)}{GRAY}'
+            gray(f'  {GREEN}{format_zone(resource.name)}{GRAY}'
                  f' ({resource.name}).')
 
     if len(zone.mobs) > 0:
@@ -220,7 +221,7 @@ def display_location(self, /):
             gray(f'  {GREEN}{npc}{GRAY} ({npc.name}).')
 
     if zone.portal is not None:
-        gray(f'\nPortal to {AQUA}{format_name(zone.portal)}{GRAY}'
+        gray(f'\nPortal to {AQUA}{format_zone(zone.portal)}{GRAY}'
              f' ({zone.portal})')
 
     gray()
@@ -467,8 +468,8 @@ def display_warp(self, /):
     ))
 
     for island, zone in self.fast_travel:
-        i_name = format_name(island)
-        r_name = 'Spawn' if zone is None else format_name(zone)
+        i_name = format_zone(island)
+        r_name = 'Spawn' if zone is None else format_zone(zone)
         warp_name = island if zone is None else zone
         green(f'  {i_name}{GRAY} - {AQUA}{r_name}')
         dark_gray(f'  /warp {warp_name}')
