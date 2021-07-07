@@ -16,6 +16,7 @@ HOWLING_CAVE = Zone(
     'howl', -330, -55, fishable=True,
     mobs=[get_mob('pack_spirit'), get_mob('howling_spirit'),
           get_mob('soul_of_the_alpha')],
+    npcs=[get_npc('old_shaman_nyko')],
 )
 SPRUCE_WOOD = Zone(
     'spruce', -325, 0,

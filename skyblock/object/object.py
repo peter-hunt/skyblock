@@ -117,6 +117,8 @@ class Pickaxe(ItemType):
     modifier: Optional[str] = None
     enchantments: Dict[str, int] = {}
 
+    abilities: List[str] = []
+
 
 @item_type
 class Drill(ItemType):
@@ -131,6 +133,8 @@ class Drill(ItemType):
 
     modifier: Optional[str] = None
     enchantments: Dict[str, int] = {}
+
+    abilities: List[str] = []
 
 
 @item_type

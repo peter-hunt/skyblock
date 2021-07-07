@@ -4,7 +4,7 @@ from ..function.io import red
 from ..function.util import get, includes
 
 from .item import get_item, get_scroll
-from .object import ItemType, Item, Mob
+from .object import ItemType, Item, Mob, EnchantedBook
 
 
 __all__ = ['MOBS', 'get_mob']
@@ -574,6 +574,7 @@ MOBS = [
             (Item('rotten_flesh'), (1, 6), 'common', 1 / 7),
             (Item('enchanted_rotten_flesh'), 1, 'common', 6 / 7),
             (Item('enchanted_feather'), 1, 'common', 6 / 7),
+            (EnchantedBook(enchantments={'magnet': 6}), 1, 'rare', 0.02),
         ]),
     Mob('catfish', level=23, health=26000, damage=220,
         coins=0, exp=50, fishing_exp=405,
@@ -584,6 +585,7 @@ MOBS = [
             (Item('fish'), (1, 3), 'common', 1),
             (Item('salmon'), (1, 3), 'common', 1),
             (Item('sponge'), 1, 'common', 1),
+            (EnchantedBook(enchantments={'frail': 6}), 1, 'rare', 0.02),
         ]),
     Mob('sea_leech', level=30, health=60000, damage=300,
         coins=0, exp=65, fishing_exp=675,
@@ -592,6 +594,7 @@ MOBS = [
             (Item('clownfish'), 2, 'common', 1),
             (Item('lily_pad'), 3, 'common', 1),
             (Item('sponge'), 1, 'common', 1),
+            (EnchantedBook(enchantments={'spiked_hook': 6}), 1, 'rare', 0.02),
         ]),
     Mob('guardian_defender', level=45, health=70000, damage=212,
         coins=0, exp=72, fishing_exp=1150,
@@ -601,6 +604,7 @@ MOBS = [
             (Item('enchanted_prismarine_crystals'), 1, 'common', 3 / 4),
             (Item('sponge'), (1, 2), 'common', 1),
             (Item('lily_pad'), (5, 11), 'common', 1),
+            (EnchantedBook(enchantments={'lure': 6}), 1, 'rare', 0.02),
         ]),
     Mob('deep_sea_protector', level=60, health=150000, damage=400,
         coins=0, exp=100, fishing_exp=1350,
@@ -609,11 +613,14 @@ MOBS = [
             (Item('lily_pad'), (30, 40), 'common', 1),
             (Item('enchanted_iron'), (2, 4), 'common', 1),
             (Item('sponge'), (1, 3), 'common', 1),
+            (EnchantedBook(enchantments={'angler': 4}), 1, 'rare', 0.02),
         ]),
     Mob('water_hydra', level=100, health=500000, damage=500,
         coins=0, exp=175, fishing_exp=3000,
         drops=[
             (get_item('water_hydra_head'), (1, 2), 'rare', 0.05),
+            (EnchantedBook(enchantments={'luck_of_the_sea': 6}),
+             1, 'rare', 0.02),
         ]),
     Mob('sea_emperor', level=150, health=750000, damage=600,
         coins=0, exp=250, fishing_exp=3375,

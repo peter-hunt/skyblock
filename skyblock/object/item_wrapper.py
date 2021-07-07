@@ -654,7 +654,7 @@ def item_type(cls: type, /) -> type:
             if self.name == 'aspect_of_the_end':
                 if set_bonus == 'strong_blood':
                     value += 75
-            elif 'pure_emerald' in self.abilities:
+            elif 'pure_emerald' in getattr(self, 'abilities', []):
                 value += 2.5 * sqrt(sqrt(profile.purse))
             if ench.get('one_for_all', 0) != 0:
                 value *= 3.1

@@ -117,16 +117,15 @@ def recieve_item(self, item: ItemType, count: int = 1, /):
     for index, slot in enumerate(self.inventory):
         if isinstance(slot, Empty):
             delta = min(counter, stack_count)
-            if stack_count != 1:
-                item_copy.count = delta
-            self.inventory[index] = item_copy
+            item_copy.count = delta
+            self.inventory[index] = item_copy.copy()
             counter -= delta
 
         elif not isinstance(slot, Item) or not isinstance(item, Item):
             continue
 
         elif (item.name != slot.name or
-                getattr(item, 'rarity', '') != getattr(slot, 'rarity', '')):
+              getattr(item, 'rarity', '') != getattr(slot, 'rarity', '')):
             continue
 
         elif len(getattr(item, 'enchantments', {})) != 0:

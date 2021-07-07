@@ -52,6 +52,9 @@ Removes all items currently in the Stash.
 > collections [category|name]
 Display collections.
 
+> combine <index-1> <index-2>
+Combine items with anvil.
+
 > consume <index> [amount]
 > use <index> [amount]
 Consume item.

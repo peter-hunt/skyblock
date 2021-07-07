@@ -113,10 +113,10 @@ def mainloop(self):
             self.buy(chosen_trade, amount)
 
         elif words[0] == 'cheat':
-            # item = get_item('paper')
-            # self.recieve_item(item, 48)
-            # item = get_item('wheat')
-            # self.recieve_item(item, 16)
+            item = get_item('paper')
+            self.recieve_item(item, 48)
+            item = get_item('wheat')
+            self.recieve_item(item, 16)
             ...
 
         elif words[0] == 'clear':
@@ -124,6 +124,17 @@ def mainloop(self):
 
         elif words[0] == 'clearstash':
             self.clearstash()
+
+        elif words[0] == 'combine':
+            index_1 = self.parse_index(words[1])
+            if index_1 is None:
+                continue
+
+            index_2 = self.parse_index(words[2])
+            if index_2 is None:
+                continue
+
+            self.combine(index_1, index_2)
 
         elif words[0] in {'consume', 'use'}:
             index = self.parse_index(words[1])

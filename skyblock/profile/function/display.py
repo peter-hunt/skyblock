@@ -387,7 +387,7 @@ def display_shop(self, npc: Npc, trade_index: Optional[int] = None, /):
                          else f' {GRAY}x {amount}')
                 gray(f"  {'':>{digits}}   {cost_display}{count}")
     else:
-        self.info(npc.trades[trade_index][1])
+        self.display_item(npc.trades[trade_index][1])
 
 
 def display_stats(self, index: Optional[int] = None, /):

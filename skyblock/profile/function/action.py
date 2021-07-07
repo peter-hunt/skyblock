@@ -6,8 +6,8 @@ from ...constant.color import (
     BOLD, DARK_AQUA, GOLD, GRAY, BLUE, GREEN, AQUA, RED, YELLOW,
 )
 from ...constant.enchanting import (
-    ENCHS, CONFLICTS, ENCH_REQUIREMENTS, SWORD_ENCHS, BOW_ENCHS, ARMOR_ENCHS,
-    AXE_ENCHS, HOE_ENCHS, PICKAXE_ENCHS, FISHING_ROD_ENCHS,
+    ENCHS, ENCH_LVLS, CONFLICTS, ENCH_REQUIREMENTS, SWORD_ENCHS, BOW_ENCHS,
+    ARMOR_ENCHS, AXE_ENCHS, HOE_ENCHS, PICKAXE_ENCHS, FISHING_ROD_ENCHS,
 )
 from ...constant.main import INTEREST_TABLE, SELL_PRICE
 from ...function.io import (
@@ -23,14 +23,15 @@ from ...map.object import Npc, calc_dist, path_find
 from ...object.item import get_item, validify_item
 from ...object.object import (
     Empty, Bow, Sword, Armor,
-    Axe, Hoe, Pickaxe, Drill, FishingRod, TravelScroll, Pet,
+    Axe, Hoe, Pickaxe, Drill, FishingRod, TravelScroll, Pet, EnchantedBook,
 )
 from ...object.recipe import RECIPES
 
 
 __all__ = [
-    'add_pet', 'buy', 'consume', 'craft', 'despawn_pet', 'die', 'enchant',
-    'goto', 'remove_pet', 'sell', 'summon_pet', 'talkto_npc', 'update', 'warp',
+    'add_pet', 'buy', 'combine', 'consume', 'craft', 'despawn_pet', 'die',
+    'enchant', 'goto', 'remove_pet', 'sell', 'summon_pet', 'talkto_npc',
+    'update', 'warp',
 ]
 
 
@@ -102,6 +103,52 @@ def buy(self, trade: Tuple, amount: int, /):
               f'{GOLD}{format_short(price)} Coins{GREEN}!')
     else:
         green(f'You bought {display_str}{GREEN}!')
+
+
+def combine(self, index_1: int, index_2: int, /):
+    item_1 = self.inventory[index_1]
+    item_2 = self.inventory[index_2]
+
+    if isinstance(item_1, Empty) or isinstance(item_2, Empty):
+        red('These items cannot be combined!')
+        return
+
+    if isinstance(item_1, EnchantedBook) and isinstance(item_2, EnchantedBook):
+        ench_1 = item_1.enchantments
+        ench_2 = item_2.enchantments
+        names = {*ench_2, *ench_2}
+        result = {}
+
+        for name in names:
+            if name in ench_1 and name in ench_2:
+                if ench_1[name] == ench_2[name]:
+                    if ench_1[name] < ENCH_LVLS[name]:
+                        result[name] = ench_1[name] + 1
+                    else:
+                        result[name] = ench_1[name]
+                else:
+                    result[name] = max(ench_1[name], ench_2[name])
+            elif name in ench_1:
+                result[name] = ench_1[name]
+            else:
+                result[name] = ench_2[name]
+
+        self.inventory[index_1] = Empty()
+        self.inventory[index_2] = Empty()
+        self.recieve_item(EnchantedBook(enchantments=result))
+
+        return
+
+    if (isinstance(item_2, (Drill, Pickaxe, Armor, Bow, Sword, FishingRod))
+            and isinstance(item_1, EnchantedBook)):
+        item_1, item_2 = item_2, item_1
+
+    if (isinstance(item_1, (Drill, Pickaxe, Armor, Bow, Sword, FishingRod))
+            and isinstance(item_2, EnchantedBook)):
+        pass
+    else:
+        red('These items cannot be combined!')
+        return
 
 
 def consume(self, index: int, amount: int = 1, /):

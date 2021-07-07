@@ -324,14 +324,16 @@ def validify_item(item: ItemType, /) -> ItemType:
         attrs['enchantments'] = item.enchantments.copy()
     if getattr(item, 'hot_potato', 0) != 0:
         attrs['hot_potato'] = item.hot_potato
-    if getattr(item, 'modifier', None) != None:
+    if getattr(item, 'modifier', None) is not None:
         attrs['modifier'] = item.modifier
     if getattr(item, 'stars', 0) != 0:
         attrs['stars'] = item.stars
 
-    if getattr(item, 'rarity', {}) != {}:
+    if getattr(item, 'rarity', None) != None:
         if isinstance(item, (Sword, Bow, Armor, Pet)):
             kwargs['rarity'] = item.rarity
+        else:
+            attrs['rarity'] = item.rarity
 
     item_copy = get_item(item.name, **kwargs)
     for key, value in attrs.items():

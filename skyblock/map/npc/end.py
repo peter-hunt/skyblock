@@ -1,6 +1,6 @@
 from ...constant.color import LIGHT_PURPLE, WHITE
 from ...object.item import get_item
-from ...object.object import Item
+from ...object.object import Item, EnchantedBook
 
 from ..object import Npc
 
@@ -20,5 +20,6 @@ END_NPCS = [
             (10, Item('end_stone')),
             (50, Item('obsidian')),
             (499_999, get_item('stonk')),
+            (1_500_000, EnchantedBook(enchantments={'ender_slayer': 4})),
         ]),
 ]
