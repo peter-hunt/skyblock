@@ -574,7 +574,9 @@ def item_type(cls: type, /) -> type:
 
                 ench_names = ench_names[2:]
 
-            info += '\n\n' + '\n'.join(ench_list)
+            if not self.__class__.__name__ in {'EnchantedBook'}:
+                info += '\n'
+            info += '\n' + '\n'.join(ench_list)
 
         footers = []
         if hasattr(self, 'modifier') and self.modifier is None:
@@ -604,7 +606,9 @@ def item_type(cls: type, /) -> type:
             type_name = self.part.upper()
         elif self.__class__.__name__ == 'FishingRod':
             type_name = 'FISHING ROD'
-        elif self.__class__.__name__ in {'Item', 'Pet', 'TravelScroll'}:
+        elif self.__class__.__name__ in {
+            'Item', 'Pet', 'TravelScroll', 'EnchantedBook',
+        }:
             type_name = ''
         else:
             type_name = self.__class__.__name__.upper()

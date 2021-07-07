@@ -138,7 +138,7 @@ ENCH_LVLS = {
     'overload': 5,
     'power': 5,
     'punch': 2,
-    'snipe': 3,
+    # 'snipe': 3,
 
     'big_brain': 5,
     'blast_protection': 5,
@@ -180,7 +180,7 @@ ENCH_REQUIREMENTS = [
     ('angler', 4),
     ('life_steal', 5),
     ('growth', 5),
-    ('snipe', 6),
+    # ('snipe', 6),
     ('sugar_rush', 7),
     ('giant_killer', 8),
     ('dragon_tracer', 8),
@@ -277,7 +277,7 @@ BOW_ENCHS = [
     # 'overload',
     'power',
     'punch',
-    'snipe',
+    # 'snipe',
 ]
 
 # list of armor enchantments (used by enchanting table)

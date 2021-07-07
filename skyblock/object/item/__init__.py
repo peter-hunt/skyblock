@@ -1,7 +1,7 @@
 from ...function.io import red
 from ...function.util import get, includes
 
-from ..object import ItemType, Item, Sword, Bow, Armor, Pet
+from ..object import ItemType, Item, Sword, Bow, Armor, Pet, EnchantedBook
 
 from .armor import ARMOR
 from .pet import PETS
@@ -284,7 +284,22 @@ OTHER_ITEMS = [
     Item('summoning_eye', 1, 'epic'),
     Item('bag_of_cash', 1, 'rare'),
 
+    Item('minnow_bait', 64, 'common'),
+    Item('fish_bait', 64, 'common'),
+    Item('light_bait', 64, 'common'),
+    Item('dark_bait', 64, 'common'),
+    Item('spiked_bait', 64, 'common'),
+    Item('spooky_bait', 64, 'common'),
+    Item('carrot_bait', 64, 'common'),
+    Item('blessed_bait', 64, 'uncommon'),
+    Item('whale_bait', 64, 'rare'),
+    Item('ice_bait', 64, 'uncommon'),
+    Item('shark_bait', 64, 'uncommon'),
+
+    Item('shark_fin', 64, 'rare'),
     Item('emperors_skull', 64, 'rare'),
+
+    EnchantedBook(),
 ]
 
 ITEMS = (COLLECTION_ITEMS + OTHER_ITEMS + WEAPONS

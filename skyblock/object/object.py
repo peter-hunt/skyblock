@@ -2,14 +2,16 @@ from typing import Dict, Iterator, List, Optional, Tuple, Union
 
 from ..constant.util import Amount, Number
 
-from .other_wrapper import collection_type, mob_type, init_type
+from .other_wrapper import (
+    collection_type, mob_type, enchanted_book_type, init_type,
+)
 from .item_wrapper import item_type
 
 
 __all__ = [
     'ItemType', 'Item', 'Empty', 'Bow', 'Sword',
     'Axe', 'Pickaxe', 'Drill', 'Hoe',
-    'Armor', 'TravelScroll', 'Pet', 'OBJECTS',
+    'Armor', 'TravelScroll', 'Pet', 'EnchantedBook', 'OBJECTS',
     'Resource', 'Mineral', 'Wood', 'Mob', 'Recipe', 'Collection',
     'load_item',
 ]
@@ -225,9 +227,17 @@ class Pet(ItemType):
     abilities: List = []
 
 
+@enchanted_book_type
+@item_type
+class EnchantedBook(ItemType):
+    name: str = 'enchanted_book'
+    enchantments: Dict[str, int] = {}
+    rarity: str = 'common'
+
+
 OBJECTS = [
     Item, Empty, Sword, Bow, Axe, Hoe, Pickaxe, Drill, FishingRod,
-    Armor, TravelScroll, Pet,
+    Armor, TravelScroll, Pet, EnchantedBook,
 ]
 
 
@@ -236,14 +246,14 @@ class Resource:
         return type(self).__name__
 
 
-@item_type
+@init_type
 class Crop(Resource):
     name: str
     amount: int = 1
     farming_exp: Number = 1
 
 
-@item_type
+@init_type
 class Mineral(Resource):
     name: str
     drop: str
@@ -254,7 +264,7 @@ class Mineral(Resource):
     mining_exp: Number = 1
 
 
-@item_type
+@init_type
 class Wood(Resource):
     name: str
     hardness: int = 2

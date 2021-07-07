@@ -60,7 +60,7 @@ FORAGING_COLLECTIONS = [
             (1_000, 100),
             (2_500, get_recipe('dark_oak_to_enchanted')),
             (5_000, 500),
-            (10_000, 1_000),
+            (10_000, get_recipe('growth_book')),
             (25_000, 2_500),
             (50_000, (get_recipe('growth_helmet'),
                       get_recipe('growth_chestplate'),

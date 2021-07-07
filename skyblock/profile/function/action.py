@@ -169,24 +169,20 @@ def craft(self, index: int, amount: int = 1, /):
         self.remove_item(item.name, count * amount)
 
     result, result_count = recipe.result
-    rarity = result.rarity
 
     if isinstance(result, Pet):
         keep_weight = 80
         upgrade_weight = 20 + 0.2 * self.get_stat('pet_luck')
         total = keep_weight + upgrade_weight
         if random() > (keep_weight / total):
-            rarity = {
+            result.rarity = {
                 'common': 'uncommon',
                 'uncommon': 'rare',
                 'rare': 'epic',
                 'epic': 'legendary',
-            }[rarity]
+            }[result.rarity]
 
-    original = get_item(result.name, rarity=rarity)
-    if hasattr(original, 'conut'):
-        original.count = 1
-    self.recieve_item(original, result_count * amount)
+    self.recieve_item(result, result_count * amount)
 
 
 def despawn_pet(self, /):

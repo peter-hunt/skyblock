@@ -3,7 +3,8 @@ Constants about mobs.
 """
 
 __all__ = [
-    'CUBISM_EFT', 'ENDER_SLAYER_EFT', 'BOA_EFT', 'SMITE_EFT', 'IMPALING_EFT',
+    'CUBISM_EFT', 'ENDER_SLAYER_EFT', 'BOA_EFT', 'SMITE_EFT',
+    'BLAST_PROT_EFT', 'PROJ_PROT_EFT', 'IMPALING_EFT',
 ]
 
 # list of mobs affected by cubism enchantment
@@ -30,6 +31,17 @@ BOA_EFT = [
     'voracious_spider',
     'dasher_spider',
     'spider_jockey',
+]
+
+# list of mobs affected by blast protection enchantment
+BLAST_PROT_EFT = [
+    'sneaky_creeper',
+]
+
+# list of mobs affected by projectile protection enchantment
+PROJ_PROT_EFT = [
+    'skeleton', 'gravel_skeleton',
+    'diamond_skeleton', 'enchanted_diamond_skeleton', 'sea_archer',
 ]
 
 # list of mobs affected by smite enchantment

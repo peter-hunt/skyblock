@@ -10,7 +10,8 @@ from ...constant.color import (
     BOLD, GOLD, GRAY, GREEN, AQUA, RED, YELLOW, WHITE, RARITY_COLORS,
 )
 from ...constant.mob import (
-    CUBISM_EFT, ENDER_SLAYER_EFT, BOA_EFT, SMITE_EFT, IMPALING_EFT,
+    CUBISM_EFT, ENDER_SLAYER_EFT, BOA_EFT, SMITE_EFT, BLAST_PROT_EFT,
+    PROJ_PROT_EFT, IMPALING_EFT,
 )
 from ...function.io import dark_aqua, gray, red, green, aqua, yellow, white
 from ...function.math import random_amount, random_bool, random_int
@@ -381,9 +382,16 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
 
     set_bonus = True
     for piece in self.armor:
-        if isinstance(piece, Armor):
+        if not isinstance(piece, Armor):
             set_bonus = False
             break
+
+        piece_ench = getattr(piece, 'enchantments', {})
+
+        if name in BLAST_PROT_EFT:
+            defense += 30 * piece_ench.get('blast_protection', 0)
+        if name in PROJ_PROT_EFT:
+            defense += 7 * piece_ench.get('projectile_protection', 0)
 
         for current_ability in piece.abilities:
             if current_ability in SET_BONUSES:
@@ -445,6 +453,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
     first_strike = 1 + 0.25 * enchantments.get('first_strike', 0)
     giant_killer = enchantments.get('giant_killer', 0)
     infinite_quiver = enchantments.get('infinite_quiver', 0)
+    knockback = 1 + 0.2 * enchantments.get('knockback', 0)
     life_steal = 0.005 * enchantments.get('life_steal', 0)
     if isinstance(weapon, Bow):
         looting = 1 + 0.15 * enchantments.get('chance', 0)
@@ -455,12 +464,21 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
     luck = 1 + 0.05 * enchantments.get('luck', 0)
     overload = enchantments.get('overload', 0)
     prosecute = 0.1 * enchantments.get('prosecute', 0)
+    punch = 1 + 0.15 * enchantments.get('punch', 0)
     scavenger = 0.3 * enchantments.get('scavenger', 0)
     if 'syphon' in enchantments:
         syphon = 0.1 + 0.1 * enchantments['syphon']
     else:
         syphon = 0
     triple_strike = 1 + 0.10 * enchantments.get('triple_strike', 0)
+    thunderbolt = 0.15 * enchantments.get('thunderbolt', 0)
+    thunderlord_lvl = enchantments.get('thunderlord', 0)
+    if thunderlord_lvl <= 3:
+        thunderlord = 0.3 * thunderlord_lvl
+    elif thunderlord_lvl <= 5:
+        thunderlord = 0.25 * thunderlord_lvl
+    else:
+        thunderlord = 0.3 * thunderlord_lvl
     vampirism = enchantments.get('vampirism', 0)
 
     soul_eater = enchantments.get('soul_eater', 0) * 2
@@ -481,25 +499,30 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
         time_cost = 10 / (5 * actual_speed / 100)
         sleep(time_cost)
 
-        if count != 1:
-            width, _ = get_terminal_size()
-            width = ceil(width * 0.85)
-            aqua(f"{BOLD}{'':-^{width}}")
+        width, _ = get_terminal_size()
+        width = ceil(width * 0.85)
+        aqua(f"{BOLD}{'':-^{width}}")
 
         healed = (round((time_cost // 2) * (1.5 + health / 100), 1)
                   * (1 + (rejuvenate / 100)))
         if set_bonus == 'holy_blood':
             healed *= 3
         hp = min(hp - + healed, health)
-        if healed != 0:
-            gray(f'You healed for {GREEN}{format_short(healed)}'
-                 f'{RED}❤{GRAY}.\n'
-                 f'Your HP: {GREEN}{format_short(hp)}{GRAY}/'
-                 f'{GREEN}{format_short(health)}{RED}❤')
         healed = 0
+
+        attack_time_cost = 1 / (1 + attack_speed / 100)
+        walk_time_cost = 5 / (speed / 100)
+
+        gray(f'Your HP: {GREEN}{format_number(hp)}{GRAY}/'
+             f'{GREEN}{format_number(health)}{RED}❤\n'
+             f"{mob_name}'s HP: "
+             f'{GREEN}{format_number(mob_hp)}{GRAY}'
+             f'/{GREEN}{format_number(mob.health)}{RED}❤\n')
 
         mob_hp = mob.health
         while True:
+            sleep(walk_time_cost)
+
             if isinstance(weapon, Bow) and infinite_quiver != 10:
                 if not self.has_item('arrow', 1):
                     red("You don't have any arrows in your inventory!")
@@ -510,7 +533,13 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
 
             killed = False
 
-            for _ in range(random_int(1 + ferocity / 100)):
+            strike_chance = 1 + ferocity / 100
+            strike_chance = 1 + attack_speed / 100
+            strike_chance *= knockback * punch
+
+            for _ in range(random_int(strike_chance)):
+                if _ != 0:
+                    sleep(attack_time_cost)
                 is_crit = False
                 if random_bool(crit_chance / 100):
                     damage_dealt = damage * (1 + crit_damage / 100)
@@ -520,7 +549,8 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                 else:
                     damage_dealt = damage
 
-                damage_dealt *= 1 + (strength + soul_eater_strength) / 100
+                effective_strength = strength + soul_eater_strength
+                damage_dealt *= 1 + effective_strength / 100
 
                 if soul_eater_strength != 0:
                     soul_eater_strength = 0
@@ -536,6 +566,10 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                 damage_dealt *= 1 + min(prosecute * (mob_hp / mob.health),
                                         0.35)
                 damage_dealt += (execute / 100) * (mob.health - mob_hp)
+
+                if strike_count % 3 == 2:
+                    damage_dealt += effective_strength * thunderbolt
+                    damage_dealt += effective_strength * thunderlord
 
                 mob_hp = max(mob_hp - damage_dealt, 0)
                 damage_display = format_number(damage_dealt)
@@ -554,6 +588,8 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                     soul_eater_strength = mob.damage * soul_eater
                     killed = True
                     break
+
+                strike_count += 1
 
             if killed:
                 break
@@ -601,11 +637,6 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                 green(f"\nYou've killed a {mob_name}!")
                 soul_eater_strength = mob.damage * soul_eater
                 break
-
-            strike_count += 1
-
-            attack_time_cost = 1 / (1 + attack_speed / 100)
-            sleep(attack_time_cost)
 
         if vampirism != 0 and hp != health:
             delta = (health - hp) * (vampirism / 100)
@@ -656,8 +687,9 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                 last_cp += cp_step
             gray(f'{count} / {iteration} ({(last_cp * 100):.0f}%) killed')
 
-        if count != iteration:
-            gray('\n')
+    width, _ = get_terminal_size()
+    width = ceil(width * 0.85)
+    aqua(f"{BOLD}{'':-^{width}}")
 
     return True
 

@@ -1,5 +1,5 @@
 from ..item import get_item, get_scroll
-from ..object import Item, Recipe
+from ..object import Item, Recipe, EnchantedBook
 
 
 __all__ = ['FORAGING_RECIPES']
@@ -116,6 +116,11 @@ FORAGING_RECIPES = [
            [(Item('dark_oak_wood'), 160)],
            (Item('enchanted_dark_oak'), 1),
            collection_req=('dark_oak_wood', 5)),
+    Recipe('growth_book', 'foraging',
+           [(Item('paper'), 24),
+            (Item('enchanted_dark_oak'), 8)],
+           (EnchantedBook(enchantments={'growth': 4}), 1),
+           collection_req=('dark_oak_wood', 7)),
 
     Recipe('growth_helmet', 'foraging',
            [(Item('enchanted_dark_oak'), 320)],
