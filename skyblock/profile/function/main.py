@@ -13,7 +13,7 @@ from ...function.util import (
 )
 from ...map.island import get_island
 from ...object.collection import is_collection
-from ...object.item import ITEMS, get_item, get_scroll
+from ...object.item import ITEMS, get_item, get_scroll, get_stone
 from ...object.mob import get_mob
 from ...object.object import (
     Empty, Bow, Sword, Armor,
@@ -113,14 +113,8 @@ def mainloop(self):
             self.buy(chosen_trade, amount)
 
         elif words[0] == 'cheat':
-            item = get_item('enderman_pet', rarity='legendary')
-            self.recieve_item(item)
-            item = get_item('phoenix_pet', rarity='legendary')
-            self.recieve_item(item)
-            item = get_item('bee_pet', rarity='epic')
-            self.recieve_item(item)
-            item = get_item('wolf_pet', rarity='uncommon')
-            self.recieve_item(item)
+            # item = get_item('titanium_drill_555')
+            # self.recieve_item(item)
             ...
 
         elif words[0] == 'clear':

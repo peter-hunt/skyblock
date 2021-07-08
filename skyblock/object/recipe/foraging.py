@@ -119,7 +119,7 @@ FORAGING_RECIPES = [
     Recipe('growth_book', 'foraging',
            [(Item('paper'), 24),
             (Item('enchanted_dark_oak'), 8)],
-           (EnchantedBook(enchantments={'growth': 4}), 1),
+           (EnchantedBook({'growth': 4}), 1),
            collection_req=('dark_oak_wood', 7)),
 
     Recipe('growth_helmet', 'foraging',

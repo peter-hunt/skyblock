@@ -1,5 +1,5 @@
 from ...constant.color import GREEN, AQUA, RED, WHITE
-from ...object.item import get_item, get_scroll
+from ...object.item import get_item, get_scroll, get_stone
 from ...object.object import Item
 
 from ..object import Npc
@@ -289,6 +289,10 @@ HUB_NPCS = [
             (79_999_999, [get_item('elegant_tuxedo_jacket'),
                           get_item('elegant_tuxedo_pants'),
                           get_item('elegant_tuxedo_oxfords')]),
+        ]),
+    Npc('smithmonger',
+        trades=[
+            (100_000, get_stone('dirt_bottle')),
         ]),
     Npc('taylor',
         dialog=[

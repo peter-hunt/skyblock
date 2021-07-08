@@ -105,6 +105,8 @@ def item_type(cls: type, /) -> type:
                 name += f' {format_zone(self.zone)}'
         elif self.__class__.__name__ == 'Pet':
             name = format_name('_'.join(self.name.split('_')[:-1]))
+        elif self.__class__.__name__ == 'ReforgeStone':
+            name = format_name(self.name)
         elif getattr(self, 'modifier', None) is not None:
             fullname = f'{self.modifier.capitalize()} {self.name}'
             name = format_name(fullname)
@@ -131,15 +133,17 @@ def item_type(cls: type, /) -> type:
     cls.display = display
 
     def info(self, profile, /):
+        mining_lvl = profile.get_skill_lvl('mining')
         combat_lvl = profile.get_skill_lvl('combat')
         fishing_lvl = profile.get_skill_lvl('fishing')
         cata_lvl = profile.get_skill_lvl('catacombs')
         rarity_color = RARITY_COLORS[self.rarity]
 
-        if getattr(self, 'modifier', None) is not None:
+        modifier = ''
+        if self.__class__.__name__ == 'ReforgeStone':
+            pass
+        elif getattr(self, 'modifier', None) is not None:
             modifier = f'{self.modifier.capitalize()} '
-        else:
-            modifier = ''
 
         if self.__class__.__name__ == 'TravelScroll':
             name = f'Travel Scroll to {format_name(self.island)}'
@@ -167,7 +171,28 @@ def item_type(cls: type, /) -> type:
         basic_stats = []
         bonus_stats = []
 
-        if self.__class__.__name__ in {'Pickaxe', 'Drill'}:
+        if self.__class__.__name__ == 'ReforgeStone':
+            if self.category == 'melee':
+                type_str = 'a melee weapon'
+            elif self.category == 'bow':
+                type_str = 'a bow'
+            elif self.category == 'armor':
+                type_str = 'armor'
+
+            info += (
+                f'\n{DARK_GRAY}Reforge Stone\n\n'
+                f'{GRAY}Can be used in a Reforge Anvil\n'
+                f'or with the Dungeon Blacksmith\n'
+                f'to apply the {BLUE}{format_name(self.modifier)}\n'
+                f'{GRAY}reforge to {type_str}.'
+            )
+
+            if getattr(self, 'mining_skill_req', None) is not None:
+                if mining_lvl < self.mining_skill_req:
+                    info += (f'\n\n{GRAY}Requires {GREEN}Mining Skill Level\n'
+                             f'{self.mining_skill_req}{GRAY}!{CLN}')
+
+        elif self.__class__.__name__ in {'Pickaxe', 'Drill'}:
             info += f'\n{DARK_GRAY}Breaking Power {self.breaking_power}\n'
 
             for stat_name in ('damage',):
@@ -608,6 +633,8 @@ def item_type(cls: type, /) -> type:
             type_name = self.part.upper()
         elif self.__class__.__name__ == 'FishingRod':
             type_name = 'FISHING ROD'
+        elif self.__class__.__name__ == 'ReforgeStone':
+            type_name = 'REFORGE STONE'
         elif self.__class__.__name__ in {
             'Item', 'Pet', 'TravelScroll', 'EnchantedBook',
         }:
@@ -628,8 +655,8 @@ def item_type(cls: type, /) -> type:
 
     cls.info = info
 
-    def get_stat(self, name: str, profile, /) -> Number:
-        value = getattr(self, name, 0)
+    def get_stat(self, name: str, profile, /, *, default: int = 0) -> Number:
+        value = getattr(self, name, default)
         ench = getattr(self, 'enchantments', {})
 
         set_bonus = True

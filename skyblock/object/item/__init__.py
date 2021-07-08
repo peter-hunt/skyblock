@@ -6,14 +6,16 @@ from ..object import ItemType, Item, Sword, Bow, Armor, Pet, EnchantedBook
 from .armor import ARMOR
 from .pet import PETS
 from .scroll import TRAVEL_SCROLLS, get_scroll
+from .stone import REFORGE_STONES, get_stone
 from .tool import TOOLS
 from .weapon import WEAPONS
 
 
 __all__ = [
     'COLLECTION_ITEMS',  'OTHER_ITEMS',
-    'ARMOR', 'PETS', 'TRAVEL_SCROLLS', 'TOOLS', 'WEAPONS', 'ITEMS',
-    'get_item', 'get_stack_size', 'get_scroll', 'validify_item',
+    'ARMOR', 'PETS', 'TRAVEL_SCROLLS', 'REFORGE_STONES', 'TOOLS', 'WEAPONS',
+    'get_scroll', 'get_stone',
+    'ITEMS', 'get_item', 'validify_item', 'get_stack_size',
 ]
 
 COLLECTION_ITEMS = [
@@ -303,7 +305,7 @@ OTHER_ITEMS = [
 ]
 
 ITEMS = (COLLECTION_ITEMS + OTHER_ITEMS + WEAPONS
-         + ARMOR + TOOLS + TRAVEL_SCROLLS + PETS)
+         + ARMOR + TOOLS + TRAVEL_SCROLLS + REFORGE_STONES + PETS)
 
 
 def get_item(name: str, **kwargs) -> ItemType:

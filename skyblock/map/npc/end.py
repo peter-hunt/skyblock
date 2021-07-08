@@ -20,6 +20,6 @@ END_NPCS = [
             (10, Item('end_stone')),
             (50, Item('obsidian')),
             (499_999, get_item('stonk')),
-            (1_500_000, EnchantedBook(enchantments={'ender_slayer': 4})),
+            (1_500_000, EnchantedBook({'ender_slayer': 4})),
         ]),
 ]

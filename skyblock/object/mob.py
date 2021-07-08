@@ -3,7 +3,7 @@ from typing import Optional
 from ..function.io import red
 from ..function.util import get, includes
 
-from .item import get_item, get_scroll
+from .item import get_item, get_scroll, get_stone
 from .object import ItemType, Item, Mob, EnchantedBook
 
 
@@ -223,6 +223,7 @@ MOBS = [
         coins=50, exp=70, combat_exp=100,
         drops=[
             (Item('starfall'), (1, 2), 'common', 1),
+            (get_stone('salmon_opal'), 1, 'rare', 0.01),
             (Item('treasurite'), 1, 'rare', 0.005),
         ]),
     Mob('ghost', level=100, health=1000000, damage=1000,

@@ -95,9 +95,10 @@ WEAPONS = [
           strength=100,
           combat_skill_req=18),
 
+    # dungeon swords
     Sword('livid_dagger', 'legendary', damage=210,
           strength=60, crit_chance=100, crit_damage=50, attack_speed=50,
-          dungeon_completion_req=5),
+          dungeon_completion_req=5, stars=0),
 
     Sword('flower_of_truth', 'legendary', damage=160,
           strength=300, stars=0),

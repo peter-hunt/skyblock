@@ -38,6 +38,33 @@ class Empty(ItemType):
         return '{}'
 
 
+@enchanted_book_type
+@item_type
+class EnchantedBook(ItemType):
+    enchantments: Dict[str, int] = {}
+    rarity: str = 'common'
+    name: str = 'enchanted_book'
+
+
+@item_type
+class ReforgeStone(ItemType):
+    name: str
+    modifier: Optional[str] = None
+    category: Optional[str] = None
+    rarity: str = 'common'
+    cost: Tuple[int] = [0, 0, 0, 0, 0, 0]
+
+    mining_skill_req: Optional[int] = None
+
+
+@item_type
+class TravelScroll(ItemType):
+    island: str
+    zone: Optional[str] = None
+    rarity: str = 'rare'
+    name: str = 'travel_scroll'
+
+
 @item_type
 class Bow(ItemType):
     name: str
@@ -200,14 +227,6 @@ class Armor(ItemType):
 
 
 @item_type
-class TravelScroll(ItemType):
-    island: str
-    zone: Optional[str] = None
-    rarity: str = 'rare'
-    name: str = 'travel_scroll'
-
-
-@item_type
 class Pet(ItemType):
     name: str
     rarity: str
@@ -231,17 +250,9 @@ class Pet(ItemType):
     abilities: List = []
 
 
-@enchanted_book_type
-@item_type
-class EnchantedBook(ItemType):
-    name: str = 'enchanted_book'
-    enchantments: Dict[str, int] = {}
-    rarity: str = 'common'
-
-
 OBJECTS = [
-    Item, Empty, Sword, Bow, Axe, Hoe, Pickaxe, Drill, FishingRod,
-    Armor, TravelScroll, Pet, EnchantedBook,
+    Item, Empty, EnchantedBook, ReforgeStone, TravelScroll,
+    Sword, Bow, Axe, Hoe, Pickaxe, Drill, FishingRod, Armor, Pet,
 ]
 
 

@@ -147,6 +147,8 @@ SPECIAL_NAMES = {
 
     'farmers_rod': "Farmer's Rod",
 
+    'necromancers_brooch': "Necromancer's Brooch",
+
     'pray_rngesus': 'Pray RNGesus',
 }
 

@@ -16,11 +16,10 @@ from ...constant.mob import (
 from ...function.io import dark_aqua, gray, red, green, aqua, yellow, white
 from ...function.math import random_amount, random_bool, random_int
 from ...function.util import (
-    checkpoint, format_crit, format_name, format_number,
-    format_roman, format_short,
+    checkpoint, format_crit, format_name, format_number, format_roman,
 )
 from ...object.fishing import FISHING_TABLE, SEA_CREATURES
-from ...object.item import get_item, validify_item
+from ...object.item import get_item, get_stone, validify_item
 from ...object.mob import get_mob
 from ...object.object import (
     Item, Empty, Bow, Sword, Armor, Axe, Hoe, Pickaxe, Drill, FishingRod,
@@ -49,7 +48,7 @@ def fish(self, rod_index: int, iteration: int = 1, /):
     enchantments = getattr(rod, 'enchantments', {})
 
     time_mult = 1 - enchantments.get('lure', 0) * 0.05
-    time_mult /= 1 + getattr(rod, 'fishing_speed', 0) / 100
+    time_mult /= 1 + rod.get_stat('fishing_speed', self) / 100
     blessing = 0.05 * enchantments.get('blessing', 0)
     expertise = 1 + 0.02 * enchantments.get('expertise', 0)
     frail = 1 - 0.05 * enchantments.get('frail', 0)
@@ -202,8 +201,10 @@ def gather(self, name: str, tool_index: Optional[int],
                 gray(f'{i} / {iteration} ({(last_cp * 100):.0f}%) done')
 
     elif isinstance(resource, Mineral):
-        breaking_power = getattr(tool, 'breaking_power', 0)
-        mining_speed = getattr(tool, 'mining_speed', 50)
+        magic_find = self.get_stat('magic_find', tool_index)
+
+        breaking_power = tool.get_stat('breaking_power', self)
+        mining_speed = tool.get_stat('mining_speed', self, default=50)
         if 'efficiency' in enchantments:
             mining_speed += 10 + 20 * enchantments['efficiency']
 
@@ -249,6 +250,15 @@ def gather(self, name: str, tool_index: Optional[int],
 
             if resource.name == 'end_stone' and random_bool(0.1):
                 self.slay(get_mob('endermite', level=37))
+
+            if 'diamond' in resource.name:
+                if random_bool(0.01 * (1 + magic_find / 100)):
+                    loot = get_stone('rare_diamond')
+                    self.recieve_item(loot)
+
+                    rarity_color = RARITY_COLORS['rare']
+                    white(f'{rarity_color}RARE DROP! '
+                          f'{WHITE}({loot.display()}{WHITE})')
 
             if i >= (last_cp + cp_step) * iteration:
                 while i >= (last_cp + cp_step) * iteration:
@@ -360,7 +370,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
     speed = self.get_stat('speed', weapon_index)
     crit_chance = self.get_stat('crit_chance', weapon_index)
     crit_damage = self.get_stat('crit_damage', weapon_index)
-    # attack_speed = 0
+    attack_speed = self.get_stat('attack_speed', weapon_index)
     # intelligence = self.get_stat('intelligence', weapon_index)
     attack_speed = self.get_stat('attack_speed', weapon_index)
     magic_find = self.get_stat('magic_find', weapon_index)
@@ -664,6 +674,15 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
             if rarity not in {'common', 'uncommon'}:
                 rarity_str = rarity.replace('_', ' ').upper()
                 white(f'{RARITY_COLORS[rarity]}{rarity_str} DROP! '
+                      f'{WHITE}({loot.display()}{WHITE})')
+
+        if 'diamond' in mob.name:
+            if random_bool(0.01 * (1 + magic_find / 100)):
+                loot = get_stone('rare_diamond')
+                self.recieve_item(loot)
+
+                rarity_color = RARITY_COLORS['rare']
+                white(f'{rarity_color}RARE DROP! '
                       f'{WHITE}({loot.display()}{WHITE})')
 
         coins_recieved = mob.coins + scavenger

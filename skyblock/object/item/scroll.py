@@ -30,4 +30,4 @@ def get_scroll(name: str) -> TravelScroll:
         scroll_name = scroll.island if scroll.zone is None else scroll.zone
         if name == scroll_name:
             return scroll
-    red(f'Invalid travel scroll: {name!r}')
+    red(f'Travel Scroll not found: {name!r}')

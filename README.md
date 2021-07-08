@@ -37,26 +37,25 @@ python -m skyblock
 # Content
 ## Added Features:
 * Abilities
-* Armor pieces
-* Axes, hoes, pickaxes, fishing rods, bows, and swords
+* Armor pieces, swords and bows
+* Axes, hoes, pickaxes, fishing rods
 * Crafting
 * Collections
+* Combining item with enchantments and combining enchanted books
 * Enchantments and Enchanting
-* Farming, mining, combat, foraging, fishing, and enchanting
+* Farming, Mining, Combat, Foraging, Fishing and Enchanting
 * Fast Traveling
-* Islands
-* NPC buying and trading items
+* NPC Buying and Trading items
 * Modifiers and Basic Reforging
 * Pets
-* Simple combat system
-* Skill system
-* Swords and bows that don't consume arrows
+* Simple Combat
+* Skills
 
 ## Features Planned:
 * Accessories
-* Anvil (enchanted books and reforge stones)
 * Combat while mining
 * Dungeons
+* Fiary Souls
 * Forging (Dwarven Mines)
 * HoTM Skill Tree (Dwarven Mines)
 * Minions

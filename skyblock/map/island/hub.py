@@ -18,7 +18,7 @@ BAZAAR_ALLEY = Zone(
 )
 BLACKSMITH = Zone(
     'blacksmith', -28, -125,
-    npcs=[get_npc('blacksmith')],
+    npcs=[get_npc('blacksmith'), get_npc('smithmonger')],
 )
 BUILDERS_HOUSE = Zone(
     'builders_house', -50, -36,

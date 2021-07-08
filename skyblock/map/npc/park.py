@@ -18,10 +18,10 @@ PARK_NPCS = [
         trades=[
             (130_000, get_item('raider_axe')),
             (70_000, get_scroll('jungle')),
-            (400_000, EnchantedBook(enchantments={'experience': 4})),
+            (400_000, EnchantedBook({'experience': 4})),
         ]),
     Npc('old_shaman_nyko',
         trades=[
-            (900_000, EnchantedBook(enchantments={'true_protection': 1})),
+            (900_000, EnchantedBook({'true_protection': 1})),
         ]),
 ]
