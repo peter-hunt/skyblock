@@ -14,6 +14,7 @@ from ...function.io import (
     dark_green, gray, red, green, yellow, blue, aqua, white,
 )
 from ...function.math import calc_exp_lvl, calc_exp
+from ...function.reforging import combine_ench
 from ...function.util import (
     checkpoint, format_name, format_number, format_roman, format_short, get,
     get_ench, includes,
@@ -114,38 +115,29 @@ def combine(self, index_1: int, index_2: int, /):
         return
 
     if isinstance(item_1, EnchantedBook) and isinstance(item_2, EnchantedBook):
-        ench_1 = item_1.enchantments
-        ench_2 = item_2.enchantments
-        names = {*ench_2, *ench_2}
-        result = {}
-
-        for name in names:
-            if name in ench_1 and name in ench_2:
-                if ench_1[name] == ench_2[name]:
-                    if ench_1[name] < ENCH_LVLS[name]:
-                        result[name] = ench_1[name] + 1
-                    else:
-                        result[name] = ench_1[name]
-                else:
-                    result[name] = max(ench_1[name], ench_2[name])
-            elif name in ench_1:
-                result[name] = ench_1[name]
-            else:
-                result[name] = ench_2[name]
+        result_ench = combine_ench(item_1.enchantments, item_2.enchantments)
 
         self.inventory[index_1] = Empty()
         self.inventory[index_2] = Empty()
-        self.recieve_item(EnchantedBook(enchantments=result))
+        self.recieve_item(EnchantedBook(enchantments=result_ench))
 
         return
 
-    if (isinstance(item_2, (Drill, Pickaxe, Armor, Bow, Sword, FishingRod))
+    if (isinstance(item_2, (Axe, Drill, Pickaxe, Hoe,
+                            Armor, Bow, Sword, FishingRod))
             and isinstance(item_1, EnchantedBook)):
+        index_1, index_2 = index_2, index_1
         item_1, item_2 = item_2, item_1
 
-    if (isinstance(item_1, (Drill, Pickaxe, Armor, Bow, Sword, FishingRod))
+    if (isinstance(item_1, (Axe, Drill, Pickaxe, Hoe,
+                            Armor, Bow, Sword, FishingRod))
             and isinstance(item_2, EnchantedBook)):
-        pass
+        result_ench = combine_ench(item_1.enchantments, item_2.enchantments)
+        item_1.enchantments = result_ench
+        self.inventory[index_1] = Empty()
+        self.inventory[index_2] = Empty()
+        self.recieve_item(item_1)
+
     else:
         red('These items cannot be combined!')
         return

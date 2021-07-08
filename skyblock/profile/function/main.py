@@ -113,10 +113,14 @@ def mainloop(self):
             self.buy(chosen_trade, amount)
 
         elif words[0] == 'cheat':
-            item = get_item('paper')
-            self.recieve_item(item, 48)
-            item = get_item('wheat')
-            self.recieve_item(item, 16)
+            item = get_item('enderman_pet', rarity='legendary')
+            self.recieve_item(item)
+            item = get_item('phoenix_pet', rarity='legendary')
+            self.recieve_item(item)
+            item = get_item('bee_pet', rarity='epic')
+            self.recieve_item(item)
+            item = get_item('wolf_pet', rarity='uncommon')
+            self.recieve_item(item)
             ...
 
         elif words[0] == 'clear':
@@ -401,7 +405,6 @@ def mainloop(self):
         elif words[0] in {'kill', 'slay'}:
             name = words[1]
             if (mob := get_mob(name)) is None:
-                red(f'Mob not found: {name!r}')
                 continue
             if get(zone.mobs, name) is None:
                 red(f'Mob not avaliable at {zone}: {name!r}')
@@ -480,6 +483,11 @@ def mainloop(self):
             elif words[1] == 'add':
                 index = self.parse_index(words[2])
                 if index is None:
+                    continue
+
+                item = self.inventory[index]
+                if not isinstance(item, Pet):
+                    red('You cannot add this item to your pet menu!')
                     continue
 
                 self.add_pet(index)

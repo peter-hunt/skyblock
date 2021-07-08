@@ -1,11 +1,34 @@
 from typing import Dict, Optional
 
-from ..constant import STAT_ALIASES, MODIFIERS
+from ..constant.enchanting import ENCH_LVLS
+from ..constant.reforging import STAT_ALIASES, MODIFIERS
+from ..constant.util import Ench
 
 from .io import red
 
 
-__all__ = ['get_modifier']
+__all__ = ['combine_ench', 'get_modifier']
+
+
+def combine_ench(ench_1: Ench, ench_2: Ench, /) -> Ench:
+    names = {*ench_2, *ench_2}
+    result = {}
+
+    for name in names:
+        if name in ench_1 and name in ench_2:
+            if ench_1[name] == ench_2[name]:
+                if ench_1[name] < ENCH_LVLS[name]:
+                    result[name] = ench_1[name] + 1
+                else:
+                    result[name] = ench_1[name]
+            else:
+                result[name] = max(ench_1[name], ench_2[name])
+        elif name in ench_1:
+            result[name] = ench_1[name]
+        else:
+            result[name] = ench_2[name]
+
+    return result
 
 
 def get_modifier(name: Optional[str], rarity: str, /) -> Dict[str, int]:

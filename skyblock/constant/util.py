@@ -2,16 +2,17 @@
 Constants used by displaying.
 """
 
-from typing import Tuple, Union
+from typing import Dict, Tuple, Union
 
 
 __all__ = [
-    'Amount', 'Number', 'NUMBER_SCALES', 'ROMAN_NUM',
+    'Amount', 'Ench', 'Number', 'NUMBER_SCALES', 'ROMAN_NUM',
     'SPECIAL_ZONES', 'SPECIAL_NAMES', 'SPECIAL_ALTER', 'IGNORED_WORDS',
 ]
 
 # util type notation classes
 Amount = Union[Tuple[int, int], int]
+Ench = Dict[str, int]
 Number = Union[float, int]
 
 # used to display numbers in short

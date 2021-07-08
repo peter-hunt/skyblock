@@ -513,13 +513,14 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
         attack_time_cost = 1 / (1 + attack_speed / 100)
         walk_time_cost = 5 / (speed / 100)
 
+        mob_hp = mob.health
+
         gray(f'Your HP: {GREEN}{format_number(hp)}{GRAY}/'
              f'{GREEN}{format_number(health)}{RED}❤\n'
              f"{mob_name}'s HP: "
              f'{GREEN}{format_number(mob_hp)}{GRAY}'
              f'/{GREEN}{format_number(mob.health)}{RED}❤\n')
 
-        mob_hp = mob.health
         while True:
             sleep(walk_time_cost)
 

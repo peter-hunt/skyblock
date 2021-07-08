@@ -233,7 +233,11 @@ def display_money(self, /):
         return
 
     balance_str = format_number(self.balance)
+    if '.' not in balance_str:
+        balance_str = balance_str + '  '
     purse_str = format_number(self.purse)
+    if '.' not in purse_str:
+        purse_str = purse_str + '  '
     length = max(len(balance_str), len(purse_str))
 
     green('Bank Account')

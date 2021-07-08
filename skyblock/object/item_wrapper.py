@@ -48,6 +48,8 @@ def item_type(cls: type, /) -> type:
 
         result = {}
         for key in anno:
+            if key in default and default[key] == getattr(self, key, None):
+                continue
             if key == 'enchantments':
                 ench = getattr(self, key)
                 result[key] = {ench_name: ench[ench_name]
