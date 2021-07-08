@@ -37,11 +37,11 @@ python -m skyblock
 # Content
 ## Added Features:
 * Abilities
-* Armor pieces, swords and bows
+* Armor pieces, swords, and bows
 * Axes, hoes, pickaxes, fishing rods
 * Crafting
 * Collections
-* Combining item with enchantments and combining enchanted books
+* Combining items with enchantments and combining enchanted books
 * Enchantments and Enchanting
 * Farming, Mining, Combat, Foraging, Fishing and Enchanting
 * Fast Traveling
@@ -54,12 +54,13 @@ python -m skyblock
 ## Features Planned:
 * Accessories
 * Combat while mining
+* Commissions
 * Dungeons
-* Fiary Souls
+* Fairy Souls
 * Forging (Dwarven Mines)
 * HoTM Skill Tree (Dwarven Mines)
 * Minions
-* NPC usage (like Blacksmith reforging)
+* NPC usage (more)
 
 # Furthur information
 This project is a clone of [Hypixel Skyblock](https://hypixel-skyblock.fandom.com/wiki/Hypixel_SkyBlock_Wiki)
