@@ -23,8 +23,8 @@ from ...map.island import ISLANDS
 from ...map.object import Npc, calc_dist, path_find
 from ...object.item import get_item, validify_item
 from ...object.object import (
-    Empty, Bow, Sword, Armor,
-    Axe, Hoe, Pickaxe, Drill, FishingRod, TravelScroll, Pet, EnchantedBook,
+    Empty, EnchantedBook, ReforgeStone, TravelScroll,
+    Bow, Sword, Armor, Axe, Hoe, Pickaxe, Drill, FishingRod, Pet,
 )
 from ...object.recipe import RECIPES
 
@@ -137,10 +137,46 @@ def combine(self, index_1: int, index_2: int, /):
         self.inventory[index_1] = Empty()
         self.inventory[index_2] = Empty()
         self.recieve_item(item_1)
-
-    else:
-        red('These items cannot be combined!')
         return
+
+    if (isinstance(item_2, (Armor, Bow, Sword, FishingRod))
+            and isinstance(item_1, ReforgeStone)):
+        index_1, index_2 = index_2, index_1
+        item_1, item_2 = item_2, item_1
+
+    if (isinstance(item_1, (Armor, Bow, Sword, FishingRod))
+            and isinstance(item_2, ReforgeStone)):
+        cost = item_2.cost['curelm'.index(item_1.rarity[0])]
+
+        if item_2.category == 'armor':
+            if not isinstance(item_1, Armor):
+                red('These items cannot be combined!')
+                return
+        if item_2.category == 'bow':
+            if not isinstance(item_1, Bow):
+                red('These items cannot be combined!')
+                return
+        if item_2.category == 'melee':
+            if not (isinstance(item_1, (Sword, FishingRod))
+                    and getattr(item_1, 'damage', 0) != 0):
+                red('These items cannot be combined!')
+                return
+
+        if self.purse < cost:
+            red("You don't have enough coins to do that!")
+            return
+
+        self.purse -= cost
+
+        item_1.modifier = item_2.modifier
+        self.inventory[index_1] = Empty()
+        self.inventory[index_2] = Empty()
+        gray(f'- {GOLD}{format_number(cost)} Coins')
+        self.recieve_item(item_1)
+        return
+
+    red('These items cannot be combined!')
+    return
 
 
 def consume(self, index: int, amount: int = 1, /):

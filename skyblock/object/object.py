@@ -52,7 +52,7 @@ class ReforgeStone(ItemType):
     modifier: Optional[str] = None
     category: Optional[str] = None
     rarity: str = 'common'
-    cost: Tuple[int] = [0, 0, 0, 0, 0, 0]
+    cost: Tuple[int] = (0, 0, 0, 0, 0, 0)
 
     mining_skill_req: Optional[int] = None
 
