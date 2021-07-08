@@ -25,7 +25,7 @@ class Npc:
     function: Optional[FunctionType] = None
 
     def __repr__(self):
-        return format_name(self.name)
+        return format_zone(self.name)
 
 
 @dataclass(order=True)

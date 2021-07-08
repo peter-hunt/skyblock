@@ -1,3 +1,4 @@
+from collections import defaultdict
 from typing import Dict, List, Optional
 
 from ..constant.util import Number
@@ -43,8 +44,8 @@ class Profile:
     crafted_minions: List[str] = []
     fast_travel: List[str] = [('hub', None)]
 
-    death_count: int = 0
     play_time: int = 0
+    stats: Dict[str, int] = defaultdict(int)
 
     armor: List[Armor] = [Empty() for _ in range(4)]
     pets: List[Item] = []

@@ -49,7 +49,7 @@ def mainloop(self):
                 last_shop = None
 
         if self.zone not in self.visited_zones:
-            dark_green(f'{BOLD}{format_name(self.zone)}')
+            dark_green(f'{BOLD}{zone}')
             green(f'New Zone Discovered!')
             self.visited_zones.append(self.zone)
 
@@ -113,6 +113,7 @@ def mainloop(self):
             self.buy(chosen_trade, amount)
 
         elif words[0] == 'cheat':
+            print(self.stats)
             # item = get_item('titanium_drill_555')
             # self.recieve_item(item)
             ...
@@ -185,7 +186,8 @@ def mainloop(self):
             self.craft(index, amount)
 
         elif words[0] == 'deathcount':
-            yellow(f'Death Count: {BLUE}{format_number(self.death_count)}')
+            death_count = self.stats['deaths']
+            yellow(f'Death Count: {BLUE}{format_number(death_count)}')
 
         elif words[0] in {'deposit', 'withdraw'}:
             if self.zone not in {'bank', 'dwarven_village'}:

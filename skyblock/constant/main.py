@@ -7,7 +7,7 @@ from typing import List
 
 __all__ = [
     'ARMOR_PARTS', 'COLL_ALTER', 'DUNGEON_EXP', 'INTEREST_TABLE', 'SELL_PRICE',
-    'SKILL_EXP', 'SKILL_LIMITS',
+    'SKILL_EXP', 'SKILL_LIMITS', 'KILL_LEVELS',
 ]
 
 # names of armor parts used by iterating and displaying
@@ -592,3 +592,7 @@ SKILL_LIMITS = {
     'taming': 50,
     'dungeoneering': 50,
 }
+
+KILL_LEVELS = (
+    10, 25, 100, 250, 500, 1000, 2500, 5000, 10000, 25000, 50000, 100000
+)

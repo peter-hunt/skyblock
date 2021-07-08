@@ -1,3 +1,4 @@
+from collections import defaultdict
 from json import load as json_load
 from os.path import join
 from pathlib import Path
@@ -30,7 +31,9 @@ def profile_wrapper(cls):
 
     init_str = 'lambda self, name'
     for key in anno:
-        if key in default:
+        if key == 'stats':
+            init_str += f', {key}=defaultdict(int)'
+        elif key in default:
             init_str += f', {key}={default[key]!r}'
         else:
             init_str += f', {key}'
@@ -46,18 +49,19 @@ def profile_wrapper(cls):
                        'saves', f'{self.name}.json'), 'w') as file:
             obj = {'name': self.name}
             for key in anno:
+                value = getattr(self, key)
                 if key in {'armor', 'pets', 'ender_chest', 'inventory',
                            'potion_bag', 'quiver', 'stash', 'talisman_bag',
                            'wardrobe'}:
-                    obj[key] = [item.to_obj() for item in getattr(self, key)]
-                elif key == 'collection':
+                    obj[key] = [item.to_obj() for item in value]
+                elif key in {'collection', 'stats'}:
                     obj[key] = {
-                        coll_name: coll_value
-                        for coll_name, coll_value in self.collection.items()
-                        if coll_value != 0
+                        name: item
+                        for name, item in value.items()
+                        if item != 0
                     }
                 else:
-                    obj[key] = getattr(self, key)
+                    obj[key] = value
 
             json_dump(obj, file, indent=2)
 
@@ -76,6 +80,7 @@ def profile_wrapper(cls):
         None,
     ))[-1]
     '''
+
     content = ''
     for i, key in enumerate(default):
         if i != 0:
@@ -91,6 +96,11 @@ def profile_wrapper(cls):
             content += (f'collection={{coll: obj.get({key!r},'
                         f' {{}}).get(coll, 0)'
                         f' for coll in {coll_names}}}')
+        elif key == 'stats':
+            coll_names = [coll.name for coll in COLLECTIONS]
+            content += (f'stats=defaultdict(int, {{coll: obj.get({key!r},'
+                        f' {{}}).get(coll, 0)'
+                        f' for coll in {coll_names}}})')
         else:
             content += f'{key}=obj.get({key!r}, {default[key]!r})'
     load_str = load_str.replace('%s', content)

@@ -4,12 +4,13 @@ from typing import Optional
 
 from ...constant.ability import SET_BONUSES
 from ...constant.color import (
-    BOLD, DARK_AQUA, GRAY, BLUE, GREEN, YELLOW, RARITY_COLORS,
+    BOLD, DARK_AQUA, GRAY, BLUE, GREEN, AQUA, YELLOW, RARITY_COLORS,
 )
 from ...constant.main import COLL_ALTER, SKILL_EXP
 from ...constant.util import Number
 from ...function.math import (
-    calc_exp_lvl, calc_pet_lvl, calc_skill_lvl, display_skill_reward,
+    calc_exp_lvl, calc_kill_lvl, calc_pet_lvl, calc_skill_lvl,
+    display_skill_reward,
 )
 from ...function.io import dark_aqua, gold, dark_gray, red, green, yellow, aqua
 from ...function.reforging import get_modifier
@@ -21,8 +22,8 @@ from ...object.object import (
 
 
 __all__ = [
-    'add_exp', 'add_skill_exp', 'coll_amount', 'coll_lvl', 'collect',
-    'get_skill_exp', 'get_skill_lvl', 'get_stat',
+    'add_exp', 'add_kill', 'add_skill_exp', 'coll_amount', 'coll_lvl',
+    'collect', 'get_skill_exp', 'get_skill_lvl', 'get_stat',
 ]
 
 
@@ -33,6 +34,19 @@ def add_exp(self, amount: Number, /):
     current_lvl = calc_exp_lvl(self.experience)
     if current_lvl > original_lvl:
         green(f'Reached XP level {current_lvl}.')
+
+
+def add_kill(self, name: str, value: int = 1):
+    original = self.stats[f'kills_{name}']
+    current = original + value
+    self.stats[f'kills_{name}'] = current
+    original_lvl = calc_kill_lvl(original)
+    current_lvl = calc_kill_lvl(current)
+
+    display = format_name(name)
+
+    if original == 0 and current > 0:
+        dark_aqua(f'{BOLD}BESTIARY FAMILY UNLOCKED {AQUA}{display}')
 
 
 def add_skill_exp(self, name: str, amount: Number, /, *, display=False):

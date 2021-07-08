@@ -272,7 +272,7 @@ def despawn_pet(self, /):
     green(f'You despawned your {pet.display()}{GREEN}!')
 
 
-def die(self, /) -> bool:
+def die(self, killer: Optional[str] = None, /) -> bool:
     if self.has_item('saving_grace'):
         self.remove_item('saving_grace')
         self.island = 'hub'
@@ -306,7 +306,9 @@ def die(self, /) -> bool:
 
     lost_coins = self.purse / 2 * perc_lost
     self.purse -= lost_coins
-    self.death_count += 1
+    self.stats['deaths'] += 1
+    if killer is not None:
+        self.stats[f'deaths_{killer}'] += 1
 
     if perc_lost == 0:
         red(f'You died!')

@@ -207,7 +207,7 @@ def display_location(self, /):
     if len(zone.resources) > 0:
         gray('\nResources:')
         for resource in zone.resources:
-            gray(f'  {GREEN}{format_zone(resource.name)}{GRAY}'
+            gray(f'  {GREEN}{format_name(resource.name)}{GRAY}'
                  f' ({resource.name}).')
 
     if len(zone.mobs) > 0:

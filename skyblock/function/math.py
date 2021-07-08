@@ -4,9 +4,11 @@ from random import randint, random
 from typing import Optional, Tuple
 
 from ..constant.color import (
-    GOLD, GRAY, BLUE, WHITE, GREEN, RED, AQUA, STAT_COLORS,
+    GOLD, GRAY, WHITE, GREEN, RED, AQUA, STAT_COLORS,
 )
-from ..constant.main import DUNGEON_EXP, SKILL_EXP, SKILL_LIMITS, PET_EXP_DIFF
+from ..constant.main import (
+    DUNGEON_EXP, SKILL_EXP, SKILL_LIMITS, PET_EXP_DIFF, KILL_LEVELS,
+)
 from ..constant.util import Amount, Number
 
 from .io import gray, yellow, white
@@ -14,7 +16,7 @@ from .util import format_number, format_roman
 
 
 __all__ = [
-    'calc_exp_lvl', 'calc_exp', 'calc_pet_exp', 'calc_pet_lvl',
+    'calc_exp_lvl', 'calc_exp', 'calc_kill_lvl', 'calc_pet_exp', 'calc_pet_lvl',
     'calc_pet_upgrade_exp', 'calc_skill_lvl', 'calc_skill_lvl_info',
     'display_skill_reward', 'dung_stat', 'fround', 'random_amount',
     'random_bool', 'random_int',
@@ -64,6 +66,13 @@ def calc_exp(lvl: int, /) -> int:
 
     else:
         return 4.5 * lvl ** 2 - 162.5 * lvl + 2220
+
+
+def calc_kill_lvl(amount: int, /) -> int:
+    for level, i in enumerate(KILL_LEVELS):
+        if i > amount:
+            return level
+    return amount // 100000 + 11
 
 
 def calc_pet_exp(rarity: str, level: Number, /) -> int:

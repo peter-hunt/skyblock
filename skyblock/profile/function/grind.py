@@ -567,7 +567,8 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                     soul_eater_strength = 0
 
                 damage_dealt *= (
-                    1 + giant_killer * (min(0.1 * (mob_hp - hp), 5) / 100))
+                    1 + giant_killer * (min(0.1 * (mob_hp - hp), 5) / 100)
+                )
 
                 if strike_count == 0:
                     damage_dealt *= first_strike
@@ -629,7 +630,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
 
             if hp <= 0:
                 red(f' ☠ {GRAY}You were killed by {mob_name}.')
-                self.die()
+                self.die(name)
                 return False
 
             if random_bool(0.5) and thorns != 0:
@@ -648,6 +649,9 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                 green(f"\nYou've killed a {mob_name}!")
                 soul_eater_strength = mob.damage * soul_eater
                 break
+
+        self.stats['kills'] += 1
+        self.add_kill(name)
 
         if vampirism != 0 and hp != health:
             delta = (health - hp) * (vampirism / 100)
@@ -676,7 +680,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                 white(f'{RARITY_COLORS[rarity]}{rarity_str} DROP! '
                       f'{WHITE}({loot.display()}{WHITE})')
 
-        if 'diamond' in mob.name:
+        if 'diamond' in name:
             if random_bool(0.01 * (1 + magic_find / 100)):
                 loot = get_stone('rare_diamond')
                 self.recieve_item(loot)
