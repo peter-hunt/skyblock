@@ -1,4 +1,4 @@
-from ..object import Npc
+from ..object import *
 
 
 NETHER_NPCS = [

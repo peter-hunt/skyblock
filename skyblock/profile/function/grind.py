@@ -6,25 +6,22 @@ from time import sleep, time
 from typing import Optional
 
 from ...constant.ability import SET_BONUSES
-from ...constant.color import (
-    BOLD, GOLD, GRAY, GREEN, AQUA, RED, YELLOW, WHITE, RARITY_COLORS,
-)
+from ...constant.color import *
 from ...constant.mob import (
     CUBISM_EFT, ENDER_SLAYER_EFT, BOA_EFT, SMITE_EFT, BLAST_PROT_EFT,
     PROJ_PROT_EFT, IMPALING_EFT,
 )
-from ...function.io import dark_aqua, gray, red, green, aqua, yellow, white
-from ...function.math import random_amount, random_bool, random_int
+from ...function.io import *
+from ...function.math import (
+    calc_kill_lvl, random_amount, random_bool, random_int,
+)
 from ...function.util import (
     checkpoint, format_crit, format_name, format_number, format_roman,
 )
 from ...object.fishing import FISHING_TABLE, SEA_CREATURES
 from ...object.item import get_item, get_stone, validify_item
 from ...object.mob import get_mob
-from ...object.object import (
-    Item, Empty, Bow, Sword, Armor, Axe, Hoe, Pickaxe, Drill, FishingRod,
-    Crop, Mineral, Wood, Mob,
-)
+from ...object.object import *
 from ...object.resource import get_resource
 
 
@@ -390,6 +387,14 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
     else:
         damage = 5
 
+    bestiary_lvl = calc_kill_lvl(self.stats[f'kills_{name}'])
+    bestiary_stat = min(bestiary_lvl, 5)
+    bestiary_stat += 2 * max(min(bestiary_lvl - 5, 5), 0)
+    bestiary_stat += 3 * max(bestiary_lvl - 10, 0)
+
+    strength += bestiary_stat
+    magic_find += bestiary_stat
+
     set_bonus = True
     for piece in self.armor:
         if not isinstance(piece, Armor):
@@ -460,10 +465,11 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
     execute = 0.2 * enchantments.get('execute', 0)
     experience = 1 + 0.125 * enchantments.get('experience', 0)
     experience += 0.04 * enchanting_lvl
+    experience += 0.2 * bestiary_lvl
     first_strike = 1 + 0.25 * enchantments.get('first_strike', 0)
     giant_killer = enchantments.get('giant_killer', 0)
     infinite_quiver = enchantments.get('infinite_quiver', 0)
-    knockback = 1 + 0.2 * enchantments.get('knockback', 0)
+    knockback = 1 + 0.1 * enchantments.get('knockback', 0)
     life_steal = 0.005 * enchantments.get('life_steal', 0)
     if isinstance(weapon, Bow):
         looting = 1 + 0.15 * enchantments.get('chance', 0)
@@ -474,8 +480,9 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
     luck = 1 + 0.05 * enchantments.get('luck', 0)
     overload = enchantments.get('overload', 0)
     prosecute = 0.1 * enchantments.get('prosecute', 0)
-    punch = 1 + 0.15 * enchantments.get('punch', 0)
+    punch = 1 + 0.08 * enchantments.get('punch', 0)
     scavenger = 0.3 * enchantments.get('scavenger', 0)
+    coins_mult = 1 + 0.01 * bestiary_lvl
     if 'syphon' in enchantments:
         syphon = 0.1 + 0.1 * enchantments['syphon']
     else:
@@ -689,7 +696,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                 white(f'{rarity_color}RARE DROP! '
                       f'{WHITE}({loot.display()}{WHITE})')
 
-        coins_recieved = mob.coins + scavenger
+        coins_recieved = (mob.coins + scavenger) * coins_mult
         self.purse += coins_recieved
         gray(f'+ {GOLD}{format_number(coins_recieved)} Coins')
 

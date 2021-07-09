@@ -1,5 +1,5 @@
 from ..item import get_item
-from ..object import Item, Recipe, EnchantedBook
+from ..object import *
 
 
 __all__ = ['COMBAT_RECIPES']

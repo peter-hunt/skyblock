@@ -1,4 +1,4 @@
-from ...object import FishingRod
+from ...object import *
 
 
 __all__ = ['FISHING_RODS']

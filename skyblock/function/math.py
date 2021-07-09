@@ -3,15 +3,13 @@ from math import floor, isinf
 from random import randint, random
 from typing import Optional, Tuple
 
-from ..constant.color import (
-    GOLD, GRAY, WHITE, GREEN, RED, AQUA, STAT_COLORS,
-)
+from ..constant.color import *
 from ..constant.main import (
     DUNGEON_EXP, SKILL_EXP, SKILL_LIMITS, PET_EXP_DIFF, KILL_LEVELS,
 )
 from ..constant.util import Amount, Number
 
-from .io import gray, yellow, white
+from .io import *
 from .util import format_number, format_roman
 
 
@@ -228,9 +226,10 @@ def display_skill_reward(name: str, original: Number, current: Number):
         for lvl in range(original + 1, current + 1):
             fh_current += 4 if lvl <= 50 else 1
         yellow(f'  Farmhand {format_roman(current)}')
-        white(f'   Grants {GREEN}+{GRAY}{fh_origin}->{GREEN}{fh_current}{GOLD}'
-              f' ☘ Farming Fortune{WHITE},\n'
-              f'   which increases your chance for multiple crops.')
+        farming_fortune = STAT_COLORS['farming_fortune']
+        white(f'   Grants {GREEN}+{GRAY}{fh_origin}->{GREEN}{fh_current}'
+              f' {farming_fortune} Farming Fortune{WHITE},'
+              f' which increases your chance for multiple crops.')
         health = STAT_COLORS['health']
         gray(f'  +{GREEN}{hp_delta} HP {health} Health')
 
@@ -243,10 +242,10 @@ def display_skill_reward(name: str, original: Number, current: Number):
             def_delta += 1 if lvl <= 14 else 2
 
         yellow(f'  Spelunker {format_roman(current)}')
-        white(f'   Grants {GREEN}+{GRAY}{sk_origin}->{GREEN}{sk_current}{GOLD}'
-              f' ☘ Mining Fortune{WHITE},\n'
-              f'   which increases your chance for multiple ore\n'
-              f'   drops')
+        mining_fortune = STAT_COLORS['mining_fortune']
+        white(f'   Grants {GREEN}+{GRAY}{sk_origin}->{GREEN}{sk_current}'
+              f' {mining_fortune} Mining Fortune{WHITE},'
+              f' which increases your chance for multiple ore drops')
         defense = STAT_COLORS['defense']
         gray(f'  +{GREEN}{def_delta} {defense} Defense')
 
@@ -276,10 +275,10 @@ def display_skill_reward(name: str, original: Number, current: Number):
             str_delta += 1 if lvl <= 14 else 2
 
         yellow(f'  Logger {format_roman(current)}')
-        white(f'   Grants {GREEN}+{GRAY}{lg_origin}->{GREEN}{lg_current}{GOLD}'
-              f' ☘ Foraging Fortune{WHITE},\n'
-              f'   which increases your chance for multiple logs\n'
-              f'   drops')
+        foraging_fortune = STAT_COLORS['foraging_fortune']
+        white(f'   Grants {GREEN}+{GRAY}{lg_origin}->{GREEN}{lg_current}'
+              f' {foraging_fortune} Foraging Fortune{WHITE},'
+              f' which increases your chance for multiple logs drops')
         strength = STAT_COLORS['strength']
         gray(f'  +{GREEN}{str_delta} {strength} Strength')
 
@@ -299,8 +298,8 @@ def display_skill_reward(name: str, original: Number, current: Number):
                 hp_delta += 5
 
         yellow(f'  Treasure Hunter {format_roman(current)}')
-        white(f'   Increases the chance to find treasure when\n'
-              f'   when fishing by {GREEN}+{GRAY}{format_number(th_origin)}->'
+        white(f'   Increases the chance to find treasure when fishing'
+              f' by {GREEN}+{GRAY}{format_number(th_origin)}->'
               f'{GREEN}{format_number(th_current)}%{WHITE}.')
         health = STAT_COLORS['health']
         gray(f'  +{GREEN}{hp_delta} {health} Health')
@@ -312,8 +311,7 @@ def display_skill_reward(name: str, original: Number, current: Number):
 
         yellow(f'  Conjurer {format_roman(current)}')
         white(f'   Gain {GRAY}{original * 4}->{GREEN}{current * 4}%'
-              f' {WHITE}more experience orbs from\n'
-              f'   any source.')
+              f' {WHITE}more experience orbs from any source.')
         intelligence = STAT_COLORS['intelligence']
         gray(f'  +{GREEN}{format_number(int_delta)}{AQUA}'
              f' {intelligence} Intelligence')
@@ -325,8 +323,7 @@ def display_skill_reward(name: str, original: Number, current: Number):
 
         yellow(f'  Brewer {format_roman(current)}')
         white(f'   Potions that you brew have a {GRAY}{original}->'
-              f'{GREEN}{current}%\n'
-              f'   {WHITE}longer duration.')
+              f'{GREEN}{current}% {WHITE}longer duration.')
         intelligence = STAT_COLORS['intelligence']
         gray(f'  +{GREEN}{format_number(int_delta)}{AQUA}'
              f' {intelligence} Intelligence')
@@ -362,8 +359,8 @@ def display_skill_reward(name: str, original: Number, current: Number):
                 dg_current += (i - 45) + 16
 
         gray(f'  +{GREEN}{hp_delta}{RED} ♥ Health')
-        white(f'  Increases the base stats of your dungeon items\n'
-              f'  from {GRAY}{dg_origin}%->{RED}{dg_current}%'
+        white(f'  Increases the base stats of your dungeon items'
+              f' from {GRAY}{dg_origin}%->{RED}{dg_current}%'
               f' {WHITE}while in {RED}The Catacombs{WHITE}.')
 
     if name != 'catacombs':

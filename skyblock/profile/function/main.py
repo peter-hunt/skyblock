@@ -2,23 +2,20 @@ from re import fullmatch
 from readline import add_history
 from typing import Optional
 
-from ...constant.color import BOLD, GOLD, GRAY, BLUE, GREEN, YELLOW
+from ...constant.color import *
 from ...constant.doc import profile_doc
 from ...constant.main import ARMOR_PARTS
-from ...function.io import dark_green, gray, red, green, yellow
+from ...function.io import *
 from ...function.math import calc_exp_lvl, calc_exp, calc_pet_exp
 from ...function.util import (
-    checkpoint, clear, format_name, format_number, format_roman, format_short,
+    checkpoint, clear, format_number, format_roman, format_short,
     generate_help, get, includes, is_valid_usage, parse_int
 )
 from ...map.island import get_island
 from ...object.collection import is_collection
 from ...object.item import ITEMS, get_item, get_scroll, get_stone
 from ...object.mob import get_mob
-from ...object.object import (
-    Empty, Bow, Sword, Armor,
-    Axe, Hoe, Pickaxe, Drill, FishingRod, Pet,
-)
+from ...object.object import *
 from ...object.recipe import RECIPES
 from ...object.resource import get_resource
 

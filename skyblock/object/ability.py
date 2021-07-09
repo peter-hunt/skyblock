@@ -1,9 +1,6 @@
 from typing import Optional
 
-from ..constant.color import (
-    GOLD, GRAY, DARK_GRAY, BLUE, GREEN, AQUA, RED, LIGHT_PURPLE, YELLOW,
-    STAT_COLORS,
-)
+from ..constant.color import *
 from ..function.io import red
 from ..function.util import get
 
@@ -41,18 +38,17 @@ ABILITIES = [
         id='farm_armor_speed',
         name='Full Set Bonus: Bonus Speed',
         description=(
-            f"Increases your {STAT_COLORS['speed']} Speed{GRAY} by\n"
-            f'{GREEN}+25{GRAY} in the {AQUA}Farm{GRAY},\n'
-            f'{AQUA}The Barn{GRAY}, and {YELLOW}Mushroom\n'
-            f'Desert{GRAY}.'
+            f"Increases your {STAT_COLORS['speed']} Speed{GRAY} by"
+            f" {GREEN}+25{GRAY} in the {AQUA}Farm{GRAY}, {AQUA}The Barn{GRAY},"
+            f" and {YELLOW}Mushroom Desert{GRAY}."
         ),
     ),
     NamedAbility(
         id='farm_suit_speed',
         name='Full Set Bonus: Bonus Speed',
         description=(
-            f"Increases your {STAT_COLORS['speed']} Speed{GRAY} by\n"
-            f'{GREEN}+20{GRAY} near farming islands.'
+            f"Increases your {STAT_COLORS['speed']} Speed{GRAY} by"
+            f" {GREEN}+20{GRAY} near farming islands."
         ),
     ),
 
@@ -60,24 +56,24 @@ ABILITIES = [
         id='pumpkin_buff',
         name='Full Set Bonus: Pumpkin Buff',
         description=(
-            f'Reduce all taken damage by\n'
-            f'{GREEN}+10%{GRAY} and deal {GREEN}+10%{GRAY}\ndamage.'
+            f'Reduce all taken damage by {GREEN}+10%{GRAY}'
+            f' and deal {GREEN}+10%{GRAY} damage.'
         ),
     ),
     NamedAbility(
         id='deflect',
         name='Full Set Bonus: Deflect',
         description=(
-            f'Rebound {GREEN}+33.0%{GRAY} of the damage\n'
-            f'you take back at your enemy.'
+            f'Rebound {GREEN}+33.0%{GRAY} of the damage'
+            f' you take back at your enemy.'
         ),
     ),
     NamedAbility(
         id='speester_bonus',
         name='Full Set Bonus: Bonus Speed',
         description=(
-            f"Increases {STAT_COLORS['speed']} Speed{GRAY} by\n"
-            f'{GREEN}+20{GRAY}.'
+            f"Increases {STAT_COLORS['speed']} Speed{GRAY}"
+            f' by {GREEN}+20{GRAY}.'
         ),
     ),
 
@@ -85,8 +81,8 @@ ABILITIES = [
         id='miners_outfit_haste',
         name='Full Set Bonus: Haste',
         description=(
-            f'Grants {GREEN}+40{GRAY}'
-            f" {STAT_COLORS['mining_speed']}Mining Speed\nwhile worn."
+            f"Grants {GREEN}+40{GRAY}"
+            f" {STAT_COLORS['mining_speed']}Mining Speed while worn."
         ),
     ),
     AnonymousAbility(
@@ -100,8 +96,8 @@ ABILITIES = [
         id='lapis_armor_health',
         name='Full Set Bonus: Health',
         description=(
-            f"Increases the wearer's maximum\n"
-            f"{STAT_COLORS['health']} Health{GRAY} by {GREEN}60{GRAY}."
+            f"Increases the wearer's maximum"
+            f" {STAT_COLORS['health']} Health{GRAY} by {GREEN}60{GRAY}."
         ),
     ),
     NamedAbility(
@@ -109,57 +105,54 @@ ABILITIES = [
         name='Full Set Bonus: Expert Miner',
         description=(
             f"Grants {GOLD}+2{STAT_COLORS['mining_speed']}"
-            f' Mining Speed{GRAY} for\neach of your mining levels.'
+            f' Mining Speed{GRAY} for each of your mining levels.'
         ),
     ),
     AnonymousAbility(
         id='glacite_double_defense',
         description=(
-            'The Defense of this item is\n'
-            'doubled while on a mining island.'
+            'The Defense of this item is doubled while on a mining island.'
         ),
     ),
 
     AnonymousAbility(
         id='ender_armor',
-        description=('All stats of this armor\n'
-                     'piece are doubled while on the End\nIsland!'),
+        description=('All stats of this armor piece are doubled'
+                     ' while on the End Island!'),
     ),
     NamedAbility(
         id='protective_blood',
         name='Full Set Bonus: Protective Blood',
         description=(
-            f'Increases the defense of each\n'
-            f"armor piece by 1% {STAT_COLORS['defense']}\n"
-            f'Defense {GRAY} for each missing\n'
-            f'percent of HP.',
+            f"Increases the defense of each armor piece"
+            f" by 1% {STAT_COLORS['defense']} Defense{GRAY}"
+            f" for each missing percent of HP.",
         ),
     ),
     NamedAbility(
         id='old_blood',
         name='Full Set Bonus: Old Blood',
         description=(
-            f'Increases the strength of\n'
-            f'{BLUE}Growth{GRAY}, {BLUE}Protection{GRAY},\n'
-            f'{BLUE}Feather Falling{GRAY}, {BLUE}Sugar\n'
-            f'Rush{GRAY}, and {BLUE}True Protection{GRAY}\n'
-            f'while worn.'
+            f'Increases the strength of {BLUE}Growth{GRAY}, '
+            f'{BLUE}Protection{GRAY}, {BLUE}Feather Falling{GRAY}, '
+            f'{BLUE}Sugar Rush{GRAY}, and {BLUE}True Protection{GRAY}'
+            f' while worn.'
         ),
     ),
     NamedAbility(
         id='holy_blood',
         name='Full Set Bonus: Holy Blood',
         description=(
-            f'Increases the natural health\n'
-            f'regeneration of you by {GREEN}3x{GRAY}.'
+            f'Increases the natural health regeneration'
+            f' of you by {GREEN}3x{GRAY}.'
         ),
     ),
     NamedAbility(
         id='young_blood',
         name='Full Set Bonus: Young Blood',
         description=(
-            f'Gain {GREEN}+70{GRAY} Walk Speed while\n'
-            f'you are above {GREEN}50%{GRAY} HP.'
+            f'Gain {GREEN}+70{GRAY} Walk Speed while'
+            f' you are above {GREEN}50%{GRAY} HP.'
         ),
     ),
     NamedAbility(
@@ -177,48 +170,44 @@ ABILITIES = [
     NamedAbility(
         id='fairys_outfit',
         name="Full Set Bonus: Fairy's Outfit",
-        description=(f"Increases {STAT_COLORS['speed']} Speed{GRAY} by\n"
-                     f'{GREEN}+10%{GRAY}.'),
+        description=(f"Increases {STAT_COLORS['speed']} Speed{GRAY}"
+                     f' by {GREEN}+10%{GRAY}.'),
     ),
 
     AnonymousAbility(
         id='jungle_axe',
-        description=(f'A powerful Wooden Axe which can\n'
-                     f'break multiple logs in a single\nhit!\n'
+        description=(f'A powerful Wooden Axe which can'
+                     f' break multiple logs in a single hit!\n'
                      f'{DARK_GRAY}Cooldown: {GREEN}2s{GRAY}'),
     ),
     AnonymousAbility(
         id='treecapitator',
-        description=(f'A forceful Gold Axe which can\n'
-                     f'break a large amount of logs in\na single hit!\n'
+        description=(f'A forceful Gold Axe which can'
+                     f' break a large amount of logs in a single hit!\n'
                      f'{DARK_GRAY}Cooldown: {GREEN}2s{GRAY}'),
     ),
 
     AnonymousAbility(
         id='tacticians_sword',
-        description=(f'Gains {RED}+15 Damage{GRAY} for\n'
-                     f'each Combat collection of\n'
-                     f'Tier VII and over of its\nwielder.'),
+        description=(f'Gains {RED}+15 Damage{GRAY} for each Combat collection'
+                     f' of Tier VII and over of its wielder.'),
     ),
     AnonymousAbility(
         id='pure_emerald',
-        description=(f'A powerful blade made from pure\n'
-                     f'{GREEN}Emeralds{GRAY}. This blade becomes\n'
-                     f'stronger as you carry more\n'
-                     f'{GOLD}coins{GRAY} in your purse.'),
+        description=(f'A powerful blade made from pure {GREEN}Emeralds{GRAY}.'
+                     f' This blade becomes stronger as you carry more'
+                     f' {GOLD}coins{GRAY} in your purse.'),
     ),
     AnonymousAbility(
         id='sword_of_the_stars',
-        description=(f'{LIGHT_PURPLE}"Only those with the power to\n'
-                     f'create this world can wield this\n'
-                     f'blade.'),
+        description=(f'{LIGHT_PURPLE}"Only those with the power to'
+                     f' create this world can wield this blade.'),
     ),
     AnonymousAbility(
         id='sword_of_the_universe',
-        description=(f"{YELLOW}Oi you! Yes you. What are you\n"
-                     f"looking at? Yes this sword has ∞\n"
-                     f"damage. Kinda overkill? I'm lazy\n"
-                     f"ok. {RED}(╯°□°)╯{GRAY}︵ ┻━┻"),
+        description=(f"{YELLOW}Oi you! Yes you. What are you looking at?"
+                     f" Yes this sword has ∞ damage. Kinda overkill? I'm lazy"
+                     f" ok. {RED}(╯°□°)╯{GRAY}︵ ┻━┻"),
     ),
 
     NamedAbility(

@@ -1,6 +1,6 @@
-from ...function.io import red
+from ...function.io import *
 
-from ..object import TravelScroll
+from ..object import *
 
 
 __all__ = ['TRAVEL_SCROLLS', 'get_scroll']

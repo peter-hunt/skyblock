@@ -1,6 +1,6 @@
 from math import inf
 
-from ..object import Bow, Sword
+from ..object import *
 
 
 __all__ = ['WEAPONS']

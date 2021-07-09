@@ -3,22 +3,18 @@ from os import get_terminal_size
 from typing import Optional
 
 from ...constant.ability import SET_BONUSES
-from ...constant.color import (
-    BOLD, DARK_AQUA, GRAY, BLUE, GREEN, AQUA, YELLOW, RARITY_COLORS,
-)
+from ...constant.color import *
 from ...constant.main import COLL_ALTER, SKILL_EXP
 from ...constant.util import Number
 from ...function.math import (
     calc_exp_lvl, calc_kill_lvl, calc_pet_lvl, calc_skill_lvl,
     display_skill_reward,
 )
-from ...function.io import dark_aqua, gold, dark_gray, red, green, yellow, aqua
+from ...function.io import *
 from ...function.reforging import get_modifier
 from ...function.util import format_name, format_roman
 from ...object.collection import is_collection, get_collection, calc_coll_lvl
-from ...object.object import (
-    Empty, Bow, Sword, Axe, Hoe, Pickaxe, Drill, FishingRod, Armor, Pet, Recipe,
-)
+from ...object.object import *
 
 
 __all__ = [
@@ -37,16 +33,51 @@ def add_exp(self, amount: Number, /):
 
 
 def add_kill(self, name: str, value: int = 1):
-    original = self.stats[f'kills_{name}']
-    current = original + value
-    self.stats[f'kills_{name}'] = current
-    original_lvl = calc_kill_lvl(original)
-    current_lvl = calc_kill_lvl(current)
-
     display = format_name(name)
 
-    if original == 0 and current > 0:
+    kills = self.stats[f'kills_{name}']
+
+    if kills == 0 and value > 0:
         dark_aqua(f'{BOLD}BESTIARY FAMILY UNLOCKED {AQUA}{display}')
+
+    original_lvl = calc_kill_lvl(kills)
+    kills += value
+    self.stats[f'kills_{name}'] = kills
+    current_lvl = calc_kill_lvl(kills)
+
+    if original_lvl == current_lvl:
+        return
+
+    width, _ = get_terminal_size()
+    width = ceil(width * 0.8)
+    dark_aqua(f"{BOLD}{'':-^{width}}")
+
+    original_str = format_roman(original_lvl) if original_lvl != 0 else '0'
+    dark_aqua(f' {BOLD}BESTIARY {AQUA}{BOLD}{display}'
+              f' {DARK_GRAY}{original_str}➜'
+              f'{YELLOW}{format_roman(current_lvl)}\n')
+
+    lvl_delta = current_lvl - original_lvl
+    original_stat = min(original_lvl, 5)
+    original_stat += 2 * max(min(original_lvl - 5, 5), 0)
+    original_stat += 3 * max(original_lvl - 10, 0)
+    current_stat = min(current_lvl, 5)
+    current_stat += 2 * max(min(current_lvl - 5, 5), 0)
+    current_stat += 3 * max(current_lvl - 10, 0)
+    stat_delta = current_stat - original_stat
+
+    magic_find = STAT_COLORS['magic_find']
+    strength = STAT_COLORS['strength']
+    aqua(
+        f' {BOLD}REWARDS'
+        f'  {DARK_GRAY}+{GREEN}{stat_delta} {display} {magic_find} Magic Find\n'
+        f'  {DARK_GRAY}+{GREEN}{stat_delta} {display} {strength} Strength\n'
+        f'  {DARK_GRAY}+{GOLD}{lvl_delta}% {GREEN}{display} {GRAY}coins\n'
+        f'  {DARK_GRAY}+{GREEN}{lvl_delta * 20}%'
+        f' {GRAY}chance for extra XP orbs'
+    )
+
+    dark_aqua(f"{BOLD}{'':-^{width}}")
 
 
 def add_skill_exp(self, name: str, amount: Number, /, *, display=False):
@@ -72,12 +103,13 @@ def add_skill_exp(self, name: str, amount: Number, /, *, display=False):
         self.purse += coins_reward
 
         width, _ = get_terminal_size()
-        width = ceil(width * 0.85)
+        width = ceil(width * 0.8)
 
         dark_aqua(f"{BOLD}{'':-^{width}}")
-        original = format_roman(original_lvl) if original_lvl != 0 else '0'
-        aqua(f' {BOLD}SKILL LEVEL UP {DARK_AQUA}{format_name(name)} '
-             f'{GRAY}{original}➜{DARK_AQUA}{format_roman(current_lvl)}\n')
+        original_str = format_roman(original_lvl) if original_lvl != 0 else '0'
+        aqua(f' {BOLD}SKILL LEVEL UP {DARK_AQUA}{format_name(name)}'
+             f' {DARK_GRAY}{original_str}➜'
+             f'{DARK_AQUA}{format_roman(current_lvl)}\n')
         green(f' {BOLD}REWARDS')
         display_skill_reward(name, original_lvl, current_lvl)
         dark_aqua(f"{BOLD}{'':-^{width}}")
@@ -154,7 +186,7 @@ def collect(self, name: str, amount: int, /):
         return
 
     width, _ = get_terminal_size()
-    width = ceil(width * 0.85)
+    width = ceil(width * 0.8)
     yellow(f"{BOLD}{'':-^{width}}")
 
     coll = get_collection(name)

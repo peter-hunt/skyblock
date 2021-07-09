@@ -1,8 +1,8 @@
 from typing import Optional
 
-from ...function.io import red
+from ...function.io import *
 
-from ..object import Collection
+from ..object import *
 
 from .combat import COMBAT_COLLECTIONS
 from .farming import FARMING_COLLECTIONS

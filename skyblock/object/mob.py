@@ -1,10 +1,10 @@
 from typing import Optional
 
-from ..function.io import red
+from ..function.io import *
 from ..function.util import get, includes
 
 from .item import get_item, get_scroll, get_stone
-from .object import ItemType, Item, Mob, EnchantedBook
+from .object import *
 
 
 __all__ = ['MOBS', 'get_mob']

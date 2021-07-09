@@ -1,7 +1,7 @@
 from ...object.item import get_item, get_scroll
-from ...object.object import EnchantedBook
+from ...object.object import *
 
-from ..object import Npc
+from ..object import *
 
 
 PARK_NPCS = [

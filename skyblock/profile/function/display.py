@@ -3,14 +3,11 @@ from os import get_terminal_size
 from time import sleep
 from typing import Iterable, Optional
 
-from ...constant.color import (
-    BOLD, DARK_AQUA, DARK_RED, GOLD, GRAY, DARK_GRAY,
-    GREEN, AQUA, RED, YELLOW, WHITE, STAT_COLORS, RARITY_COLORS,
-)
+from ...constant.color import *
 from ...constant.main import ARMOR_PARTS
 from ...constant.stat import ALL_STAT, HIDDEN_STATS, PERC_STATS
 from ...constant.util import Number
-from ...function.io import dark_aqua, gray, dark_gray, red, green, yellow, white
+from ...function.io import *
 from ...function.math import calc_skill_lvl_info, display_skill_reward
 from ...function.util import (
     format_name, format_number, format_roman, format_short, format_zone,
@@ -18,10 +15,10 @@ from ...function.util import (
 )
 from ...object.collection import COLLECTIONS, get_collection
 from ...object.item import get_item
-from ...object.object import Empty, ItemType, Recipe
+from ...object.object import *
 from ...object.recipe import RECIPES
 from ...map.island import ISLANDS
-from ...map.object import Npc
+from ...map.object import *
 
 
 __all__ = [

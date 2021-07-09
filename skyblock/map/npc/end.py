@@ -1,8 +1,8 @@
-from ...constant.color import LIGHT_PURPLE, WHITE
+from ...constant.color import *
 from ...object.item import get_item
-from ...object.object import Item, EnchantedBook
+from ...object.object import *
 
-from ..object import Npc
+from ..object import *
 
 
 END_NPCS = [

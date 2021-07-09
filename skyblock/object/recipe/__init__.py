@@ -1,9 +1,9 @@
 from typing import Optional
 
-from ...function.io import red
+from ...function.io import *
 from ...function.util import includes, get
 
-from ..object import Recipe
+from ..object import *
 
 from .combat import *
 from .combat import __all__ as __combat__

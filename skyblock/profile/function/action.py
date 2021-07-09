@@ -2,17 +2,13 @@ from random import choice, random
 from time import sleep, time
 from typing import Optional, Tuple
 
-from ...constant.color import (
-    BOLD, DARK_AQUA, GOLD, GRAY, BLUE, GREEN, AQUA, RED, YELLOW,
-)
+from ...constant.color import *
 from ...constant.enchanting import (
-    ENCHS, ENCH_LVLS, CONFLICTS, ENCH_REQUIREMENTS, SWORD_ENCHS, BOW_ENCHS,
+    ENCHS, CONFLICTS, ENCH_REQUIREMENTS, SWORD_ENCHS, BOW_ENCHS,
     ARMOR_ENCHS, AXE_ENCHS, HOE_ENCHS, PICKAXE_ENCHS, FISHING_ROD_ENCHS,
 )
 from ...constant.main import INTEREST_TABLE, SELL_PRICE
-from ...function.io import (
-    dark_green, gray, red, green, yellow, blue, aqua, white,
-)
+from ...function.io import *
 from ...function.math import calc_exp_lvl, calc_exp
 from ...function.reforging import combine_ench
 from ...function.util import (
@@ -20,12 +16,9 @@ from ...function.util import (
     get_ench, includes,
 )
 from ...map.island import ISLANDS
-from ...map.object import Npc, calc_dist, path_find
-from ...object.item import get_item, validify_item
-from ...object.object import (
-    Empty, EnchantedBook, ReforgeStone, TravelScroll,
-    Bow, Sword, Armor, Axe, Hoe, Pickaxe, Drill, FishingRod, Pet,
-)
+from ...map.object import *
+from ...object.item import validify_item
+from ...object.object import *
 from ...object.recipe import RECIPES
 
 
@@ -489,6 +482,10 @@ def goto(self, dest: str, /):
             dark_green(f'{BOLD}{format_name(self.zone)}')
             green(f'New Zone Discovered!')
             self.visited_zones.append(self.zone)
+
+        if self.zone == 'mist':
+            red(f'{BOLD}DANGER')
+            dark_gray(f'Powerful creatures reside in the Mist')
 
 
 def remove_pet(self, index: int, /):

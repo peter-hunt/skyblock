@@ -5,14 +5,14 @@ from pathlib import Path
 from re import sub
 from typing import Optional
 
-from ..constant.color import WHITE
+from ..constant.color import *
 from ..data import dump as json_dump
-from ..function.io import red, yellow
+from ..function.io import *
 from ..function.path import is_profile
 from ..function.util import parse_int
 from ..object.collection import COLLECTIONS
-from ..object.object import Empty, load_item
-from ..map.object import Npc
+from ..object.object import *
+from ..map.object import *
 
 from .function import profile_functions
 
@@ -50,15 +50,15 @@ def profile_wrapper(cls):
             obj = {'name': self.name}
             for key in anno:
                 value = getattr(self, key)
+
                 if key in {'armor', 'pets', 'ender_chest', 'inventory',
                            'potion_bag', 'quiver', 'stash', 'talisman_bag',
                            'wardrobe'}:
                     obj[key] = [item.to_obj() for item in value]
                 elif key in {'collection', 'stats'}:
                     obj[key] = {
-                        name: item
-                        for name, item in value.items()
-                        if item != 0
+                        name: param for name, param in value.items()
+                        # if param != 0
                     }
                 else:
                     obj[key] = value
@@ -97,10 +97,7 @@ def profile_wrapper(cls):
                         f' {{}}).get(coll, 0)'
                         f' for coll in {coll_names}}}')
         elif key == 'stats':
-            coll_names = [coll.name for coll in COLLECTIONS]
-            content += (f'stats=defaultdict(int, {{coll: obj.get({key!r},'
-                        f' {{}}).get(coll, 0)'
-                        f' for coll in {coll_names}}})')
+            content += f'stats=defaultdict(int, obj.get({key!r}, {{}}))'
         else:
             content += f'{key}=obj.get({key!r}, {default[key]!r})'
     load_str = load_str.replace('%s', content)

@@ -1,7 +1,7 @@
-from ...function.io import red
+from ...function.io import *
 from ...function.util import get, includes
 
-from ..object import ItemType, Item, Sword, Bow, Armor, Pet, EnchantedBook
+from ..object import *
 
 from .armor import ARMOR
 from .pet import PETS

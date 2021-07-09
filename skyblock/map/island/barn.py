@@ -1,7 +1,7 @@
 from ...object.mob import get_mob
 from ...object.resource import get_resource
 
-from ..object import Zone, Island, add_dist
+from ..object import *
 
 
 __all__ = ['BARN']

@@ -1,7 +1,7 @@
-from ...function.io import red
+from ...function.io import *
 from ...function.util import get, includes
 
-from ..object import Npc
+from ..object import *
 
 from .barn import BARN
 from .deep import DEEP

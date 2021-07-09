@@ -39,6 +39,7 @@ python -m skyblock
 * Abilities
 * Armor pieces, swords, and bows
 * Axes, hoes, pickaxes, fishing rods
+* Bestiary
 * Crafting
 * Collections
 * Combining items with enchantments and combining enchanted books

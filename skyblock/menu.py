@@ -3,9 +3,9 @@ from os.path import join
 from pathlib import Path
 from readline import add_history
 
-from .constant.color import GREEN, AQUA
+from .constant.color import *
 from .constant.doc import menu_doc
-from .function.io import gray, red, green, yellow, aqua, input_regex
+from .function.io import *
 from .function.path import is_dir, is_profile
 from .function.util import checkpoint, clear, generate_help, is_valid_usage
 from .profile.object import Profile

@@ -4,8 +4,8 @@ from math import dist, inf
 from types import FunctionType
 from typing import Dict, List, Optional, Tuple, Union
 
-from ..function.util import format_name, format_zone
-from ..object.object import ItemType, Resource, Mob
+from ..function.util import format_zone
+from ..object.object import *
 
 
 __all__ = [

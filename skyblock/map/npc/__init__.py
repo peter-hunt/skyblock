@@ -1,7 +1,7 @@
-from ...function.io import red
+from ...function.io import *
 from ...function.util import get, includes
 
-from ..object import Npc
+from ..object import *
 
 from .desert import DESERT_NPCS
 from .end import END_NPCS

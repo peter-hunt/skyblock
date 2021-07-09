@@ -1,4 +1,4 @@
-from ...object import Drill, Pickaxe
+from ...object import *
 
 
 __all__ = ['PICKAXES']

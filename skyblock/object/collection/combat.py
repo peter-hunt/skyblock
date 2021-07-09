@@ -1,4 +1,4 @@
-from ..object import Collection
+from ..object import *
 from ..recipe import get_recipe
 
 

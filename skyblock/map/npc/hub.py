@@ -1,8 +1,8 @@
-from ...constant.color import GREEN, AQUA, RED, WHITE
+from ...constant.color import *
 from ...object.item import get_item, get_scroll, get_stone
-from ...object.object import Item
+from ...object.object import *
 
-from ..object import Npc
+from ..object import *
 
 from .function import reforge
 

@@ -1,6 +1,6 @@
-from ...constant.color import BLUE, GREEN, AQUA, RED, WHITE
+from ...constant.color import *
 
-from ..object import Npc
+from ..object import *
 
 
 SPIDER_NPCS = [

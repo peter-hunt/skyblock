@@ -1,4 +1,4 @@
-from ..object import Pet
+from ..object import *
 
 
 __all__ = ['PETS']

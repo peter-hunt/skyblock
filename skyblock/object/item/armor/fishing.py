@@ -1,4 +1,4 @@
-from ...object import Armor
+from ...object import *
 
 
 __all__ = ['FISHING_ARMOR']

@@ -1,7 +1,7 @@
 from os.path import join
 from pathlib import Path
 
-from .io import yellow
+from .io import *
 
 
 __all__ = ['is_dir', 'is_file', 'is_profile']

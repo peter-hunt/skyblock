@@ -1,4 +1,4 @@
-from ...object import Axe
+from ...object import *
 
 
 __all__ = ['AXES']

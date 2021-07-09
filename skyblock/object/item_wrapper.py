@@ -2,11 +2,7 @@ from math import floor, sqrt
 from typing import Any, Dict
 
 from ..constant.ability import SET_BONUSES
-from ..constant.color import (
-    RARITY_COLORS,
-    CLN, BOLD, DARK_RED, GOLD, GRAY, DARK_GRAY,
-    BLUE, GREEN, AQUA, RED, LIGHT_PURPLE, YELLOW, WHITE,
-)
+from ..constant.color import *
 from ..constant.enchanting import ENCH_LVLS, ULTIMATE_ENCHS
 from ..constant.util import Number
 from ..function.math import (
@@ -578,6 +574,7 @@ def item_type(cls: type, /) -> type:
                         f'{ench_color}{format_name(name)}{lvl_str}{CLN}'
                     )
                     break
+
                 name = ench_names[0]
                 lvl = enchs[name]
                 if name in ULTIMATE_ENCHS:
@@ -587,19 +584,24 @@ def item_type(cls: type, /) -> type:
                 else:
                     ench_color = BLUE
                 lvl_str = '' if lvl == 0 else f' {format_roman(lvl)}'
-                ench_str = f'{ench_color}{format_name(name)}{lvl_str}{BLUE}, '
+                ench_str = f'{ench_color}{format_name(name)}{lvl_str}'
 
-                name = ench_names[1]
-                lvl = enchs[name]
-                if name in ENCH_LVLS and ENCH_LVLS[name] < lvl:
-                    ench_color = GOLD
-                else:
-                    ench_color = BLUE
-                lvl_str = '' if lvl == 0 else f' {format_roman(lvl)}'
-                ench_str += f'{ench_color}{format_name(name)}{lvl_str}{CLN}'
+                for i in range(1, 3):
+                    if len(ench_names) <= i:
+                        break
+                    name = ench_names[i]
+                    lvl = enchs[name]
+                    if name in ENCH_LVLS and ENCH_LVLS[name] < lvl:
+                        ench_color = GOLD
+                    else:
+                        ench_color = BLUE
+                    lvl_str = '' if lvl == 0 else f' {format_roman(lvl)}'
+                    ench_str += (f'{BLUE}, {ench_color}'
+                                 f'{format_name(name)}{lvl_str}')
+
                 ench_list.append(ench_str)
 
-                ench_names = ench_names[2:]
+                ench_names = ench_names[3:]
 
             if not self.__class__.__name__ in {'EnchantedBook'}:
                 info += '\n'

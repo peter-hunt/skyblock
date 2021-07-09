@@ -1,5 +1,5 @@
 from ..item import get_item
-from ..object import Item, Recipe
+from ..object import *
 
 
 __all__ = ['MISC_RECIPES']

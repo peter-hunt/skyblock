@@ -1,6 +1,6 @@
-from typing import Dict, Optional
+from typing import Dict
 
-from ..constant.color import GRAY, GREEN, RED
+from ..constant.color import *
 from ..function.util import format_name, format_number, format_short
 
 

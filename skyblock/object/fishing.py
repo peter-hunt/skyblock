@@ -1,6 +1,6 @@
 from .item import get_item
 from .mob import get_mob
-from .object import Item
+from .object import *
 
 
 __all__ = ['FISHING_TABLE', 'SEA_CREATURES']

@@ -1,8 +1,8 @@
-from ...constant.color import GOLD, GREEN, WHITE
+from ...constant.color import *
 from ...object.item import get_item
-from ...object.object import Item
+from ...object.object import *
 
-from ..object import Npc
+from ..object import *
 
 
 MINES_NPCS = [

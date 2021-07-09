@@ -9,10 +9,13 @@ from .item_wrapper import item_type
 
 
 __all__ = [
-    'ItemType', 'Item', 'Empty', 'Bow', 'Sword',
-    'Axe', 'Pickaxe', 'Drill', 'Hoe',
-    'Armor', 'TravelScroll', 'Pet', 'EnchantedBook', 'OBJECTS',
-    'Resource', 'Mineral', 'Wood', 'Mob', 'Recipe', 'Collection',
+    'ItemType', 'Item', 'Empty',
+    'EnchantedBook', 'ReforgeStone', 'TravelScroll',
+    'Bow', 'Sword',
+    'Axe', 'Pickaxe', 'Drill', 'Hoe', 'FishingRod', 'Armor', 'Pet',
+    'Resource',
+    'Crop', 'Mineral', 'Wood', 'Mob',
+    'Recipe', 'Collection',
     'load_item',
 ]
 

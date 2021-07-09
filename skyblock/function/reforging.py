@@ -4,7 +4,7 @@ from ..constant.enchanting import ENCH_LVLS
 from ..constant.reforging import STAT_ALIASES, MODIFIERS
 from ..constant.util import Ench
 
-from .io import red
+from .io import *
 
 
 __all__ = ['combine_ench', 'get_modifier']

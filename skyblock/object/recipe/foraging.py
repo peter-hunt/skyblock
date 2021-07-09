@@ -1,5 +1,5 @@
 from ..item import get_item, get_scroll
-from ..object import Item, Recipe, EnchantedBook
+from ..object import *
 
 
 __all__ = ['FORAGING_RECIPES']

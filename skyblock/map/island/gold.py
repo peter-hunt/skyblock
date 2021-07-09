@@ -1,7 +1,7 @@
 from ...object.resource import get_resource
 
 from ..npc import get_npc
-from ..object import Island, Zone, add_dist
+from ..object import *
 
 
 __all__ = ['GOLD']

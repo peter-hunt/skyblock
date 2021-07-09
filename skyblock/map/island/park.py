@@ -1,9 +1,8 @@
-from ...object.item import get_item
 from ...object.mob import get_mob
 from ...object.resource import get_resource
 
 from ..npc import get_npc
-from ..object import Npc, Zone, Island, add_dist
+from ..object import *
 
 
 __all__ = ['PARK']

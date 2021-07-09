@@ -1,5 +1,6 @@
-from ..object import ReforgeStone
-from ...function.io import red
+from ...function.io import *
+
+from ..object import *
 
 
 __all__ = ['REFORGE_STONES', 'get_stone']
