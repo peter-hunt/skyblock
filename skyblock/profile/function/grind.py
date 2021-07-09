@@ -381,11 +381,11 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
     enchantments = getattr(weapon, 'enchantments', {})
 
     if not isinstance(weapon, Empty):
-        damage = weapon.get_stat('damage', self)
+        weapon_damage = weapon.get_stat('damage', self)
         if enchantments.get('ultimate_jerry', 0) != 0:
-            damage += enchantments['ultimate_jerry'] * 10
+            weapon_damage += enchantments['ultimate_jerry'] * 10
     else:
-        damage = 5
+        weapon_damage = 5
 
     bestiary_lvl = calc_bestiary_lvl(self.stats.get(f'kills_{name}', 0))
     bestiary_stat = min(bestiary_lvl, 5)
@@ -419,9 +419,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
             if current_ability != set_bonus:
                 set_bonus = False
 
-    if enchantments.get('one_for_all', 0) != 0:
-        damage *= 3.1
-
+    damage = weapon_damage
     damage *= 1 + 0.08 * enchantments.get('power', 0)
     damage *= 1 + 0.05 * enchantments.get('sharpness', 0)
     damage *= 1 + 0.05 * enchantments.get('spiked_hook', 0)
@@ -466,7 +464,9 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
     experience = 1 + 0.125 * enchantments.get('experience', 0)
     experience *= 1 + 0.04 * enchanting_lvl
     add_exp = 0.2 * bestiary_lvl
+    fire_aspect = enchantments.get('fire_aspect', 0)
     first_strike = 1 + 0.25 * enchantments.get('first_strike', 0)
+    flame = enchantments.get('flame', 0)
     giant_killer = enchantments.get('giant_killer', 0)
     infinite_quiver = enchantments.get('infinite_quiver', 0)
     knockback = 1 + 0.1 * enchantments.get('knockback', 0)
@@ -531,6 +531,8 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
         walk_time_cost = 5 / (speed / 100)
 
         mob_hp = mob.health
+        mob_fire_time = 0
+        mob_fire_damage = 0
 
         gray(f'Your HP: {GREEN}{format_number(hp)}{GRAY}/'
              f'{GREEN}{format_number(health)}{RED}❤\n'
@@ -589,6 +591,11 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                 if strike_count % 3 == 2:
                     damage_dealt += effective_strength * thunderbolt
                     damage_dealt += effective_strength * thunderlord
+
+                damage_dealt += (
+                    (2 + fire_aspect) * 0.5 * fire_aspect * weapon_damage
+                )
+                damage_dealt += flame * 15
 
                 mob_hp = max(mob_hp - damage_dealt, 0)
                 damage_display = format_number(damage_dealt)

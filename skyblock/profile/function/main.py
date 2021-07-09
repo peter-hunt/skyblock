@@ -84,7 +84,7 @@ def mainloop(self):
                 continue
             self.display_armor(part)
 
-        elif words[0] == 'bestiary':
+        elif words[0] in {'be', 'bestiary'}:
             if len(words) == 1:
                 self.display_bestiaries()
                 continue
@@ -391,6 +391,9 @@ def mainloop(self):
             else:
                 red(f'Command not found: {phrase!r}.')
 
+        elif words[0] == 'hub':
+            self.warp('hub')
+
         elif words[0] in {'info', 'information'}:
             index = self.parse_index(words[1])
             if index is None:
@@ -532,7 +535,7 @@ def mainloop(self):
             else:
                 red(f'Invalid subcommand of {words[0]}: {words[1]!r}')
 
-        elif words[0] in {'playtime', 'pt'}:
+        elif words[0] in {'pt', 'playtime'}:
             self.display_playtime()
 
         elif words[0] in {'recipe', 'recipes'}:

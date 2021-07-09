@@ -30,7 +30,7 @@ SPIDERS_PATH = Zone(
     'spiders_path', -315, -240, portal='hub',
     npcs=[get_npc('haysmith')],
     mobs=[get_mob('gravel_skeleton'),
-          get_mob('rainy_slime')],
+          get_mob('rain_slime')],
 )
 SPIDER_TOWER = Zone(
     'spider_tower', -380, -210,

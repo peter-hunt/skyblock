@@ -5,6 +5,7 @@ Constants about mobs.
 __all__ = [
     'CUBISM_EFT', 'ENDER_SLAYER_EFT', 'BOA_EFT', 'SMITE_EFT',
     'BLAST_PROT_EFT', 'PROJ_PROT_EFT', 'IMPALING_EFT',
+    'BESTIARY_ALTER',
 ]
 
 # list of mobs affected by cubism enchantment
@@ -18,9 +19,9 @@ CUBISM_EFT = [
 # list of mobs affected by ender slayer enchantment
 ENDER_SLAYER_EFT = [
     'enderman',
-    # 'voidling_extremist',
-    # 'voidling_fanatic',
     'zealot',
+    'voidling_fanatic',
+    'voidling_extremist',
 ]
 
 # list of mobs affected by bane of arthropods enchantment
@@ -35,12 +36,12 @@ BOA_EFT = [
 
 # list of mobs affected by blast protection enchantment
 BLAST_PROT_EFT = [
-    'sneaky_creeper',
+    'sneaky_creeper', 'ghast',
 ]
 
 # list of mobs affected by projectile protection enchantment
 PROJ_PROT_EFT = [
-    'skeleton', 'gravel_skeleton',
+    'skeleton', 'gravel_skeleton', 'watcher',
     'diamond_skeleton', 'enchanted_diamond_skeleton', 'sea_archer',
 ]
 
@@ -53,6 +54,7 @@ SMITE_EFT = [
     'redstone_pigman',
     'diamond_zombie', 'diamond_skeleton',
     'enchanted_diamond_zombie', 'enchanted_diamond_skeleton',
+    'obsidian_defender', 'watcher',
     'sea_walker', 'sea_archer', 'monster_of_the_deep',
 ]
 
@@ -65,3 +67,18 @@ IMPALING_EFT = [
     'squid', 'night_squid',
     'sea_guardian', 'guardian_defender', 'sea_emperor',
 ]
+
+BESTIARY_ALTER = {
+    'crypt_ghoul': ('crypt_ghoul', 'golden_ghoul'),
+    'blaze': ('blaze', 'mini_blaze'),
+    'magma_cube': ('small_magma_cube',
+                   'medium_magma_cube',
+                   'large_magma_cube'),
+    'emerald_slime': ('small_emerald_slime',
+                      'medium_emerald_slime',
+                      'large_emerald_slime'),
+    'miner_zombie': ('diamond_zombie',
+                     'enchanted_diamond_zombie'),
+    'miner_skeleton': ('diamond_skeleton',
+                       'enchanted_diamond_skeleton'),
+}

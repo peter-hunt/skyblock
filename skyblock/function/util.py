@@ -8,6 +8,7 @@ from types import FunctionType
 
 from ..constant.color import CRIT_COLORS
 from ..constant.enchanting import ENCHS
+from ..constant.mob import BESTIARY_ALTER
 from ..constant.util import (
     NUMBER_SCALES, ROMAN_NUM, SPECIAL_ZONES, SPECIAL_NAMES,
     SPECIAL_ALTER, IGNORED_WORDS,
@@ -301,6 +302,23 @@ def get_ench(name: str, /) -> Tuple[str, Tuple[int]]:
             return exp_lvls
     else:
         red(f'Enchantment not fonud: {name!r}')
+
+
+def get_family(name: str, /) -> str:
+    """
+    Get bestiary family from mob name.
+
+    Args:
+        name: Name of the original mob.
+
+    Returns:
+        Valid bestiary family.
+    """
+
+    for family, others in BESTIARY_ALTER.items():
+        if name in others:
+            return family
+    return name
 
 
 def includes(ls: List[Any], name: str, /) -> bool:

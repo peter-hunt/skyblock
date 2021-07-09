@@ -12,14 +12,15 @@ from ...function.math import (
 )
 from ...function.io import *
 from ...function.reforging import get_modifier
-from ...function.util import format_name, format_roman
+from ...function.util import format_name, format_roman, get_family
 from ...object.collection import is_collection, get_collection, calc_coll_lvl
 from ...object.object import *
 
 
 __all__ = [
     'add_exp', 'add_kill', 'add_skill_exp', 'coll_amount', 'coll_lvl',
-    'collect', 'get_skill_exp', 'get_skill_lvl', 'get_stat',
+    'collect', 'get_bestiary_amount', 'get_bestiary_lvl', 'get_skill_exp',
+    'get_skill_lvl', 'get_stat',
 ]
 
 
@@ -33,17 +34,17 @@ def add_exp(self, amount: Number, /):
 
 
 def add_kill(self, name: str, value: int = 1):
-    display = format_name(name)
+    family = get_family(name)
+    display = format_name(family)
 
-    kills = self.stats.get(f'kills_{name}', 0)
+    kills = self.get_bestiary_amount(name)
 
     if kills == 0 and value > 0:
         dark_aqua(f'{BOLD}BESTIARY FAMILY UNLOCKED {AQUA}{display}')
 
-    original_lvl = calc_bestiary_lvl(kills)
-    kills += value
-    self.stats[f'kills_{name}'] = kills
-    current_lvl = calc_bestiary_lvl(kills)
+    original_lvl = self.get_bestiary_lvl(name)
+    self.stats[f'kills_{family}'] = kills + value
+    current_lvl = self.get_bestiary_lvl(name)
 
     if original_lvl == current_lvl:
         return
@@ -219,6 +220,15 @@ def collect(self, name: str, amount: int, /):
     for reward in rewards:
         if isinstance(reward, (float, int)):
             self.add_skill_exp(coll.category, reward)
+
+
+def get_bestiary_amount(self, name: str, /) -> int:
+    family = get_family(name)
+    return self.stats.get(f'kills_{family}', 0)
+
+
+def get_bestiary_lvl(self, name: str, /) -> int:
+    return calc_bestiary_lvl(self.get_bestiary_amount(name))
 
 
 def get_skill_exp(self, name: str, /) -> int:

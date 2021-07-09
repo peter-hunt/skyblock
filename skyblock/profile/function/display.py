@@ -14,7 +14,7 @@ from ...function.math import (
 )
 from ...function.util import (
     format_name, format_number, format_roman, format_short, format_zone,
-    get, index,
+    get, get_family, index,
 )
 from ...object.collection import COLLECTIONS, get_collection
 from ...object.item import get_item
@@ -51,10 +51,11 @@ def display_bestiary(self, name: str, /):
     width = ceil(width * 0.85)
 
     display = format_name(name)
+    family = get_family(name)
 
-    kills = self.stats.get(f'kills_{name}', 0)
+    kills = self.stats.get(f'kills_{family}', 0)
     deaths = self.stats.get(f'deaths_{name}', 0)
-    lvl = calc_bestiary_lvl(kills)
+    lvl = self.get_bestiary_lvl(family)
 
     if kills == 0:
         red("You haven't unlocked this bestiary family yet!")
@@ -121,12 +122,20 @@ def display_bestiaries(self, /):
 
     yellow(f"{BOLD}{'':-^{width}}")
 
+    displayed_families = []
+
     for mob in MOBS:
-        kills = self.stats.get(f'kills_{mob.name}', 0)
+        family = get_family(mob.name)
+        if family in displayed_families:
+            continue
+        displayed_families.append(family)
+
+        bestiary_lvl = self.get_bestiary_amount(family)
+        kills = self.stats.get(f'kills_{family}', 0)
         if kills == 0:
             gray('  unknown')
             continue
-        bestiary_lvl = calc_bestiary_lvl(kills)
+        bestiary_lvl = self.get_bestiary_lvl(mob.name)
         aqua(f'  {format_name(mob.name)} {format_roman(bestiary_lvl)}')
 
     yellow(f"{BOLD}{'':-^{width}}")

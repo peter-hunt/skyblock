@@ -36,6 +36,7 @@ profile_doc = """
 > armor [part=all]
 Display equipped armor.
 
+> be [mob=all]
 > bestiary [mob=all]
 Display bestiary of the mob.
 
@@ -94,6 +95,9 @@ Gather resources.
 
 > goto <region>
 Go to a region.
+
+> hub
+Teleport you to the hub.
 
 > info <index>
 Display detailed informatioon about the item.
