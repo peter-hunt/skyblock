@@ -223,6 +223,6 @@ def get_ability(id: str, /) -> Optional[Ability]:
         if item.id == id:
             break
     else:
-        red(f'Invalid ability: {id!r}')
+        red(f'Ability not found: {id!r}')
         return
     return get(ABILITIES, id=id)

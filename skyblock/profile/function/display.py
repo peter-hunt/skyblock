@@ -8,13 +8,17 @@ from ...constant.main import ARMOR_PARTS
 from ...constant.stat import ALL_STAT, HIDDEN_STATS, PERC_STATS
 from ...constant.util import Number
 from ...function.io import *
-from ...function.math import calc_skill_lvl_info, display_skill_reward
+from ...function.math import (
+    calc_bestiary_lvl, calc_bestiary_upgrade_amount, calc_skill_lvl_info,
+    display_skill_reward, fround,
+)
 from ...function.util import (
     format_name, format_number, format_roman, format_short, format_zone,
     get, index,
 )
 from ...object.collection import COLLECTIONS, get_collection
 from ...object.item import get_item
+from ...object.mob import MOBS
 from ...object.object import *
 from ...object.recipe import RECIPES
 from ...map.island import ISLANDS
@@ -22,12 +26,13 @@ from ...map.object import *
 
 
 __all__ = [
-    'display_armor', 'display_collection_info', 'display_collection',
-    'display_collections', 'display_item', 'display_inv',
-    'display_location', 'display_money', 'display_pets', 'display_playtime',
-    'display_recipe_info', 'display_recipe', 'display_recipes', 'display_shop',
-    'display_stats', 'display_skill_add', 'display_skill', 'display_skills',
-    'display_warp', 'npc_silent', 'npc_speak',
+    'display_armor', 'display_bestiary', 'display_bestiaries',
+    'display_collection_info', 'display_collection', 'display_collections',
+    'display_item', 'display_inv', 'display_location', 'display_money',
+    'display_pets', 'display_playtime', 'display_recipe_info', 'display_recipe',
+    'display_recipes', 'display_shop', 'display_stats', 'display_skill_add',
+    'display_skill', 'display_skills', 'display_warp',
+    'npc_silent', 'npc_speak',
 ]
 
 
@@ -39,6 +44,92 @@ def display_armor(self, part: Optional[str] = None, /):
 
     for piece, name in zip(self.armor, ARMOR_PARTS):
         gray(f'{format_name(name)}: {piece.display()}')
+
+
+def display_bestiary(self, name: str, /):
+    width, _ = get_terminal_size()
+    width = ceil(width * 0.85)
+
+    display = format_name(name)
+
+    kills = self.stats.get(f'kills_{name}', 0)
+    deaths = self.stats.get(f'deaths_{name}', 0)
+    lvl = calc_bestiary_lvl(kills)
+
+    if kills == 0:
+        red("You haven't unlocked this bestiary family yet!")
+        return
+
+    yellow(f"{BOLD}{'':-^{width}}")
+    aqua(f'{display} {format_roman(lvl)}\n')
+    gray(f'Kills: {GREEN}{kills}')
+    gray(f'Deaths: {GREEN}{deaths}\n')
+
+    amt_left, amt_to_next = calc_bestiary_upgrade_amount(kills)
+
+    stat_boost = min(lvl, 5)
+    stat_boost += 2 * max(min(lvl - 5, 5), 0)
+    stat_boost += 3 * max(lvl - 10, 0)
+
+    xp_orbs, chance = divmod(100 + lvl * 20, 100)
+    if chance == 0:
+        xp_orbs -= 1
+        chance = 100
+
+    magic_find = STAT_COLORS['magic_find']
+    strength = STAT_COLORS['strength']
+    aqua(
+        f' {BOLD}REWARDS\n'
+        f'  {DARK_GRAY}+{AQUA}{stat_boost} {magic_find} Magic Find\n'
+        f'  {DARK_GRAY}+{RED}{stat_boost} {strength} Strength\n'
+        f'  {DARK_GRAY}+{GOLD}{lvl}% {GRAY}coin gain\n'
+        f'  {DARK_GRAY}+{GREEN}{chance}% {GRAY}chance for'
+        f' {GREEN}+{xp_orbs}{GRAY} XP orbs\n'
+    )
+
+    perc = fround(amt_left / amt_to_next * 100, 2)
+    gray(f'Progress to Tier {format_roman(lvl + 1)}: {AQUA}{perc}%')
+
+    bar = min(floor(amt_left / amt_to_next * 20), 20)
+    left, right = '-' * bar, '-' * (20 - bar)
+    green(f'{BOLD}{left}{GRAY}{BOLD}{right} {AQUA}{format_number(amt_left)}'
+          f'{DARK_AQUA}/{AQUA}{format_short(amt_to_next)}')
+
+    gray(f'\nTier {format_roman(lvl + 1)} Rewards:')
+    if lvl < 5:
+        stat_delta = 1
+    elif lvl < 10:
+        stat_delta = 2
+    else:
+        stat_delta = 3
+    aqua(
+        f' {BOLD}REWARDS\n'
+        f'  {DARK_GRAY}+{GREEN}{stat_delta} {AQUA}{display}'
+        f' {magic_find} Magic Find\n'
+        f'  {DARK_GRAY}+{GREEN}{stat_delta} {AQUA}{display}'
+        f' {strength} Strength\n'
+        f'  {DARK_GRAY}+{GOLD}1% {AQUA}{display} {GRAY}coins\n'
+        f'  {DARK_GRAY}+{GREEN}20% {GRAY}chance for extra XP orbs'
+    )
+
+    yellow(f"{BOLD}{'':-^{width}}")
+
+
+def display_bestiaries(self, /):
+    width, _ = get_terminal_size()
+    width = ceil(width * 0.85)
+
+    yellow(f"{BOLD}{'':-^{width}}")
+
+    for mob in MOBS:
+        kills = self.stats.get(f'kills_{mob.name}', 0)
+        if kills == 0:
+            gray('  unknown')
+            continue
+        bestiary_lvl = calc_bestiary_lvl(kills)
+        aqua(f'  {format_name(mob.name)} {format_roman(bestiary_lvl)}')
+
+    yellow(f"{BOLD}{'':-^{width}}")
 
 
 def display_collection_info(self, name: str, /):
@@ -428,10 +519,10 @@ def display_skill(self, name: str, /, *,
     green(f'{format_name(name)} {format_roman(lvl)}')
 
     if exp_left < exp_to_next:
-        perc = int(exp_left / exp_to_next * 100)
+        perc = fround(exp_left / exp_to_next * 100, 2)
         gray(f'Progress to level {format_roman(lvl + 1)}: {YELLOW}{perc}%')
 
-    bar = min(int(exp_left / exp_to_next * 20), 20)
+    bar = min(floor(exp_left / exp_to_next * 20), 20)
     left, right = '-' * bar, '-' * (20 - bar)
     green(f'{BOLD}{left}{GRAY}{BOLD}{right} {YELLOW}{format_number(exp_left)}'
           f'{GOLD}/{YELLOW}{format_short(exp_to_next)}')

@@ -79,6 +79,6 @@ RESOURCES = [
 
 def get_resource(name: str, **kwargs) -> Optional[ItemType]:
     if not includes(RESOURCES, name):
-        red(f'Invalid resource: {name!r}')
+        red(f'Resource not found: {name!r}')
         return
     return get(RESOURCES, name, **kwargs)

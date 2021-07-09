@@ -32,7 +32,7 @@ def get_collection(name: str) -> Optional[Collection]:
         if collection.name == name:
             return collection
     else:
-        red(f'Unknown collection: {name!r}')
+        red(f'Collection not found: {name!r}')
 
 
 def calc_coll_lvl(name: str, amount: int) -> Optional[int]:

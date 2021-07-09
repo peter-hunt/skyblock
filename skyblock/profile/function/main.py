@@ -84,6 +84,17 @@ def mainloop(self):
                 continue
             self.display_armor(part)
 
+        elif words[0] == 'bestiary':
+            if len(words) == 1:
+                self.display_bestiaries()
+                continue
+
+            mob_name = words[1]
+            if get_mob(mob_name) is None:
+                continue
+
+            self.display_bestiary(mob_name)
+
         elif words[0] == 'buy':
             if last_shop is None:
                 red("You haven't talked to an NPC "

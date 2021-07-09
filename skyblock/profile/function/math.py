@@ -7,7 +7,7 @@ from ...constant.color import *
 from ...constant.main import COLL_ALTER, SKILL_EXP
 from ...constant.util import Number
 from ...function.math import (
-    calc_exp_lvl, calc_kill_lvl, calc_pet_lvl, calc_skill_lvl,
+    calc_exp_lvl, calc_bestiary_lvl, calc_pet_lvl, calc_skill_lvl,
     display_skill_reward,
 )
 from ...function.io import *
@@ -35,15 +35,15 @@ def add_exp(self, amount: Number, /):
 def add_kill(self, name: str, value: int = 1):
     display = format_name(name)
 
-    kills = self.stats[f'kills_{name}']
+    kills = self.stats.get(f'kills_{name}', 0)
 
     if kills == 0 and value > 0:
         dark_aqua(f'{BOLD}BESTIARY FAMILY UNLOCKED {AQUA}{display}')
 
-    original_lvl = calc_kill_lvl(kills)
+    original_lvl = calc_bestiary_lvl(kills)
     kills += value
     self.stats[f'kills_{name}'] = kills
-    current_lvl = calc_kill_lvl(kills)
+    current_lvl = calc_bestiary_lvl(kills)
 
     if original_lvl == current_lvl:
         return
@@ -69,7 +69,7 @@ def add_kill(self, name: str, value: int = 1):
     magic_find = STAT_COLORS['magic_find']
     strength = STAT_COLORS['strength']
     aqua(
-        f' {BOLD}REWARDS'
+        f' {BOLD}REWARDS\n'
         f'  {DARK_GRAY}+{GREEN}{stat_delta} {display} {magic_find} Magic Find\n'
         f'  {DARK_GRAY}+{GREEN}{stat_delta} {display} {strength} Strength\n'
         f'  {DARK_GRAY}+{GOLD}{lvl_delta}% {GREEN}{display} {GRAY}coins\n'

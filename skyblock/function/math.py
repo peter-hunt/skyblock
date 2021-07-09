@@ -14,11 +14,47 @@ from .util import format_number, format_roman
 
 
 __all__ = [
-    'calc_exp_lvl', 'calc_exp', 'calc_kill_lvl', 'calc_pet_exp', 'calc_pet_lvl',
-    'calc_pet_upgrade_exp', 'calc_skill_lvl', 'calc_skill_lvl_info',
-    'display_skill_reward', 'dung_stat', 'fround', 'random_amount',
-    'random_bool', 'random_int',
+    'calc_bestiary_lvl', 'calc_bestiary_upgrade_amount', 'calc_exp_lvl',
+    'calc_exp', 'calc_pet_exp', 'calc_pet_lvl', 'calc_pet_upgrade_exp',
+    'calc_skill_lvl', 'calc_skill_lvl_info', 'display_skill_reward',
+    'dung_stat', 'fround', 'random_amount', 'random_bool', 'random_int',
 ]
+
+
+def calc_bestiary_lvl(amount: int, /) -> int:
+    """
+    Calculate bestiary level from kill amonut.
+
+    Args:
+        amount: Kills on the mob.
+
+    Returns:
+        An integer of bestiary level.
+    """
+
+    for level, i in enumerate(KILL_LEVELS):
+        if i > amount:
+            return level
+        amount -= i
+    return amount // 100000 + 11
+
+
+def calc_bestiary_upgrade_amount(amount: int, /) -> Tuple[int, int]:
+    """
+    Calculate mob kills needed for an upgrade.
+
+    Args:
+        amount: Kills on the mob.
+
+    Returns:
+        An tuple of kills left and to the next level.
+    """
+
+    for i in KILL_LEVELS:
+        if i > amount:
+            return amount, i
+        amount -= i
+    return amount % 100000, 100000
 
 
 def calc_exp_lvl(exp: Number, /) -> int:
@@ -66,13 +102,6 @@ def calc_exp(lvl: int, /) -> int:
         return 4.5 * lvl ** 2 - 162.5 * lvl + 2220
 
 
-def calc_kill_lvl(amount: int, /) -> int:
-    for level, i in enumerate(KILL_LEVELS):
-        if i > amount:
-            return level
-    return amount // 100000 + 11
-
-
 def calc_pet_exp(rarity: str, level: Number, /) -> int:
     """
     Calculate pet xp from rarity and level.
@@ -99,7 +128,7 @@ def calc_pet_exp(rarity: str, level: Number, /) -> int:
 
 def calc_pet_lvl(rarity: str, exp: Number, /) -> int:
     """
-    Calculate pet xp level from rarity and xp.
+    Calculate pet xp level.
 
     Args:
         rarity: A string of pet rarity.
@@ -120,16 +149,16 @@ def calc_pet_lvl(rarity: str, exp: Number, /) -> int:
         return 100
 
 
-def calc_pet_upgrade_exp(rarity: str, exp: Number, /) -> int:
+def calc_pet_upgrade_exp(rarity: str, exp: Number, /) -> Tuple[int, int]:
     """
-    Calculate pet xp needed for upgrade from rarity and xp.
+    Calculate pet xp needed for an upgrade.
 
     Args:
         rarity: A string of pet rarity.
         exp: An integer or float of the pet xp.
 
     Returns:
-        An integer of pet xp to the next level.
+        An tuple of pet xp left and to the next level.
     """
 
     if rarity == 'mythic':

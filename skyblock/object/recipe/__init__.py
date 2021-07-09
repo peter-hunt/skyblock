@@ -32,6 +32,6 @@ RECIPES = (
 
 def get_recipe(name: str, **kwargs) -> Optional[Recipe]:
     if not includes(RECIPES, name):
-        red(f'Invalid recipe: {name!r}')
+        red(f'Recipe not found: {name!r}')
         return
     return get(RECIPES, name, **kwargs)

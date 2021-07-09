@@ -636,8 +636,8 @@ MOBS = [
 ]
 
 
-def get_mob(name: str, **kwargs) -> Optional[ItemType]:
+def get_mob(name: str, warn=True, **kwargs) -> Optional[ItemType]:
     if not includes(MOBS, name):
-        red(f'Invalid mob: {name!r}')
+        red(f'Mob not found: {name!r}')
         return
     return get(MOBS, name, **kwargs)

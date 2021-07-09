@@ -36,6 +36,9 @@ profile_doc = """
 > armor [part=all]
 Display equipped armor.
 
+> bestiary [mob=all]
+Display bestiary of the mob.
+
 > buy <index> [amount]
 Buy item from the shop.
 

@@ -1,4 +1,3 @@
-from collections import defaultdict
 from typing import Dict, List, Optional
 
 from ..constant.util import Number
@@ -45,7 +44,10 @@ class Profile:
     fast_travel: List[str] = [('hub', None)]
 
     play_time: int = 0
-    stats: Dict[str, int] = defaultdict(int)
+    stats: Dict[str, int] = {
+        'deaths': 0,
+        'kills': 0,
+    }
 
     armor: List[Armor] = [Empty() for _ in range(4)]
     pets: List[Item] = []

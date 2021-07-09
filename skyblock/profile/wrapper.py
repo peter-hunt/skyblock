@@ -1,4 +1,3 @@
-from collections import defaultdict
 from json import load as json_load
 from os.path import join
 from pathlib import Path
@@ -31,9 +30,7 @@ def profile_wrapper(cls):
 
     init_str = 'lambda self, name'
     for key in anno:
-        if key == 'stats':
-            init_str += f', {key}=defaultdict(int)'
-        elif key in default:
+        if key in default:
             init_str += f', {key}={default[key]!r}'
         else:
             init_str += f', {key}'
@@ -58,7 +55,7 @@ def profile_wrapper(cls):
                 elif key in {'collection', 'stats'}:
                     obj[key] = {
                         name: param for name, param in value.items()
-                        # if param != 0
+                        if param != 0
                     }
                 else:
                     obj[key] = value
@@ -97,7 +94,7 @@ def profile_wrapper(cls):
                         f' {{}}).get(coll, 0)'
                         f' for coll in {coll_names}}}')
         elif key == 'stats':
-            content += f'stats=defaultdict(int, obj.get({key!r}, {{}}))'
+            content += f'stats=obj.get({key!r}, {{}})'
         else:
             content += f'{key}=obj.get({key!r}, {default[key]!r})'
     load_str = load_str.replace('%s', content)

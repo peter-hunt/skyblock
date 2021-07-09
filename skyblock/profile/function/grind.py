@@ -13,7 +13,7 @@ from ...constant.mob import (
 )
 from ...function.io import *
 from ...function.math import (
-    calc_kill_lvl, random_amount, random_bool, random_int,
+    calc_bestiary_lvl, random_amount, random_bool, random_int,
 )
 from ...function.util import (
     checkpoint, format_crit, format_name, format_number, format_roman,
@@ -387,7 +387,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
     else:
         damage = 5
 
-    bestiary_lvl = calc_kill_lvl(self.stats[f'kills_{name}'])
+    bestiary_lvl = calc_bestiary_lvl(self.stats.get(f'kills_{name}', 0))
     bestiary_stat = min(bestiary_lvl, 5)
     bestiary_stat += 2 * max(min(bestiary_lvl - 5, 5), 0)
     bestiary_stat += 3 * max(bestiary_lvl - 10, 0)
@@ -464,8 +464,8 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
 
     execute = 0.2 * enchantments.get('execute', 0)
     experience = 1 + 0.125 * enchantments.get('experience', 0)
-    experience += 0.04 * enchanting_lvl
-    experience += 0.2 * bestiary_lvl
+    experience *= 1 + 0.04 * enchanting_lvl
+    add_exp = 0.2 * bestiary_lvl
     first_strike = 1 + 0.25 * enchantments.get('first_strike', 0)
     giant_killer = enchantments.get('giant_killer', 0)
     infinite_quiver = enchantments.get('infinite_quiver', 0)
@@ -661,10 +661,9 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
         self.add_kill(name)
 
         if vampirism != 0 and hp != health:
-            delta = (health - hp) * (vampirism / 100)
-            hp += delta
+            hp += (health - hp) * (vampirism / 100)
 
-        self.add_exp(mob.exp * random_int(experience))
+        self.add_exp(mob.exp * random_int(experience) + random_int(add_exp))
 
         for item, loot_amount, rarity, drop_chance in mob.drops:
             drop_chance *= looting
@@ -679,8 +678,9 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
             if getattr(loot, 'count', 1) != 1:
                 loot.count = 1
 
-            self.recieve_item(loot, random_amount(loot_amount))
-            self.collect(loot.name, random_amount(loot_amount))
+            amount_pool = random_amount(loot_amount)
+            self.recieve_item(loot, amount_pool)
+            self.collect(loot.name, amount_pool)
 
             if rarity not in {'common', 'uncommon'}:
                 rarity_str = rarity.replace('_', ' ').upper()
