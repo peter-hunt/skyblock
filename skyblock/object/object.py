@@ -41,6 +41,13 @@ class Empty(ItemType):
         return '{}'
 
 
+@item_type
+class Accessory(ItemType):
+    name: str
+    modifier: Optional[str] = None
+    rarity: str = 'common'
+
+
 @enchanted_book_type
 @item_type
 class EnchantedBook(ItemType):
@@ -296,9 +303,11 @@ class Mob:
     name: str
     level: int
     health: int
-    damage: int
-    coins: int
-    exp: int
+    damage: int = 0
+    true_damage: int = 0
+
+    coins: int = 0
+    exp: int = 0
     farming_exp: int = 0
     combat_exp: int = 0
     fishing_exp: int = 0

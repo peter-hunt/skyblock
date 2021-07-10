@@ -372,7 +372,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
 
     health = self.get_stat('health', weapon_index)
     defense = self.get_stat('defense', weapon_index)
-    # true_defense = self.get_stat('true_defense', weapon_index)
+    true_defense = self.get_stat('true_defense', weapon_index)
     strength = self.get_stat('strength', weapon_index)
     speed = self.get_stat('speed', weapon_index)
     crit_chance = self.get_stat('crit_chance', weapon_index)
@@ -535,7 +535,6 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
         if set_bonus == 'holy_blood':
             healed *= 3
         hp = min(hp + healed, health)
-        healed = 0
 
         attack_time_cost = 1 / (1 + attack_speed / 100)
         sleep(1 / (speed / 100))
@@ -609,11 +608,12 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                     damage_display = format_crit(damage_display)
                 gray(f"You've dealt {YELLOW}{damage_display}{GRAY} damage.")
 
+                healed = 0
                 if life_steal != 0:
                     healed += life_steal * health
-
                 if syphon != 0:
                     healed += syphon * health * (crit_damage // 100)
+                hp = min(hp + healed, health)
 
                 if mob_hp <= 0:
                     green(f"\nYou've killed a {mob_name}!")
@@ -639,7 +639,18 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                     damage_recieved *= 0.9
                 hp = max(hp - damage_recieved, 0)
                 gray(f"You've recieved {YELLOW}"
-                     f'{format_number(damage_recieved)}{GRAY} damage.')
+                     f"{format_number(damage_recieved)}{GRAY} damage.")
+
+            if mob.true_damage != 0:
+                true_damage_recieved = (
+                    mob.true_damage / (1 + true_defense / 100)
+                )
+                if set_bonus == 'pumpkin_buff':
+                    true_damage_recieved *= 0.9
+                hp = max(hp - true_damage_recieved, 0)
+                gray(f"You've recieved {YELLOW}"
+                     f"{format_number(true_damage_recieved)}{GRAY}"
+                     f" true damage.")
 
             exp_npng = 0
             for npng_chance in no_pain_no_gain:

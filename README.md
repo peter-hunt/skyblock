@@ -42,7 +42,7 @@ python -m skyblock
 * Bestiary
 * Crafting
 * Collections
-* Combining Items with Enchantments, Reforge Stone and Potato Books
+* Combining Items with Enchantments, Reforge Stone, and Potato Books
 * Enchantments
 * Farming, Mining, Combat, Foraging, Fishing and Enchanting
 * Fast Traveling
@@ -61,7 +61,7 @@ python -m skyblock
 * Forging (Dwarven Mines)
 * HoTM Skill Tree (Dwarven Mines)
 * Minions
-* NPC usage (more)
+* NPC usage (like Kat, Fetchur, etc.)
 
 # Furthur information
 This project is a clone of [Hypixel Skyblock](https://hypixel-skyblock.fandom.com/wiki/Hypixel_SkyBlock_Wiki)

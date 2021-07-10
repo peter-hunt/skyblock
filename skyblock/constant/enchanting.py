@@ -151,7 +151,7 @@ ENCH_LVLS = {
     'rejuvenate': 5,
     'respite': 5,
     'thorns': 3,
-    'true_protection': 1,
+    'true_protection': 0,
     'smarty_pants': 5,
     'sugar_rush': 0,
 

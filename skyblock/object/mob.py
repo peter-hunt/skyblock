@@ -445,7 +445,7 @@ MOBS = [
             (Item('exp_share_core'), 1, 'pray_rngesus', 0.0001),
         ]),
 
-    Mob('ghost', level=250, health=1000000, damage=1000,
+    Mob('ghost', level=250, health=1000000, damage=1000, true_damage=100,
         coins=100, exp=0, combat_exp=100,
         drops=[
             (Item('sorrow'), 1, 'rare', 0.0012),
