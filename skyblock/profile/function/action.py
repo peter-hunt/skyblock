@@ -613,7 +613,7 @@ def talkto_npc(self, npc: Npc, /) -> Optional[str]:
             elif isinstance(npc.dialog, tuple):
                 self.npc_speak(npc.name, choice(npc.dialog))
         elif npc.function is not None:
-            npc.function()
+            npc.function(self)
         elif npc.trades is not None:
             self.display_shop(npc, None)
             return npc.name
