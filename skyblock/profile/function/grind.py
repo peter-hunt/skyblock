@@ -712,6 +712,8 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
         self.purse += coins_recieved
         gray(f'+ {GOLD}{format_number(coins_recieved)} Coins')
 
+        if getattr(mob, 'farming_exp', 0) != 0:
+            self.add_skill_exp('farming', mob.farming_exp, display=True)
         if getattr(mob, 'combat_exp', 0) != 0:
             self.add_skill_exp('combat', mob.combat_exp, display=True)
         if getattr(mob, 'fishing_exp', 0) != 0:

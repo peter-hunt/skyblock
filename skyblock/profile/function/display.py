@@ -180,7 +180,7 @@ def display_collection_info(self, name: str, /):
                 item = reward.result[0]
                 color = RARITY_COLORS[item.rarity]
                 print(f'  {color}{format_name(item.name)} {GRAY}Recipe'
-                      f' {DARK_GRAY}{reward.name}')
+                      f'  {DARK_GRAY}({reward.name})')
 
     this_lvl = current - past_amount
     if next_lvl is None:

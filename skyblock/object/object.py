@@ -299,6 +299,7 @@ class Mob:
     damage: int
     coins: int
     exp: int
+    farming_exp: int = 0
     combat_exp: int = 0
     fishing_exp: int = 0
     drops: List[Tuple[ItemType, Amount, str, Number]] = []

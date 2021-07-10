@@ -11,7 +11,7 @@ __all__ = ['combine_ench', 'get_modifier']
 
 
 def combine_ench(ench_1: Ench, ench_2: Ench, /) -> Ench:
-    names = {*ench_2, *ench_2}
+    names = {*ench_1, *ench_2}
     result = {}
 
     for name in names:

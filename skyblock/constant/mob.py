@@ -13,7 +13,7 @@ CUBISM_EFT = [
     'sneaky_creeper',
     'small_emerald_slime', 'medium_emerald_slime', 'large_emerald_slime',
     'small_magma_cube', 'medium_magma_cube', 'large_magma_cube',
-    'rainy_slime',
+    'rain_slime', 'ghost',
 ]
 
 # list of mobs affected by ender slayer enchantment
@@ -54,8 +54,6 @@ SMITE_EFT = [
     'redstone_pigman',
     'diamond_zombie', 'diamond_skeleton',
     'enchanted_diamond_zombie', 'enchanted_diamond_skeleton',
-    'obsidian_defender', 'watcher',
-    'sea_walker', 'sea_archer', 'monster_of_the_deep',
 ]
 
 
