@@ -340,6 +340,8 @@ SELL_PRICE = {
     'enchanted_nether_wart': 480,
     'mutant_nether_wart': 76_800,
 
+    'hot_potato_book': 13_000,
+
     'cobblestone': 1,
     'coal': 2,
     'iron_nugget': 0.3,

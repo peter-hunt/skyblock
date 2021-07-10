@@ -168,6 +168,45 @@ def combine(self, index_1: int, index_2: int, /):
         self.recieve_item(item_1)
         return
 
+    if (item_1.name in {'hot_potato_book', 'fuming_potato_book'} and
+            isinstance(item_2, (Axe, Drill, Pickaxe, Hoe,
+                                Armor, Bow, Sword, FishingRod))):
+        index_1, index_2 = index_2, index_1
+        item_1, item_2 = item_2, item_1
+
+    if (isinstance(item_1, (Axe, Drill, Pickaxe, Hoe,
+                            Armor, Bow, Sword, FishingRod))
+            and item_2.name == 'hot_potato_book'):
+        if 10 <= item_1.hot_potato < 15:
+            red('Error!')
+            gray('You have already applied the maximum number of'
+                 ' normal Hot Potato books to this item!\n'
+                 'Use Fuming Potato books to continue.')
+        elif item_1.hot_potato >= 15:
+            red('Error!')
+            gray('You have already applied the maximum number of'
+                 ' Hot Potato books to this item!')
+        else:
+            item_1.hot_potato += 1
+            self.inventory[index_1] = Empty()
+            self.inventory[index_2] = Empty()
+            self.recieve_item(item_1)
+        return
+
+    if (isinstance(item_1, (Axe, Drill, Pickaxe, Hoe,
+                            Armor, Bow, Sword, FishingRod))
+            and item_2.name == 'fuming_potato_book'):
+        if item_1.hot_potato >= 15:
+            red('Error!')
+            gray('You have already applied the maximum number of'
+                 ' Hot Potato books to this item!')
+        else:
+            item_1.hot_potato += 1
+            self.inventory[index_1] = Empty()
+            self.inventory[index_2] = Empty()
+            self.recieve_item(item_1)
+        return
+
     red('These items cannot be combined!')
     return
 

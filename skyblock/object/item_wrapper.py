@@ -256,7 +256,7 @@ def item_type(cls: type, /) -> type:
 
                 bonus = ''
                 if stat_name[0] in 'ds' and self.hot_potato != 0:
-                    bonus += f' {YELLOW}(+{self.hot_potato})'
+                    bonus += f' {YELLOW}(+{2 * self.hot_potato})'
 
                 if stat_name in modifier_bonus:
                     bonus_value = modifier_bonus[stat_name]
@@ -330,7 +330,7 @@ def item_type(cls: type, /) -> type:
 
                 bonus = ''
                 if stat_name[0] in 'ds' and self.hot_potato != 0:
-                    bonus += f' {YELLOW}(+{self.hot_potato})'
+                    bonus += f' {YELLOW}(+{2 * self.hot_potato})'
 
                 if stat_name in modifier_bonus:
                     bonus_value = modifier_bonus[stat_name]
@@ -441,8 +441,11 @@ def item_type(cls: type, /) -> type:
 
                 bonus = ''
 
-                if stat_name[0] in 'dh' and self.hot_potato != 0:
-                    bonus += f' {YELLOW}(+{self.hot_potato})'
+                if stat_name[0] == 'h' and self.hot_potato != 0:
+                    bonus += f' {YELLOW}(+{4 * self.hot_potato})'
+
+                if stat_name[0] == 'd' and self.hot_potato != 0:
+                    bonus += f' {YELLOW}(+{2 * self.hot_potato})'
 
                 if stat_name in modifier_bonus:
                     bonus_value = modifier_bonus[stat_name]
@@ -771,11 +774,13 @@ def item_type(cls: type, /) -> type:
             value += ench.get('vicious', 0)
 
         if self.__class__.__name__ == 'Armor':
-            if name in {'health', 'defense'}:
-                value += self.hot_potato
+            if name == 'health':
+                value += 4 * self.hot_potato
+            elif name == 'defense':
+                value += 2 * self.hot_potato
         elif self.__class__.__name__ in {'FishingRod', 'Bow', 'Sword'}:
             if name in {'damage', 'strength'}:
-                value += self.hot_potato
+                value += 2 * self.hot_potato
 
         if getattr(self, 'modifier', None) is not None:
             modifier_bonus = get_modifier(self.modifier, self.rarity)

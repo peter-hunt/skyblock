@@ -273,7 +273,7 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
 
     if name == 'strength':
         if isinstance(item, (Bow, Sword, FishingRod)):
-            value += item.hot_potato
+            value += item.hot_potato * 2
     if name == 'crit_damage':
         value += item_ench.get('critical', 0) * 10
     elif name == 'mining_speed':
@@ -345,13 +345,13 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
         armor_ench = getattr(piece, 'enchantments', {})
 
         if name == 'health':
-            delta += piece.hot_potato
+            delta += piece.hot_potato * 4
             if set_bonus == 'old_blood':
                 delta += armor_ench.get('growth', 0) * 25
             else:
                 delta += armor_ench.get('growth', 0) * 15
         elif name == 'defense':
-            delta += piece.hot_potato
+            delta += piece.hot_potato * 2
             if set_bonus == 'old_blood':
                 delta += armor_ench.get('protection', 0) * 5
             else:

@@ -249,27 +249,31 @@ COLLECTION_ITEMS = [
 ]
 
 OTHER_ITEMS = [
-    Item('apple', 64, 'common'),
     Item('arrow', 64, 'common'),
     Item('blaze_powder', 64, 'common'),
-    Item('book', 64, 'common'),
-    Item('bread', 64, 'common'),
-    Item('egg', 16, 'common'),
     Item('enchanted_golden_apple', 64, 'uncommon'),
     Item('exp_share_core', 1, 'epic'),
     Item('flint', 64, 'common'),
     Item('glowstone_block', 64, 'common'),
     Item('gold_nugget', 64, 'common'),
-    Item('golden_apple', 64, 'common'),
     Item('golden_powder', 64, 'epic'),
     Item('iron_nugget', 64, 'common'),
     Item('lapis_crystal', 1, 'rare'),
-    Item('paper', 64, 'common'),
     Item('planks', 64, 'common'),
     Item('poisonous_potato', 64, 'common'),
     Item('saving_grace', 64, 'rare'),
     Item('stick', 64, 'common'),
+
+    Item('apple', 64, 'common'),
+    Item('book', 64, 'common'),
+    Item('bread', 64, 'common'),
+    Item('egg', 16, 'common'),
+    Item('golden_apple', 64, 'common'),
+    Item('paper', 64, 'common'),
     Item('sugar', 64, 'common'),
+
+    Item('hot_potato_book', 1, 'epic'),
+    Item('fuming_potato_book', 1, 'epic'),
 
     Item('glass', 64, 'common'),
     Item('bottle', 64, 'common'),

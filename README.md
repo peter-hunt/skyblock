@@ -37,13 +37,13 @@ python -m skyblock
 # Content
 ## Added Features:
 * Abilities
-* Armor pieces, swords, and bows
-* Axes, hoes, pickaxes, fishing rods
+* Armor pieces, Swords, and Bows
+* Axes, Hoes, Pickaxes, Fishing Rods
 * Bestiary
 * Crafting
 * Collections
-* Combining items with enchantments and combining enchanted books
-* Enchantments and Enchanting
+* Combining Items with Enchantments, Reforge Stone and Potato Books
+* Enchantments
 * Farming, Mining, Combat, Foraging, Fishing and Enchanting
 * Fast Traveling
 * NPC Buying and Trading items
@@ -62,7 +62,6 @@ python -m skyblock
 * HoTM Skill Tree (Dwarven Mines)
 * Minions
 * NPC usage (more)
-* Usable Hot Potato Books
 
 # Furthur information
 This project is a clone of [Hypixel Skyblock](https://hypixel-skyblock.fandom.com/wiki/Hypixel_SkyBlock_Wiki)

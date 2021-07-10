@@ -49,7 +49,7 @@ FARMING_COLLECTIONS = [
             (5_000, 500),
             (10_000, get_recipe('scroll_to_barn')),
             (25_000, get_recipe('potato_to_enchanted_baked')),
-            (50_000, 5_000),
+            (50_000, get_recipe('hot_potato_book')),
             (100_000, 10_000),
         ],
     ),

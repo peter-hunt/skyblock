@@ -137,6 +137,11 @@ FARMING_RECIPES = [
            [(Item('enchanted_potato'), 160)],
            (Item('enchanted_baked_potato'), 1),
            collection_req=('potato', 7)),
+    Recipe('hot_potato_book', 'farming',
+           [(Item('enchanted_baked_potato'), 1),
+            (Item('paper'), 3)],
+           (Item('hot_potato_book'), 1),
+           collection_req=('potato', 8)),
 
     Recipe('pumpkin_helmet', 'farming',
            [(Item('pumpkin'), 5)],
