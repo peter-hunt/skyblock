@@ -9,11 +9,11 @@ from ...constant.enchanting import (
 )
 from ...constant.main import INTEREST_TABLE, SELL_PRICE
 from ...function.io import *
-from ...function.math import calc_exp_lvl, calc_exp
+from ...function.math import calc_exp_lvl, calc_exp, random_amount
 from ...function.reforging import combine_ench
 from ...function.util import (
     checkpoint, format_name, format_number, format_roman, format_short,
-    format_zone, get, get_ench, includes, random_amount,
+    format_zone, get, get_ench, includes,
 )
 from ...map.island import ISLANDS
 from ...map.object import *
