@@ -9,8 +9,8 @@ menu_doc = """
 > clear
 Clear the screen.
 
-> delete <name>
-> remove <name>
+> delete <profile>
+> remove <profile>
 Delete a profile.
 
 > exit
@@ -20,8 +20,8 @@ Exit the menu.
 > help [command]
 Show this message or get command description.
 
-> load <name>
-> open <name>
+> load <profile>
+> open <profile>
 Load a profile and run it.
 
 > ls
@@ -33,11 +33,11 @@ Create a new profile.
 """.strip()
 
 profile_doc = """
-> armor [part=all]
+> armor [armor-part]
 Display equipped armor.
 
-> be [mob=all]
-> bestiary [mob=all]
+> be [mob]
+> bestiary [mob]
 Display bestiary of the mob.
 
 > buy <index> [amount]
@@ -52,11 +52,11 @@ Clear the screen.
 > clearstash
 Removes all items currently in the Stash.
 
-> collection [category|name]
-> collections [category|name]
+> collection [collection]
+> collections [collection]
 Display collections.
 
-> combine <index-1> <index-2>
+> combine <index> <index>
 Combine items with anvil.
 
 > consume <index> [amount]
@@ -111,8 +111,8 @@ Display detailed informatioon about the item.
 > item <id>
 Display information of any item.
 
-> kill <mob> [weapon-index] [iteration]
-> slay <mob> [weapon-index] [iteration]
+> kill <mob> [index] [iteration]
+> slay <mob> [index] [iteration]
 Slay mobs.
 
 > ls
@@ -124,14 +124,14 @@ Show this message or get command description.
 > look
 Get information about the region.
 
-> merge <from-index> <to-index>
+> merge <index> <index>
 Merge stackable items in the inventory.
 
 > money
 Display information about your money.
 
-> move <index-1> <index-2>
-> switch <index-1> <index-2>
+> move <index> <index>
+> switch <index> <index>
 Switch items slot in the inventory.
 
 > organize
@@ -163,8 +163,8 @@ Takes all items currently in the Stash.
 > pt
 Shows your current playtime.
 
-> recipe [category] [--all]
-> recipes [category] [--all]
+> recipe [recipe] [--all]
+> recipes [recipe] [--all]
 Shows all recipes or recipes avaliable.
 
 > save
@@ -176,22 +176,22 @@ Sell the item.
 > shop [index]
 Show trades in recently opened shop.
 
-> skill [name]
-> skills [name]
+> skill [skill]
+> skills [skill]
 Get information about your skills.
 
-> split <from-index> <to-index> <amount>
+> split <index> <index> <amount>
 Split items to another slot.
 
-> stat [item_index=none]
-> stats [item_index=none]
+> stat [index]
+> stats [index]
 Get information about your stats.
 Can be done holding item.
 
 > talkto <npc>
 Talk to an npc.
 
-> unequip <part>
+> unequip <armor-part>
 Unequip armor.
 
 > warp [island]

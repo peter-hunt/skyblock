@@ -2,6 +2,7 @@ from os import walk
 from os.path import join
 from pathlib import Path
 from readline import add_history
+from typing import List
 
 from .constant.color import *
 from .constant.doc import menu_doc
@@ -37,12 +38,16 @@ def new():
     green('New profile created!')
 
 
+def get_profiles() -> List[str]:
+    if not is_dir(warn=True) or not is_dir('saves', warn=True):
+        return []
+    names = [*walk(join(Path.home(), 'skyblock', 'saves'))][0][2]
+    return [name[:-5] for name in names if name.endswith('.json')]
+
+
 @checkpoint
 def ls():
-    if not is_dir(warn=True) or not is_dir('saves', warn=True):
-        return
-    names = [*walk(join(Path.home(), 'skyblock', 'saves'))][0][2]
-    names = [name[:-5] for name in names if name.endswith('.json')]
+    names = get_profiles()
     if len(names) == 0:
         yellow('No profiles to be displayed.')
     else:
@@ -61,8 +66,7 @@ def main():
     if not is_dir(warn=True) or not is_dir('saves', warn=True):
         pass
     else:
-        names = [*walk(join(Path.home(), 'skyblock', 'saves'))][0][2]
-        names = [name[:-5] for name in names if name.endswith('.json')]
+        names = get_profiles()
         if len(names) != 0:
             lastest, lastest_profile = 0, None
             for name in names:

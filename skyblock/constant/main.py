@@ -342,7 +342,9 @@ SELL_PRICE = {
 
     'cobblestone': 1,
     'coal': 2,
+    'iron_nugget': 0.3,
     'iron': 3,
+    'gold_nugget': 0.4,
     'gold': 4,
     'redstone': 1,
     'lapis': 4,
