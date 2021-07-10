@@ -191,7 +191,6 @@ def gather(self, name: str, tool_index: Optional[int],
                 self.collect('seeds', seeds_pool * drop_pool)
 
             self.add_skill_exp('farming', resource.farming_exp, display=True)
-            dark_aqua(f'+{format_number(resource.farming_exp)} Farming')
             if i >= (last_cp + cp_step) * iteration:
                 while i >= (last_cp + cp_step) * iteration:
                     last_cp += cp_step
@@ -206,7 +205,8 @@ def gather(self, name: str, tool_index: Optional[int],
             mining_speed += 10 + 20 * enchantments['efficiency']
 
         if resource.breaking_power > breaking_power:
-            red(f'Insufficient breaking power for {resource.name}!')
+            red(f'Insufficient breaking power'
+                f' for {format_name(resource.name)}!')
             return
 
         time_cost = 30 * resource.hardness / mining_speed
@@ -524,15 +524,13 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                   * (1 + (rejuvenate / 100)))
         if set_bonus == 'holy_blood':
             healed *= 3
-        hp = min(hp - + healed, health)
+        hp = min(hp + healed, health)
         healed = 0
 
         attack_time_cost = 1 / (1 + attack_speed / 100)
-        walk_time_cost = 5 / (speed / 100)
+        sleep(1 / (speed / 100))
 
         mob_hp = mob.health
-        mob_fire_time = 0
-        mob_fire_damage = 0
 
         gray(f'Your HP: {GREEN}{format_number(hp)}{GRAY}/'
              f'{GREEN}{format_number(health)}{RED}❤\n'
@@ -541,8 +539,6 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
              f'/{GREEN}{format_number(mob.health)}{RED}❤\n')
 
         while True:
-            sleep(walk_time_cost)
-
             if isinstance(weapon, Bow) and infinite_quiver != 10:
                 if not self.has_item('arrow', 1):
                     red("You don't have any arrows in your inventory!")
@@ -557,9 +553,9 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
             strike_chance = 1 + attack_speed / 100
             strike_chance *= knockback * punch
 
+            sleep(attack_time_cost)
+
             for _ in range(random_int(strike_chance)):
-                if _ != 0:
-                    sleep(attack_time_cost)
                 is_crit = False
                 if random_bool(crit_chance / 100):
                     damage_dealt = damage * (1 + crit_damage / 100)
@@ -664,6 +660,8 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                 soul_eater_strength = mob.damage * soul_eater
                 break
 
+        if 'kills' not in self.stats:
+            self.stats['kills'] = 0
         self.stats['kills'] += 1
         self.add_kill(name)
 

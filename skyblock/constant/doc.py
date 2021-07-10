@@ -69,6 +69,12 @@ Craft items.
 > deathcount
 Displays how many times you have died.
 
+> del <index>
+> delete <index>
+> rm <index>
+> remove <index>
+Delete items from your inventory.
+
 > deposit [all|half|<coins>]
 Deposit coins from the purse to the bank.
 

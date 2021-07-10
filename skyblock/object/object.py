@@ -45,8 +45,8 @@ class Empty(ItemType):
 @item_type
 class EnchantedBook(ItemType):
     enchantments: Dict[str, int] = {}
-    rarity: str = 'common'
     name: str = 'enchanted_book'
+    rarity: str = 'common'
 
 
 @item_type

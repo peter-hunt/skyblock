@@ -179,7 +179,8 @@ def display_collection_info(self, name: str, /):
             elif isinstance(reward, Recipe):
                 item = reward.result[0]
                 color = RARITY_COLORS[item.rarity]
-                print(f'  {color}{format_name(item.name)} {GRAY}Recipe')
+                print(f'  {color}{format_name(item.name)} {GRAY}Recipe'
+                      f' {DARK_GRAY}{reward.name}')
 
     this_lvl = current - past_amount
     if next_lvl is None:
@@ -250,13 +251,11 @@ def display_item(self, item: ItemType, /):
 
 def display_inv(self, /):
     length = len(self.inventory)
-    if length == 0:
-        gray('Your inventory is empty.')
-        return
 
     digits = len(f'{length}')
     empty_slots = []
     index = 0
+    is_empty = True
     while index < length:
         item = self.inventory[index]
         if isinstance(item, Empty):
@@ -267,12 +266,16 @@ def display_inv(self, /):
                 index += 1
             continue
 
+        is_empty = False
         if empty_slots:
             for empty_index in empty_slots:
                 gray(f'{(empty_index + 1):>{digits * 2 + 1}}')
             empty_slots.clear()
         gray(f'{(index + 1):>{digits * 2 + 1}} {item.display()}')
         index += 1
+
+    if is_empty:
+        gray('Your inventory is empty.')
 
 
 def display_location(self, /):
@@ -449,9 +452,8 @@ def display_recipe(self, category: Optional[str], /, *,
 
 
 def display_recipes(self, /, *, show_all=False):
-    for category in ('farming', 'mining', 'forging', 'smelting',
-                     'combat', 'fishing', 'foraging',
-                     'enchanting', 'alchemy', 'slayer'):
+    for category in ('farming', 'mining', 'combat', 'foraging', 'fishing',
+                     'enchanting', 'forging', 'smelting'):
         self.display_recipe(category, show_all=show_all, end=False)
 
     width, _ = get_terminal_size()

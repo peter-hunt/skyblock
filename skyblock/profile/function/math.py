@@ -12,7 +12,9 @@ from ...function.math import (
 )
 from ...function.io import *
 from ...function.reforging import get_modifier
-from ...function.util import format_name, format_roman, get_family
+from ...function.util import (
+    format_name, format_number, format_roman, get_family,
+)
 from ...object.collection import is_collection, get_collection, calc_coll_lvl
 from ...object.object import *
 
@@ -219,7 +221,7 @@ def collect(self, name: str, amount: int, /):
 
     for reward in rewards:
         if isinstance(reward, (float, int)):
-            self.add_skill_exp(coll.category, reward)
+            self.add_skill_exp(coll.category, reward, display=True)
 
 
 def get_bestiary_amount(self, name: str, /) -> int:

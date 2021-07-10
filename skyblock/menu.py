@@ -58,6 +58,22 @@ def ls():
 def main():
     init_env()
 
+    if not is_dir(warn=True) or not is_dir('saves', warn=True):
+        pass
+    else:
+        names = [*walk(join(Path.home(), 'skyblock', 'saves'))][0][2]
+        names = [name[:-5] for name in names if name.endswith('.json')]
+        if len(names) != 0:
+            lastest, lastest_profile = 0, None
+            for name in names:
+                profile = Profile.load(name)
+                if profile.last_update > lastest:
+                    lastest = profile.last_update
+                    lastest_profile = profile
+
+            if lastest_profile is not None:
+                lastest_profile.mainloop()
+
     while True:
         original_input = input('> ')
         words = original_input.split()
@@ -115,11 +131,9 @@ def main():
             ls()
 
         elif words[0] in {'load', 'open'}:
-            game = Profile.load(words[1])
-            if game is None:
-                continue
-
-            game.mainloop()
+            profile = Profile.load(words[1])
+            if profile is not None:
+                profile.mainloop()
 
         elif words[0] in {'new', 'touch'}:
             new()

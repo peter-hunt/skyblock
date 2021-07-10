@@ -194,8 +194,20 @@ def mainloop(self):
             self.craft(index, amount)
 
         elif words[0] == 'deathcount':
-            death_count = self.stats['deaths']
+            death_count = self.stats.get('deaths', 0)
             yellow(f'Death Count: {BLUE}{format_number(death_count)}')
+
+        elif words[0] in {'del', 'delete', 'rm', 'remove'}:
+            index = self.parse_index(words[1])
+            if index is None:
+                continue
+
+            item = self.inventory[index]
+            if isinstance(item, Empty):
+                red("You don't have an item there!")
+                continue
+            self.inventory[index] = Empty()
+            green(f'Deleted {item.display()}{GREEN}!')
 
         elif words[0] in {'deposit', 'withdraw'}:
             if self.zone not in {'bank', 'dwarven_village'}:
@@ -408,6 +420,9 @@ def mainloop(self):
                     if isinstance(item, Pet):
                         item.exp = calc_pet_exp(item.rarity, 100)
                     self.display_item(item)
+                    break
+            else:
+                red(f'Item not found: {name!r}')
 
         elif words[0] in {'kill', 'slay'}:
             name = words[1]

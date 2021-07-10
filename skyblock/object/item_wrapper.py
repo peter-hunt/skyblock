@@ -690,7 +690,7 @@ def item_type(cls: type, /) -> type:
             if ench.get('one_for_all', 0) != 0:
                 value *= 3.1
         elif name == 'health':
-            value += ench.get('growth', 0) * 3
+            value += ench.get('growth', 0) * 15
         elif name == 'defense':
             value += ench.get('protection', 0) * 3
         elif name == 'true_defense':

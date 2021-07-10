@@ -160,7 +160,7 @@ HUB_NPCS = [
             (2, Item('melon')),
             (12, Item('red_mushroom')),
             (12, Item('brown_mushroom')),
-            (5, Item('cocoa_beans')),
+            (5, Item('cocoa')),
             (5, Item('sugar_cane')),
             (4, Item('sand')),
             (10, get_item('rookie_hoe')),

@@ -72,8 +72,8 @@ def mob_type(cls):
 
 def enchanted_book_type(cls: type, /) -> type:
     def __init__(self, enchantments: Dict[str, int] = {},
-                 rarity: str = 'common',
-                 name: str = 'enchanted_book'):
+                 name: str = 'enchanted_book',
+                 rarity: str = 'common'):
         self.name = 'enchanted_book'
         self.enchantments = enchantments
 
@@ -98,7 +98,7 @@ def enchanted_book_type(cls: type, /) -> type:
     cls.__init__ = __init__
 
     def copy(self, /):
-        return type(self)(self.name, self.enchantments, self.rarity)
+        return type(self)(self.enchantments, self.name, self.rarity)
 
     cls.copy = copy
 

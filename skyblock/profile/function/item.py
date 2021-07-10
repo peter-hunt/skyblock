@@ -46,6 +46,11 @@ def has_item(self, name: str, count: int = 1, /, **kwargs):
 def merge(self, index_1: int, index_2: int, /):
     item_from = self.inventory[index_1]
     item_to = self.inventory[index_2]
+
+    if isinstance(item_from, Empty) or isinstance(item_from, Empty):
+        red('Cannot merge Empty.')
+        yellow('Use `move` instead.')
+        return
     if not hasattr(item_from, 'count') or not hasattr(item_to, 'count'):
         red('Cannot merge unstackable items.')
         return
@@ -64,12 +69,13 @@ def merge(self, index_1: int, index_2: int, /):
         red('Target item is already full as a stack.')
         return
 
-    delta = max(item_from.count, item_to.count - item_type.count)
+    delta = min(item_from.count, item_type.count - item_to.count)
     self.inventory[index_1].count -= delta
     if self.inventory[index_1].count == 0:
         self.inventory[index_1] = Empty()
     self.inventory[index_2].count += delta
 
+    item_type.count = 1
     green(f'Merged {item_type.display()}')
 
 
@@ -200,7 +206,7 @@ def split(self, index_1: int, index_2: int, amount: int, /):
 
     if isinstance(item_2, Empty):
         self.inventory[index_1].count -= amount
-        self.inventory[index_2] = item_1
+        self.inventory[index_2] = item_1.copy()
         self.inventory[index_2].count = amount
         gray(f'Splitted {amount} item from '
              f'slot {index_1 + 1} to slot {index_2 + 1}.')

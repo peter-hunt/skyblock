@@ -12,8 +12,8 @@ from ...function.io import *
 from ...function.math import calc_exp_lvl, calc_exp
 from ...function.reforging import combine_ench
 from ...function.util import (
-    checkpoint, format_name, format_number, format_roman, format_short, get,
-    get_ench, includes,
+    checkpoint, format_name, format_number, format_roman, format_short,
+    format_zone, get, get_ench, includes,
 )
 from ...map.island import ISLANDS
 from ...map.object import *
@@ -299,8 +299,14 @@ def die(self, killer: Optional[str] = None, /) -> bool:
 
     lost_coins = self.purse / 2 * perc_lost
     self.purse -= lost_coins
+
+    if 'deaths' not in self.stats:
+        self.stats['deaths'] = 0
     self.stats['deaths'] += 1
+
     if killer is not None:
+        if f'deaths_{killer}' not in self.stats:
+            self.stats[f'deaths_{killer}'] = 0
         self.stats[f'deaths_{killer}'] += 1
 
     if perc_lost == 0:
@@ -466,12 +472,12 @@ def goto(self, dest: str, /):
             name, level = target.skill_req
             exp_lvl = self.get_skill_lvl(name)
             if exp_lvl < level:
-                red(f'Cannot go to {dest}!')
+                red(f'Cannot go to {format_zone(dest)}!')
                 red(f'Requires {name.capitalize()} level {format_roman(level)}')
                 return
 
         dist = calc_dist(zone, target)
-        time_cost = float(dist) / (5 * (speed / 100))
+        time_cost = float(dist) / (speed / 10)
         green(f'Going from {zone} to {target}...')
         gray(f'(eta: {time_cost:.1f}s)')
         sleep(time_cost)
@@ -479,7 +485,7 @@ def goto(self, dest: str, /):
         zone = get(island.zones, target.name)
 
         if self.zone not in self.visited_zones:
-            dark_green(f'{BOLD}{format_name(self.zone)}')
+            dark_green(f'{BOLD}{format_zone(self.zone)}')
             green(f'New Zone Discovered!')
             self.visited_zones.append(self.zone)
 
