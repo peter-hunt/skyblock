@@ -224,7 +224,7 @@ def craft(self, index: int, amount: int = 1, /):
 
     if recipe.collection_req is not None:
         coll_name, lvl = recipe.collection_req
-        if self.coll_lvl(coll_name) < lvl:
+        if self.get_collection_lvl(coll_name) < lvl:
             red("You haven't reached the required collection yet!")
             return
 

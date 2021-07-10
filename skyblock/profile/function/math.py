@@ -20,7 +20,7 @@ from ...object.object import *
 
 
 __all__ = [
-    'add_exp', 'add_kill', 'add_skill_exp', 'coll_amount', 'coll_lvl',
+    'add_exp', 'add_kill', 'add_skill_exp', 'get_collection_amount', 'get_collection_lvl',
     'collect', 'get_bestiary_amount', 'get_bestiary_lvl', 'get_skill_exp',
     'get_skill_lvl', 'get_stat',
 ]
@@ -151,14 +151,14 @@ def add_skill_exp(self, name: str, amount: Number, /, *, display=False):
                       f' level {BLUE}{current_pet_lvl}{GREEN}!')
 
 
-def coll_amount(self, name: str, /) -> Optional[int]:
+def get_collection_amount(self, name: str, /) -> Optional[int]:
     if not is_collection(name):
         red(f'Unknown collection: {name!r}')
         return
     return self.collection[name]
 
 
-def coll_lvl(self, name: str, /) -> Optional[int]:
+def get_collection_lvl(self, name: str, /) -> Optional[int]:
     if not is_collection(name):
         red(f'Unknown collection: {name!r}')
         return
@@ -176,14 +176,14 @@ def collect(self, name: str, amount: int, /):
 
     display = format_name(name)
 
-    original_lvl = self.coll_lvl(name)
+    original_lvl = self.get_collection_lvl(name)
 
     if self.collection[name] == 0 and amount > 0:
         gold(f'{BOLD}COLLECTION UNLOCKED {YELLOW}{display}')
 
     self.collection[name] += amount
 
-    current_lvl = self.coll_lvl(name)
+    current_lvl = self.get_collection_lvl(name)
 
     if current_lvl <= original_lvl:
         return

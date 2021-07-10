@@ -147,13 +147,13 @@ def display_collection_info(self, name: str, /):
     yellow(f"{BOLD}{'':-^{width}}")
 
     coll = get_collection(name)
-    lvl = self.coll_lvl(name)
+    lvl = self.get_collection_lvl(name)
     lvl_str = f' {format_roman(lvl)}' if lvl != 0 else ''
     display = format_name(name)
 
-    current = self.coll_amount(name)
+    current = self.get_collection_amount(name)
 
-    yellow(f'{display}{lvl_str}')
+    yellow(f'{display}{lvl_str} {DARK_GRAY}({format_short(current)})')
     last_lvl = 0
     next_lvl = None
     rewards = None
@@ -171,7 +171,8 @@ def display_collection_info(self, name: str, /):
             past_amount = last_lvl
         last_lvl = amount
 
-        gray(f'\n{display} {format_roman(index + 1)} Reward:')
+        gray(f'\n{display} {format_roman(index + 1)} Reward:'
+             f' {DARK_GRAY}({format_short(amount)})')
         for reward in rwds:
             if isinstance(reward, (float, int)):
                 dark_gray(f' +{DARK_AQUA}{reward}{GRAY}'
@@ -180,7 +181,7 @@ def display_collection_info(self, name: str, /):
                 item = reward.result[0]
                 color = RARITY_COLORS[item.rarity]
                 print(f'  {color}{format_name(item.name)} {GRAY}Recipe'
-                      f'  {DARK_GRAY}({reward.name})')
+                      f' {DARK_GRAY}({reward.name})')
 
     this_lvl = current - past_amount
     if next_lvl is None:
@@ -223,7 +224,7 @@ def display_collection(self, category: str, /, *, end=True):
                 gray('  unknown')
                 continue
             name = format_name(coll.name)
-            lvl = self.coll_lvl(coll.name)
+            lvl = self.get_collection_lvl(coll.name)
             lvl_str = f' {format_roman(lvl)}' if lvl != 0 else ''
             yellow(f'  {name}{lvl_str}')
 
@@ -397,12 +398,12 @@ def display_recipe_info(self, index: int, /):
     requirements = []
 
     if recipe.collection_req is not None:
-        coll_name, coll_lvl = recipe.collection_req
-        lvl = self.coll_lvl(coll_name)
-        if lvl < coll_lvl:
+        coll_name, get_collection_lvl = recipe.collection_req
+        lvl = self.get_collection_lvl(coll_name)
+        if lvl < get_collection_lvl:
             requirements.append(
                 f'{DARK_RED}❣ {RED}Requires {GREEN}'
-                f'{format_name(coll_name)} Collection {format_roman(coll_lvl)}'
+                f'{format_name(coll_name)} Collection {format_roman(get_collection_lvl)}'
             )
 
     if len(requirements) != 0:
@@ -427,9 +428,9 @@ def display_recipe(self, category: Optional[str], /, *,
         recipes = []
         for recipe in recipes_copy:
             if recipe.collection_req is not None:
-                coll_name, coll_lvl = recipe.collection_req
-                lvl = self.coll_lvl(coll_name)
-                if lvl < coll_lvl:
+                coll_name, get_collection_lvl = recipe.collection_req
+                lvl = self.get_collection_lvl(coll_name)
+                if lvl < get_collection_lvl:
                     continue
 
             for item, count in recipe.ingredients:

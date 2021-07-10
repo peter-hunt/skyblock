@@ -275,15 +275,18 @@ def gather(self, name: str, tool_index: Optional[int],
 
     elif isinstance(resource, Wood):
         is_wood = True
+
+        break_amount = 1
+        cooldown = 0
+        time_cost = 0.5
         if 'wood' not in resource.name:
             time_cost = 0.5
-            break_amount = 1
             is_wood = False
         elif getattr(tool, 'name', None) in {'jungle_axe', 'treecapitator'}:
-            time_cost = 2
+            cooldown = 2
             if has_active_pet:
                 if 'evolves_axes' in active_pet.abilities:
-                    time_cost *= 1 - 0.5 * pet_mult
+                    cooldown *= 1 - 0.5 * pet_mult
             break_amount = 10 if tool.name[0] == 'j' else 35
         else:
             if isinstance(tool, Axe):
@@ -295,7 +298,7 @@ def gather(self, name: str, tool_index: Optional[int],
                 tool_speed = 1
                 time_cost = 5 * resource.hardness / tool_speed
             time_cost = ceil(time_cost * 20) / 20
-            break_amount = 1
+        time_cost += cooldown
 
         foraging_fortune = self.get_stat('foraging_fortune', tool_index)
         fortune_mult = 1 + foraging_fortune / 100
