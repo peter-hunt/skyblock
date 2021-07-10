@@ -520,7 +520,7 @@ MOBS = [
         ]),
 
     # sea creatures
-    Mob('squid', level=1, health=2000, damage=0,
+    Mob('squid', level=1, health=2000,
         coins=0, exp=15, fishing_exp=41,
         drops=[
             (Item('lily_pad'), (1, 2), 'common', 1),
@@ -533,7 +533,7 @@ MOBS = [
             (Item('lily_pad'), (1, 6), 'common', 1),
             (Item('fish'), (1, 4), 'common', 1),
         ]),
-    Mob('night_squid', level=6, health=4000, damage=0,
+    Mob('night_squid', level=6, health=4000,
         coins=0, exp=28, fishing_exp=270,
         drops=[
             (Item('ink_sack'), (12, 27), 'common', 1),

@@ -3,7 +3,7 @@ from .mob import get_mob
 from .object import *
 
 
-__all__ = ['FISHING_TABLE', 'SEA_CREATURES']
+__all__ = ['FISHING_TABLE', 'SC_TABLE']
 
 FISHING_TABLE = [
     # item, amount, rarity,
@@ -62,7 +62,7 @@ FISHING_TABLE = [
      0.01, 300, ('upper',)),
 ]
 
-SEA_CREATURES = [
+SC_TABLE = [
     # mob, weight, fishing lvl requirement, text
     (get_mob('squid'), 0.12, 1,
      'A Squid appeared.'),

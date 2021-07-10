@@ -539,12 +539,17 @@ def item_type(cls: type, /) -> type:
         else:
             stat_mult = 1
 
-        for ability_id in getattr(self, 'abilities', []):
+        item_abilities = getattr(self, 'abilities', [])
+        if self.__class__.__name__ == 'Accessory':
+            item_abilities = [self.name] + item_abilities
+        for ability_id in item_abilities:
             ability = get_ability(ability_id)
             if ability.__class__.__name__ == 'NamedAbility':
                 values = tuple(floor(value * stat_mult)
                                for value in ability.values)
-                desc = ability.description % values
+                desc = ability.description
+                if len(values) != 0:
+                    desc = desc % values
                 ability_list.append(f'{GOLD}{ability.name}'
                                     f'\n{GRAY}{desc}')
             elif ability.__class__.__name__ == 'AnonymousAbility':

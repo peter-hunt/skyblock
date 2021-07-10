@@ -300,19 +300,6 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
     mining_lvl = self.get_skill_lvl('mining')
     taming_lvl = self.get_skill_lvl('taming')
 
-    if name == 'health':
-        value += 100
-    elif name == 'speed':
-        value += 100
-    elif name == 'crit_chance':
-        value += 30
-    elif name == 'crit_damage':
-        value += 50
-    elif name == 'intelligence':
-        value += 100
-    elif name == 'sea_creature_chance':
-        value += 20
-
     set_bonus = True
 
     for piece in self.armor:
@@ -386,6 +373,7 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
         pet_mult = 0
 
     if name == 'health':
+        value += 100
         value += min(farming_lvl, 14) * 2
         value += max(min(farming_lvl - 14, 5), 0) * 3
         value += max(min(farming_lvl - 19, 6), 0) * 4
@@ -394,10 +382,8 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
         value += max(min(fishing_lvl - 14, 5), 0) * 3
         value += max(min(fishing_lvl - 19, 6), 0) * 4
         value += max(min(fishing_lvl - 25, 35), 0) * 5
-
         if set_bonus == 'lapis_armor':
             value += 60
-
         if has_active_pet:
             if 'archimedes' in active_pet.abilities:
                 value *= 1 + 0.2 * pet_mult
@@ -408,27 +394,51 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
         value += min(foraging_lvl, 14) * 1
         value += max(min(foraging_lvl - 14, 36), 0) * 2
     elif name == 'speed':
+        value += 100
         if set_bonus == 'speedster_armor':
             value += 20
         elif set_bonus == 'farm_armor_speed':
             if self.island in {'barn', 'desert'} or self.zone == 'farm':
-                value += 250
+                value += 25
         elif set_bonus == 'farm_suit_speed':
             if self.island in {'barn', 'desert'}:
                 value += 20
-
         if has_active_pet:
             if self.island == 'park':
                 if 'epic_vine_swing' in active_pet.abilities:
                     value += 100 * pet_mult
                 elif 'rare_vine_swing' in active_pet.abilities:
                     value += 75 * pet_mult
+        if self.has_item('speed_artifact'):
+            value += 5
+        elif self.has_item('speed_ring'):
+            value += 3
+        elif self.has_item('speed_talisman'):
+            value += 1
+        if self.has_item('farming_talisman'):
+            if self.island in {'barn', 'desert'} or self.zone == 'farm':
+                value *= 1.1
+        if self.has_item('wood_affinity_talisman'):
+            if self.zone in {'forest', 'graveyard', 'wilderness'}:
+                value *= 1.1
+        if self.has_item('village_affinity_talisman'):
+            if self.zone == 'village':
+                value *= 1.1
+        if self.has_item('mine_affinity_talisman'):
+            if (self.island in {'gold', 'deep', 'mines'}
+                    or self.zone == 'coal_mine'):
+                value *= 1.1
     elif name == 'crit_chance':
+        value += 30
         value += combat_lvl * 0.5
+    elif name == 'crit_damage':
+        value += 50
     elif name == 'intelligence':
+        value += 100
         value += min(enchanting_lvl, 14) * 1
         value += max(min(enchanting_lvl - 14, 46), 0) * 2
     elif name == 'sea_creature_chance':
+        value += 20
         if has_active_pet:
             if 'epic_echolocation' in active_pet.abilities:
                 value *= 1 + 0.1 * pet_mult
@@ -441,6 +451,16 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
             value += 100
         if set_bonus == 'glacite_armor':
             value += 2 * mining_lvl
+        if self.has_item('haste_ring'):
+            value += 50
+        if self.has_item('titanium_relic'):
+            value += 60
+        elif self.has_item('titanium_artifact'):
+            value += 45
+        elif self.has_item('titanium_ring'):
+            value += 30
+        elif self.has_item('titanium_talisman'):
+            value += 15
     elif name == 'ferocity':
         if has_active_pet:
             if 'legendary_merciless_swipe' in active_pet.abilities:

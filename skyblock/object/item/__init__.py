@@ -3,6 +3,7 @@ from ...function.util import get, includes
 
 from ..object import *
 
+from .accessory import ACCESSORIES
 from .armor import ARMOR
 from .pet import PETS
 from .scroll import TRAVEL_SCROLLS, get_scroll
@@ -13,7 +14,8 @@ from .weapon import WEAPONS
 
 __all__ = [
     'COLLECTION_ITEMS',  'OTHER_ITEMS',
-    'ARMOR', 'PETS', 'TRAVEL_SCROLLS', 'REFORGE_STONES', 'TOOLS', 'WEAPONS',
+    'ACCESSORIES', 'ARMOR', 'PETS', 'TRAVEL_SCROLLS', 'REFORGE_STONES',
+    'TOOLS', 'WEAPONS',
     'get_scroll', 'get_stone',
     'ITEMS', 'get_item', 'validify_item', 'get_stack_size',
 ]
@@ -249,17 +251,19 @@ COLLECTION_ITEMS = [
 ]
 
 OTHER_ITEMS = [
-    Item('arrow', 64, 'common'),
-    Item('blaze_powder', 64, 'common'),
-    Item('enchanted_golden_apple', 64, 'uncommon'),
-    Item('exp_share_core', 1, 'epic'),
     Item('flint', 64, 'common'),
     Item('glowstone_block', 64, 'common'),
     Item('gold_nugget', 64, 'common'),
-    Item('golden_powder', 64, 'epic'),
     Item('iron_nugget', 64, 'common'),
-    Item('lapis_crystal', 1, 'rare'),
+
+    Item('arrow', 64, 'common'),
+    Item('blaze_powder', 64, 'common'),
+    Item('exp_share_core', 1, 'epic'),
+    Item('golden_powder', 64, 'epic'),
+
     Item('planks', 64, 'common'),
+    Item('chest', 64, 'common'),
+
     Item('poisonous_potato', 64, 'common'),
     Item('saving_grace', 64, 'rare'),
     Item('stick', 64, 'common'),
@@ -268,6 +272,7 @@ OTHER_ITEMS = [
     Item('book', 64, 'common'),
     Item('bread', 64, 'common'),
     Item('egg', 16, 'common'),
+    Item('enchanted_golden_apple', 64, 'uncommon'),
     Item('golden_apple', 64, 'common'),
     Item('paper', 64, 'common'),
     Item('sugar', 64, 'common'),
@@ -309,10 +314,10 @@ OTHER_ITEMS = [
 ]
 
 ITEMS = (COLLECTION_ITEMS + OTHER_ITEMS + WEAPONS
-         + ARMOR + TOOLS + TRAVEL_SCROLLS + REFORGE_STONES + PETS)
+         + ACCESSORIES + ARMOR + TOOLS + TRAVEL_SCROLLS + REFORGE_STONES + PETS)
 
 
-def get_item(name: str, **kwargs) -> ItemType:
+def get_item(name: str, /, **kwargs) -> ItemType:
     if not includes(ITEMS, name):
         red(f'Item not found: {name!r}')
         exit()

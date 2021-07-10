@@ -10,7 +10,7 @@ from .item_wrapper import item_type
 
 __all__ = [
     'ItemType', 'Item', 'Empty',
-    'EnchantedBook', 'ReforgeStone', 'TravelScroll',
+    'Accessory', 'EnchantedBook', 'ReforgeStone', 'TravelScroll',
     'Bow', 'Sword',
     'Axe', 'Pickaxe', 'Drill', 'Hoe', 'FishingRod', 'Armor', 'Pet',
     'Resource',
@@ -44,8 +44,10 @@ class Empty(ItemType):
 @item_type
 class Accessory(ItemType):
     name: str
-    modifier: Optional[str] = None
     rarity: str = 'common'
+    modifier: Optional[str] = None
+
+    abilities: List[str] = []
 
 
 @enchanted_book_type
@@ -263,7 +265,7 @@ class Pet(ItemType):
 
 
 OBJECTS = [
-    Item, Empty, EnchantedBook, ReforgeStone, TravelScroll,
+    Item, Empty, Accessory, EnchantedBook, ReforgeStone, TravelScroll,
     Sword, Bow, Axe, Hoe, Pickaxe, Drill, FishingRod, Armor, Pet,
 ]
 

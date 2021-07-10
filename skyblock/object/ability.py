@@ -31,11 +31,13 @@ class NamedAbility(Ability):
 
 
 ABILITIES = [
+    # misc abilities
     AnonymousAbility(
         id='exp_bottle',
         description=f'Smash it open to recieve\nexperience!',
     ),
 
+    # armor abilities
     NamedAbility(
         id='farm_armor_speed',
         name='Full Set Bonus: Bonus Speed',
@@ -116,7 +118,6 @@ ABILITIES = [
             'The Defense of this item is doubled while on a mining island.'
         ),
     ),
-
     AnonymousAbility(
         id='ender_armor',
         description=('All stats of this armor piece are doubled'
@@ -168,7 +169,6 @@ ABILITIES = [
         name='Full Set Bonus: Superior Blood',
         description=f'Most of your stats are increased by {GREEN}5%{GRAY}',
     ),
-
     NamedAbility(
         id='fairys_outfit',
         name="Full Set Bonus: Fairy's Outfit",
@@ -176,6 +176,7 @@ ABILITIES = [
                      f' by {GREEN}+10%{GRAY}.'),
     ),
 
+    # tool abilities
     AnonymousAbility(
         id='jungle_axe',
         description=(f'A powerful Wooden Axe which can'
@@ -189,6 +190,7 @@ ABILITIES = [
                      f'{DARK_GRAY}Cooldown: {GREEN}2s{GRAY}'),
     ),
 
+    # weapon abilities
     AnonymousAbility(
         id='tacticians_sword',
         description=(f'Gains {RED}+15 Damage{GRAY} for each Combat collection'
@@ -212,6 +214,7 @@ ABILITIES = [
                      f" ok. {RED}(╯°□°)╯{GRAY}︵ ┻━┻"),
     ),
 
+    # pet abilities
     NamedAbility(
         id='one_with_the_dragons',
         name='One with the Dragons',
@@ -330,25 +333,188 @@ ABILITIES = [
     NamedAbility(
         id='rare_echolocation',
         name='Echolocation',
-        description=(f"Increases sea creatures catch chance"
-                     f" by {GREEN}%d%%{GRAY}."),
+        description=(f'Increases sea creatures catch chance'
+                     f' by {GREEN}%d%%{GRAY}.'),
         values=[7],
     ),
     NamedAbility(
         id='epic_echolocation',
         name='Echolocation',
-        description=(f"Increases sea creatures catch chance"
-                     f" by {GREEN}%d%%{GRAY}."),
+        description=(f'Increases sea creatures catch chance'
+                     f' by {GREEN}%d%%{GRAY}.'),
         values=[10],
+    ),
+
+    # accessory abilities
+    AnonymousAbility(
+        id='farming_talisman',
+        description=(f"Increases your {STAT_COLORS['speed']} Speed {GRAY}by"
+                     f" {GREEN}+10% {GRAY}while held in the {AQUA}Farm{GRAY},"
+                     f" {AQUA}The Barn{GRAY},"
+                     f" and {AQUA}Mushroom Desert{GRAY}."),
+    ),
+    AnonymousAbility(
+        id='vaccine_talisman',
+        description=(f'Provides immunity to {BLUE}Poison'
+                     f' {GRAY}damage when held.'),
+    ),
+    AnonymousAbility(
+        id='farmer_orb',
+        description=(f'Increases the regrowth rate of nearby crops'
+                     f' on the public islands, regrowing an extra crop'
+                     f' every {GREEN}3 {GRAY}seconds.'),
+    ),
+    AnonymousAbility(
+        id='night_vision_charm',
+        description=('Grants better vision while this item'
+                     ' is in your inventory.'),
+    ),
+    AnonymousAbility(
+        id='speed_talisman',
+        description=(f"Gives {GREEN}+1 {STAT_COLORS['speed']} Speed"
+                     f" {GRAY}when held."),
+    ),
+    AnonymousAbility(
+        id='speed_ring',
+        description=(f"Gives {GREEN}+3 {STAT_COLORS['speed']} Speed"
+                     f" {GRAY}when held."),
+    ),
+    AnonymousAbility(
+        id='speed_artifact',
+        description=(f"Gives {GREEN}+5 {STAT_COLORS['speed']} Speed"
+                     f" {GRAY}when held."),
+    ),
+    AnonymousAbility(
+        id='feather_talisman',
+        description=f'Reduce little fall damage.',
+    ),
+    AnonymousAbility(
+        id='feather_ring',
+        description=f'Reduce fall damage.',
+    ),
+    AnonymousAbility(
+        id='feather_artifact',
+        description='Reduce more fall damage.',
+    ),
+    AnonymousAbility(
+        id='piggy_bank',
+        description=(f'Saves your coins from death.'
+                     f' Only when in player inventory. {RED}Fragile!'),
+    ),
+    AnonymousAbility(
+        id='cracked_piggy_bank',
+        description=(f'Saves {RED}75% {GRAY}of your coins from death.'
+                     f' Only when in player inventory.'
+                     f' {RED}Very fragile!'),
+    ),
+    AnonymousAbility(
+        id='broken_piggy_bank',
+        description='It broke!',
+    ),
+    AnonymousAbility(
+        id='haste_ring',
+        description=(f"Grants {GREEN}+50 {STAT_COLORS['mining_speed']}"
+                     f" Mining Speed{GRAY}."),
+    ),
+    AnonymousAbility(
+        id='experience_artifact',
+        description=(f'Increase experience orbs you gain by {GREEN}25% '
+                     f'{GRAY}while this item is in your inventory.'),
+    ),
+    AnonymousAbility(
+        id='talisman_of_coins',
+        description=('Coins start appearing around you'
+                     ' on public islands. Lucky!'),
+    ),
+    AnonymousAbility(
+        id='emerald_ring',
+        description=f'Get {GOLD}+1 coin {GRAY}every minute.',
+    ),
+    AnonymousAbility(
+        id='wood_affinity_talisman',
+        description=(f"Increases your {STAT_COLORS['speed']} Speed {GRAY}by"
+                     f" {GREEN}+10% {GRAY}in {AQUA}Forest{GRAY},"
+                     f" {AQUA}Graveyard{GRAY}, {AQUA}Wilderness{GRAY}."),
+    ),
+    AnonymousAbility(
+        id='healing_talisman',
+        description=f'Increases healing by {GREEN}5%{GRAY}.',
+    ),
+    AnonymousAbility(
+        id='healing_ring',
+        description=f'Increases healing by {GREEN}10%{GRAY}.',
+    ),
+    AnonymousAbility(
+        id='sea_creature_talisman',
+        description=f'Take {GREEN}5% {GRAY}less damage from Sea Creatures.',
+    ),
+    AnonymousAbility(
+        id='sea_creature_ring',
+        description=f'Take {GREEN}10% {GRAY}less damage from Sea Creatures.',
+    ),
+    AnonymousAbility(
+        id='sea_creature_artifact',
+        description=f'Take {GREEN}15% {GRAY}less damage from Sea Creatures.',
+    ),
+    AnonymousAbility(
+        id='titanium_talisman',
+        description=(f"Grants {GREEN}+15 {STAT_COLORS['mining_speed']}"
+                     f" Mining Speed{GRAY}."),
+    ),
+    AnonymousAbility(
+        id='titanium_ring',
+        description=(f"Grants {GREEN}+30 {STAT_COLORS['mining_speed']}"
+                     f" Mining Speed{GRAY}."),
+    ),
+    AnonymousAbility(
+        id='titanium_artifact',
+        description=(f"Grants {GREEN}+45 {STAT_COLORS['mining_speed']}"
+                     f" Mining Speed{GRAY}."),
+    ),
+    AnonymousAbility(
+        id='titanium_relic',
+        description=(f"Grants {GREEN}+60 {STAT_COLORS['mining_speed']}"
+                     f" Mining Speed{GRAY}."),
+    ),
+    AnonymousAbility(
+        id='zombie_talisman',
+        description=(f'Reduce the damage taken from zombies'
+                     f' by {GREEN}5%{GRAY}.'),
+    ),
+    AnonymousAbility(
+        id='skeleton_talisman',
+        description=(f'Reduce the damage taken from skeletons'
+                     f' by {GREEN}5%{GRAY}.'),
+    ),
+    AnonymousAbility(
+        id='village_affinity_talisman',
+        description=(f"Increases your {STAT_COLORS['speed']} Speed {GRAY}by"
+                     f" {GREEN}+10% {GRAY}while held"
+                     f" in the {AQUA}Village{GRAY}."),
+    ),
+    AnonymousAbility(
+        id='mine_affinity_talisman',
+        description=(f"Increases your {STAT_COLORS['speed']} Speed {GRAY}by"
+                     f" {GREEN}+10% {GRAY}while held"
+                     f" in any {AQUA}Mines{GRAY}."),
+    ),
+    AnonymousAbility(
+        id='intimidation_talisman',
+        description=f'Level {GREEN}1 {GRAY}monsters will no longer target you.',
+    ),
+    AnonymousAbility(
+        id='scavenger_talisman',
+        description='Monsters drop coins will killed.',
     ),
 ]
 
 
-def get_ability(id: str, /) -> Optional[Ability]:
+def get_ability(id: str, /, *, warn=True) -> Optional[Ability]:
     for item in ABILITIES:
         if item.id == id:
             break
     else:
-        red(f'Ability not found: {id!r}')
+        if warn:
+            red(f'Ability not found: {id!r}')
         return
     return get(ABILITIES, id=id)

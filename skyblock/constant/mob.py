@@ -5,6 +5,7 @@ Constants about mobs.
 __all__ = [
     'CUBISM_EFT', 'ENDER_SLAYER_EFT', 'BOA_EFT', 'SMITE_EFT',
     'BLAST_PROT_EFT', 'PROJ_PROT_EFT', 'IMPALING_EFT',
+    'SEA_CREATURES', 'ZOMBIES', 'SKELETONS',
     'BESTIARY_ALTER',
 ]
 
@@ -65,6 +66,28 @@ IMPALING_EFT = [
     'squid', 'night_squid',
     'sea_guardian', 'guardian_defender', 'sea_emperor',
 ]
+
+# list of mobs affected by sea creature talisman, ring, and artifact
+SEA_CREATURES = [
+    'squid', 'sea_walker', 'night_squid', 'sea_guardian', 'sea_witch',
+    'sea_archer', 'monster_of_the_deep', 'catfish', 'sea_leech',
+    'guardian_defender', 'deep_sea_protector', 'water_hydra', 'sea_emperor',
+]
+
+# list of mobs affected by zombie talisman
+ZOMBIES = [
+    'zombie', 'zombie_villager',
+    'crypt_ghoul', 'golden_ghoul',
+    'lapis_zombie',
+    'diamond_zombie', 'enchanted_diamond_zombie',
+]
+
+# list of mobs affected by skeleton talisman
+SKELETONS = [
+    'skeleton', 'gravel_skeleton',
+    'diamond_skeleton', 'enchanted_diamond_skeleton',
+]
+
 
 BESTIARY_ALTER = {
     'crypt_ghoul': ('crypt_ghoul', 'golden_ghoul'),

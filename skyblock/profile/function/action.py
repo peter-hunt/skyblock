@@ -13,11 +13,11 @@ from ...function.math import calc_exp_lvl, calc_exp
 from ...function.reforging import combine_ench
 from ...function.util import (
     checkpoint, format_name, format_number, format_roman, format_short,
-    format_zone, get, get_ench, includes,
+    format_zone, get, get_ench, includes, random_amount,
 )
 from ...map.island import ISLANDS
 from ...map.object import *
-from ...object.item import validify_item
+from ...object.item import get_item, validify_item
 from ...object.object import *
 from ...object.recipe import RECIPES
 
@@ -244,6 +244,9 @@ def consume(self, index: int, amount: int = 1, /):
         elif item.name == 'tiantium_experience_bottle':
             exp_amount = 250_000
 
+        if self.has_item('experience_artifact'):
+            exp_amount *= 1.25
+
         item_copy = item.copy()
         item_copy.count = amount
 
@@ -335,8 +338,26 @@ def die(self, killer: Optional[str] = None, /) -> bool:
         perc_lost = 0
 
     perc_lost = max(perc_lost, 0)
-
     lost_coins = self.purse / 2 * perc_lost
+
+    did_crack_piggy = False
+
+    if self.has_item('piggy_bank'):
+        if lost_coins >= 20_000:
+            did_crack_piggy = True
+            lost_coins = 0
+            self.remove_item('piggy_bank')
+            self.recieve_item(get_item('cracked_piggy_bank'))
+
+    did_broke_piggy = False
+
+    if not did_crack_piggy and self.has_item('cracked_piggy_bank'):
+        if lost_coins >= 20_000:
+            did_broke_piggy = True
+            lost_coins *= 0.25
+            self.remove_item('cracked_piggy_bank')
+            self.recieve_item(get_item('broken_piggy_bank'))
+
     self.purse -= lost_coins
 
     if 'deaths' not in self.stats:
@@ -348,7 +369,12 @@ def die(self, killer: Optional[str] = None, /) -> bool:
             self.stats[f'deaths_{killer}'] = 0
         self.stats[f'deaths_{killer}'] += 1
 
-    if perc_lost == 0:
+    if did_crack_piggy:
+        red('You died and your piggy bank cracked!')
+    elif did_broke_piggy:
+        red(f'You died, lost {format_number(lost_coins)} coins'
+            f' and your piggy bank broke!')
+    elif perc_lost == 0:
         red(f'You died!')
     else:
         red(f'You died and lost {format_number(lost_coins)} coins!')
@@ -502,8 +528,6 @@ def goto(self, dest: str, /):
     path, accum_dist = path_find(zone, get(island.zones, dest),
                                  island.conns, island.dists)
 
-    speed = self.get_stat('speed')
-
     route = f'{GRAY} ➜ {AQUA}'.join(f'{zone}' for zone in path)
     gray(f'Route: {AQUA}{route} {GRAY}({float(accum_dist):.2f}m)')
     for target in path[1:]:
@@ -516,6 +540,7 @@ def goto(self, dest: str, /):
                 return
 
         dist = calc_dist(zone, target)
+        speed = self.get_stat('speed')
         time_cost = float(dist) / (speed / 10)
         green(f'Going from {zone} to {target}...')
         gray(f'(eta: {time_cost:.1f}s)')
@@ -616,6 +641,19 @@ def update(self, /):
     now = int(time())
     last = now if self.last_update == 0 else self.last_update
     dt = now - last
+
+    if self.has_item('talisman_of_coins'):
+        last_coins_cp = last // 10
+        now_coins_cp = now // 10
+        if now_coins_cp > last_coins_cp:
+            self.purse += (random_amount((1, 5))
+                           * (now_coins_cp - last_coins_cp))
+
+    if self.has_item('emerald_ring'):
+        last_min_cp = last // 60
+        now_min_cp = now // 60
+        if now_min_cp > last_min_cp:
+            self.purse += now_min_cp - last_min_cp
 
     last_save_cp = last // 300
     now_save_cp = now // 300

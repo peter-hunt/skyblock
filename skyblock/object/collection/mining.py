@@ -20,7 +20,7 @@ MINING_COLLECTIONS = [
                       get_recipe('miners_outfit_leggings'),
                       get_recipe('miners_outfit_boots'))),
             (25_000, 2_500),
-            (40_000, 4_000),
+            (40_000, get_recipe('experience_artifact')),
         ],
     ),
     Collection(
@@ -112,7 +112,7 @@ MINING_COLLECTIONS = [
             (100, 10),
             (250, 25),
             (1_000, get_recipe('emerald_to_enchanted')),
-            (5_000, 500),
+            (5_000, get_recipe('emerald_ring')),
             (15_000, 1_500),
             (30_000, get_recipe('emerald_to_enchanted_block')),
             (50_000, get_recipe('emerald_blade')),

@@ -121,13 +121,7 @@ def mainloop(self):
             self.buy(chosen_trade, amount)
 
         elif words[0] == 'cheat':
-            # item = get_item('necrons_helmet')
-            # self.recieve_item(item)
-            # item = get_item('necrons_chestplate')
-            # self.recieve_item(item)
-            # item = get_item('necrons_leggings')
-            # self.recieve_item(item)
-            # item = get_item('necrons_boots')
+            # item = get_item('haste_ring')
             # self.recieve_item(item)
             ...
 
@@ -373,7 +367,7 @@ def mainloop(self):
                 tool_item = self.inventory[tool_index]
                 if not isinstance(tool_item,
                                   (Empty, Axe, Hoe, Pickaxe, Drill)):
-                    yellow(f'{tool_item.display()}{YELLOW} is not tool.\n'
+                    yellow(f'{tool_item.display()} {YELLOW}is not tool.\n'
                            f'Using barehand by default.')
                     tool_index = None
 
@@ -449,7 +443,7 @@ def mainloop(self):
                         getattr(weapon_item, 'damage', 0) != 0):
                     pass
                 elif not isinstance(weapon_item, (Empty, Bow, Sword)):
-                    yellow(f'{weapon_item.name} item is not weapon.\n'
+                    yellow(f'{weapon_item.display()} {YELLOW}is not weapon.\n'
                            f'Using barehand by default.')
                     weapon_index = None
 

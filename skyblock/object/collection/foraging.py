@@ -18,7 +18,7 @@ FORAGING_COLLECTIONS = [
             (1_000, 100),
             (2_000, get_recipe('oak_to_enchanted')),
             (5_000, 500),
-            (10_000, 1_000),
+            (10_000, get_recipe('wood_affinity_talisman')),
             (30_000, 3_000),
         ],
     ),

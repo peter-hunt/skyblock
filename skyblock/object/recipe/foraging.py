@@ -47,12 +47,14 @@ FORAGING_RECIPES = [
     Recipe('planks_to_stick', 'foraging',
            [(Item('planks'), 2)],
            (Item('stick'), 4)),
+    Recipe('planks_to_chest', 'foraging',
+           [(Item('planks'), 8)],
+           (Item('chest'), 1)),
 
     Recipe('oak_leaves', 'foraging',
            [(Item('oak_sapling'), 1)],
            (Item('oak_leaves'), 1),
            collection_req=('oak_wood', 2)),
-
     Recipe('leaflet_helmet', 'foraging',
            [(Item('oak_leaves'), 5)],
            (get_item('leaflet_helmet'), 1),
@@ -69,11 +71,15 @@ FORAGING_RECIPES = [
            [(Item('oak_leaves'), 4)],
            (get_item('leaflet_boots'), 1),
            collection_req=('oak_wood', 3)),
-
     Recipe('oak_to_enchanted', 'foraging',
            [(Item('oak_wood'), 160)],
            (Item('enchanted_oak'), 1),
            collection_req=('oak_wood', 6)),
+    Recipe('wood_affinity_talisman', 'foraging',
+           [(Item('enchanted_oak'), 1),
+            (Item('oak_leaves'), 8)],
+           (get_item('wood_affinity_talisman'), 1),
+           collection_req=('oak_wood', 8)),
 
     Recipe('birch_leaves', 'foraging',
            [(Item('birch_sapling'), 1)],

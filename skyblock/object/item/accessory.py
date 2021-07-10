@@ -1,0 +1,40 @@
+from ..object import *
+
+
+__all__ = ['ACCESSORIES']
+
+ACCESSORIES = [
+    Accessory('farming_talisman', rarity='common'),
+    Accessory('vaccine_talisman', rarity='common'),
+    Accessory('farmer_orb', rarity='uncommon'),
+    Accessory('night_vision_charm', rarity='common'),
+    Accessory('speed_talisman', rarity='common'),
+    Accessory('speed_ring', rarity='uncommon'),
+    Accessory('speed_artifact', rarity='rare'),
+    Accessory('feather_talisman', rarity='common'),
+    Accessory('feather_ring', rarity='uncommon'),
+    Accessory('feather_artifact', rarity='rare'),
+    Accessory('piggy_bank', rarity='uncommon'),
+    Accessory('cracked_piggy_bank', rarity='uncommon'),
+    Accessory('broken_piggy_bank', rarity='uncommon'),
+    Accessory('haste_ring', rarity='rare'),
+    Accessory('experience_artifact', rarity='epic'),
+    Accessory('talisman_of_coins', rarity='common'),
+    Accessory('emerald_ring', rarity='uncommon'),
+    Accessory('wood_affinity_talisman', rarity='uncommon'),
+    Accessory('healing_talisman', rarity='common'),
+    Accessory('healing_ring', rarity='uncommon'),
+    Accessory('sea_creature_talisman', rarity='common'),
+    Accessory('sea_creature_ring', rarity='uncommon'),
+    Accessory('sea_creature_artifact', rarity='rare'),
+    Accessory('titanium_talisman', rarity='uncommon'),
+    Accessory('titanium_ring', rarity='rare'),
+    Accessory('titanium_artifact', rarity='epic'),
+    Accessory('titanium_relic', rarity='legendary'),
+    Accessory('zombie_talisman', rarity='common'),
+    Accessory('skeleton_talisman', rarity='common'),
+    Accessory('village_affinity_talisman', rarity='common'),
+    Accessory('mine_affinity_talisman', rarity='common'),
+    Accessory('intimidation_talisman', rarity='common'),
+    Accessory('scavenger_talisman', rarity='common'),
+]

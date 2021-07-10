@@ -9,7 +9,7 @@ from ...constant.ability import SET_BONUSES
 from ...constant.color import *
 from ...constant.mob import (
     CUBISM_EFT, ENDER_SLAYER_EFT, BOA_EFT, SMITE_EFT, BLAST_PROT_EFT,
-    PROJ_PROT_EFT, IMPALING_EFT,
+    PROJ_PROT_EFT, IMPALING_EFT, SEA_CREATURES, ZOMBIES, SKELETONS,
 )
 from ...function.io import *
 from ...function.math import (
@@ -18,7 +18,7 @@ from ...function.math import (
 from ...function.util import (
     checkpoint, format_crit, format_name, format_number, format_roman,
 )
-from ...object.fishing import FISHING_TABLE, SEA_CREATURES
+from ...object.fishing import FISHING_TABLE, SC_TABLE
 from ...object.item import get_item, get_stone, validify_item
 from ...object.mob import get_mob
 from ...object.object import *
@@ -78,7 +78,7 @@ def fish(self, rod_index: int, iteration: int = 1, /):
         is_sc = random_bool(sea_creature_chance / 100)
         if is_sc and fishing_lvl >= 1:
             avaliable_sc = [
-                line for line in SEA_CREATURES
+                line for line in SC_TABLE
                 if line[2] <= fishing_lvl
             ]
             total_sc_weight = sum(line[1] for line in avaliable_sc)
@@ -173,6 +173,8 @@ def gather(self, name: str, tool_index: Optional[int],
 
     if isinstance(resource, Crop):
         time_cost = 0.4
+        if self.has_item('farmer_orb'):
+            time_cost -= 0.05
 
         farming_fortune = self.get_stat('farming_fortune', tool_index)
         fortune_mult = 1 + farming_fortune / 100
@@ -221,6 +223,8 @@ def gather(self, name: str, tool_index: Optional[int],
         mining_fortune = self.get_stat('mining_fortune', tool_index)
         fortune_mult = 1 + mining_fortune / 100
         exp_mult = 1 + 0.125 * enchantments.get('experience', 0)
+        if self.has_item('experience_artifact'):
+            exp_mult *= 1.25
 
         lapis_exp_bonus = 1
 
@@ -471,9 +475,6 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
     enchanting_lvl = self.get_skill_lvl('enchanting')
 
     execute = 0.2 * enchantments.get('execute', 0)
-    experience = 1 + 0.125 * enchantments.get('experience', 0)
-    experience *= 1 + 0.04 * enchanting_lvl
-    add_exp = 0.2 * bestiary_lvl
     fire_aspect = enchantments.get('fire_aspect', 0)
     first_strike = 1 + 0.25 * enchantments.get('first_strike', 0)
     flame = enchantments.get('flame', 0)
@@ -508,6 +509,43 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
         thunderlord = 0.3 * thunderlord_lvl
     vampirism = enchantments.get('vampirism', 0)
 
+    added_exp = 0.2 * bestiary_lvl
+    added_coin = 0
+    if self.has_item('scavenger_talisman'):
+        added_coin = 20
+
+    exp_mult = 1 + 0.125 * enchantments.get('experience', 0)
+    exp_mult *= 1 + 0.04 * enchanting_lvl
+    if self.has_item('experience_artifact'):
+        exp_mult *= 1.25
+
+    damage_recieved_mult = 1
+    if name in SEA_CREATURES:
+        if self.has_item('sea_creature_artifact'):
+            damage_recieved_mult *= 0.85
+        elif self.has_item('sea_creature_ring'):
+            damage_recieved_mult *= 0.9
+        elif self.has_item('sea_creature_talisman'):
+            damage_recieved_mult *= 0.95
+    if name in ZOMBIES:
+        if self.has_item('zombie_talisman'):
+            damage_recieved_mult *= 0.95
+    if name in SKELETONS:
+        if self.has_item('skeleton_talisman'):
+            damage_recieved_mult *= 0.95
+
+    if self.has_item('intimidation_talisman') and mob.level <= 1:
+        damage_recieved_mult = 0
+
+    if set_bonus == 'pumpkin_buff':
+        damage_recieved_mult *= 0.9
+
+    healing_mult = 1
+    if self.has_item('healing_ring'):
+        healing_mult = 1.1
+    elif self.has_item('healing_talisman'):
+        healing_mult = 1.05
+
     soul_eater = enchantments.get('soul_eater', 0) * 2
     soul_eater_strength = 0
 
@@ -534,6 +572,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                   * (1 + (rejuvenate / 100)))
         if set_bonus == 'holy_blood':
             healed *= 3
+        healed *= healing_mult
         hp = min(hp + healed, health)
 
         attack_time_cost = 1 / (1 + attack_speed / 100)
@@ -633,20 +672,16 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
             if last_stand != 0 and hp / health < 0.4:
                 actual_defense *= last_stand / 100
 
-            if mob.damage != 0:
-                damage_recieved = mob.damage / (1 + defense / 100)
-                if set_bonus == 'pumpkin_buff':
-                    damage_recieved *= 0.9
+            damage_recieved = mob.damage / (1 + defense / 100)
+            damage_recieved *= damage_recieved_mult
+            if damage_recieved != 0:
                 hp = max(hp - damage_recieved, 0)
                 gray(f"You've recieved {YELLOW}"
                      f"{format_number(damage_recieved)}{GRAY} damage.")
 
-            if mob.true_damage != 0:
-                true_damage_recieved = (
-                    mob.true_damage / (1 + true_defense / 100)
-                )
-                if set_bonus == 'pumpkin_buff':
-                    true_damage_recieved *= 0.9
+            true_damage_recieved = mob.true_damage / (1 + true_defense / 100)
+            true_damage_recieved *= damage_recieved_mult
+            if true_damage_recieved != 0:
                 hp = max(hp - true_damage_recieved, 0)
                 gray(f"You've recieved {YELLOW}"
                      f"{format_number(true_damage_recieved)}{GRAY}"
@@ -689,7 +724,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
         if vampirism != 0 and hp != health:
             hp += (health - hp) * (vampirism / 100)
 
-        self.add_exp(mob.exp * random_int(experience) + random_int(add_exp))
+        self.add_exp(mob.exp * random_int(exp_mult) + random_int(added_exp))
 
         for item, loot_amount, rarity, drop_chance in mob.drops:
             drop_chance *= looting
@@ -722,7 +757,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                 white(f'{rarity_color}RARE DROP! '
                       f'{WHITE}({loot.display()}{WHITE})')
 
-        coins_recieved = (mob.coins + scavenger) * coins_mult
+        coins_recieved = (mob.coins + scavenger) * coins_mult + added_coin
         self.purse += coins_recieved
         gray(f'+ {GOLD}{format_number(coins_recieved)} Coins')
 

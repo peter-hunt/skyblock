@@ -23,6 +23,12 @@ HUB_NPCS = [
             (10, Item('string')),
             (14, Item('slime_ball')),
             (10, Item('gunpowder')),
+            (500, Item('zombie_talisman')),
+            (500, Item('skeleton_talisman')),
+            (2500, Item('village_affinity_talisman')),
+            (2500, Item('mine_affinity_talisman')),
+            (10000, Item('intimidation_talisman')),
+            (10000, Item('scavenger_talisman')),
         ]),
     Npc('alchemist',
         init_dialog=[
