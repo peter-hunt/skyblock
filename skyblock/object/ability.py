@@ -1,6 +1,7 @@
-from typing import Optional
+from typing import List, Optional
 
 from ..constant.color import *
+from ..constant.util import Number
 from ..function.io import red
 from ..function.util import get
 
@@ -26,6 +27,7 @@ class NamedAbility(Ability):
     id: str
     name: str
     description: str
+    values: List[Number] = []
 
 
 ABILITIES = [
@@ -211,9 +213,133 @@ ABILITIES = [
     ),
 
     NamedAbility(
+        id='one_with_the_dragons',
+        name='One with the Dragons',
+        description=(f"Buffs the Aspect of the Dragons sword by"
+                     f" {GREEN}%d {STAT_COLORS['strength']} Damage {GRAY}and"
+                     f" {GREEN}%d {STAT_COLORS['strength']} Strength{GRAY}."),
+        values=[50, 10],
+    ),
+    NamedAbility(
+        id='superior',
+        name='Superior',
+        description=f'Increases all stats by {GREEN}%d%%{GRAY}.',
+        values=[10],
+    ),
+    NamedAbility(
+        id='jerry_damage',
+        name='Jerry',
+        description=(f'Actually adds {RED}%d {GRAY}damage'
+                     f' to the Aspect of the Jerry.'),
+        values=[50],
+    ),
+    NamedAbility(
+        id='common_merciless_swipe',
+        name='Merciless Swipe',
+        description=(f"Gain {RED}+%d%% {STAT_COLORS['ferocity']}"
+                     f" Ferocity{GRAY}."),
+        values=[15],
+    ),
+    NamedAbility(
+        id='uncommon_merciless_swipe',
+        name='Merciless Swipe',
+        description=(f"Gain {RED}+%d%% {STAT_COLORS['ferocity']}"
+                     f" Ferocity{GRAY}."),
+        values=[33],
+    ),
+    NamedAbility(
+        id='legendary_merciless_swipe',
+        name='Merciless Swipe',
+        description=(f"Gain {RED}+%d%% {STAT_COLORS['ferocity']}"
+                     f" Ferocity{GRAY}."),
+        values=[50],
+    ),
+    NamedAbility(
         id='eternal_coins',
         name='Eternal Coins',
         description=f"Don't lose {GOLD}coins{GRAY} from death.",
+    ),
+    NamedAbility(
+        id='common_primal_force',
+        name='Primal Force',
+        description=(f"Adds +{RED}%d {STAT_COLORS['strength']} Damage {GRAY}and"
+                     f" +{RED}%d {STAT_COLORS['strength']} Strength{GRAY}"
+                     f" to your weapons."),
+        values=[3, 3],
+    ),
+    NamedAbility(
+        id='uncommon_primal_force',
+        name='Primal Force',
+        description=(f"Adds +{RED}%d {STAT_COLORS['strength']} Damage {GRAY}and"
+                     f" +{RED}%d {STAT_COLORS['strength']} Strength{GRAY}"
+                     f" to your weapons."),
+        values=[5, 5],
+    ),
+    NamedAbility(
+        id='rare_primal_force',
+        name='Primal Force',
+        description=(f"Adds +{RED}%d {STAT_COLORS['strength']} Damage {GRAY}and"
+                     f" +{RED}%d {STAT_COLORS['strength']} Strength{GRAY}"
+                     f" to your weapons."),
+        values=[10, 10],
+    ),
+    NamedAbility(
+        id='epic_primal_force',
+        name='Primal Force',
+        description=(f"Adds +{RED}%d {STAT_COLORS['strength']} Damage {GRAY}and"
+                     f" +{RED}%d {STAT_COLORS['strength']} Strength{GRAY}"
+                     f" to your weapons."),
+        values=[15, 15],
+    ),
+    NamedAbility(
+        id='legendary_primal_force',
+        name='Primal Force',
+        description=(f"Adds +{RED}%d {STAT_COLORS['strength']} Damage {GRAY}and"
+                     f" +{RED}%d {STAT_COLORS['strength']} Strength{GRAY}"
+                     f" to your weapons."),
+        values=[15, 15],
+    ),
+    NamedAbility(
+        id='rare_vine_swing',
+        name='Vine Swing',
+        description=(f"Gain +{GREEN}%d {STAT_COLORS['speed']} Speed"
+                     f" {GRAY}while in The Park."),
+        values=[75],
+    ),
+    NamedAbility(
+        id='epic_vine_swing',
+        name='Vine Swing',
+        description=(f"Gain +{GREEN}%d {STAT_COLORS['speed']} Speed"
+                     f" {GRAY}while in The Park."),
+        values=[100],
+    ),
+    NamedAbility(
+        id='evolves_axes',
+        name='Evolves Axes',
+        description=(f'Reduces the cooldown of Jungle Axe and Treecapitator'
+                     f' by {GREEN}%d%%{GRAY}.'),
+        values=[50],
+    ),
+    NamedAbility(
+        id='archimedes',
+        name='Archimedes',
+        description=(f"Gain {RED}+%d%% Max {STAT_COLORS['health']}"
+                     f"  Health{GRAY}."),
+        values=[20],
+    ),
+    NamedAbility(
+        id='rare_echolocation',
+        name='Echolocation',
+        description=(f"Increases sea creatures catch chance"
+                     f" by {GREEN}%d%%{GRAY}."),
+        values=[7],
+    ),
+    NamedAbility(
+        id='epic_echolocation',
+        name='Echolocation',
+        description=(f"Increases sea creatures catch chance"
+                     f" by {GREEN}%d%%{GRAY}."),
+        values=[10],
     ),
 ]
 

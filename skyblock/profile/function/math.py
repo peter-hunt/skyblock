@@ -252,7 +252,8 @@ def get_skill_lvl(self, name: str, /) -> int:
 def get_stat(self, name: str, index: Optional[int] = None, /):
     value = 0
 
-    pet = self.get_active_pet()
+    active_pet = self.get_active_pet()
+    has_active_pet = isinstance(active_pet, Pet)
 
     if index is None:
         item = Empty()
@@ -378,6 +379,12 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
 
         value += delta
 
+    if has_active_pet:
+        pet_mult = calc_pet_lvl(active_pet.rarity, active_pet.exp) / 100
+        value += getattr(active_pet, name, 0) * pet_mult
+    else:
+        pet_mult = 0
+
     if name == 'health':
         value += min(farming_lvl, 14) * 2
         value += max(min(farming_lvl - 14, 5), 0) * 3
@@ -387,8 +394,13 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
         value += max(min(fishing_lvl - 14, 5), 0) * 3
         value += max(min(fishing_lvl - 19, 6), 0) * 4
         value += max(min(fishing_lvl - 25, 35), 0) * 5
+
         if set_bonus == 'lapis_armor':
             value += 60
+
+        if has_active_pet:
+            if 'archimedes' in active_pet.abilities:
+                value *= 1 + 0.2 * pet_mult
     elif name == 'defense':
         value += min(mining_lvl, 14) * 1
         value += max(min(mining_lvl - 14, 46), 0) * 2
@@ -404,11 +416,24 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
         elif set_bonus == 'farm_suit_speed':
             if self.island in {'barn', 'desert'}:
                 value += 20
+
+        if has_active_pet:
+            if self.island == 'park':
+                if 'epic_vine_swing' in active_pet.abilities:
+                    value += 100 * pet_mult
+                elif 'rare_vine_swing' in active_pet.abilities:
+                    value += 75 * pet_mult
     elif name == 'crit_chance':
         value += combat_lvl * 0.5
     elif name == 'intelligence':
         value += min(enchanting_lvl, 14) * 1
         value += max(min(enchanting_lvl - 14, 46), 0) * 2
+    elif name == 'sea_creature_chance':
+        if has_active_pet:
+            if 'epic_echolocation' in active_pet.abilities:
+                value *= 1 + 0.1 * pet_mult
+            elif 'rare_echolocation' in active_pet.abilities:
+                value *= 1 + 0.07 * pet_mult
     elif name == 'pet_luck':
         value += taming_lvl
     elif name == 'mining_speed':
@@ -416,6 +441,14 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
             value += 100
         if set_bonus == 'glacite_armor':
             value += 2 * mining_lvl
+    elif name == 'ferocity':
+        if has_active_pet:
+            if 'legendary_merciless_swipe' in active_pet.abilities:
+                value *= 1 + 0.5 * pet_mult
+            elif 'uncommon_merciless_swipe' in active_pet.abilities:
+                value *= 1 + 0.33 * pet_mult
+            elif 'common_merciless_swipe' in active_pet.abilities:
+                value *= 1 + 0.15 * pet_mult
     elif name == 'mining_fortune':
         value += mining_lvl * 4
     elif name == 'foraging_fortune':
@@ -423,14 +456,14 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
     elif name == 'farming_fortune':
         value += farming_lvl * 4
 
-    if isinstance(pet, Pet):
-        lvl_mult = calc_pet_lvl(pet.rarity, pet.exp) / 100
-        value += getattr(pet, name, 0) * lvl_mult
-
     if set_bonus == 'superior_dragon_armor':
         value *= 1.05
     if set_bonus == 'fairy_armor' and name == 'speed':
         value *= 1.1
+
+    if has_active_pet:
+        if 'superior' in active_pet.abilities:
+            value *= 1 + 0.1 * pet_mult
 
     return value
 

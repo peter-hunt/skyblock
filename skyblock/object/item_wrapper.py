@@ -213,7 +213,7 @@ def item_type(cls: type, /) -> type:
                 if value == 0:
                     continue
 
-                value_str = format_number(round(value, 1), sign=True)
+                value_str = format_number(fround(value, 1), sign=True)
                 bonus_stats.append(f'{display_stat}: {GREEN}{value_str}')
 
             if len(bonus_stats) != 0:
@@ -480,11 +480,11 @@ def item_type(cls: type, /) -> type:
 
             stats = []
             for stat_name in (
-                    'health', 'defense', 'speed', 'true_defense',
-                    'intelligence', 'strength', 'crit_chance', 'crit_damage',
-                    'damage', 'magic_find', 'attack_speed', 'ferocity',
-                    'sea_creature_chance',
-                ):
+                'health', 'defense', 'speed', 'true_defense',
+                'intelligence', 'strength', 'crit_chance', 'crit_damage',
+                'damage', 'magic_find', 'attack_speed', 'ferocity',
+                'sea_creature_chance',
+            ):
                 display_stat = format_name(stat_name)
                 value = getattr(self, stat_name) * lvl_mult
 
@@ -510,7 +510,7 @@ def item_type(cls: type, /) -> type:
                 next_level = min(pet_lvl + 1, 100)
                 exp_left, exp_to_next = calc_pet_upgrade_exp(self.rarity,
                                                              self.exp)
-                perc = round(exp_left / exp_to_next * 100, 1)
+                perc = fround(exp_left / exp_to_next * 100, 1)
                 bar = min(int(exp_left / exp_to_next * 20), 20)
                 left, right = '-' * bar, '-' * (20 - bar)
                 info += (
@@ -518,7 +518,7 @@ def item_type(cls: type, /) -> type:
                     f' {YELLOW}{format_number(perc)}%\n'
                     f'{GREEN}{BOLD}{left}{GRAY}{BOLD}{right}'
                     f' {YELLOW}{format_number(floor(exp_left))}'
-                    f'/{format_short(exp_to_next)}'
+                    f'{GOLD}/{YELLOW}{format_short(exp_to_next)}'
                 )
 
         elif self.__class__.__name__ == 'TravelScroll':
@@ -531,11 +531,19 @@ def item_type(cls: type, /) -> type:
 
         ability_list = []
 
+        if self.__class__.__name__ == 'Pet':
+            stat_mult = lvl_mult
+        else:
+            stat_mult = 1
+
         for ability_id in getattr(self, 'abilities', []):
             ability = get_ability(ability_id)
             if ability.__class__.__name__ == 'NamedAbility':
+                values = tuple(floor(value * stat_mult)
+                               for value in ability.values)
+                desc = ability.description % values
                 ability_list.append(f'{GOLD}{ability.name}'
-                                    f'\n{GRAY}{ability.description}')
+                                    f'\n{GRAY}{desc}')
             elif ability.__class__.__name__ == 'AnonymousAbility':
                 ability_list.append(f'{GRAY}{ability.description}')
 
@@ -662,6 +670,7 @@ def item_type(cls: type, /) -> type:
     def get_stat(self, name: str, profile, /, *, default: int = 0) -> Number:
         value = getattr(self, name, default)
         ench = getattr(self, 'enchantments', {})
+        self_name = getattr(self, 'name', None)
 
         set_bonus = True
         for piece in profile.armor:
@@ -680,26 +689,51 @@ def item_type(cls: type, /) -> type:
                 if current_ability != set_bonus:
                     set_bonus = False
 
-        active_pet = None
-        for pet in profile.pets:
-            if pet.active:
-                active_pet = pet
-                break
+        active_pet = profile.get_active_pet()
+        has_active_pet = active_pet.__class__.__name__ == 'Pet'
+        if has_active_pet:
+            pet_lvl = calc_pet_lvl(active_pet.rarity, active_pet.exp)
+            pet_mult = 100 / pet_lvl
+        else:
+            pet_lvl = 0
+            pet_mult = 0
 
         if name == 'damage':
-            if self.name == 'aspect_of_the_jerry':
+            if self_name == 'aspect_of_the_jerry':
                 if ench.get('ultimate_jerry', 0) != 0:
-                    value *= ench.get('ultimate_jerry', 0) * 10
-            if self.name == 'aspect_of_the_end':
+                    value *= ench['ultimate_jerry'] * 10
+                if has_active_pet:
+                    if 'jerry_damage' in active_pet.abilities:
+                        value += pet_mult * 50
+
+            elif self_name == 'aspect_of_the_dragons':
+                if has_active_pet:
+                    if 'one_with_the_dragons' in active_pet.abilities:
+                        value += pet_mult * 50
+
+            elif self_name == 'aspect_of_the_end':
                 if set_bonus == 'strong_blood':
                     value += 75
+
             elif 'pure_emerald' in getattr(self, 'abilities', []):
                 value += 2.5 * sqrt(sqrt(profile.purse))
+
             if ench.get('one_for_all', 0) != 0:
                 value *= 3.1
 
-            if active_pet is not None:
+            if has_active_pet:
                 value += active_pet.damage
+
+                if 'legendary_primal_force' in active_pet.abilities:
+                    value += pet_mult * 20
+                elif 'epic_primal_force' in active_pet.abilities:
+                    value += pet_mult * 15
+                elif 'rare_primal_force' in active_pet.abilities:
+                    value += pet_mult * 10
+                elif 'uncommon_primal_force' in active_pet.abilities:
+                    value += pet_mult * 5
+                elif 'common_primal_force' in active_pet.abilities:
+                    value += pet_mult * 3
         elif name == 'health':
             value += ench.get('growth', 0) * 15
         elif name == 'defense':
@@ -709,6 +743,23 @@ def item_type(cls: type, /) -> type:
         elif name == 'intelligence':
             value += ench.get('big_brain', 0) * 5
             value += ench.get('smarty_pants', 0) * 5
+        elif name == 'strength':
+            if self_name == 'aspect_of_the_dragons':
+                if has_active_pet:
+                    if 'one_with_the_dragons' in active_pet.abilities:
+                        value += pet_mult * 30
+
+            if has_active_pet:
+                if 'legendary_primal_force' in active_pet.abilities:
+                    value += pet_mult * 20
+                elif 'epic_primal_force' in active_pet.abilities:
+                    value += pet_mult * 15
+                elif 'rare_primal_force' in active_pet.abilities:
+                    value += pet_mult * 10
+                elif 'uncommon_primal_force' in active_pet.abilities:
+                    value += pet_mult * 5
+                elif 'common_primal_force' in active_pet.abilities:
+                    value += pet_mult * 3
         elif name == 'speed':
             value += ench.get('sugar_rush', 0) * 2
         elif name == 'mining_speed':

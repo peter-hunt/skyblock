@@ -121,8 +121,7 @@ def mainloop(self):
             self.buy(chosen_trade, amount)
 
         elif words[0] == 'cheat':
-            print(self.stats)
-            # item = get_item('titanium_drill_555')
+            # item = get_item('monkey_pet', rarity='legendary')
             # self.recieve_item(item)
             ...
 

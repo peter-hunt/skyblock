@@ -13,7 +13,7 @@ from ...constant.mob import (
 )
 from ...function.io import *
 from ...function.math import (
-    calc_bestiary_lvl, random_amount, random_bool, random_int,
+    calc_bestiary_lvl, calc_pet_lvl, random_amount, random_bool, random_int,
 )
 from ...function.util import (
     checkpoint, format_crit, format_name, format_number, format_roman,
@@ -159,6 +159,13 @@ def gather(self, name: str, tool_index: Optional[int],
     tool = Empty() if tool_index is None else self.inventory[tool_index]
     iteration = 1 if iteration is None else iteration
 
+    active_pet = self.get_active_pet()
+    has_active_pet = isinstance(active_pet, Pet)
+    if has_active_pet:
+        pet_mult = calc_pet_lvl(active_pet.rarity, active_pet.exp) / 100
+    else:
+        pet_mult = 0
+
     if not isinstance(tool, (Empty, Axe, Hoe, Pickaxe, Drill)):
         tool = Empty()
 
@@ -272,12 +279,12 @@ def gather(self, name: str, tool_index: Optional[int],
             time_cost = 0.5
             break_amount = 1
             is_wood = False
-        elif getattr(tool, 'name', None) == 'jungle_axe':
+        elif getattr(tool, 'name', None) in {'jungle_axe', 'treecapitator'}:
             time_cost = 2
-            break_amount = 10
-        elif getattr(tool, 'name', None) == 'treecapitator':
-            time_cost = 2
-            break_amount = 35
+            if has_active_pet:
+                if 'evolves_axes' in active_pet.abilities:
+                    time_cost *= 1 - 0.5 * pet_mult
+            break_amount = 10 if tool.name[0] == 'j' else 35
         else:
             if isinstance(tool, Axe):
                 tool_speed = tool.tool_speed

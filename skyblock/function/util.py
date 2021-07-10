@@ -144,6 +144,12 @@ def format_number(number: Union[int, float], /, *, sign: bool = False) -> str:
         else:
             return '∞' if number > 0 else '-∞'
 
+    if sign:
+        sign_str = '+' if number >= 0 else '-'
+    else:
+        sign_str = '' if number >= 0 else '-'
+    number = abs(number)
+
     if number % 1 == 0:
         string = f'{number:.0f}'
         string = ','.join(part[::-1] for part in wrap(string[::-1], 3)[::-1])
@@ -153,10 +159,7 @@ def format_number(number: Union[int, float], /, *, sign: bool = False) -> str:
         integer = ','.join(part[::-1] for part in wrap(integer[::-1], 3)[::-1])
         string = f'{integer}.{floating}'
 
-    if sign and number > 0:
-        string = '+' + string
-
-    return string
+    return f'{sign_str}{string}'
 
 
 def format_roman(number: int, /) -> str:
