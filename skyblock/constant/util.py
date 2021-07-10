@@ -75,6 +75,8 @@ SPECIAL_ZONES = {
 
 # names with special translation from id to displayed name
 SPECIAL_NAMES = {
+    'oringo': 'Oringo the Traveling Zookeeper',
+
     'attack_speed': 'Bonus Attack Speed',
 
     'counter_strike': 'Counter-Strike',

@@ -91,8 +91,8 @@ VILLAGE = Zone(
     'village', -3, -85, fishable=True,
     npcs=[get_npc('andrew'), get_npc('armorsmith'), get_npc('duke'),
           get_npc('fish_merchant'), get_npc('jack'), get_npc('jamie'),
-          get_npc('liam'), get_npc('mine_merchant'), get_npc('ryu'),
-          get_npc('weaponsmith')],
+          get_npc('liam'), get_npc('mine_merchant'), get_npc('oringo'),
+          get_npc('ryu'), get_npc('weaponsmith')],
 )
 WILDERNESS = Zone('wilderness', 75, -11, fishable=True)
 WIZARD_TOWER = Zone('wizard_tower', 40, 70)

@@ -479,10 +479,12 @@ def item_type(cls: type, /) -> type:
             lvl_mult = pet_lvl / 100
 
             stats = []
-            for stat_name in ('health', 'defense', 'speed', 'true_defense',
-                              'intelligence', 'strength', 'crit_chance',
-                              'crit_damage', 'magic_find', 'attack_speed',
-                              'ferocity'):
+            for stat_name in (
+                    'health', 'defense', 'speed', 'true_defense',
+                    'intelligence', 'strength', 'crit_chance', 'crit_damage',
+                    'damage', 'magic_find', 'attack_speed', 'ferocity',
+                    'sea_creature_chance',
+                ):
                 display_stat = format_name(stat_name)
                 value = getattr(self, stat_name) * lvl_mult
 
@@ -678,6 +680,12 @@ def item_type(cls: type, /) -> type:
                 if current_ability != set_bonus:
                     set_bonus = False
 
+        active_pet = None
+        for pet in profile.pets:
+            if pet.active:
+                active_pet = pet
+                break
+
         if name == 'damage':
             if self.name == 'aspect_of_the_jerry':
                 if ench.get('ultimate_jerry', 0) != 0:
@@ -689,6 +697,9 @@ def item_type(cls: type, /) -> type:
                 value += 2.5 * sqrt(sqrt(profile.purse))
             if ench.get('one_for_all', 0) != 0:
                 value *= 3.1
+
+            if active_pet is not None:
+                value += active_pet.damage
         elif name == 'health':
             value += ench.get('growth', 0) * 15
         elif name == 'defense':

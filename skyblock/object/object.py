@@ -246,9 +246,11 @@ class Pet(ItemType):
     strength: int = 0
     crit_chance: int = 0
     crit_damage: int = 0
+    damage: int = 0
     magic_find: int = 0
     attack_speed: int = 0
     ferocity: int = 0
+    sea_creature_chance: int = 0
 
     abilities: List = []
 
