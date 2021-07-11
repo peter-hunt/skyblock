@@ -169,7 +169,7 @@ def mainloop(self):
                 self.display_collection(category)
             elif is_collection(category):
                 if self.collection[category] == 0:
-                    yellow(f'Locked collection: {category}')
+                    red("You haven't unlocked this collection yet!")
                     continue
                 self.display_collection_info(category)
             else:

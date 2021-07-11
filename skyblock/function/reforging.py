@@ -1,6 +1,6 @@
 from typing import Dict, Optional
 
-from ..constant.enchanting import ENCH_LVLS
+from ..constant.enchanting import *
 from ..constant.reforging import STAT_ALIASES, MODIFIERS
 from ..constant.util import Ench
 

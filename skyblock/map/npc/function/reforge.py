@@ -57,6 +57,7 @@ def reforge(player, /):
         avaliable_modifiers = {*modifiers} - {item.modifier}
         item.modifier = choice([*avaliable_modifiers])
         player.inventory[index] = item
+        player.purse -= cost
         current_display = item.display()
 
         green(f'You reforged your {original_display}{GREEN} into a'

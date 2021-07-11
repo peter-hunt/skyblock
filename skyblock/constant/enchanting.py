@@ -308,7 +308,6 @@ AXE_ENCHS = [
 # list of hoe enchantments (used by enchanting table)
 HOE_ENCHS = [
     # 'cultivating',
-    'experience',
     'harvesting',
 ]
 

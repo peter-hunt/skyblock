@@ -32,7 +32,7 @@ HUB_NPCS = [
         ]),
     Npc('alchemist',
         init_dialog=[
-            'There is a darkness in you, adventurer',
+            'There is a darkness in you, adventurer.',
             "I've seen it in my flames, you are destined for great things.",
             "For now, you shouldn't let it get to your head.",
             'Talk to me again to open the Alchemist Shop!',

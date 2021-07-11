@@ -3,11 +3,9 @@ from time import sleep, time
 from typing import Optional, Tuple
 
 from ...constant.color import *
-from ...constant.enchanting import (
-    ENCHS, CONFLICTS, ENCH_REQUIREMENTS, SWORD_ENCHS, BOW_ENCHS,
-    ARMOR_ENCHS, AXE_ENCHS, HOE_ENCHS, PICKAXE_ENCHS, FISHING_ROD_ENCHS,
-)
+from ...constant.enchanting import *
 from ...constant.main import INTEREST_TABLE, SELL_PRICE
+from ...function.enchanting import get_enchantments
 from ...function.io import *
 from ...function.math import calc_exp_lvl, calc_exp, random_amount
 from ...function.reforging import combine_ench
@@ -126,7 +124,12 @@ def combine(self, index_1: int, index_2: int, /):
                             Armor, Bow, Sword, FishingRod))
             and isinstance(item_2, EnchantedBook)):
         result_ench = combine_ench(item_1.enchantments, item_2.enchantments)
-        item_1.enchantments = result_ench
+        ench_table = get_enchantments(item_1)
+        item_1.enchantments = {
+            name: value
+            for name, value in result_ench.items()
+            if name in ench_table
+        }
         self.inventory[index_1] = Empty()
         self.inventory[index_2] = Empty()
         self.recieve_item(item_1)
@@ -169,13 +172,11 @@ def combine(self, index_1: int, index_2: int, /):
         return
 
     if (item_1.name in {'hot_potato_book', 'fuming_potato_book'} and
-            isinstance(item_2, (Axe, Drill, Pickaxe, Hoe,
-                                Armor, Bow, Sword, FishingRod))):
+            isinstance(item_2, (Armor, Bow, Sword, FishingRod))):
         index_1, index_2 = index_2, index_1
         item_1, item_2 = item_2, item_1
 
-    if (isinstance(item_1, (Axe, Drill, Pickaxe, Hoe,
-                            Armor, Bow, Sword, FishingRod))
+    if (isinstance(item_1, (Armor, Bow, Sword, FishingRod))
             and item_2.name == 'hot_potato_book'):
         if 10 <= item_1.hot_potato < 15:
             red('Error!')
@@ -193,8 +194,7 @@ def combine(self, index_1: int, index_2: int, /):
             self.recieve_item(item_1)
         return
 
-    if (isinstance(item_1, (Axe, Drill, Pickaxe, Hoe,
-                            Armor, Bow, Sword, FishingRod))
+    if (isinstance(item_1, (Armor, Bow, Sword, FishingRod))
             and item_2.name == 'fuming_potato_book'):
         if item_1.hot_potato >= 15:
             red('Error!')
@@ -251,7 +251,7 @@ def consume(self, index: int, amount: int = 1, /):
         item_copy.count = amount
 
         gray(f'You consumed {item_copy.display()}{GRAY}!')
-        self.add_exp(exp_amount)
+        self.add_exp(exp_amount * amount)
 
         self.inventory[index].count -= amount
         if self.inventory[index].count == 0:
@@ -394,21 +394,9 @@ def enchant(self, item_index: int, /):
         red('Cannot Enchant more than one item at once!')
         return
 
-    if isinstance(item, Sword):
-        table = SWORD_ENCHS
-    elif isinstance(item, Bow):
-        table = BOW_ENCHS
-    elif isinstance(item, Armor):
-        table = ARMOR_ENCHS
-    elif isinstance(item, Axe):
-        table = AXE_ENCHS
-    elif isinstance(item, Hoe):
-        table = HOE_ENCHS
-    elif isinstance(item, (Pickaxe, Drill)):
-        table = PICKAXE_ENCHS
-    elif isinstance(item, FishingRod):
-        table = FISHING_ROD_ENCHS
-    else:
+    ench_table = get_enchantments(item)
+
+    if len(ench_table) == 0:
         red('Cannot Enchant Item!')
         gray('This item cannot be enchanted!')
         return
@@ -418,7 +406,7 @@ def enchant(self, item_index: int, /):
     all_ench = [row[0] for row in ENCHS]
 
     gray('Avaliable enchantments and xp level needed:')
-    for name in table:
+    for name in ench_table:
         if name not in all_ench:
             continue
 

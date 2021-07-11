@@ -2,6 +2,8 @@
 Functions commonly used throughout the menu and profile.
 """
 
+from .enchanting import *
+from .enchanting import __all__ as __enchanting__
 from .io import *
 from .io import __all__ as __io__
 from .math import *
@@ -14,4 +16,6 @@ from .util import *
 from .util import __all__ as __util__
 
 
-__all__ = __io__ + __math__ + ___path__ + __reforging__ + __util__
+__all__ = (
+    __enchanting__ + __io__ + __math__ + ___path__ + __reforging__ + __util__
+)
