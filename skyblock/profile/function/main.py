@@ -6,7 +6,7 @@ from ...constant.color import *
 from ...constant.doc import profile_doc
 from ...constant.main import ARMOR_PARTS
 from ...function.io import *
-from ...function.math import calc_exp_lvl, calc_exp, calc_pet_exp
+from ...function.math import calc_exp_level, calc_exp, calc_pet_exp
 from ...function.util import (
     checkpoint, clear, format_number, format_roman, format_short,
     generate_help, get, includes, is_valid_usage, parse_int
@@ -289,11 +289,11 @@ def mainloop(self):
                 continue
 
             combat_req = armor_piece.combat_skill_req
-            combat_lvl = self.get_skill_lvl('combat')
+            combat_level = self.get_skill_level('combat')
 
             if armor_piece.combat_skill_req is None:
                 pass
-            elif combat_req > combat_lvl:
+            elif combat_req > combat_level:
                 red(f'Requires Combat level {format_roman(combat_req)}')
                 continue
 
@@ -309,7 +309,7 @@ def mainloop(self):
             break
 
         elif words[0] == 'exp':
-            lvl = calc_exp_lvl(self.experience)
+            lvl = calc_exp_level(self.experience)
             left = self.experience - calc_exp(lvl)
             if lvl <= 15:
                 gap = 2 * lvl + 7

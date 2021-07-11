@@ -9,7 +9,7 @@ from ...constant.stat import ALL_STAT, HIDDEN_STATS, PERC_STATS
 from ...constant.util import Number
 from ...function.io import *
 from ...function.math import (
-    calc_bestiary_lvl, calc_bestiary_upgrade_amount, calc_skill_lvl_info,
+    calc_bestiary_level, calc_bestiary_upgrade_amount, calc_skill_level_info,
     display_skill_reward, fround,
 )
 from ...function.util import (
@@ -55,7 +55,7 @@ def display_bestiary(self, name: str, /):
 
     kills = self.stats.get(f'kills_{family}', 0)
     deaths = self.stats.get(f'deaths_{name}', 0)
-    lvl = self.get_bestiary_lvl(family)
+    lvl = self.get_bestiary_level(family)
 
     if kills == 0:
         red("You haven't unlocked this bestiary family yet!")
@@ -130,13 +130,13 @@ def display_bestiaries(self, /):
             continue
         displayed_families.append(family)
 
-        bestiary_lvl = self.get_bestiary_amount(family)
+        bestiary_level = self.get_bestiary_amount(family)
         kills = self.stats.get(f'kills_{family}', 0)
         if kills == 0:
             gray('  unknown')
             continue
-        bestiary_lvl = self.get_bestiary_lvl(mob.name)
-        aqua(f'  {format_name(mob.name)} {format_roman(bestiary_lvl)}')
+        bestiary_level = self.get_bestiary_level(mob.name)
+        aqua(f'  {format_name(mob.name)} {format_roman(bestiary_level)}')
 
     yellow(f"{BOLD}{'':-^{width}}")
 
@@ -147,15 +147,15 @@ def display_collection_info(self, name: str, /):
     yellow(f"{BOLD}{'':-^{width}}")
 
     coll = get_collection(name)
-    lvl = self.get_collection_lvl(name)
+    lvl = self.get_collection_level(name)
     lvl_str = f' {format_roman(lvl)}' if lvl != 0 else ''
     display = format_name(name)
 
     current = self.get_collection_amount(name)
 
     yellow(f'{display}{lvl_str} {DARK_GRAY}({format_short(current)})')
-    last_lvl = 0
-    next_lvl = None
+    last_level = 0
+    next_level = None
     rewards = None
     past_amount = 0
 
@@ -165,11 +165,11 @@ def display_collection_info(self, name: str, /):
         if not hasattr(rwds, '__iter__'):
             rwds = [rwds]
 
-        if amount > current and next_lvl is None:
-            next_lvl = amount - last_lvl
+        if amount > current and next_level is None:
+            next_level = amount - last_level
             rewards = [reward for reward in rwds]
-            past_amount = last_lvl
-        last_lvl = amount
+            past_amount = last_level
+        last_level = amount
 
         gray(f'\n{display} {format_roman(index + 1)} Reward:'
              f' {DARK_GRAY}({format_short(amount)})')
@@ -183,17 +183,17 @@ def display_collection_info(self, name: str, /):
                 print(f'  {color}{format_name(item.name)} {GRAY}Recipe'
                       f' {DARK_GRAY}({reward.name})')
 
-    this_lvl = current - past_amount
-    if next_lvl is None:
-        next_lvl = 0
+    this_level = current - past_amount
+    if next_level is None:
+        next_level = 0
 
-    progress = min(this_lvl / next_lvl, 1)
+    progress = min(this_level / next_level, 1)
     bar = floor(progress * 20)
     left, right = '-' * bar, '-' * (20 - bar)
     if rewards is not None:
         gray(f'\nProgress: {YELLOW}{floor(progress * 100)}{GOLD}%')
-    green(f'{BOLD}{left}{GRAY}{BOLD}{right} {YELLOW}{format_number(this_lvl)}'
-          f'{GOLD}/{YELLOW}{format_short(next_lvl)}\n')
+    green(f'{BOLD}{left}{GRAY}{BOLD}{right} {YELLOW}{format_number(this_level)}'
+          f'{GOLD}/{YELLOW}{format_short(next_level)}\n')
     if rewards is not None:
         gray(f'{display} {format_roman(lvl + 1)} Reward:')
         for reward in rewards:
@@ -224,7 +224,7 @@ def display_collection(self, category: str, /, *, end=True):
                 gray('  unknown')
                 continue
             name = format_name(coll.name)
-            lvl = self.get_collection_lvl(coll.name)
+            lvl = self.get_collection_level(coll.name)
             lvl_str = f' {format_roman(lvl)}' if lvl != 0 else ''
             yellow(f'  {name}{lvl_str}')
 
@@ -398,12 +398,12 @@ def display_recipe_info(self, index: int, /):
     requirements = []
 
     if recipe.collection_req is not None:
-        coll_name, get_collection_lvl = recipe.collection_req
-        lvl = self.get_collection_lvl(coll_name)
-        if lvl < get_collection_lvl:
+        coll_name, get_collection_level = recipe.collection_req
+        lvl = self.get_collection_level(coll_name)
+        if lvl < get_collection_level:
             requirements.append(
                 f'{DARK_RED}❣ {RED}Requires {GREEN}'
-                f'{format_name(coll_name)} Collection {format_roman(get_collection_lvl)}'
+                f'{format_name(coll_name)} Collection {format_roman(get_collection_level)}'
             )
 
     if len(requirements) != 0:
@@ -428,9 +428,9 @@ def display_recipe(self, category: Optional[str], /, *,
         recipes = []
         for recipe in recipes_copy:
             if recipe.collection_req is not None:
-                coll_name, get_collection_lvl = recipe.collection_req
-                lvl = self.get_collection_lvl(coll_name)
-                if lvl < get_collection_lvl:
+                coll_name, get_collection_level = recipe.collection_req
+                lvl = self.get_collection_level(coll_name)
+                if lvl < get_collection_level:
                     continue
 
             for item, count in recipe.ingredients:
@@ -513,7 +513,7 @@ def display_skill_add(self, name: str, amount: Number, /):
     name_display = format_name(name)
 
     exp = self.get_skill_exp(name)
-    _, exp_left, exp_to_next = calc_skill_lvl_info(name, exp)
+    _, exp_left, exp_to_next = calc_skill_level_info(name, exp)
 
     dark_aqua(f'+ {format_number(amount)} {name_display}'
               f' ({format_number(exp_left)}/{format_number(exp_to_next)})')
@@ -527,7 +527,7 @@ def display_skill(self, name: str, /, *,
     yellow(f"{BOLD}{'':-^{width}}")
 
     exp = self.get_skill_exp(name)
-    lvl, exp_left, exp_to_next = calc_skill_lvl_info(name, exp)
+    lvl, exp_left, exp_to_next = calc_skill_level_info(name, exp)
     green(f'{format_name(name)} {format_roman(lvl)}')
 
     if exp_left < exp_to_next:

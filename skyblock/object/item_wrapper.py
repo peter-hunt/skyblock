@@ -6,7 +6,7 @@ from ..constant.color import *
 from ..constant.enchanting import ENCH_LVLS, ULTIMATE_ENCHS
 from ..constant.util import Number
 from ..function.math import (
-    calc_pet_lvl, calc_pet_upgrade_exp, dung_stat, fround,
+    calc_pet_level, calc_pet_upgrade_exp, dung_stat, fround,
 )
 from ..function.reforging import get_modifier
 from ..function.util import (
@@ -47,9 +47,9 @@ def item_type(cls: type, /) -> type:
             if key in default and default[key] == getattr(self, key, None):
                 continue
             if key == 'enchantments':
-                ench = getattr(self, key)
-                result[key] = {ench_name: ench[ench_name]
-                               for ench_name in sorted(ench)}
+                enchants = getattr(self, key)
+                result[key] = {enchant_name: enchants[enchant_name]
+                               for enchant_name in sorted(enchants)}
             else:
                 result[key] = getattr(self, key)
 
@@ -121,7 +121,7 @@ def item_type(cls: type, /) -> type:
                      + GOLD + (10 - self.stars) * '✪')
 
         if self.__class__.__name__ == 'Pet':
-            lvl = calc_pet_lvl(self.rarity, self.exp)
+            lvl = calc_pet_level(self.rarity, self.exp)
             return (f'{GRAY}[Lvl {lvl}] {color}{name}')
         else:
             return f'{color}{name}{stars}{DARK_GRAY}{count}{CLN}'
@@ -129,10 +129,10 @@ def item_type(cls: type, /) -> type:
     cls.display = display
 
     def info(self, profile, /):
-        mining_lvl = profile.get_skill_lvl('mining')
-        combat_lvl = profile.get_skill_lvl('combat')
-        fishing_lvl = profile.get_skill_lvl('fishing')
-        cata_lvl = profile.get_skill_lvl('catacombs')
+        mining_level = profile.get_skill_level('mining')
+        combat_level = profile.get_skill_level('combat')
+        fishing_level = profile.get_skill_level('fishing')
+        catacombs_level = profile.get_skill_level('catacombs')
         rarity_color = RARITY_COLORS[self.rarity]
 
         modifier = ''
@@ -159,7 +159,7 @@ def item_type(cls: type, /) -> type:
                      + GOLD + (10 - self.stars) * '✪')
 
         if self.__class__.__name__ == 'Pet':
-            lvl = calc_pet_lvl(self.rarity, self.exp)
+            lvl = calc_pet_level(self.rarity, self.exp)
             info = f'{GRAY}[Lvl {lvl}] {rarity_color}{name}'
         else:
             info = f'{rarity_color}{modifier}{name}{stars}'
@@ -184,7 +184,7 @@ def item_type(cls: type, /) -> type:
                 value = fround(modifier_bonus[stat_name], 1)
                 value_str = format_number(value, sign=True)
                 bonus = (f' {BLUE}({format_name(self.modifier)}'
-                          f' {value_str}{ext})')
+                         f' {value_str}{ext})')
 
                 if value == 0:
                     continue
@@ -243,7 +243,7 @@ def item_type(cls: type, /) -> type:
                               f' {bonus_str}{ext})')
 
                 if is_dungeon:
-                    dung_value = dung_stat(value, cata_lvl, self.stars)
+                    dung_value = dung_stat(value, catacombs_level, self.stars)
                     if value != dung_value:
                         dung_str = format_number(fround(dung_value, 1),
                                                  sign=True)
@@ -283,7 +283,7 @@ def item_type(cls: type, /) -> type:
                               f' {bonus_str})')
 
                 if is_dungeon:
-                    dung_value = dung_stat(value, cata_lvl, self.stars)
+                    dung_value = dung_stat(value, catacombs_level, self.stars)
                     if value != dung_value:
                         dung_str = format_number(fround(dung_value, 1),
                                                  sign=True)
@@ -328,7 +328,7 @@ def item_type(cls: type, /) -> type:
                               f' {bonus_str}{ext})')
 
                 if is_dungeon:
-                    dung_value = dung_stat(value, cata_lvl, self.stars)
+                    dung_value = dung_stat(value, catacombs_level, self.stars)
                     if stat_name == 'crit_chance':
                         dung_value = min(dung_value, 100)
                     if value != dung_value:
@@ -361,7 +361,7 @@ def item_type(cls: type, /) -> type:
                               f' {bonus_str})')
 
                 if is_dungeon:
-                    dung_value = dung_stat(value, cata_lvl, self.stars)
+                    dung_value = dung_stat(value, catacombs_level, self.stars)
                     if value != dung_value:
                         dung_str = format_number(fround(dung_value, 1),
                                                  sign=True)
@@ -442,7 +442,7 @@ def item_type(cls: type, /) -> type:
                               f' {bonus_str}{ext})')
 
                 if is_dungeon:
-                    dung_value = dung_stat(value, cata_lvl, self.stars)
+                    dung_value = dung_stat(value, catacombs_level, self.stars)
                     if value != dung_value:
                         dung_str = format_number(fround(dung_value, 1),
                                                  sign=True)
@@ -471,7 +471,7 @@ def item_type(cls: type, /) -> type:
                               f' {bonus_str})')
 
                 if is_dungeon:
-                    dung_value = dung_stat(value, cata_lvl, self.stars)
+                    dung_value = dung_stat(value, catacombs_level, self.stars)
                     if value != dung_value:
                         dung_str = format_number(fround(dung_value, 1),
                                                  sign=True)
@@ -526,7 +526,7 @@ def item_type(cls: type, /) -> type:
             )
 
             if getattr(self, 'mining_skill_req', None) is not None:
-                if mining_lvl < self.mining_skill_req:
+                if mining_level < self.mining_skill_req:
                     info += (f'\n\n{GRAY}Requires {GREEN}Mining Skill Level\n'
                              f'{self.mining_skill_req}{GRAY}!{CLN}')
 
@@ -534,8 +534,8 @@ def item_type(cls: type, /) -> type:
             category = format_name(self.category)
             info += f'\n{DARK_GRAY}{category} Pet'
 
-            pet_lvl = calc_pet_lvl(self.rarity, self.exp)
-            lvl_mult = pet_lvl / 100
+            pet_level = calc_pet_level(self.rarity, self.exp)
+            lvl_mult = pet_level / 100
 
             stats = []
             for stat_name in (
@@ -563,10 +563,10 @@ def item_type(cls: type, /) -> type:
             stats_str = '\n'.join(f'{GRAY}{stat}' for stat in stats)
             info += f'\n\n{stats_str}{CLN}'
 
-            if pet_lvl == 100:
+            if pet_level == 100:
                 info += f'\n\n{AQUA}MAX LEVEL'
             else:
-                next_level = min(pet_lvl + 1, 100)
+                next_level = min(pet_level + 1, 100)
                 exp_left, exp_to_next = calc_pet_upgrade_exp(self.rarity,
                                                              self.exp)
                 perc = fround(exp_left / exp_to_next * 100, 1)
@@ -618,80 +618,80 @@ def item_type(cls: type, /) -> type:
                 info += '\n'
             info += '\n' + '\n\n'.join(ability_list)
 
-        ench_list = []
+        enchant_list = []
 
         if getattr(self, 'enchantments', {}) != {}:
-            enchs = self.enchantments
-            ench_names = [*enchs.keys()]
+            enchants = self.enchantments
+            enchant_names = [*enchants.keys()]
             ult_ench = []
 
-            for name in ench_names:
+            for name in enchant_names:
                 if name in ULTIMATE_ENCHS:
                     ult_ench = [name]
-                    ench_names.remove(name)
+                    enchant_names.remove(name)
                     break
 
-            ench_names = ult_ench + sorted(ench_names)
+            enchant_names = ult_ench + sorted(enchant_names)
 
-            while len(ench_names) != 0:
-                if len(ench_names) == 1:
-                    name = ench_names[0]
-                    lvl = enchs[name]
+            while len(enchant_names) != 0:
+                if len(enchant_names) == 1:
+                    name = enchant_names[0]
+                    lvl = enchants[name]
                     if name in ULTIMATE_ENCHS:
-                        ench_color = f'{LIGHT_PURPLE}{BOLD}'
+                        enchant_color = f'{LIGHT_PURPLE}{BOLD}'
                     elif name in ENCH_LVLS and ENCH_LVLS[name] < lvl:
-                        ench_color = GOLD
+                        enchant_color = GOLD
                     else:
-                        ench_color = BLUE
+                        enchant_color = BLUE
                     lvl_str = '' if lvl == 0 else f' {format_roman(lvl)}'
-                    ench_list.append(
-                        f'{ench_color}{format_name(name)}{lvl_str}{CLN}'
+                    enchant_list.append(
+                        f'{enchant_color}{format_name(name)}{lvl_str}{CLN}'
                     )
                     break
 
-                name = ench_names[0]
-                lvl = enchs[name]
+                name = enchant_names[0]
+                lvl = enchants[name]
                 if name in ULTIMATE_ENCHS:
-                    ench_color = f'{LIGHT_PURPLE}{BOLD}'
+                    enchant_color = f'{LIGHT_PURPLE}{BOLD}'
                 elif name in ENCH_LVLS and ENCH_LVLS[name] < lvl:
-                    ench_color = GOLD
+                    enchant_color = GOLD
                 else:
-                    ench_color = BLUE
+                    enchant_color = BLUE
                 lvl_str = '' if lvl == 0 else f' {format_roman(lvl)}'
-                ench_str = f'{ench_color}{format_name(name)}{lvl_str}'
+                enchant_str = f'{enchant_color}{format_name(name)}{lvl_str}'
 
                 for i in range(1, 3):
-                    if len(ench_names) <= i:
+                    if len(enchant_names) <= i:
                         break
-                    name = ench_names[i]
-                    lvl = enchs[name]
+                    name = enchant_names[i]
+                    lvl = enchants[name]
                     if name in ENCH_LVLS and ENCH_LVLS[name] < lvl:
-                        ench_color = GOLD
+                        enchant_color = GOLD
                     else:
-                        ench_color = BLUE
+                        enchant_color = BLUE
                     lvl_str = '' if lvl == 0 else f' {format_roman(lvl)}'
-                    ench_str += (f'{BLUE}, {ench_color}'
-                                 f'{format_name(name)}{lvl_str}')
+                    enchant_str += (f'{BLUE}, {enchant_color}'
+                                    f'{format_name(name)}{lvl_str}')
 
-                ench_list.append(ench_str)
+                enchant_list.append(enchant_str)
 
-                ench_names = ench_names[3:]
+                enchant_names = enchant_names[3:]
 
             if not self.__class__.__name__ in {'EnchantedBook'}:
                 info += '\n'
-            info += '\n' + '\n'.join(ench_list)
+            info += '\n' + '\n'.join(enchant_list)
 
         footers = []
         if hasattr(self, 'modifier') and self.modifier is None:
             footers.append(f'{DARK_GRAY}This item can be reforged!{CLN}')
 
         if getattr(self, 'combat_skill_req', None) is not None:
-            if combat_lvl < self.combat_skill_req:
+            if combat_level < self.combat_skill_req:
                 footers.append(f'{DARK_RED}❣ {RED}Requires {GREEN}'
                                f'Combat Skill'
                                f' {self.combat_skill_req}{CLN}')
         if getattr(self, 'dungeon_skill_req', None) is not None:
-            if cata_lvl < self.dungeon_skill_req:
+            if catacombs_level < self.dungeon_skill_req:
                 footers.append(f'{DARK_RED}❣ {RED}Requires {GREEN}'
                                f'Catacombs Skill'
                                f' {self.dungeon_skill_req}{CLN}')
@@ -701,7 +701,7 @@ def item_type(cls: type, /) -> type:
                            f' {format_roman(self.dungeon_completion_req)}'
                            f' Completion{CLN}')
         if getattr(self, 'fishing_skill_req', None) is not None:
-            if fishing_lvl < self.fishing_skill_req:
+            if fishing_level < self.fishing_skill_req:
                 footers.append(f'{DARK_RED}❣ {RED}Requires {GREEN}'
                                f'Fishing Skill {self.fishing_skill_req}{CLN}')
 
@@ -733,7 +733,7 @@ def item_type(cls: type, /) -> type:
 
     def get_stat(self, name: str, profile, /, *, default: int = 0) -> Number:
         value = getattr(self, name, default)
-        ench = getattr(self, 'enchantments', {})
+        enchants = getattr(self, 'enchantments', {})
         self_name = getattr(self, 'name', None)
 
         set_bonus = True
@@ -756,16 +756,16 @@ def item_type(cls: type, /) -> type:
         active_pet = profile.get_active_pet()
         has_active_pet = active_pet.__class__.__name__ == 'Pet'
         if has_active_pet:
-            pet_lvl = calc_pet_lvl(active_pet.rarity, active_pet.exp)
-            pet_mult = 100 / pet_lvl
+            pet_level = calc_pet_level(active_pet.rarity, active_pet.exp)
+            pet_mult = 100 / pet_level
         else:
-            pet_lvl = 0
+            pet_level = 0
             pet_mult = 0
 
         if name == 'damage':
             if self_name == 'aspect_of_the_jerry':
-                if ench.get('ultimate_jerry', 0) != 0:
-                    value *= ench['ultimate_jerry'] * 10
+                if enchants.get('ultimate_jerry', 0) != 0:
+                    value *= enchants['ultimate_jerry'] * 10
                 if has_active_pet:
                     if 'jerry_damage' in active_pet.abilities:
                         value += pet_mult * 50
@@ -782,7 +782,7 @@ def item_type(cls: type, /) -> type:
             elif 'pure_emerald' in getattr(self, 'abilities', []):
                 value += 2.5 * sqrt(sqrt(profile.purse))
 
-            if ench.get('one_for_all', 0) != 0:
+            if enchants.get('one_for_all', 0) != 0:
                 value *= 3.1
 
             if has_active_pet:
@@ -799,14 +799,14 @@ def item_type(cls: type, /) -> type:
                 elif 'common_primal_force' in active_pet.abilities:
                     value += pet_mult * 3
         elif name == 'health':
-            value += ench.get('growth', 0) * 15
+            value += enchants.get('growth', 0) * 15
         elif name == 'defense':
-            value += ench.get('protection', 0) * 3
+            value += enchants.get('protection', 0) * 3
         elif name == 'true_defense':
-            value += ench.get('true_protection', 0) * 3
+            value += enchants.get('true_protection', 0) * 3
         elif name == 'intelligence':
-            value += ench.get('big_brain', 0) * 5
-            value += ench.get('smarty_pants', 0) * 5
+            value += enchants.get('big_brain', 0) * 5
+            value += enchants.get('smarty_pants', 0) * 5
         elif name == 'strength':
             if self_name == 'aspect_of_the_dragons':
                 if has_active_pet:
@@ -825,14 +825,14 @@ def item_type(cls: type, /) -> type:
                 elif 'common_primal_force' in active_pet.abilities:
                     value += pet_mult * 3
         elif name == 'speed':
-            value += ench.get('sugar_rush', 0) * 2
+            value += enchants.get('sugar_rush', 0) * 2
         elif name == 'mining_speed':
-            if ench.get('efficiency', 0) != 0:
-                value += 10 + 20 * ench['efficiency']
+            if enchants.get('efficiency', 0) != 0:
+                value += 10 + 20 * enchants['efficiency']
         elif name == 'sea_creature_chance':
-            value += ench.get('angler', 0)
+            value += enchants.get('angler', 0)
         elif name == 'ferocity':
-            value += ench.get('vicious', 0)
+            value += enchants.get('vicious', 0)
 
         if self.__class__.__name__ == 'Armor':
             if name == 'health':

@@ -14,14 +14,14 @@ from .util import format_number, format_roman
 
 
 __all__ = [
-    'calc_bestiary_lvl', 'calc_bestiary_upgrade_amount', 'calc_exp_lvl',
-    'calc_exp', 'calc_pet_exp', 'calc_pet_lvl', 'calc_pet_upgrade_exp',
-    'calc_skill_lvl', 'calc_skill_lvl_info', 'display_skill_reward',
+    'calc_bestiary_level', 'calc_bestiary_upgrade_amount', 'calc_exp_level',
+    'calc_exp', 'calc_pet_exp', 'calc_pet_level', 'calc_pet_upgrade_exp',
+    'calc_skill_level', 'calc_skill_level_info', 'display_skill_reward',
     'dung_stat', 'fround', 'random_amount', 'random_bool', 'random_int',
 ]
 
 
-def calc_bestiary_lvl(amount: int, /) -> int:
+def calc_bestiary_level(amount: int, /) -> int:
     """
     Calculate bestiary level from kill amonut.
 
@@ -57,7 +57,7 @@ def calc_bestiary_upgrade_amount(amount: int, /) -> Tuple[int, int]:
     return amount % 100000, 100000
 
 
-def calc_exp_lvl(exp: Number, /) -> int:
+def calc_exp_level(exp: Number, /) -> int:
     """
     Calculate vanilla xp level from xp.
 
@@ -126,7 +126,7 @@ def calc_pet_exp(rarity: str, level: Number, /) -> int:
     return exp
 
 
-def calc_pet_lvl(rarity: str, exp: Number, /) -> int:
+def calc_pet_level(rarity: str, exp: Number, /) -> int:
     """
     Calculate pet xp level.
 
@@ -171,7 +171,7 @@ def calc_pet_upgrade_exp(rarity: str, exp: Number, /) -> Tuple[int, int]:
     return exp + diff, diff
 
 
-def calc_skill_lvl(name: str, exp: Number, /) -> int:
+def calc_skill_level(name: str, exp: Number, /) -> int:
     """
     Calculate skill level from xp.
 
@@ -192,7 +192,7 @@ def calc_skill_lvl(name: str, exp: Number, /) -> int:
         return SKILL_LIMITS[name]
 
 
-def calc_skill_lvl_info(name: str, exp: Number, /) -> \
+def calc_skill_level_info(name: str, exp: Number, /) -> \
         Tuple[int, int, Optional[int]]:
     """
     Calculate skill level from xp.

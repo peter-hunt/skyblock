@@ -77,20 +77,20 @@ def enchanted_book_type(cls: type, /) -> type:
         self.name = 'enchanted_book'
         self.enchantments = enchantments
 
-        max_lvl = 0
+        max_level = 0
         if len(enchantments) != 0:
-            max_lvl = max(enchantments.values())
-        if max_lvl <= 4:
+            max_level = max(enchantments.values())
+        if max_level <= 4:
             self.rarity = 'common'
-        elif max_lvl == 5:
+        elif max_level == 5:
             self.rarity = 'uncommon'
-        elif max_lvl == 6:
+        elif max_level == 6:
             self.rarity = 'rare'
-        elif max_lvl == 7:
+        elif max_level == 7:
             self.rarity = 'epic'
-        elif max_lvl == 8:
+        elif max_level == 8:
             self.rarity = 'legendary'
-        elif max_lvl == 9:
+        elif max_level == 9:
             self.rarity = 'mythic'
         else:
             self.rarity = 'supreme'

@@ -13,7 +13,7 @@ from ...constant.mob import (
 )
 from ...function.io import *
 from ...function.math import (
-    calc_bestiary_lvl, calc_pet_lvl, random_amount, random_bool, random_int,
+    calc_bestiary_level, calc_pet_level, random_amount, random_bool, random_int,
 )
 from ...function.util import (
     checkpoint, format_crit, format_name, format_number, format_roman,
@@ -35,23 +35,23 @@ def fish(self, rod_index: int, iteration: int = 1, /):
     if not isinstance(rod, (Empty, FishingRod)):
         rod = Empty()
 
-    fishing_lvl = self.get_skill_lvl('fishing')
+    fishing_level = self.get_skill_level('fishing')
 
     fishing_req = getattr(rod, 'fishing_skill_req', None)
-    if fishing_req is not None and fishing_req > fishing_lvl:
+    if fishing_req is not None and fishing_req > fishing_level:
         red(f'You need Fishing {format_roman(fishing_req)} to use it!')
         return
 
-    enchantments = getattr(rod, 'enchantments', {})
+    enchants = getattr(rod, 'enchantments', {})
 
-    time_mult = 1 - enchantments.get('lure', 0) * 0.05
+    time_mult = 1 - enchants.get('lure', 0) * 0.05
     time_mult /= 1 + rod.get_stat('fishing_speed', self) / 100
-    blessing = 0.05 * enchantments.get('blessing', 0)
-    expertise = 1 + 0.02 * enchantments.get('expertise', 0)
-    frail = 1 - 0.05 * enchantments.get('frail', 0)
-    luck = 1 + 0.01 * enchantments.get('luck_of_the_sea', 0)
-    luck += fishing_lvl * 0.002
-    magnet = enchantments.get('magnet', 0)
+    blessing = 0.05 * enchants.get('blessing', 0)
+    expertise = 1 + 0.02 * enchants.get('expertise', 0)
+    frail = 1 - 0.05 * enchants.get('frail', 0)
+    luck = 1 + 0.01 * enchants.get('luck_of_the_sea', 0)
+    luck += fishing_level * 0.002
+    magnet = enchants.get('magnet', 0)
 
     sea_creature_chance = self.get_stat('sea_creature_chance')
 
@@ -76,10 +76,10 @@ def fish(self, rod_index: int, iteration: int = 1, /):
             print()
 
         is_sc = random_bool(sea_creature_chance / 100)
-        if is_sc and fishing_lvl >= 1:
+        if is_sc and fishing_level >= 1:
             avaliable_sc = [
                 line for line in SC_TABLE
-                if line[2] <= fishing_lvl
+                if line[2] <= fishing_level
             ]
             total_sc_weight = sum(line[1] for line in avaliable_sc)
 
@@ -162,14 +162,14 @@ def gather(self, name: str, tool_index: Optional[int],
     active_pet = self.get_active_pet()
     has_active_pet = isinstance(active_pet, Pet)
     if has_active_pet:
-        pet_mult = calc_pet_lvl(active_pet.rarity, active_pet.exp) / 100
+        pet_mult = calc_pet_level(active_pet.rarity, active_pet.exp) / 100
     else:
         pet_mult = 0
 
     if not isinstance(tool, (Empty, Axe, Hoe, Pickaxe, Drill)):
         tool = Empty()
 
-    enchantments = getattr(tool, 'enchantments', {})
+    enchants = getattr(tool, 'enchantments', {})
 
     if isinstance(resource, Crop):
         time_cost = 0.4
@@ -210,8 +210,8 @@ def gather(self, name: str, tool_index: Optional[int],
 
         breaking_power = tool.get_stat('breaking_power', self)
         mining_speed = tool.get_stat('mining_speed', self, default=50)
-        if 'efficiency' in enchantments:
-            mining_speed += 10 + 20 * enchantments['efficiency']
+        if 'efficiency' in enchants:
+            mining_speed += 10 + 20 * enchants['efficiency']
 
         if resource.breaking_power > breaking_power:
             red(f'Insufficient breaking power'
@@ -222,7 +222,7 @@ def gather(self, name: str, tool_index: Optional[int],
 
         mining_fortune = self.get_stat('mining_fortune', tool_index)
         fortune_mult = 1 + mining_fortune / 100
-        exp_mult = 1 + 0.125 * enchantments.get('experience', 0)
+        exp_mult = 1 + 0.125 * enchants.get('experience', 0)
         if self.has_item('experience_artifact'):
             exp_mult *= 1.25
 
@@ -295,8 +295,8 @@ def gather(self, name: str, tool_index: Optional[int],
         else:
             if isinstance(tool, Axe):
                 tool_speed = tool.tool_speed
-                if 'efficiency' in enchantments:
-                    tool_speed += enchantments['efficiency'] ** 2 + 1
+                if 'efficiency' in enchants:
+                    tool_speed += enchants['efficiency'] ** 2 + 1
                 time_cost = 1.5 * resource.hardness / tool_speed
             else:
                 tool_speed = 1
@@ -357,27 +357,33 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
     if not isinstance(weapon, (Empty, Bow, Sword, FishingRod, Pickaxe, Drill)):
         weapon = Empty()
 
-    cata_lvl = self.get_skill_lvl('catacombs')
-    combat_lvl = self.get_skill_lvl('combat')
-    fishing_lvl = self.get_skill_lvl('fishing')
+    catacombs_level = self.get_skill_level('catacombs')
+    combat_level = self.get_skill_level('combat')
+    fishing_level = self.get_skill_level('fishing')
 
     combat_req = getattr(weapon, 'combat_skill_req', None)
-    if combat_req is not None and combat_req > combat_lvl:
+    if combat_req is not None and combat_req > combat_level:
         red(f'You need Combat {format_roman(combat_req)} to use it!')
         return
     cata_req = getattr(weapon, 'dungeon_skill_req', None)
-    if cata_req is not None and cata_req > cata_lvl:
+    if cata_req is not None and cata_req > catacombs_level:
         red(f'You need Catacombs {format_roman(combat_req)} to use it!')
         return
     fishing_req = getattr(weapon, 'fishing_skill_req', None)
-    if fishing_req is not None and fishing_req > fishing_lvl:
+    if fishing_req is not None and fishing_req > fishing_level:
         red(f'You need Fishing {format_roman(fishing_req)} to use it!')
         return
+
+    bestiary_level = calc_bestiary_level(self.stats.get(f'kills_{name}', 0))
+    bestiary_stat = min(bestiary_level, 5)
+    bestiary_stat += 2 * max(min(bestiary_level - 5, 5), 0)
+    bestiary_stat += 3 * max(bestiary_level - 10, 0)
 
     health = self.get_stat('health', weapon_index)
     defense = self.get_stat('defense', weapon_index)
     true_defense = self.get_stat('true_defense', weapon_index)
     strength = self.get_stat('strength', weapon_index)
+    strength += bestiary_stat
     speed = self.get_stat('speed', weapon_index)
     crit_chance = self.get_stat('crit_chance', weapon_index)
     crit_damage = self.get_stat('crit_damage', weapon_index)
@@ -385,6 +391,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
     # intelligence = self.get_stat('intelligence', weapon_index)
     attack_speed = self.get_stat('attack_speed', weapon_index)
     magic_find = self.get_stat('magic_find', weapon_index)
+    magic_find += bestiary_stat
     ferocity = self.get_stat('ferocity', weapon_index)
 
     thorns = 0
@@ -392,22 +399,13 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
     last_stand = 0
     no_pain_no_gain = []
 
-    enchantments = getattr(weapon, 'enchantments', {})
+    weapon_enchants = getattr(weapon, 'enchantments', {})
 
+    weapon_dmg = 0
     if not isinstance(weapon, Empty):
-        weapon_damage = weapon.get_stat('damage', self)
-        if enchantments.get('ultimate_jerry', 0) != 0:
-            weapon_damage += enchantments['ultimate_jerry'] * 10
-    else:
-        weapon_damage = 5
-
-    bestiary_lvl = calc_bestiary_lvl(self.stats.get(f'kills_{name}', 0))
-    bestiary_stat = min(bestiary_lvl, 5)
-    bestiary_stat += 2 * max(min(bestiary_lvl - 5, 5), 0)
-    bestiary_stat += 3 * max(bestiary_lvl - 10, 0)
-
-    strength += bestiary_stat
-    magic_find += bestiary_stat
+        weapon_dmg = weapon.get_stat('damage', self)
+        if weapon_enchants.get('ultimate_jerry', 0) != 0:
+            weapon_dmg += weapon_enchants['ultimate_jerry'] * 10
 
     set_bonus = True
     for piece in self.armor:
@@ -415,12 +413,12 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
             set_bonus = False
             break
 
-        piece_ench = getattr(piece, 'enchantments', {})
+        piece_enchants = getattr(piece, 'enchantments', {})
 
         if name in BLAST_PROT_EFT:
-            defense += 30 * piece_ench.get('blast_protection', 0)
+            defense += 30 * piece_enchants.get('blast_protection', 0)
         if name in PROJ_PROT_EFT:
-            defense += 7 * piece_ench.get('projectile_protection', 0)
+            defense += 7 * piece_enchants.get('projectile_protection', 0)
 
         for current_ability in piece.abilities:
             if current_ability in SET_BONUSES:
@@ -433,23 +431,23 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
             if current_ability != set_bonus:
                 set_bonus = False
 
-    damage = weapon_damage
-    damage *= 1 + 0.08 * enchantments.get('power', 0)
-    damage *= 1 + 0.05 * enchantments.get('sharpness', 0)
-    damage *= 1 + 0.05 * enchantments.get('spiked_hook', 0)
-    if name in CUBISM_EFT:
-        damage *= 1 + 0.1 * enchantments.get('cubism', 0)
-    if name in ENDER_SLAYER_EFT:
-        damage *= 1 + 0.12 * enchantments.get('ender_slayer', 0)
-    if name in BOA_EFT:
-        damage *= 1 + 0.08 * enchantments.get('bane_of_arthropods', 0)
+    enchants = 0
+    enchants += 0.05 * weapon_enchants.get('sharpness', 0)
     if name in SMITE_EFT:
-        damage *= 1 + 0.08 * enchantments.get('smite', 0)
+        enchants += 0.08 * weapon_enchants.get('smite', 0)
+    if name in BOA_EFT:
+        enchants += 0.08 * weapon_enchants.get('bane_of_arthropods', 0)
+    if name in ENDER_SLAYER_EFT:
+        enchants += 0.12 * weapon_enchants.get('ender_slayer', 0)
+    if name in CUBISM_EFT:
+        enchants += 0.1 * weapon_enchants.get('cubism', 0)
     if name in IMPALING_EFT:
-        damage *= 1 + 0.125 * enchantments.get('impaling', 0)
+        enchants += 0.125 * weapon_enchants.get('impaling', 0)
+    enchants += 0.08 * weapon_enchants.get('power', 0)
+    enchants += 0.05 * weapon_enchants.get('spiked_hook', 0)
 
-    crit_damage += 10 * enchantments.get('critical', 0)
-    ferocity += enchantments.get('vicious', 0)
+    crit_damage += 10 * weapon_enchants.get('critical', 0)
+    ferocity += weapon_enchants.get('vicious', 0)
 
     rejuvenate = 0
 
@@ -457,65 +455,64 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
         if not isinstance(piece, Armor):
             continue
 
-        ench = getattr(piece, 'enchantments', {})
-        rejuvenate += ench.get('rejuvenate', 0) * 2
-        thorns += ench.get('thorns', 0) * 3
-        last_stand += ench.get('last_stand', 0) * 5
-        no_pain_no_gain.append(ench.get('no_pain_no_gain', 0) * 25)
+        piece_enchants = getattr(piece, 'enchantments', {})
+        rejuvenate += piece_enchants.get('rejuvenate', 0) * 2
+        thorns += piece_enchants.get('thorns', 0) * 3
+        last_stand += piece_enchants.get('last_stand', 0) * 5
+        no_pain_no_gain.append(piece_enchants.get('no_pain_no_gain', 0) * 25)
 
     if set_bonus == 'deflect':
         thorns += 33
 
-    warrior = 0.04 * min(combat_lvl, 50)
-    warrior += 0.01 * max(min(combat_lvl - 50, 10), 0)
-    damage *= 1 + warrior
+    armor_bonuses = 0
     if set_bonus == 'pumpkin_buff':
-        damage *= 1.1
+        armor_bonuses *= 1.1
 
-    enchanting_lvl = self.get_skill_lvl('enchanting')
+    enchanting_level = self.get_skill_level('enchanting')
 
-    execute = 0.2 * enchantments.get('execute', 0)
-    fire_aspect = enchantments.get('fire_aspect', 0)
-    first_strike = 1 + 0.25 * enchantments.get('first_strike', 0)
-    flame = enchantments.get('flame', 0)
-    giant_killer = enchantments.get('giant_killer', 0)
-    infinite_quiver = enchantments.get('infinite_quiver', 0)
-    knockback = 1 + 0.1 * enchantments.get('knockback', 0)
-    life_steal = 0.005 * enchantments.get('life_steal', 0)
+    execute_level = 0.2 * weapon_enchants.get('execute_level', 0)
+    prosecute_level = 0.1 * weapon_enchants.get('prosecute_level', 0)
+    fire_aspect_level = weapon_enchants.get('fire_aspect_level', 0)
+    first_strike = 0.25 * weapon_enchants.get('first_strike', 0)
+    flame = weapon_enchants.get('flame', 0)
+    giant_killer = weapon_enchants.get('giant_killer', 0)
+    infinite_quiver = weapon_enchants.get('infinite_quiver', 0)
+    knockback = 1 + 0.1 * weapon_enchants.get('knockback', 0)
+    life_steal = 0.005 * weapon_enchants.get('life_steal', 0)
     if isinstance(weapon, Bow):
-        looting = 1 + 0.15 * enchantments.get('chance', 0)
+        looting = 1 + 0.15 * weapon_enchants.get('chance', 0)
     elif isinstance(weapon, Sword):
-        looting = 1 + 0.15 * enchantments.get('looting', 0)
+        looting = 1 + 0.15 * weapon_enchants.get('looting', 0)
     else:
         looting = 1
-    luck = 1 + 0.05 * enchantments.get('luck', 0)
-    overload = enchantments.get('overload', 0)
-    prosecute = 0.1 * enchantments.get('prosecute', 0)
-    punch = 1 + 0.08 * enchantments.get('punch', 0)
-    scavenger = 0.3 * enchantments.get('scavenger', 0)
-    coins_mult = 1 + 0.01 * bestiary_lvl
-    if 'syphon' in enchantments:
-        syphon = 0.1 + 0.1 * enchantments['syphon']
+    luck = 1 + 0.05 * weapon_enchants.get('luck', 0)
+    overload = weapon_enchants.get('overload', 0)
+    prosecute = 0.1 * weapon_enchants.get('prosecute', 0)
+    punch = 1 + 0.08 * weapon_enchants.get('punch', 0)
+    scavenger = 0.3 * weapon_enchants.get('scavenger', 0)
+    coins_mult = 1 + 0.01 * bestiary_level
+    if 'syphon' in weapon_enchants:
+        syphon = 0.1 + 0.1 * weapon_enchants['syphon']
     else:
         syphon = 0
-    triple_strike = 1 + 0.10 * enchantments.get('triple_strike', 0)
-    thunderbolt = 0.15 * enchantments.get('thunderbolt', 0)
-    thunderlord_lvl = enchantments.get('thunderlord', 0)
-    if thunderlord_lvl <= 3:
-        thunderlord = 0.3 * thunderlord_lvl
-    elif thunderlord_lvl <= 5:
-        thunderlord = 0.25 * thunderlord_lvl
+    triple_strike = 0.1 * weapon_enchants.get('triple_strike', 0)
+    thunderbolt = 0.15 * weapon_enchants.get('thunderbolt', 0)
+    thunderlord_level = weapon_enchants.get('thunderlord', 0)
+    if thunderlord_level <= 3:
+        thunderlord = 0.3 * thunderlord_level
+    elif thunderlord_level <= 5:
+        thunderlord = 0.25 * thunderlord_level
     else:
-        thunderlord = 0.3 * thunderlord_lvl
-    vampirism = enchantments.get('vampirism', 0)
+        thunderlord = 0.3 * thunderlord_level
+    vampirism = weapon_enchants.get('vampirism', 0)
 
-    added_exp = 0.2 * bestiary_lvl
+    added_exp = 0.2 * bestiary_level
     added_coin = 0
     if self.has_item('scavenger_talisman'):
         added_coin = 20
 
-    exp_mult = 1 + 0.125 * enchantments.get('experience', 0)
-    exp_mult *= 1 + 0.04 * enchanting_lvl
+    exp_mult = 1 + 0.125 * weapon_enchants.get('experience', 0)
+    exp_mult *= 1 + 0.04 * enchanting_level
     if self.has_item('experience_artifact'):
         exp_mult *= 1.25
 
@@ -546,7 +543,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
     elif self.has_item('healing_talisman'):
         healing_mult = 1.05
 
-    soul_eater = enchantments.get('soul_eater', 0) * 2
+    soul_eater = weapon_enchants.get('soul_eater', 0) * 2
     soul_eater_strength = 0
 
     crit_chance += overload
@@ -604,14 +601,18 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
             sleep(attack_time_cost)
 
             for _ in range(random_int(strike_chance)):
+                damage_dealt = 5 + weapon_dmg
+
+                if strike_count % 3 == 2:
+                    damage_dealt += thunderbolt
+                    damage_dealt += thunderlord
+
                 is_crit = False
                 if random_bool(crit_chance / 100):
-                    damage_dealt = damage * (1 + crit_damage / 100)
+                    damage_dealt *= 1 + crit_damage / 100
                     if crit_chance >= 100 and random_bool(overload * 0.1):
                         damage_dealt *= 1.1
                     is_crit = True
-                else:
-                    damage_dealt = damage
 
                 effective_strength = strength + soul_eater_strength
                 damage_dealt *= 1 + effective_strength / 100
@@ -619,25 +620,33 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                 if soul_eater_strength != 0:
                     soul_eater_strength = 0
 
-                damage_dealt *= (
-                    1 + giant_killer * (min(0.1 * (mob_hp - hp), 5) / 100)
-                )
+                combat_level = self.get_skill_level('combat')
+
+                effective_enchants = enchants
 
                 if strike_count == 0:
-                    damage_dealt *= first_strike
+                    effective_enchants += first_strike
                 if strike_count < 3:
-                    damage_dealt *= triple_strike
-
-                damage_dealt *= 1 + min(prosecute * (mob_hp / mob.health),
-                                        0.35)
-                damage_dealt += (execute / 100) * (mob.health - mob_hp)
-
-                if strike_count % 3 == 2:
-                    damage_dealt += effective_strength * thunderbolt
-                    damage_dealt += effective_strength * thunderlord
+                    effective_enchants += triple_strike
+                effective_enchants += (
+                    giant_killer * (min(0.1 * (mob_hp - hp), 5) / 100)
+                )
+                effective_enchants += (
+                    (execute_level / 100) * (mob.health - mob_hp)
+                )
+                effective_enchants += (
+                    min(prosecute_level * (mob_hp / mob.health), 0.35)
+                )
+                damage_mult = 1 + enchants
+                damage_mult += (
+                    0.04 * min(combat_level, 50)
+                    + 0.01 * max(min(combat_level - 50, 10), 0)
+                )
+                damage_dealt *= 1 + damage_mult
 
                 damage_dealt += (
-                    (2 + fire_aspect) * 0.5 * fire_aspect * weapon_damage
+                    (2 + fire_aspect_level) * 0.5 *
+                    fire_aspect_level * weapon_dmg
                 )
                 damage_dealt += flame * 15
 

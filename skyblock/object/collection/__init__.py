@@ -11,7 +11,7 @@ from .foraging import FORAGING_COLLECTIONS
 from .mining import MINING_COLLECTIONS
 
 
-__all__ = ['COLLECTIONS', 'is_collection', 'get_collection', 'calc_coll_lvl']
+__all__ = ['COLLECTIONS', 'is_collection', 'get_collection', 'calc_coll_level']
 
 COLLECTIONS = (
     COMBAT_COLLECTIONS + FARMING_COLLECTIONS + FISHING_COLLECTIONS
@@ -35,7 +35,7 @@ def get_collection(name: str) -> Optional[Collection]:
         red(f'Collection not found: {name!r}')
 
 
-def calc_coll_lvl(name: str, amount: int) -> Optional[int]:
+def calc_coll_level(name: str, amount: int) -> Optional[int]:
     if (collection := get_collection(name)) is None:
         return
 

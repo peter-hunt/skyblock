@@ -300,9 +300,9 @@ def get_ench(name: str, /) -> Tuple[str, Tuple[int]]:
         if row[0] == name:
             if isinstance(row[2], tuple):
                 return row[2]
-            exp_lvls = tuple(lvl * row[2] + row[3]
-                             for lvl in range(1, row[1] + 1))
-            return exp_lvls
+            exp_levels = tuple(lvl * row[2] + row[3]
+                               for lvl in range(1, row[1] + 1))
+            return exp_levels
     else:
         red(f'Enchantment not fonud: {name!r}')
 

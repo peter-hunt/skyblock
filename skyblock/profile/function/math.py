@@ -7,32 +7,32 @@ from ...constant.color import *
 from ...constant.main import COLL_ALTER, SKILL_EXP
 from ...constant.util import Number
 from ...function.math import (
-    calc_exp_lvl, calc_bestiary_lvl, calc_pet_lvl, calc_skill_lvl,
+    calc_exp_level, calc_bestiary_level, calc_pet_level, calc_skill_level,
     display_skill_reward,
 )
 from ...function.io import *
 from ...function.reforging import get_modifier
 from ...function.util import (
-    format_name, format_number, format_roman, get_family,
+    format_name, format_roman, get_family,
 )
-from ...object.collection import is_collection, get_collection, calc_coll_lvl
+from ...object.collection import is_collection, get_collection, calc_coll_level
 from ...object.object import *
 
 
 __all__ = [
-    'add_exp', 'add_kill', 'add_skill_exp', 'get_collection_amount', 'get_collection_lvl',
-    'collect', 'get_bestiary_amount', 'get_bestiary_lvl', 'get_skill_exp',
-    'get_skill_lvl', 'get_stat',
+    'add_exp', 'add_kill', 'add_skill_exp', 'get_collection_amount',
+    'get_collection_level', 'collect', 'get_bestiary_amount',
+    'get_bestiary_level', 'get_skill_exp', 'get_skill_level', 'get_stat',
 ]
 
 
 def add_exp(self, amount: Number, /):
-    enchanting_lvl = self.get_skill_lvl('enchanting')
-    original_lvl = calc_exp_lvl(self.experience)
-    self.experience += amount * (1 + 0.04 * enchanting_lvl)
-    current_lvl = calc_exp_lvl(self.experience)
-    if current_lvl > original_lvl:
-        green(f'Reached XP level {current_lvl}.')
+    enchanting_level = self.get_skill_level('enchanting')
+    original_level = calc_exp_level(self.experience)
+    self.experience += amount * (1 + 0.04 * enchanting_level)
+    current_level = calc_exp_level(self.experience)
+    if current_level > original_level:
+        green(f'Reached XP level {current_level}.')
 
 
 def add_kill(self, name: str, value: int = 1):
@@ -44,29 +44,29 @@ def add_kill(self, name: str, value: int = 1):
     if kills == 0 and value > 0:
         dark_aqua(f'{BOLD}BESTIARY FAMILY UNLOCKED {AQUA}{display}')
 
-    original_lvl = self.get_bestiary_lvl(name)
+    original_level = self.get_bestiary_level(name)
     self.stats[f'kills_{family}'] = kills + value
-    current_lvl = self.get_bestiary_lvl(name)
+    current_level = self.get_bestiary_level(name)
 
-    if original_lvl == current_lvl:
+    if original_level == current_level:
         return
 
     width, _ = get_terminal_size()
     width = ceil(width * 0.8)
     dark_aqua(f"{BOLD}{'':-^{width}}")
 
-    original_str = format_roman(original_lvl) if original_lvl != 0 else '0'
+    original_str = format_roman(original_level) if original_level != 0 else '0'
     dark_aqua(f' {BOLD}BESTIARY {AQUA}{BOLD}{display}'
               f' {DARK_GRAY}{original_str}➜'
-              f'{YELLOW}{format_roman(current_lvl)}\n')
+              f'{YELLOW}{format_roman(current_level)}\n')
 
-    lvl_delta = current_lvl - original_lvl
-    original_stat = min(original_lvl, 5)
-    original_stat += 2 * max(min(original_lvl - 5, 5), 0)
-    original_stat += 3 * max(original_lvl - 10, 0)
-    current_stat = min(current_lvl, 5)
-    current_stat += 2 * max(min(current_lvl - 5, 5), 0)
-    current_stat += 3 * max(current_lvl - 10, 0)
+    lvl_delta = current_level - original_level
+    original_stat = min(original_level, 5)
+    original_stat += 2 * max(min(original_level - 5, 5), 0)
+    original_stat += 3 * max(original_level - 10, 0)
+    current_stat = min(current_level, 5)
+    current_stat += 2 * max(min(current_level - 5, 5), 0)
+    current_stat += 3 * max(current_level - 10, 0)
     stat_delta = current_stat - original_stat
 
     magic_find = STAT_COLORS['magic_find']
@@ -89,18 +89,18 @@ def add_skill_exp(self, name: str, amount: Number, /, *, display=False):
         return
 
     exp = self.get_skill_exp(name)
-    original_lvl = calc_skill_lvl(name, exp)
+    original_level = calc_skill_level(name, exp)
     exp += amount
     setattr(self, f'experience_skill_{name}', exp)
-    current_lvl = calc_skill_lvl(name, exp)
+    current_level = calc_skill_level(name, exp)
 
     if display:
         self.display_skill_add(name, amount)
 
-    if current_lvl > original_lvl:
+    if current_level > original_level:
         coins_reward = 0
         if name != 'catacombs':
-            for lvl in range(original_lvl + 1, current_lvl + 1):
+            for lvl in range(original_level + 1, current_level + 1):
                 coins_reward += SKILL_EXP[lvl][3]
 
         self.purse += coins_reward
@@ -109,16 +109,17 @@ def add_skill_exp(self, name: str, amount: Number, /, *, display=False):
         width = ceil(width * 0.8)
 
         dark_aqua(f"{BOLD}{'':-^{width}}")
-        original_str = format_roman(original_lvl) if original_lvl != 0 else '0'
+        original_str = format_roman(
+            original_level) if original_level != 0 else '0'
         aqua(f' {BOLD}SKILL LEVEL UP {DARK_AQUA}{format_name(name)}'
              f' {DARK_GRAY}{original_str}➜'
-             f'{DARK_AQUA}{format_roman(current_lvl)}\n')
+             f'{DARK_AQUA}{format_roman(current_level)}\n')
         green(f' {BOLD}REWARDS')
-        display_skill_reward(name, original_lvl, current_lvl)
+        display_skill_reward(name, original_level, current_level)
         dark_aqua(f"{BOLD}{'':-^{width}}")
 
     if name != 'taming':
-        taming_lvl = self.get_skill_lvl('taming')
+        taming_level = self.get_skill_level('taming')
 
         for pet_index, pet in enumerate(self.pets):
             if pet.active:
@@ -129,7 +130,7 @@ def add_skill_exp(self, name: str, amount: Number, /, *, display=False):
         if pet_index is not None:
             pet_exp = pet.exp
 
-            original_pet_lvl = calc_pet_lvl(pet.rarity, pet_exp)
+            original_pet_level = calc_pet_level(pet.rarity, pet_exp)
 
             if pet.category == name:
                 pass
@@ -137,18 +138,18 @@ def add_skill_exp(self, name: str, amount: Number, /, *, display=False):
                 amount /= 12
             else:
                 amount /= 4
-            amount *= 1 + taming_lvl / 100
+            amount *= 1 + taming_level / 100
 
             pet_exp += amount
             self.add_skill_exp('taming', amount / 2)
 
             self.pets[pet_index].exp = pet_exp
-            current_pet_lvl = calc_pet_lvl(pet.rarity, pet_exp)
+            current_pet_level = calc_pet_level(pet.rarity, pet_exp)
 
-            if current_pet_lvl > original_pet_lvl:
+            if current_pet_level > original_pet_level:
                 pet_str = pet.display().split(']')[1].lstrip()
                 green(f'Your {pet_str}{GREEN} levelled up to'
-                      f' level {BLUE}{current_pet_lvl}{GREEN}!')
+                      f' level {BLUE}{current_pet_level}{GREEN}!')
 
 
 def get_collection_amount(self, name: str, /) -> Optional[int]:
@@ -158,11 +159,11 @@ def get_collection_amount(self, name: str, /) -> Optional[int]:
     return self.collection[name]
 
 
-def get_collection_lvl(self, name: str, /) -> Optional[int]:
+def get_collection_level(self, name: str, /) -> Optional[int]:
     if not is_collection(name):
         red(f'Unknown collection: {name!r}')
         return
-    return calc_coll_lvl(name, self.collection[name])
+    return calc_coll_level(name, self.collection[name])
 
 
 def collect(self, name: str, amount: int, /):
@@ -176,16 +177,16 @@ def collect(self, name: str, amount: int, /):
 
     display = format_name(name)
 
-    original_lvl = self.get_collection_lvl(name)
+    original_level = self.get_collection_level(name)
 
     if self.collection[name] == 0 and amount > 0:
         gold(f'{BOLD}COLLECTION UNLOCKED {YELLOW}{display}')
 
     self.collection[name] += amount
 
-    current_lvl = self.get_collection_lvl(name)
+    current_level = self.get_collection_level(name)
 
-    if current_lvl <= original_lvl:
+    if current_level <= original_level:
         return
 
     width, _ = get_terminal_size()
@@ -194,14 +195,14 @@ def collect(self, name: str, amount: int, /):
 
     coll = get_collection(name)
 
-    original = format_roman(original_lvl) if original_lvl != 0 else '0'
+    original = format_roman(original_level) if original_level != 0 else '0'
     gold(f' {BOLD}COLLECTION LEVEL UP {YELLOW}{format_name(name)}'
-         f' {GRAY}{original}➜{YELLOW}{format_roman(current_lvl)}\n')
+         f' {GRAY}{original}➜{YELLOW}{format_roman(current_level)}\n')
 
     rewards = []
 
     for index, (_, rwds) in enumerate(coll.levels):
-        if original_lvl < index + 1 <= current_lvl:
+        if original_level < index + 1 <= current_level:
             if isinstance(rwds, tuple):
                 rewards += rwds
             else:
@@ -229,8 +230,8 @@ def get_bestiary_amount(self, name: str, /) -> int:
     return self.stats.get(f'kills_{family}', 0)
 
 
-def get_bestiary_lvl(self, name: str, /) -> int:
-    return calc_bestiary_lvl(self.get_bestiary_amount(name))
+def get_bestiary_level(self, name: str, /) -> int:
+    return calc_bestiary_level(self.get_bestiary_amount(name))
 
 
 def get_skill_exp(self, name: str, /) -> int:
@@ -241,12 +242,12 @@ def get_skill_exp(self, name: str, /) -> int:
     return getattr(self, f'experience_skill_{name}')
 
 
-def get_skill_lvl(self, name: str, /) -> int:
+def get_skill_level(self, name: str, /) -> int:
     if not hasattr(self, f'experience_skill_{name}'):
         red(f'Skill not found: {name}')
         return
 
-    return calc_skill_lvl(name, getattr(self, f'experience_skill_{name}'))
+    return calc_skill_level(name, getattr(self, f'experience_skill_{name}'))
 
 
 def get_stat(self, name: str, index: Optional[int] = None, /):
@@ -293,13 +294,13 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
     if not isinstance(item, Accessory):
         value += item.get_stat(name, self)
 
-    combat_lvl = self.get_skill_lvl('combat')
-    farming_lvl = self.get_skill_lvl('farming')
-    enchanting_lvl = self.get_skill_lvl('enchanting')
-    foraging_lvl = self.get_skill_lvl('foraging')
-    fishing_lvl = self.get_skill_lvl('fishing')
-    mining_lvl = self.get_skill_lvl('mining')
-    taming_lvl = self.get_skill_lvl('taming')
+    combat_level = self.get_skill_level('combat')
+    farming_level = self.get_skill_level('farming')
+    enchanting_level = self.get_skill_level('enchanting')
+    foraging_level = self.get_skill_level('foraging')
+    fishing_level = self.get_skill_level('fishing')
+    mining_level = self.get_skill_level('mining')
+    taming_level = self.get_skill_level('taming')
 
     set_bonus = True
 
@@ -374,32 +375,32 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
         value += delta
 
     if has_active_pet:
-        pet_mult = calc_pet_lvl(active_pet.rarity, active_pet.exp) / 100
+        pet_mult = calc_pet_level(active_pet.rarity, active_pet.exp) / 100
         value += getattr(active_pet, name, 0) * pet_mult
     else:
         pet_mult = 0
 
     if name == 'health':
         value += 100
-        value += min(farming_lvl, 14) * 2
-        value += max(min(farming_lvl - 14, 5), 0) * 3
-        value += max(min(farming_lvl - 19, 6), 0) * 4
-        value += max(min(farming_lvl - 25, 35), 0) * 5
-        value += min(fishing_lvl, 14) * 2
-        value += max(min(fishing_lvl - 14, 5), 0) * 3
-        value += max(min(fishing_lvl - 19, 6), 0) * 4
-        value += max(min(fishing_lvl - 25, 35), 0) * 5
+        value += min(farming_level, 14) * 2
+        value += max(min(farming_level - 14, 5), 0) * 3
+        value += max(min(farming_level - 19, 6), 0) * 4
+        value += max(min(farming_level - 25, 35), 0) * 5
+        value += min(fishing_level, 14) * 2
+        value += max(min(fishing_level - 14, 5), 0) * 3
+        value += max(min(fishing_level - 19, 6), 0) * 4
+        value += max(min(fishing_level - 25, 35), 0) * 5
         if set_bonus == 'lapis_armor':
             value += 60
         if has_active_pet:
             if 'archimedes' in active_pet.abilities:
                 value *= 1 + 0.2 * pet_mult
     elif name == 'defense':
-        value += min(mining_lvl, 14) * 1
-        value += max(min(mining_lvl - 14, 46), 0) * 2
+        value += min(mining_level, 14) * 1
+        value += max(min(mining_level - 14, 46), 0) * 2
     elif name == 'strength':
-        value += min(foraging_lvl, 14) * 1
-        value += max(min(foraging_lvl - 14, 36), 0) * 2
+        value += min(foraging_level, 14) * 1
+        value += max(min(foraging_level - 14, 36), 0) * 2
     elif name == 'speed':
         value += 100
         if set_bonus == 'speedster_armor':
@@ -437,13 +438,13 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
                 value *= 1.1
     elif name == 'crit_chance':
         value += 30
-        value += combat_lvl * 0.5
+        value += combat_level * 0.5
     elif name == 'crit_damage':
         value += 50
     elif name == 'intelligence':
         value += 100
-        value += min(enchanting_lvl, 14) * 1
-        value += max(min(enchanting_lvl - 14, 46), 0) * 2
+        value += min(enchanting_level, 14) * 1
+        value += max(min(enchanting_level - 14, 46), 0) * 2
     elif name == 'sea_creature_chance':
         value += 20
         if has_active_pet:
@@ -452,12 +453,12 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
             elif 'rare_echolocation' in active_pet.abilities:
                 value *= 1 + 0.07 * pet_mult
     elif name == 'pet_luck':
-        value += taming_lvl
+        value += taming_level
     elif name == 'mining_speed':
         if set_bonus == 'miners_outfit':
             value += 100
         if set_bonus == 'glacite_armor':
-            value += 2 * mining_lvl
+            value += 2 * mining_level
         if self.has_item('haste_ring'):
             value += 50
         if self.has_item('titanium_relic'):
@@ -477,11 +478,11 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
             elif 'common_merciless_swipe' in active_pet.abilities:
                 value *= 1 + 0.15 * pet_mult
     elif name == 'mining_fortune':
-        value += mining_lvl * 4
+        value += mining_level * 4
     elif name == 'foraging_fortune':
-        value += foraging_lvl * 4
+        value += foraging_level * 4
     elif name == 'farming_fortune':
-        value += farming_lvl * 4
+        value += farming_level * 4
 
     if set_bonus == 'superior_dragon_armor':
         value *= 1.05

@@ -7,8 +7,8 @@ from ...constant.enchanting import *
 from ...constant.main import INTEREST_TABLE, SELL_PRICE
 from ...function.enchanting import get_enchantments
 from ...function.io import *
-from ...function.math import calc_exp_lvl, calc_exp, random_amount
-from ...function.reforging import combine_ench
+from ...function.math import calc_exp_level, calc_exp, random_amount
+from ...function.reforging import combine_enchant
 from ...function.util import (
     checkpoint, format_name, format_number, format_roman, format_short,
     format_zone, get, get_ench, includes,
@@ -106,11 +106,12 @@ def combine(self, index_1: int, index_2: int, /):
         return
 
     if isinstance(item_1, EnchantedBook) and isinstance(item_2, EnchantedBook):
-        result_ench = combine_ench(item_1.enchantments, item_2.enchantments)
+        result_enchants = combine_enchant(item_1.enchantments,
+                                          item_2.enchantments)
 
         self.inventory[index_1] = Empty()
         self.inventory[index_2] = Empty()
-        self.recieve_item(EnchantedBook(enchantments=result_ench))
+        self.recieve_item(EnchantedBook(enchantments=result_enchants))
 
         return
 
@@ -123,12 +124,13 @@ def combine(self, index_1: int, index_2: int, /):
     if (isinstance(item_1, (Axe, Drill, Pickaxe, Hoe,
                             Armor, Bow, Sword, FishingRod))
             and isinstance(item_2, EnchantedBook)):
-        result_ench = combine_ench(item_1.enchantments, item_2.enchantments)
-        ench_table = get_enchantments(item_1)
+        result_enchants = combine_enchant(item_1.enchantments,
+                                          item_2.enchantments)
+        enchant_table = get_enchantments(item_1)
         item_1.enchantments = {
             name: value
-            for name, value in result_ench.items()
-            if name in ench_table
+            for name, value in result_enchants.items()
+            if name in enchant_table
         }
         self.inventory[index_1] = Empty()
         self.inventory[index_2] = Empty()
@@ -270,7 +272,7 @@ def craft(self, index: int, amount: int = 1, /):
 
     if recipe.collection_req is not None:
         coll_name, lvl = recipe.collection_req
-        if self.get_collection_lvl(coll_name) < lvl:
+        if self.get_collection_level(coll_name) < lvl:
             red("You haven't reached the required collection yet!")
             return
 
@@ -389,8 +391,8 @@ def die(self, killer: Optional[str] = None, /) -> bool:
 
 @checkpoint
 def enchant(self, item_index: int, /):
-    enchanting_lvl = self.get_skill_lvl('enchanting')
-    exp_lvl = calc_exp_lvl(self.experience)
+    enchanting_level = self.get_skill_level('enchanting')
+    exp_level = calc_exp_level(self.experience)
 
     item = self.inventory[item_index]
 
@@ -398,9 +400,9 @@ def enchant(self, item_index: int, /):
         red('Cannot Enchant more than one item at once!')
         return
 
-    ench_table = get_enchantments(item)
+    enchant_table = get_enchantments(item)
 
-    if len(ench_table) == 0:
+    if len(enchant_table) == 0:
         red('Cannot Enchant Item!')
         gray('This item cannot be enchanted!')
         return
@@ -410,12 +412,12 @@ def enchant(self, item_index: int, /):
     all_ench = [row[0] for row in ENCHS]
 
     gray('Avaliable enchantments and xp level needed:')
-    for name in ench_table:
+    for name in enchant_table:
         if name not in all_ench:
             continue
 
         for _ench, req in ENCH_REQUIREMENTS:
-            if name == _ench and req > enchanting_lvl:
+            if name == _ench and req > enchanting_level:
                 break
         else:
             current = item.enchantments.get(name, 0)
@@ -429,8 +431,8 @@ def enchant(self, item_index: int, /):
                 calc_exp(xp) - current_xp
                 for lvl, xp in enumerate(xps)
             ]
-            discounted_lvl = [calc_exp_lvl(xp) for xp in discounted]
-            avaliable.append((name, discounted_lvl))
+            discounted_level = [calc_exp_level(xp) for xp in discounted]
+            avaliable.append((name, discounted_level))
 
             blue(f'{len(avaliable):>2} {name}')
             if current > 0:
@@ -440,10 +442,10 @@ def enchant(self, item_index: int, /):
                     else f'{DARK_AQUA}{xp}{AQUA}➜{AQUA}{dxp}'
                     if xp != dxp else f'{AQUA}{xp}'
                     for lvl, (xp, dxp) in enumerate(
-                        zip(xps, discounted_lvl)))
+                        zip(xps, discounted_level)))
             else:
                 xp_str = ', '.join(
-                    f'{AQUA}{xp}' if xp <= exp_lvl
+                    f'{AQUA}{xp}' if xp <= exp_level
                     else f'{YELLOW}{xp}' for xp in xps)
             aqua(f'   {xp_str}')
 
@@ -473,7 +475,7 @@ def enchant(self, item_index: int, /):
 
         white(f'Cost: {DARK_AQUA}{lvl} Experience Levels')
 
-        if exp_lvl < lvl:
+        if exp_level < lvl:
             red("You don't have enough Levels!")
             return
 
@@ -525,8 +527,8 @@ def goto(self, dest: str, /):
     for target in path[1:]:
         if target.skill_req is not None:
             name, level = target.skill_req
-            exp_lvl = self.get_skill_lvl(name)
-            if exp_lvl < level:
+            exp_level = self.get_skill_level(name)
+            if exp_level < level:
                 red(f'Cannot go to {format_zone(dest)}!')
                 red(f'Requires {name.capitalize()} level {format_roman(level)}')
                 return
@@ -699,8 +701,8 @@ def warp(self, dest: str, /):
 
     if dest_island.skill_req is not None:
         name, level = dest_island.skill_req
-        skill_lvl = self.get_skill_lvl(name)
-        if skill_lvl < level:
+        skill_level = self.get_skill_level(name)
+        if skill_level < level:
             red(f'Cannot warp to {dest}!')
             red(f'Requires {name.capitalize()} level {format_roman(level)}')
             return

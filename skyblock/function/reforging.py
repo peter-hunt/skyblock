@@ -7,10 +7,10 @@ from ..constant.util import Ench
 from .io import *
 
 
-__all__ = ['combine_ench', 'get_modifier']
+__all__ = ['combine_enchant', 'get_modifier']
 
 
-def combine_ench(ench_1: Ench, ench_2: Ench, /) -> Ench:
+def combine_enchant(ench_1: Ench, ench_2: Ench, /) -> Ench:
     names = {*ench_1, *ench_2}
     result = {}
 
