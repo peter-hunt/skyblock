@@ -2,11 +2,12 @@ from random import choice
 
 from ....constant.color import GOLD, GREEN
 from ....constant.reforging import (
-    ARMOR_REFORGES, BOW_REFORGES, MELEE_REFORGES, REFORGE_COST,
+    ACCESSORY_REFORGES, ARMOR_REFORGES, BOW_REFORGES, MELEE_REFORGES,
+    REFORGE_COST,
 )
 from ....function.io import gray, dark_gray, green, red
 from ....function.util import checkpoint, format_number
-from ....object.object import Armor, Bow, Sword, FishingRod
+from ....object.object import *
 
 __all__ = ['reforge']
 
@@ -26,7 +27,9 @@ def reforge(player, /):
             continue
 
         item = player.inventory[index]
-        if isinstance(item, Armor):
+        if isinstance(item, Accessory):
+            modifiers = ACCESSORY_REFORGES
+        elif isinstance(item, Armor):
             modifiers = ARMOR_REFORGES
         elif isinstance(item, Bow):
             modifiers = BOW_REFORGES

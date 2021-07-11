@@ -167,54 +167,52 @@ def item_type(cls: type, /) -> type:
         basic_stats = []
         bonus_stats = []
 
-        if self.__class__.__name__ == 'ReforgeStone':
-            if self.category == 'melee':
-                type_str = 'a melee weapon'
-            elif self.category == 'bow':
-                type_str = 'a bow'
-            elif self.category == 'armor':
-                type_str = 'armor'
+        if self.__class__.__name__ == 'Accessory':
+            if self.modifier is not None:
+                modifier_bonus = get_modifier(self.modifier, self.rarity)
+            else:
+                modifier_bonus = {}
 
-            info += (
-                f'\n{DARK_GRAY}Reforge Stone\n\n'
-                f'{GRAY}Can be used in a Reforge Anvil\n'
-                f'or with the Dungeon Blacksmith\n'
-                f'to apply the {BLUE}{format_name(self.modifier)}\n'
-                f'{GRAY}reforge to {type_str}.'
-            )
-
-            if getattr(self, 'mining_skill_req', None) is not None:
-                if mining_lvl < self.mining_skill_req:
-                    info += (f'\n\n{GRAY}Requires {GREEN}Mining Skill Level\n'
-                             f'{self.mining_skill_req}{GRAY}!{CLN}')
-
-        elif self.__class__.__name__ in {'Pickaxe', 'Drill'}:
-            info += f'\n{DARK_GRAY}Breaking Power {self.breaking_power}\n'
-
-            for stat_name in ('damage',):
+            for stat_name in ('strength', 'crit_chance', 'crit_damage',
+                              'attack_speed'):
                 display_stat = format_name(stat_name)
-                value = self.get_stat(stat_name, profile)
+                ext = '%' if stat_name[0] in 'ac' else ''
 
-                value = fround(value, 1)
+                if stat_name not in modifier_bonus:
+                    continue
+
+                value = fround(modifier_bonus[stat_name], 1)
+                value_str = format_number(value, sign=True)
+                bonus = (f' {BLUE}({format_name(self.modifier)}'
+                          f' {value_str}{ext})')
+
                 if value == 0:
                     continue
 
-                value_str = format_number(value)
-                basic_stats.append(f'{display_stat}: {RED}+{value_str}')
+                basic_stats.append(f'{display_stat}: {RED}'
+                                   f'{value_str}{ext}{bonus}')
 
             if len(basic_stats) != 0:
                 info += '\n' + '\n'.join(f'{GRAY}{stat}'
                                          for stat in basic_stats)
 
-            for stat_name in ('mining_speed', 'mining_fortune'):
+            for stat_name in ('health', 'defense', 'intelligence', 'speed'):
                 display_stat = format_name(stat_name)
-                value = self.get_stat(stat_name, profile)
+                ext = ' HP' if stat_name[0] == 'h' else ''
+
+                if stat_name not in modifier_bonus:
+                    continue
+
+                value = fround(modifier_bonus[stat_name], 1)
+                value_str = format_number(value, sign=True)
+                bonus = (f' {BLUE}({format_name(self.modifier)}'
+                         f' {value_str}{ext})')
 
                 if value == 0:
                     continue
 
-                value_str = format_number(fround(value, 1), sign=True)
-                bonus_stats.append(f'{display_stat}: {GREEN}{value_str}')
+                bonus_stats.append(f'{display_stat}: {GREEN}'
+                                   f'{value_str}{ext}{bonus}')
 
             if len(bonus_stats) != 0:
                 if len(basic_stats) != 0:
@@ -222,23 +220,7 @@ def item_type(cls: type, /) -> type:
                 info += '\n' + '\n'.join(f'{GRAY}{stat}'
                                          for stat in bonus_stats)
 
-        elif self.__class__.__name__ == 'Hoe':
-            for stat_name in ('farming_fortune',):
-                display_stat = format_name(stat_name)
-                value = getattr(self, stat_name, 0)
-
-                value = fround(value, 1)
-                if value == 0:
-                    continue
-
-                value_str = format_number(value, sign=True)
-                bonus_stats.append(f'{display_stat}: {GREEN}{value_str}')
-
-            if len(bonus_stats) != 0:
-                info += '\n' + '\n'.join(f'{GRAY}{stat}'
-                                         for stat in bonus_stats)
-
-        elif self.__class__.__name__ == 'FishingRod':
+        elif self.__class__.__name__ == 'Armor':
             is_dungeon = self.stars is not None
 
             if self.modifier is not None:
@@ -246,18 +228,14 @@ def item_type(cls: type, /) -> type:
             else:
                 modifier_bonus = {}
 
-            for stat_name in (
-                'damage', 'strength', 'crit_chance', 'crit_damage',
-                'attack_speed', 'sea_creature_chance',
-            ):
+            for stat_name in ('strength', 'crit_chance', 'crit_damage',
+                              'attack_speed', 'sea_creature_chance'):
                 display_stat = format_name(stat_name)
-                ext = '%' if 'sea' in stat_name or stat_name[0] in 'ac' else ''
+                ext = ('%' if stat_name[0] in 'ac'
+                       or stat_name.startswith('sea') else '')
                 value = self.get_stat(stat_name, profile)
 
                 bonus = ''
-                if stat_name[0] in 'ds' and self.hot_potato != 0:
-                    bonus += f' {YELLOW}(+{2 * self.hot_potato})'
-
                 if stat_name in modifier_bonus:
                     bonus_value = modifier_bonus[stat_name]
                     bonus_str = format_number(bonus_value, sign=True)
@@ -283,9 +261,20 @@ def item_type(cls: type, /) -> type:
                 info += '\n' + '\n'.join(f'{GRAY}{stat}'
                                          for stat in basic_stats)
 
-            for stat_name in ('defense', 'intelligence', 'ferocity', 'speed'):
+            for stat_name in ('health', 'defense', 'intelligence', 'speed',
+                              'magic_find', 'mining_speed', 'mining_fortune',
+                              'true_defense', 'ferocity'):
                 display_stat = format_name(stat_name)
+                ext = ' HP' if stat_name[0] == 'h' else ''
                 value = self.get_stat(stat_name, profile)
+
+                bonus = ''
+
+                if stat_name[0] == 'h' and self.hot_potato != 0:
+                    bonus += f' {YELLOW}(+{4 * self.hot_potato})'
+
+                if stat_name[0] == 'd' and self.hot_potato != 0:
+                    bonus += f' {YELLOW}(+{2 * self.hot_potato})'
 
                 if stat_name in modifier_bonus:
                     bonus_value = modifier_bonus[stat_name]
@@ -298,15 +287,15 @@ def item_type(cls: type, /) -> type:
                     if value != dung_value:
                         dung_str = format_number(fround(dung_value, 1),
                                                  sign=True)
-                        bonus += f' {DARK_GRAY}({dung_str})'
+                        bonus += f' {DARK_GRAY}({dung_str}{ext})'
 
                 value = fround(value, 1)
                 if value == 0:
                     continue
 
                 value_str = format_number(value, sign=True)
-                bonus_stats.append(
-                    f'{display_stat}: {GREEN}{value_str}{bonus}')
+                bonus_stats.append(f'{display_stat}: {GREEN}'
+                                   f'{value_str}{ext}{bonus}')
 
             if len(bonus_stats) != 0:
                 if len(basic_stats) != 0:
@@ -392,7 +381,41 @@ def item_type(cls: type, /) -> type:
                 info += '\n' + '\n'.join(f'{GRAY}{stat}'
                                          for stat in bonus_stats)
 
-        elif self.__class__.__name__ == 'Armor':
+        elif self.__class__.__name__ in {'Drill', 'Pickaxe'}:
+            info += f'\n{DARK_GRAY}Breaking Power {self.breaking_power}\n'
+
+            for stat_name in ('damage',):
+                display_stat = format_name(stat_name)
+                value = self.get_stat(stat_name, profile)
+
+                value = fround(value, 1)
+                if value == 0:
+                    continue
+
+                value_str = format_number(value)
+                basic_stats.append(f'{display_stat}: {RED}+{value_str}')
+
+            if len(basic_stats) != 0:
+                info += '\n' + '\n'.join(f'{GRAY}{stat}'
+                                         for stat in basic_stats)
+
+            for stat_name in ('mining_speed', 'mining_fortune'):
+                display_stat = format_name(stat_name)
+                value = self.get_stat(stat_name, profile)
+
+                if value == 0:
+                    continue
+
+                value_str = format_number(fround(value, 1), sign=True)
+                bonus_stats.append(f'{display_stat}: {GREEN}{value_str}')
+
+            if len(bonus_stats) != 0:
+                if len(basic_stats) != 0:
+                    info += '\n'
+                info += '\n' + '\n'.join(f'{GRAY}{stat}'
+                                         for stat in bonus_stats)
+
+        elif self.__class__.__name__ == 'FishingRod':
             is_dungeon = self.stars is not None
 
             if self.modifier is not None:
@@ -400,13 +423,18 @@ def item_type(cls: type, /) -> type:
             else:
                 modifier_bonus = {}
 
-            for stat_name in ('strength', 'crit_chance', 'crit_damage',
-                              'attack_speed', 'sea_creature_chance'):
+            for stat_name in (
+                'damage', 'strength', 'crit_chance', 'crit_damage',
+                'attack_speed', 'sea_creature_chance',
+            ):
                 display_stat = format_name(stat_name)
-                ext = '%' if stat_name[0] in 'acs' else ''
+                ext = '%' if 'sea' in stat_name or stat_name[0] in 'ac' else ''
                 value = self.get_stat(stat_name, profile)
 
                 bonus = ''
+                if stat_name[0] in 'ds' and self.hot_potato != 0:
+                    bonus += f' {YELLOW}(+{2 * self.hot_potato})'
+
                 if stat_name in modifier_bonus:
                     bonus_value = modifier_bonus[stat_name]
                     bonus_str = format_number(bonus_value, sign=True)
@@ -432,20 +460,9 @@ def item_type(cls: type, /) -> type:
                 info += '\n' + '\n'.join(f'{GRAY}{stat}'
                                          for stat in basic_stats)
 
-            for stat_name in ('health', 'defense', 'intelligence', 'speed',
-                              'magic_find', 'mining_speed', 'mining_fortune',
-                              'true_defense', 'ferocity'):
+            for stat_name in ('defense', 'intelligence', 'ferocity', 'speed'):
                 display_stat = format_name(stat_name)
-                ext = ' HP' if stat_name[0] == 'h' else ''
                 value = self.get_stat(stat_name, profile)
-
-                bonus = ''
-
-                if stat_name[0] == 'h' and self.hot_potato != 0:
-                    bonus += f' {YELLOW}(+{4 * self.hot_potato})'
-
-                if stat_name[0] == 'd' and self.hot_potato != 0:
-                    bonus += f' {YELLOW}(+{2 * self.hot_potato})'
 
                 if stat_name in modifier_bonus:
                     bonus_value = modifier_bonus[stat_name]
@@ -458,21 +475,58 @@ def item_type(cls: type, /) -> type:
                     if value != dung_value:
                         dung_str = format_number(fround(dung_value, 1),
                                                  sign=True)
-                        bonus += f' {DARK_GRAY}({dung_str}{ext})'
+                        bonus += f' {DARK_GRAY}({dung_str})'
 
                 value = fround(value, 1)
                 if value == 0:
                     continue
 
                 value_str = format_number(value, sign=True)
-                bonus_stats.append(f'{display_stat}: {GREEN}'
-                                   f'{value_str}{ext}{bonus}')
+                bonus_stats.append(
+                    f'{display_stat}: {GREEN}{value_str}{bonus}')
 
             if len(bonus_stats) != 0:
                 if len(basic_stats) != 0:
                     info += '\n'
                 info += '\n' + '\n'.join(f'{GRAY}{stat}'
                                          for stat in bonus_stats)
+
+        elif self.__class__.__name__ == 'Hoe':
+            for stat_name in ('farming_fortune',):
+                display_stat = format_name(stat_name)
+                value = getattr(self, stat_name, 0)
+
+                value = fround(value, 1)
+                if value == 0:
+                    continue
+
+                value_str = format_number(value, sign=True)
+                bonus_stats.append(f'{display_stat}: {GREEN}{value_str}')
+
+            if len(bonus_stats) != 0:
+                info += '\n' + '\n'.join(f'{GRAY}{stat}'
+                                         for stat in bonus_stats)
+
+        if self.__class__.__name__ == 'ReforgeStone':
+            if self.category == 'melee':
+                type_str = 'a melee weapon'
+            elif self.category == 'bow':
+                type_str = 'a bow'
+            elif self.category == 'armor':
+                type_str = 'armor'
+
+            info += (
+                f'\n{DARK_GRAY}Reforge Stone\n\n'
+                f'{GRAY}Can be used in a Reforge Anvil\n'
+                f'or with the Dungeon Blacksmith\n'
+                f'to apply the {BLUE}{format_name(self.modifier)}\n'
+                f'{GRAY}reforge to {type_str}.'
+            )
+
+            if getattr(self, 'mining_skill_req', None) is not None:
+                if mining_lvl < self.mining_skill_req:
+                    info += (f'\n\n{GRAY}Requires {GREEN}Mining Skill Level\n'
+                             f'{self.mining_skill_req}{GRAY}!{CLN}')
 
         elif self.__class__.__name__ == 'Pet':
             category = format_name(self.category)
@@ -494,7 +548,7 @@ def item_type(cls: type, /) -> type:
                 ext = ''
                 if stat_name[0] == 'h':
                     ext = ' HP'
-                elif stat_name[0] == 'ac':
+                elif stat_name[0] == 'ac' or stat_name.startswith('sea'):
                     ext = '%'
 
                 value = fround(value, 1)

@@ -4,8 +4,8 @@ Constants of reforging stats.
 
 __all__ = [
     'STAT_ALIASES',
-    'ARMOR_REFORGES', 'BOW_REFORGES', 'MELEE_REFORGES',
-    'ARMOR_MODIFIERS', 'BOW_MODIFIERS', 'MELEE_MODIFIERS',
+    'ACCESSORY_REFORGES', 'ARMOR_REFORGES', 'BOW_REFORGES', 'MELEE_REFORGES',
+    'ACCESSORY_MODIFIERS', 'ARMOR_MODIFIERS', 'BOW_MODIFIERS', 'MELEE_MODIFIERS',
     'MODIFIERS', 'REFORGE_COST',
 ]
 
@@ -30,9 +30,115 @@ STAT_ALIASES = {
     'for_ftn': 'foraging_fortune',
 }
 
+ACCESSORY_REFORGES = (
+    'bizarre', 'itchy', 'ominous', 'pleasant', 'pretty', 'shiny', 'simple',
+    'strange', 'vivid', 'godly', 'demonic', 'forceful', 'hurtful', 'keen',
+    'strong', 'superior', 'unpleasant', 'zealous',
+)
+
+ACCESSORY_MODIFIERS = {
+    'bizarre': (
+        {'hp': 1, 'str': 1, 'cd': -1, 'int': 6},
+        {'hp': 1, 'str': 2, 'cd': -2, 'int': 8},
+        {'hp': 1, 'str': 2, 'cd': -2, 'int': 10},
+        {'hp': 1, 'str': 3, 'cd': -3, 'int': 14},
+        {'hp': 1, 'str': 5, 'cd': -5, 'int': 20},
+        {'hp': 2, 'str': 7, 'cd': -7, 'int': 30},
+    ),
+    'itchy': (
+        {'str': 1, 'cd': 3}, {'str': 1, 'cd': 4},
+        {'str': 1, 'cd': 5, 'as': 1}, {'str': 2, 'cd': 7, 'as': 1},
+        {'str': 3, 'cd': 10, 'as': 1}, {'str': 4, 'cd': 15, 'as': 1},
+    ),
+    'ominous': (
+        {'hp': 1, 'def': 1, 'str': 1, 'cd': 1},
+        {'hp': 1, 'def': 1, 'str': 1, 'cd': 1, 'int': 1},
+        {'hp': 2, 'def': 1, 'str': 1, 'cd': 1, 'int': 2},
+        {'hp': 3, 'def': 2, 'str': 2, 'cd': 1, 'int': 3},
+        {'hp': 4, 'def': 3, 'str': 3, 'cd': 1, 'int': 4},
+        {'hp': 5, 'def': 5, 'str': 4, 'cd': 1, 'int': 5},
+    ),
+    'pleasant': (
+        {'def': 4}, {'def': 5}, {'def': 7},
+        {'def': 10}, {'def': 15}, {'def': 20},
+    ),
+    'pretty': (
+        {'hp': 1, 'int': 3}, {'hp': 1, 'int': 4}, {'hp': 2, 'int': 6, 'as': 1},
+        {'hp': 2, 'spd': 1, 'int': 9, 'as': 1},
+        {'hp': 3, 'spd': 1, 'int': 13, 'as': 1},
+        {'hp': 4, 'spd': 2, 'int': 18, 'as': 1},
+    ),
+    'shiny': (
+        {'hp': 4, 'int': 1}, {'hp': 5, 'int': 2}, {'hp': 7, 'int': 2},
+        {'hp': 10, 'int': 3}, {'hp': 15, 'int': 5}, {'hp': 20, 'int': 5},
+    ),
+    'simple': (
+        {'hp': 1, 'def': 1, 'str': 1, 'spd': 1, 'cd': 1, 'int': 1},
+        {'hp': 1, 'def': 1, 'str': 1, 'spd': 1, 'cd': 1, 'int': 1},
+        {'hp': 1, 'def': 1, 'str': 1, 'spd': 1, 'cd': 1, 'int': 1},
+        {'hp': 1, 'def': 1, 'str': 1, 'spd': 1, 'cd': 1, 'int': 1},
+        {'hp': 1, 'def': 1, 'str': 1, 'spd': 1, 'cd': 1, 'int': 1},
+        {'hp': 1, 'def': 2, 'str': 1, 'spd': 1, 'cd': 1, 'int': 1},
+    ),
+    'strange': (
+        {'str': 2, 'spd': 1, 'cd': 1, 'int': 1, 'as': -1},
+        {'def': 3, 'str': 1, 'cd': 1, 'int': -1, 'as': 3},
+        {'def': 2, 'str': -1, 'spd': 1, 'int': 2},
+        {'def': -1, 'str': 3, 'cd': 1, 'as': 4},
+        {'def': 1, 'spd': 3, 'cd': 7, 'int': 8},
+        {'def': 1, 'str': 4, 'spd': 3, 'cd': 9, 'int': 11, 'as': 5},
+    ),
+    'vivid': (
+        {'hp': 1, 'spd': 1}, {'hp': 2, 'spd': 2}, {'hp': 3, 'spd': 3},
+        {'hp': 4, 'spd': 4}, {'hp': 5, 'spd': 5}, {'hp': 6, 'spd': 6},
+    ),
+    'godly': (
+        {'str': 1, 'cd': 2, 'int': 1}, {'str': 2, 'cd': 2, 'int': 1},
+        {'str': 3, 'cd': 3, 'int': 1}, {'str': 5, 'cd': 4, 'int': 2},
+        {'str': 7, 'cd': 6, 'int': 4}, {'str': 10, 'cd': 8, 'int': 6},
+    ),
+    'demonic': (
+        {'str': 1, 'int': 5}, {'str': 2, 'int': 7}, {'str': 2, 'int': 9},
+        {'str': 3, 'int': 12}, {'str': 5, 'int': 17}, {'str': 7, 'int': 24},
+    ),
+    'forceful': (
+        {'str': 4}, {'str': 5}, {'str': 7},
+        {'str': 10}, {'str': 15}, {'str': 20},
+    ),
+    'hurtful': (
+        {'cd': 4}, {'cd': 5}, {'cd': 7},
+        {'cd': 10}, {'cd': 15}, {'cd': 20},
+    ),
+    'keen': (
+        {'hp': 1, 'def': 1, 'int': 1}, {'hp': 2, 'def': 2, 'int': 2},
+        {'hp': 3, 'def': 3, 'int': 3}, {'hp': 4, 'def': 4, 'int': 4},
+        {'hp': 5, 'def': 5, 'int': 5}, {'hp': 7, 'def': 7, 'int': 7},
+    ),
+    'strong': (
+        {'str': 1, 'cd': 1}, {'str': 2, 'cd': 2},
+        {'def': 1, 'str': 3, 'cd': 3}, {'def': 2, 'str': 5, 'cd': 5},
+        {'def': 3, 'str': 8, 'cd': 8}, {'def': 4, 'str': 12, 'cd': 12},
+    ),
+    'superior': (
+        {'str': 2, 'cd': 2}, {'str': 3, 'cd': 2}, {'str': 4, 'cd': 2},
+        {'str': 5, 'cd': 3}, {'str': 7, 'cd': 3}, {'str': 10, 'cd': 5},
+    ),
+    'unpleasant': (
+        {'cc': 1}, {'cc': 1}, {'cc': 1}, {'cc': 2}, {'cc': 2}, {'cc': 3},
+    ),
+    'zealous': (
+        {'str': 1, 'cd': 1, 'int': 1},
+        {'str': 2, 'cd': 2, 'int': 2},
+        {'str': 2, 'spd': 1, 'cd': 2,  'int': 2},
+        {'str': 3, 'spd': 1, 'cd': 3,  'int': 3},
+        {'str': 5, 'spd': 1, 'cd': 5,  'int': 5},
+        {'str': 7, 'spd': 2, 'cd': 7,  'int': 7},
+    ),
+}
+
 ARMOR_REFORGES = (
-    'clean', 'fierce', 'heavy', 'light', 'mythic',
-    'pure', 'smart', 'titanic', 'wise',
+    'clean', 'fierce', 'heavy', 'light', 'mythic', 'pure', 'smart', 'titanic',
+    'wise',
 )
 
 ARMOR_MODIFIERS = {
@@ -319,6 +425,7 @@ MELEE_MODIFIERS = {
     ),
 }
 
-MODIFIERS = {**ARMOR_MODIFIERS, **BOW_MODIFIERS, **MELEE_MODIFIERS}
+MODIFIERS = {**ACCESSORY_MODIFIERS, **ARMOR_MODIFIERS,
+             **BOW_MODIFIERS, **MELEE_MODIFIERS}
 
 REFORGE_COST = (250, 500, 1_000, 2_500, 5_000, 10_000)

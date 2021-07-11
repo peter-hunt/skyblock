@@ -290,7 +290,8 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
         value += item_ench.get('cultivating', 0)
         value += item_ench.get('harvesting', 0) * 12.6
 
-    value += item.get_stat(name, self)
+    if not isinstance(item, Accessory):
+        value += item.get_stat(name, self)
 
     combat_lvl = self.get_skill_lvl('combat')
     farming_lvl = self.get_skill_lvl('farming')
@@ -323,6 +324,12 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
         elif set_bonus is not False:
             if current_ability != set_bonus:
                 set_bonus = False
+
+    for item in self.inventory:
+        if isinstance(item, Accessory):
+            if item.modifier is not None:
+                modifier_bonus = get_modifier(item.modifier, item.rarity)
+                value += modifier_bonus.get(name, 0)
 
     for piece in self.armor:
         if not isinstance(piece, Armor):
