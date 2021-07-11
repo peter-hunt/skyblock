@@ -134,6 +134,28 @@ ACCESSORY_MODIFIERS = {
         {'str': 5, 'spd': 1, 'cd': 5,  'int': 5},
         {'str': 7, 'spd': 2, 'cd': 7,  'int': 7},
     ),
+
+    'silky': (
+        {'cd': 5}, {'cd': 6}, {'cd': 8}, {'cd': 10}, {'cd': 15}, {'cd': 20},
+    ),
+    'bloody': (
+        {'str': 1, 'spd': 1, 'cd': 3, 'as': 1},
+        {'str': 1, 'spd': 1, 'cd': 4, 'as': 1},
+        {'str': 1, 'spd': 1, 'cd': 5, 'as': 1},
+        {'str': 2, 'spd': 1, 'cd': 6, 'as': 2},
+        {'str': 3, 'spd': 1, 'cd': 9, 'as': 2},
+        {'str': 4, 'spd': 1, 'cd': 14, 'as': 2},
+    ),
+    'shaded': (
+        {'str': 2, 'cd': 3}, {'str': 3, 'cd': 4},
+        {'str': 4, 'cd': 5}, {'str': 5, 'cd': 6},
+        {'str': 6, 'cc': 1, 'cd': 9}, {'str': 8, 'cc': 1, 'cd': 14},
+    ),
+    'sweet': (
+        {'hp': 3, 'def': 1, 'spd': 1}, {'hp': 4, 'def': 1, 'spd': 1},
+        {'hp': 6, 'def': 2, 'spd': 2}, {'hp': 8, 'def': 3, 'spd': 2},
+        {'hp': 12, 'def': 4, 'spd': 3}, {'hp': 16, 'def': 4, 'spd': 4},
+    ),
 }
 
 ARMOR_REFORGES = (

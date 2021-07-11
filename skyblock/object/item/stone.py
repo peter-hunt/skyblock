@@ -59,6 +59,17 @@ REFORGE_STONES = [
     ReforgeStone('deep_sea_orb', 'submerged', 'armor', 'epic',
                  (50000, 150000, 300000, 600000, 750000, 800000),
                  mining_skill_req=25),
+
+    ReforgeStone('luxurious_spool', 'silky', 'accessory', 'rare',
+                 (250, 500, 1000, 2500, 5000, 10000),
+                 mining_skill_req=6),
+    ReforgeStone('beating_heart', 'bloody', 'accessory', 'rare',
+                 (750, 1500, 3650, 7500, 15000, 30000),
+                 mining_skill_req=18),
+    ReforgeStone('dark_orb', 'shaded', 'accessory', 'rare',
+                 (25000, 50000, 100000, 200000, 400000, 800000)),
+    ReforgeStone('rock_candy', 'sweet', 'accessory', 'rare',
+                 (20000, 40000, 80000, 150000, 300000, 600000)),
 ]
 
 

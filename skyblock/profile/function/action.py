@@ -135,24 +135,28 @@ def combine(self, index_1: int, index_2: int, /):
         self.recieve_item(item_1)
         return
 
-    if (isinstance(item_2, (Armor, Bow, Sword, FishingRod))
+    if (isinstance(item_2, (Accessory, Armor, Bow, Sword, FishingRod))
             and isinstance(item_1, ReforgeStone)):
         index_1, index_2 = index_2, index_1
         item_1, item_2 = item_2, item_1
 
-    if (isinstance(item_1, (Armor, Bow, Sword, FishingRod))
+    if (isinstance(item_1, (Accessory, Armor, Bow, Sword, FishingRod))
             and isinstance(item_2, ReforgeStone)):
         cost = item_2.cost['curelm'.index(item_1.rarity[0])]
 
-        if item_2.category == 'armor':
+        if item_2.category == 'accessory':
+            if not isinstance(item_1, Accessory):
+                red('These items cannot be combined!')
+                return
+        elif item_2.category == 'armor':
             if not isinstance(item_1, Armor):
                 red('These items cannot be combined!')
                 return
-        if item_2.category == 'bow':
+        elif item_2.category == 'bow':
             if not isinstance(item_1, Bow):
                 red('These items cannot be combined!')
                 return
-        if item_2.category == 'melee':
+        elif item_2.category == 'melee':
             if not (isinstance(item_1, (Sword, FishingRod))
                     and getattr(item_1, 'damage', 0) != 0):
                 red('These items cannot be combined!')

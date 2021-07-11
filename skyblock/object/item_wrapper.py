@@ -508,7 +508,9 @@ def item_type(cls: type, /) -> type:
                                          for stat in bonus_stats)
 
         if self.__class__.__name__ == 'ReforgeStone':
-            if self.category == 'melee':
+            if self.category == 'accessory':
+                type_str = 'accessories'
+            elif self.category == 'melee':
                 type_str = 'a melee weapon'
             elif self.category == 'bow':
                 type_str = 'a bow'

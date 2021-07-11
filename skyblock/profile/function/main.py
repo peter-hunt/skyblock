@@ -121,7 +121,7 @@ def mainloop(self):
             self.buy(chosen_trade, amount)
 
         elif words[0] == 'cheat':
-            # item = get_item('haste_ring')
+            # item = get_item('luxurious_spool')
             # self.recieve_item(item)
             ...
 
