@@ -102,6 +102,12 @@ Gather resources.
 > goto <region>
 Go to a region.
 
+> help [command]
+Show this message or get command description.
+
+> hotm
+Open the Heart of the Mountain menu.
+
 > hub
 Teleport you to the hub.
 
@@ -117,9 +123,6 @@ Slay mobs.
 
 > ls
 List all the items in the inventory.
-
-> help [command]
-Show this message or get command description.
 
 > look
 Get information about the region.

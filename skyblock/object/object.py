@@ -291,6 +291,7 @@ class Mineral(Resource):
     hardness: Number = 2
     exp: Amount = 1
     mining_exp: Number = 1
+    mithril_powder: Amount = 0
 
 
 @init_type

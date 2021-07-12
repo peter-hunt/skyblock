@@ -9,8 +9,8 @@ from ...constant.stat import ALL_STAT, HIDDEN_STATS, PERC_STATS
 from ...constant.util import Number
 from ...function.io import *
 from ...function.math import (
-    calc_bestiary_level, calc_bestiary_upgrade_amount, calc_skill_level_info,
-    display_skill_reward, fround,
+    calc_bestiary_upgrade_amount, calc_skill_level_info, display_skill_reward,
+    fround,
 )
 from ...function.util import (
     format_name, format_number, format_roman, format_short, format_zone,
@@ -28,10 +28,10 @@ from ...map.object import *
 __all__ = [
     'display_armor', 'display_bestiary', 'display_bestiaries',
     'display_collection_info', 'display_collection', 'display_collections',
-    'display_item', 'display_inv', 'display_location', 'display_money',
-    'display_pets', 'display_playtime', 'display_recipe_info', 'display_recipe',
-    'display_recipes', 'display_shop', 'display_stats', 'display_skill_add',
-    'display_skill', 'display_skills', 'display_warp',
+    'display_hotm', 'display_item', 'display_inv', 'display_location',
+    'display_money', 'display_pets', 'display_playtime', 'display_recipe_info',
+    'display_recipe', 'display_recipes', 'display_shop', 'display_stats',
+    'display_skill_add', 'display_skill', 'display_skills', 'display_warp',
     'npc_silent', 'npc_speak',
 ]
 
@@ -238,6 +238,12 @@ def display_collections(self, /):
         self.display_collection(category, end=False)
 
 
+def display_hotm(self, /):
+    powder_str = format_number(fround(self.mithril_powder))
+
+    dark_green(f'᠅ {GRAY}Mithril Powder: {DARK_GREEN}{powder_str}')
+
+
 def display_item(self, item: ItemType, /):
     if isinstance(item, Empty):
         gray('Empty')
@@ -329,21 +335,26 @@ def display_location(self, /):
 
 
 def display_money(self, /):
+    if self.has_item('piggy_bank') or self.has_item('cracked_piggy_bank'):
+        bank_type = 'Piggy'
+    else:
+        bank_type = 'Purse'
+
     if self.zone not in {'bank', 'dwarven_village'}:
-        white(f'Purse: {GOLD}{format_number(self.purse)} Coins')
+        white(f'{bank_type}: {GOLD}{format_number(self.purse)} Coins')
         return
 
-    balance_str = format_number(self.balance)
+    balance_str = format_number(fround(self.balance, 1))
     if '.' not in balance_str:
         balance_str = balance_str + '  '
-    purse_str = format_number(self.purse)
+    purse_str = format_number(fround(self.purse, 1))
     if '.' not in purse_str:
         purse_str = purse_str + '  '
     length = max(len(balance_str), len(purse_str))
 
     green('Bank Account')
     gray(f'Balance: {GOLD}{balance_str:>{length}} Coins')
-    white(f'Purse:   {GOLD}{purse_str:>{length}} Coins')
+    white(f'{bank_type}:   {GOLD}{purse_str:>{length}} Coins')
     gray(f'Bank Level: {GREEN}{format_name(self.bank_level)}')
 
 

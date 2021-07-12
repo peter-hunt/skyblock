@@ -37,7 +37,8 @@ python -m skyblock
 # Content
 ## Added Features:
 * Abilities
-* Armor pieces, Swords, and Bows
+* Accessories
+* Armor pieces, Bows and Swords
 * Axes, Hoes, Pickaxes, Fishing Rods
 * Bestiary
 * Crafting
@@ -53,10 +54,10 @@ python -m skyblock
 * Skills
 
 ## Features Planned:
-* Accessories
 * Combat while mining
 * Commissions
 * Dungeons
+* EHP display
 * Fairy Souls
 * Forging (Dwarven Mines)
 * HoTM Skill Tree (Dwarven Mines)

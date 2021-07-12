@@ -16,25 +16,25 @@ class Profile:
     last_update: int = 0
 
     bank_level: str = 'starter'
-    balance: Number = 0.0
-    purse: Number = 0.0
-
     experience: Number = 0
+    balance: Number = 0
+    purse: Number = 0
+    mithril_powder: Number = 0
 
     island: str = 'hub'
     zone: str = 'village'
     visited_zones: List[str] = []
 
-    experience_skill_alchemy: float = 0.0
-    experience_skill_carpentry: float = 0.0
-    experience_skill_catacombs: float = 0.0
-    experience_skill_combat: float = 0.0
-    experience_skill_enchanting: float = 0.0
-    experience_skill_farming: float = 0.0
-    experience_skill_fishing: float = 0.0
-    experience_skill_foraging: float = 0.0
-    experience_skill_mining: float = 0.0
-    experience_skill_taming: float = 0.0
+    experience_skill_alchemy: Number = 0
+    experience_skill_carpentry: Number = 0
+    experience_skill_catacombs: Number = 0
+    experience_skill_combat: Number = 0
+    experience_skill_enchanting: Number = 0
+    experience_skill_farming: Number = 0
+    experience_skill_fishing: Number = 0
+    experience_skill_foraging: Number = 0
+    experience_skill_mining: Number = 0
+    experience_skill_taming: Number = 0
     collection: Dict[str, int] = {
         collection.name: 0
         for collection in COLLECTIONS

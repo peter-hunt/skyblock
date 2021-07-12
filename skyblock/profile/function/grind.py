@@ -268,6 +268,11 @@ def gather(self, name: str, tool_index: Optional[int],
                     white(f'{rarity_color}RARE DROP! '
                           f'{WHITE}({loot.display()}{WHITE})')
 
+            mithril_powder = random_amount(resource.mithril_powder)
+            if mithril_powder != 0:
+                self.mithril_powder += mithril_powder
+                dark_green(f'+ {format_number(mithril_powder)} Mithril Powder')
+
             if i >= (last_cp + cp_step) * iteration:
                 while i >= (last_cp + cp_step) * iteration:
                     last_cp += cp_step

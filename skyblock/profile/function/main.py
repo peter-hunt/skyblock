@@ -402,6 +402,13 @@ def mainloop(self):
             else:
                 red(f'Command not found: {phrase!r}.')
 
+        elif words[0] == 'hotm':
+            if self.island != 'mines':
+                red('You can only use the HoTM menu in the Dwarven Mines!')
+                continue
+
+            self.display_hotm()
+
         elif words[0] == 'hub':
             self.warp('hub')
 
