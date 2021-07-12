@@ -77,6 +77,7 @@ SPECIAL_ZONES = {
 SPECIAL_NAMES = {
     'oringo': 'Oringo the Traveling Zookeeper',
 
+    'ehp': 'EHP',
     'attack_speed': 'Bonus Attack Speed',
 
     'counter_strike': 'Counter-Strike',

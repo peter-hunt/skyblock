@@ -454,17 +454,17 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
     crit_damage += 10 * weapon_enchants.get('critical', 0)
     ferocity += weapon_enchants.get('vicious', 0)
 
-    rejuvenate = 0
+    healing_mult = 1
 
     for piece in self.armor:
         if not isinstance(piece, Armor):
             continue
 
         piece_enchants = getattr(piece, 'enchantments', {})
-        rejuvenate += piece_enchants.get('rejuvenate', 0) * 2
-        thorns += piece_enchants.get('thorns', 0) * 3
-        last_stand += piece_enchants.get('last_stand', 0) * 5
-        no_pain_no_gain.append(piece_enchants.get('no_pain_no_gain', 0) * 25)
+        healing_mult += 0.02 + piece_enchants.get('rejuvenate', 0)
+        thorns += 3 * piece_enchants.get('thorns', 0)
+        last_stand += 5 * piece_enchants.get('last_stand', 0)
+        no_pain_no_gain.append(25 * piece_enchants.get('no_pain_no_gain', 0))
 
     if set_bonus == 'deflect':
         thorns += 33
@@ -542,11 +542,10 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
     if set_bonus == 'pumpkin_buff':
         damage_recieved_mult *= 0.9
 
-    healing_mult = 1
     if self.has_item('healing_ring'):
-        healing_mult = 1.1
+        healing_mult *= 1.1
     elif self.has_item('healing_talisman'):
-        healing_mult = 1.05
+        healing_mult *= 1.05
 
     soul_eater = weapon_enchants.get('soul_eater', 0) * 2
     soul_eater_strength = 0
@@ -570,8 +569,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
         width = ceil(width * 0.85)
         aqua(f"{BOLD}{'':-^{width}}")
 
-        healed = (round((time_cost // 2) * (1.5 + health / 100), 1)
-                  * (1 + (rejuvenate / 100)))
+        healed = round((time_cost // 2) * (1.5 + health / 100), 1)
         if set_bonus == 'holy_blood':
             healed *= 3
         healed *= healing_mult
@@ -686,7 +684,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
             if last_stand != 0 and hp / health < 0.4:
                 actual_defense *= last_stand / 100
 
-            damage_recieved = mob.damage / (1 + defense / 100)
+            damage_recieved = mob.damage / (1 + actual_defense / 100)
             damage_recieved *= damage_recieved_mult
             if damage_recieved != 0:
                 hp = max(hp - damage_recieved, 0)

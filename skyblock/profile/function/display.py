@@ -508,7 +508,7 @@ def display_shop(self, npc: Npc, trade_index: Optional[int] = None, /):
 def display_stats(self, index: Optional[int] = None, /):
     green('Your SkyBlock Profile')
     for stat_name in ALL_STAT:
-        value = self.get_stat(stat_name, index)
+        value = floor(self.get_stat(stat_name, index))
         if value == 0 and stat_name in HIDDEN_STATS:
             continue
         color = STAT_COLORS[stat_name]
@@ -517,7 +517,14 @@ def display_stats(self, index: Optional[int] = None, /):
         else:
             ext = '%' if stat_name in PERC_STATS else ''
         white(f'  {color} {format_name(stat_name)}'
-              f' {WHITE}{floor(value)}{ext}')
+              f' {WHITE}{format_number(value)}{ext}')
+        if stat_name == 'defense':
+            health = self.get_stat('health', index)
+            defense = self.get_stat('defense', index)
+            color = STAT_COLORS['ehp']
+            ehp = floor(health * (1 + defense / 100))
+            white(f"  {color} {format_name('ehp')}"
+                  f" {WHITE}{format_number(ehp)}{ext}")
 
 
 def display_skill_add(self, name: str, amount: Number, /):

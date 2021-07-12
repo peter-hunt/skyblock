@@ -54,6 +54,7 @@ RARITY_COLORS = {
 STAT_COLORS = {
     'health': f'{RED}❤',
     'defense': f'{GREEN}❈',
+    'ehp': f'{DARK_AQUA}❤',
     'true_defense': f'{WHITE}❂',
     'strength': f'{RED}❁',
     'speed': f'{WHITE}✦',

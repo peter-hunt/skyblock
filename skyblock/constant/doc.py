@@ -200,6 +200,9 @@ Unequip armor.
 > warp [island]
 Warp to an island using portal or consumed travel scroll.
 
+> warpforge
+Warps you to the The Forge area in the Dwarven Mines.
+
 > withdraw [all|half|<coins>]
 Withdraw coins from the bank to the purse.
 """.strip()

@@ -37,7 +37,7 @@ BOA_EFT = [
 
 # list of mobs affected by blast protection enchantment
 BLAST_PROT_EFT = [
-    'sneaky_creeper', 'ghast',
+    'sneaky_creeper', 'large_magma_cube', 'ghast',
 ]
 
 # list of mobs affected by projectile protection enchantment

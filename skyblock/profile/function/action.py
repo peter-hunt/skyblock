@@ -708,7 +708,7 @@ def warp(self, dest: str, /):
             return
 
     if dest == self.island and island.spawn == self.zone:
-        yellow(f'Already at {AQUA}{format_name(dest)}{YELLOW}!')
+        yellow(f'Already at {AQUA}{format_zone(dest)}{YELLOW}!')
         return
 
     dest_zone = get(dest_island.zones,
