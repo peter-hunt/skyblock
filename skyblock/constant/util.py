@@ -75,25 +75,33 @@ SPECIAL_ZONES = {
 
 # names with special translation from id to displayed name
 SPECIAL_NAMES = {
+    # items
+    'tightly_tied_hay_bale': 'Tightly-Tied Hay Bale',
+
+    # npcs
     'oringo': 'Oringo the Traveling Zookeeper',
 
+    # stats
     'ehp': 'EHP',
     'attack_speed': 'Bonus Attack Speed',
 
+    # enchantments
     'counter_strike': 'Counter-Strike',
     'first_strike': 'First-Strike',
     'triple_strike': 'Triple-Strike',
 
-    'skeletons_helmet': "Skeleton's Helmet",
-    'spiders_boots': "Spider's Boots",
-    'ranchers_boots': "Rancher's Boots",
-    'tightly_tied_hay_bale': 'Tightly-Tied Hay Bale',
+    # weapon
     'runaans_bow': "Runaan's Bow",
-    'zombies_heart': "Zombie's Heart",
 
     'giants_sword': "Giant's Sword",
     'necrons_blade': "Necron's Blade",
     'tacticians_sword': "Tactician's Sword",
+
+    # armor pieces
+    'skeletons_helmet': "Skeleton's Helmet",
+    'spiders_boots': "Spider's Boots",
+    'ranchers_boots': "Rancher's Boots",
+    'zombies_heart': "Zombie's Heart",
 
     'miners_outfit_helmet': "Miner's Outfit Helmet",
     'miners_outfit_chestplate': "Miner's Outfit Chestplate",
@@ -142,6 +150,7 @@ SPECIAL_NAMES = {
     'titans_leggings': "Titan's Leggings",
     'titans_boots': "Titan's Boots",
 
+    # tools
     'mithril_drill_226': 'Mithril Drill SX-R226',
     'mithril_drill_326': 'Mithril Drill SX-R326',
     'titanium_drill_355': 'Titanium Drill DR-X355',
@@ -150,8 +159,10 @@ SPECIAL_NAMES = {
 
     'farmers_rod': "Farmer's Rod",
 
+    # reforge stones
     'necromancers_brooch': "Necromancer's Brooch",
 
+    # rarity
     'pray_rngesus': 'Pray RNGesus',
 }
 

@@ -43,7 +43,7 @@ BLAST_PROT_EFT = [
 # list of mobs affected by projectile protection enchantment
 PROJ_PROT_EFT = [
     'skeleton', 'gravel_skeleton', 'watcher',
-    'diamond_skeleton', 'enchanted_diamond_skeleton', 'sea_archer',
+    'diamond_skeleton', 'sea_archer',
 ]
 
 # list of mobs affected by smite enchantment
@@ -54,7 +54,6 @@ SMITE_EFT = [
     'lapis_zombie',
     'redstone_pigman',
     'diamond_zombie', 'diamond_skeleton',
-    'enchanted_diamond_zombie', 'enchanted_diamond_skeleton',
 ]
 
 
@@ -78,14 +77,13 @@ SEA_CREATURES = [
 ZOMBIES = [
     'zombie', 'zombie_villager',
     'crypt_ghoul', 'golden_ghoul',
-    'lapis_zombie',
-    'diamond_zombie', 'enchanted_diamond_zombie',
+    'lapis_zombie', 'diamond_zombie',
 ]
 
 # list of mobs affected by skeleton talisman
 SKELETONS = [
     'skeleton', 'gravel_skeleton',
-    'diamond_skeleton', 'enchanted_diamond_skeleton',
+    'diamond_skeleton',
 ]
 
 
@@ -98,8 +96,6 @@ BESTIARY_ALTER = {
     'emerald_slime': ('small_emerald_slime',
                       'medium_emerald_slime',
                       'large_emerald_slime'),
-    'miner_zombie': ('diamond_zombie',
-                     'enchanted_diamond_zombie'),
-    'miner_skeleton': ('diamond_skeleton',
-                       'enchanted_diamond_skeleton'),
+    'miner_zombie': ('diamond_zombie',),
+    'miner_skeleton': ('diamond_skeleton',),
 }

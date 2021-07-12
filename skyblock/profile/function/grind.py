@@ -512,9 +512,6 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
     vampirism = weapon_enchants.get('vampirism', 0)
 
     added_exp = 0.2 * bestiary_level
-    added_coin = 0
-    if self.has_item('scavenger_talisman'):
-        added_coin = 20
 
     exp_mult = 1 + 0.125 * weapon_enchants.get('experience', 0)
     exp_mult *= 1 + 0.04 * enchanting_level
@@ -769,7 +766,9 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                 white(f'{rarity_color}RARE DROP! '
                       f'{WHITE}({loot.display()}{WHITE})')
 
-        coins_recieved = (mob.coins + scavenger) * coins_mult + added_coin
+        coins_recieved = (mob.coins + scavenger) * coins_mult
+        if self.has_item('scavenger_talisman'):
+            coins_recieved += 0.5 * mob.level
         self.purse += coins_recieved
         gray(f'+ {GOLD}{format_number(coins_recieved)} Coins')
 

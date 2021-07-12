@@ -521,6 +521,7 @@ def display_stats(self, index: Optional[int] = None, /):
         if stat_name == 'defense':
             health = self.get_stat('health', index)
             defense = self.get_stat('defense', index)
+            ext = ' EHP'
             color = STAT_COLORS['ehp']
             ehp = floor(health * (1 + defense / 100))
             white(f"  {color} {format_name('ehp')}"

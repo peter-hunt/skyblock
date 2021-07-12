@@ -416,7 +416,7 @@ MOBS = [
             (get_item('miner_boots'), 1, 'pray_rngesus', 0.00125),
             (Item('exp_share_core'), 1, 'pray_rngesus', 0.0001),
         ]),
-    Mob('enchanted_diamond_zombie', level=20, health=300, damage=190,
+    Mob('diamond_zombie', level=20, health=300, damage=190,
         coins=15, exp=40, combat_exp=24,
         drops=[
             (Item('rotten_flesh'), 4, 'common', 1),
@@ -430,7 +430,7 @@ MOBS = [
              1, 'pray_rngesus', 0.00125),
             (Item('exp_share_core'), 1, 'pray_rngesus', 0.0001),
         ]),
-    Mob('enchanted_diamond_skeleton', level=20, health=300, damage=190,
+    Mob('diamond_skeleton', level=20, health=300, damage=190,
         coins=15, exp=40, combat_exp=24,
         drops=[
             (Item('bone'), 4, 'common', 1),

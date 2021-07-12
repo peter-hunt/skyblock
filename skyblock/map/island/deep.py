@@ -34,15 +34,15 @@ SLIMEHILL = Zone(
 DIAMOND_RESERVE = Zone(
     'diamond_reserve', -35, 15,
     resources=[get_resource('stone'), get_resource('diamond_ore')],
-    mobs=[get_mob('diamond_zombie'),
-          get_mob('diamond_skeleton')],
+    mobs=[get_mob('diamond_zombie', level=15),
+          get_mob('diamond_skeleton', level=15)],
 )
 OBSIDIAN_SANCTUARY = Zone(
     'obsidian_sanctuary', -10, 70, portal='mines',
     resources=[get_resource('stone'), get_resource('diamond_ore'),
                get_resource('diamond_block'), get_resource('obsidian')],
-    mobs=[get_mob('enchanted_diamond_zombie'),
-          get_mob('enchanted_diamond_skeleton')],
+    mobs=[get_mob('diamond_zombie', level=20),
+          get_mob('diamond_skeleton', level=20)],
 )
 LIFT = Zone(
     'lift', 50, 0,
