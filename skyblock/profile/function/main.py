@@ -1,5 +1,5 @@
+from gnureadline import add_history
 from re import fullmatch
-from readline import add_history
 from typing import Optional
 
 from ...constant.color import *
@@ -13,7 +13,7 @@ from ...function.util import (
 )
 from ...map.island import get_island
 from ...object.collection import is_collection
-from ...object.item import ITEMS, get_item, get_scroll, get_stone
+from ...object.item import ITEMS, get_item
 from ...object.mob import get_mob
 from ...object.object import *
 from ...object.recipe import RECIPES
@@ -432,7 +432,9 @@ def mainloop(self):
 
         elif words[0] in {'kill', 'slay'}:
             name = words[1]
-            if (mob := get_mob(name)) is None:
+            mob = get_mob(name)
+
+            if mob is None:
                 continue
             if get(zone.mobs, name) is None:
                 red(f'Mob not avaliable at {zone}: {name!r}')

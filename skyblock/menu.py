@@ -1,7 +1,7 @@
+from gnureadline import add_history
 from os import walk
 from os.path import join
 from pathlib import Path
-from readline import add_history
 from typing import List
 
 from .constant.color import *
