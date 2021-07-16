@@ -1,37 +1,51 @@
-from typing import Optional
+from typing import List, Optional, Union
 
 from ...function.io import *
 from ...function.util import includes, get
 
 from ..object import *
 
-from .combat import *
-from .combat import __all__ as __combat__
-from .farming import *
-from .farming import __all__ as __farming__
-from .foraging import *
-from .foraging import __all__ as __foraging__
-from .fishing import *
-from .fishing import __all__ as __fishing__
-from .mining import *
-from .mining import __all__ as __mining__
-from .misc import *
-from .misc import __all__ as __misc__
+from .combat import COMBAT_RECIPES as COMBAT
+from .farming import FARMING_RECIPES as _FARMING
+from .farming_minion import FARMING_MINION_RECIPES as _FARMING_MINION
+from .foraging import FORAGING_RECIPES as FORAGING
+from .fishing import FISHING_RECIPES as FISHING
+from .mining import MINING_RECIPES as MINING
+from .misc import MISC_RECIPES as MISC
 
 
-__all__ = (
-    __combat__ + __farming__ + __fishing__ + __foraging__
-    + __mining__ + __misc__ + ['get_recipe']
-)
-
-RECIPES = (
-    FARMING_RECIPES + MINING_RECIPES + COMBAT_RECIPES + FORAGING_RECIPES
-    + FISHING_RECIPES + MISC_RECIPES
-)
+__all__ = ['RECIPES', 'CRAFTABLES', 'get_recipe']
 
 
-def get_recipe(name: str, **kwargs) -> Optional[Recipe]:
+def _gen_recipes(recipes: List[Recipe],
+                 minion_recipes: List[Recipe]) -> List[Recipe]:
+    _recipes = [recipe for recipe in recipes
+                if recipe.collection_req is not None]
+    result = [recipe for recipe in recipes
+              if recipe.collection_req is None]
+    collections = [*{recipe.collection_req[0] for recipe in _recipes}]
+
+    for collection in collections:
+        for recipe in minion_recipes:
+            if recipe.collection_req[0] == collection:
+                result.append(recipe)
+        for recipe in _recipes:
+            if recipe.collection_req[0] == collection:
+                result.append(recipe)
+
+    return result
+
+
+FARMING = _gen_recipes(_FARMING, _FARMING_MINION)
+RECIPES = FARMING + MINING + COMBAT + FORAGING + FISHING + MISC
+CRAFTABLES = [recipe for recipe in RECIPES
+              if isinstance(recipe, Recipe)]
+
+
+def get_recipe(name: str, warn: bool = True
+               ) -> Optional[Union[Recipe, RecipeGroup]]:
     if not includes(RECIPES, name):
-        red(f'Recipe not found: {name!r}')
+        if warn:
+            red(f'Recipe or Group not found: {name!r}')
         return
-    return get(RECIPES, name, **kwargs)
+    return get(RECIPES, name)

@@ -125,4 +125,10 @@ def init_type(cls: type, /) -> type:
 
     cls.__init__ = eval(init_str)
 
+    copy_str = 'lambda self: self.__class__('
+    copy_str += ', '.join(f'self.{key}' for key in anno)
+    copy_str += ')'
+
+    cls.copy = eval(copy_str)
+
     return cls

@@ -4,19 +4,16 @@ from ...function.io import *
 
 from ..object import *
 
-from .combat import COMBAT_COLLECTIONS
-from .farming import FARMING_COLLECTIONS
-from .fishing import FISHING_COLLECTIONS
-from .foraging import FORAGING_COLLECTIONS
-from .mining import MINING_COLLECTIONS
+from .combat import COMBAT_COLLECTIONS as COMBAT
+from .farming import FARMING_COLLECTIONS as FARMING
+from .fishing import FISHING_COLLECTIONS as FISHING
+from .foraging import FORAGING_COLLECTIONS as FORAGING
+from .mining import MINING_COLLECTIONS as MINING
 
 
 __all__ = ['COLLECTIONS', 'is_collection', 'get_collection', 'calc_coll_level']
 
-COLLECTIONS = (
-    COMBAT_COLLECTIONS + FARMING_COLLECTIONS + FISHING_COLLECTIONS
-    + FORAGING_COLLECTIONS + MINING_COLLECTIONS
-)
+COLLECTIONS = COMBAT + FARMING + FISHING + FORAGING + MINING
 
 
 def is_collection(name: str) -> bool:

@@ -2,8 +2,6 @@ from ..object import *
 from ..recipe import get_recipe
 
 
-__all__ = ['FISHING_COLLECTIONS']
-
 FISHING_COLLECTIONS = [
     Collection(
         'fish', 'fishing',
@@ -12,8 +10,7 @@ FISHING_COLLECTIONS = [
             (50, 5),
             (100, 10),
             (250, 25),
-            (500, (get_recipe('angler_helmet'), get_recipe('angler_chestplate'),
-                   get_recipe('angler_leggings'), get_recipe('angler_boots'))),
+            (500, get_recipe('angler_armor')),
             (1_000, get_recipe('fish_to_enchanted')),
             (2_500, 250),
             (15_000, get_recipe('fish_to_enchanted_cooked')),
@@ -33,10 +30,7 @@ FISHING_COLLECTIONS = [
             (1_000, get_recipe('fish_bait')),
             (2_500, 250),
             (5_000, get_recipe('salmon_to_enchanted_cooked')),
-            (10_000, (get_recipe('salmon_helmet'),
-                      get_recipe('salmon_chestplate'),
-                      get_recipe('salmon_leggings'),
-                      get_recipe('salmon_boots'))),
+            (10_000, get_recipe('salmon_armor')),
         ],
     ),
     Collection(
@@ -136,10 +130,7 @@ FISHING_COLLECTIONS = [
             (800, get_recipe('sea_creature_ring')),
             (1_500, get_recipe('sponge_to_enchanted_wet')),
             (2_500, get_recipe('sea_creature_artifact')),
-            (4_000, (get_recipe('sponge_helmet'),
-                     get_recipe('sponge_chestplate'),
-                     get_recipe('sponge_leggings'),
-                     get_recipe('sponge_boots'))),
+            (4_000, get_recipe('sponge_armor')),
         ],
     ),
 ]

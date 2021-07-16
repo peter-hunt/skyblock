@@ -446,7 +446,7 @@ MOBS = [
         ]),
 
     Mob('ghost', level=250, health=1000000, damage=1000, true_damage=100,
-        coins=100, exp=0, combat_exp=100,
+        coins=100, exp=30, combat_exp=100,
         drops=[
             (Item('sorrow'), 1, 'rare', 0.0012),
             (Item('plasma'), 1, 'legendary', 0.001),
@@ -471,7 +471,7 @@ MOBS = [
             (get_stone('salmon_opal'), 1, 'rare', 0.01),
             (Item('treasurite'), 1, 'rare', 0.005),
         ]),
-    Mob('ice_walker', level=45, health=888, damage=500,
+    Mob('ice_walker', level=45, health=888, defense=800, damage=500,
         coins=40, exp=35, combat_exp=40,
         drops=[
             (get_item('glacite_helmet'),

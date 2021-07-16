@@ -2,8 +2,6 @@ from ..item import get_item
 from ..object import *
 
 
-__all__ = ['MISC_RECIPES']
-
 MISC_RECIPES = [
     Recipe('diamond_to_refined', 'forging',
            [(Item('enchanted_diamond_block'), 2)],

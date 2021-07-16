@@ -2,8 +2,6 @@ from ..item import get_item
 from ..object import *
 
 
-__all__ = ['FISHING_RECIPES']
-
 FISHING_RECIPES = [
     Recipe('fishing_rod', 'fishing',
            [(Item('stick'), 3),
@@ -22,6 +20,9 @@ FISHING_RECIPES = [
     Recipe('divers_boots', 'fishing',
            [(Item('emperors_skull'), 4)],
            (get_item('divers_boots'), 1)),
+    RecipeGroup('divers_armor', 'fishing',
+                ['divers_helmet', 'divers_chestplate',
+                 'divers_leggings', 'divers_boots']),
 
     Recipe('carrot_bait', 'fishing',
            [(Item('carrot'), 1),
@@ -35,7 +36,6 @@ FISHING_RECIPES = [
            [(Item('fish'), 8)],
            (get_item('fish_hat'), 1),
            collection_req=('fish', 1)),
-
     Recipe('angler_helmet', 'fishing',
            [(Item('fish'), 5)],
            (get_item('angler_helmet'), 1),
@@ -52,7 +52,10 @@ FISHING_RECIPES = [
            [(Item('fish'), 4)],
            (get_item('angler_boots'), 1),
            collection_req=('fish', 5)),
-
+    RecipeGroup('angler_armor', 'fishing',
+                ['angler_helmet', 'angler_chestplate',
+                 'angler_leggings', 'angler_boots'],
+                collection_req=('fish', 5)),
     Recipe('fish_to_enchanted', 'fishing',
            [(Item('fish'), 160)],
            (Item('enchanted_fish'), 1),
@@ -89,7 +92,6 @@ FISHING_RECIPES = [
            [(Item('enchanted_salmon'), 160)],
            (Item('enchanted_cooked_salmon'), 1),
            collection_req=('salmon', 8)),
-
     Recipe('salmon_helmet', 'fishing',
            [(Item('enchanted_salmon'), 5)],
            (get_item('salmon_helmet'), 1),
@@ -106,6 +108,10 @@ FISHING_RECIPES = [
            [(Item('enchanted_salmon'), 4)],
            (get_item('salmon_boots'), 1),
            collection_req=('salmon', 9)),
+    RecipeGroup('salmon_armor', 'fishing',
+                ['salmon_helmet', 'salmon_chestplate',
+                 'salmon_leggings', 'salmon_boots'],
+                collection_req=('salmon', 9)),
 
     Recipe('clownfish_hat', 'fishing',
            [(Item('clownfish'), 8)],
@@ -316,7 +322,6 @@ FISHING_RECIPES = [
             (Item('enchanted_sponge'), 64)],
            (get_item('sea_creature_artifact'), 1),
            collection_req=('sponge', 8)),
-
     Recipe('sponge_helmet', 'fishing',
            [(Item('enchanted_wet_sponge'), 5)],
            (get_item('sponge_helmet'), 1),
@@ -333,4 +338,8 @@ FISHING_RECIPES = [
            [(Item('enchanted_wet_sponge'), 4)],
            (get_item('sponge_boots'), 1),
            collection_req=('sponge', 9)),
+    RecipeGroup('sponge_armor', 'fishing',
+                ['sponge_helmet', 'sponge_chestplate',
+                 'sponge_leggings', 'sponge_boots'],
+                collection_req=('sponge', 9)),
 ]

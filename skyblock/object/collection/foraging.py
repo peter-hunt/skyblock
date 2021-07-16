@@ -2,18 +2,13 @@ from ..object import *
 from ..recipe import get_recipe
 
 
-__all__ = ['FORAGING_COLLECTIONS']
-
 FORAGING_COLLECTIONS = [
     Collection(
         'oak_wood', 'foraging',
         [
             (50, 5),
             (100, get_recipe('oak_leaves')),
-            (250, (get_recipe('leaflet_helmet'),
-                   get_recipe('leaflet_chestplate'),
-                   get_recipe('leaflet_leggings'),
-                   get_recipe('leaflet_boots'))),
+            (250, get_recipe('leaflet_armor')),
             (500, 50),
             (1_000, 100),
             (2_000, get_recipe('oak_to_enchanted')),
@@ -46,8 +41,7 @@ FORAGING_COLLECTIONS = [
             (2_000, get_recipe('spruce_to_enchanted')),
             (5_000, 500),
             (10_000, 1_000),
-            (25_000, (get_recipe('uncommon_wolf_pet'),
-                      get_recipe('epic_wolf_pet'))),
+            (25_000, get_recipe('wolf_pet')),
             (50_000, 5_000),
         ],
     ),
@@ -62,10 +56,7 @@ FORAGING_COLLECTIONS = [
             (5_000, 500),
             (10_000, get_recipe('growth_book')),
             (25_000, 2_500),
-            (50_000, (get_recipe('growth_helmet'),
-                      get_recipe('growth_chestplate'),
-                      get_recipe('growth_leggings'),
-                      get_recipe('growth_boots'))),
+            (50_000, get_recipe('growth_armor')),
         ],
     ),
     Collection(
@@ -93,8 +84,7 @@ FORAGING_COLLECTIONS = [
             (5_000, get_recipe('jungle_to_enchanted')),
             (10_000, get_recipe('jungle_axe')),
             (25_000, 2_500),
-            (50_000, (get_recipe('uncommon_ocelot_pet'),
-                      get_recipe('epic_ocelot_pet'))),
+            (50_000, get_recipe('ocelot_pet')),
         ],
     ),
 ]

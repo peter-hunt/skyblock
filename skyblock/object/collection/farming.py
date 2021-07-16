@@ -2,25 +2,19 @@ from ..object import *
 from ..recipe import get_recipe
 
 
-__all__ = ['FARMING_COLLECTIONS']
-
 FARMING_COLLECTIONS = [
     Collection(
         'wheat', 'farming',
         [
-            (50, 5),
+            (50, get_recipe('wheat_minion')),
             (100, get_recipe('harvesting_book')),
-            (250, (get_recipe('farm_suit_helmet'),
-                   get_recipe('farm_suit_chestplate'),
-                   get_recipe('farm_suit_leggings'),
-                   get_recipe('farm_suit_boots'))),
+            (250, get_recipe('farm_suit_armor')),
             (500, get_recipe('farming_talisman')),
             (1_000, 100),
             (2_500, 250),
             (10_000, get_recipe('hay_to_enchanted')),
             (15_000, 1_500),
-            (25_000, (get_recipe('farm_helmet'), get_recipe('farm_chestplate'),
-                      get_recipe('farm_leggings'), get_recipe('farm_boots'))),
+            (25_000, get_recipe('farm_armor')),
             (50_000, 5_000),
             (100_000, get_recipe('hay_to_tighted')),
         ],
@@ -28,7 +22,7 @@ FARMING_COLLECTIONS = [
     Collection(
         'carrot', 'farming',
         [
-            (100, 10),
+            (100, get_recipe('carrot_minion')),
             (250, 25),
             (500, 50),
             (1_700, get_recipe('carrot_to_enchanted')),
@@ -42,7 +36,7 @@ FARMING_COLLECTIONS = [
     Collection(
         'potato', 'farming',
         [
-            (100, 10),
+            (100, get_recipe('potato_minion')),
             (250, 25),
             (500, get_recipe('vaccine_talisman')),
             (1_700, get_recipe('potato_to_enchanted')),
@@ -56,11 +50,8 @@ FARMING_COLLECTIONS = [
     Collection(
         'pumpkin', 'farming',
         [
-            (40, 4),
-            (100, (get_recipe('pumpkin_helmet'),
-                   get_recipe('pumpkin_chestplate'),
-                   get_recipe('pumpkin_leggings'),
-                   get_recipe('pumpkin_boots'))),
+            (40, get_recipe('pumpkin_minion')),
+            (100, get_recipe('pumpkin_armor')),
             (250, get_recipe('pumpkin_to_enchanted')),
             (1_000, get_recipe('cubism_book')),
             (2_500, 250),
@@ -75,7 +66,7 @@ FARMING_COLLECTIONS = [
     Collection(
         'melon', 'farming',
         [
-            (250, 25),
+            (250, get_recipe('melon_minion')),
             (500, 50),
             (1_200, 120),
             (5_000, get_recipe('melon_to_enchanted')),
@@ -100,25 +91,21 @@ FARMING_COLLECTIONS = [
     Collection(
         'mushroom', 'farming',
         [
-            (50, 5),
+            (50, get_recipe('mushroom_minion')),
             (100, 10),
-            (250, (get_recipe('mushroom_helmet'),
-                   get_recipe('mushroom_chestplate'),
-                   get_recipe('mushroom_leggings'),
-                   get_recipe('mushroom_boots'))),
+            (250, get_recipe('mushroom_armor')),
             (1_000, 100),
             (2_500, get_recipe('mushroom_block')),
             (5_000, get_recipe('mushroom_to_enchanted')),
             (10_000, get_recipe('night_vision_charm')),
             (25_000, get_recipe('mushroom_to_enchanted_block')),
-            (50_000, (get_recipe('uncommon_bat_pet'),
-                      get_recipe('epic_bat_pet'))),
+            (50_000, get_recipe('bat_pet')),
         ],
     ),
     Collection(
         'cocoa', 'farming',
         [
-            (75, 7.5),
+            (75, get_recipe('cocoa_minion')),
             (200, 20),
             (500, 50),
             (2_000, get_recipe('cocoa_to_enchanted')),
@@ -132,9 +119,8 @@ FARMING_COLLECTIONS = [
     Collection(
         'cactus', 'farming',
         [
-            (100, 10),
-            (250, (get_recipe('cactus_helmet'), get_recipe('cactus_chestplate'),
-                   get_recipe('cactus_leggings'), get_recipe('cactus_boots'))),
+            (100, get_recipe('cactus_minion')),
+            (250, get_recipe('cactus_armor')),
             (500, 50),
             (1_000, get_recipe('cactus_to_enchanted_green')),
             (2_500, 250),
@@ -147,7 +133,7 @@ FARMING_COLLECTIONS = [
     Collection(
         'sugar_cane', 'farming',
         [
-            (100, 10),
+            (100, get_recipe('sugar_cane_minion')),
             (250, get_recipe('speed_talisman')),
             (500, 50),
             (1_000, get_recipe('cane_to_enchanted_sugar')),
@@ -157,10 +143,7 @@ FARMING_COLLECTIONS = [
             (10_000, 1_000),
             (25_000, (get_recipe('cane_to_enchanted'),
                       get_recipe('speed_artifact'))),
-            (50_000, (get_recipe('speedster_helmet'),
-                      get_recipe('speedster_chestplate'),
-                      get_recipe('speedster_leggings'),
-                      get_recipe('speedster_boots'))),
+            (50_000, get_recipe('speedster_armor')),
         ],
     ),
     Collection(
@@ -180,7 +163,7 @@ FARMING_COLLECTIONS = [
     Collection(
         'leather', 'farming',
         [
-            (50, 5),
+            (50, get_recipe('cow_minion')),
             (100, 10),
             (250, 25),
             (1_000, get_recipe('beef_to_enchanted')),
@@ -188,38 +171,35 @@ FARMING_COLLECTIONS = [
             (5_000, get_recipe('leather_to_enchanted')),
             (10_000, 1_000),
             (25_000, 2_500),
-            (50_000, (get_recipe('uncommon_horse_pet'),
-                      get_recipe('epic_horse_pet'))),
+            (50_000, get_recipe('horse_pet')),
             (100_000, 10_000),
         ],
     ),
     Collection(
         'pork', 'farming',
         [
-            (50, 5),
+            (50, get_recipe('pig_minion')),
             (100, 10),
-            (250, (get_recipe('uncommon_pig_pet'),
-                   get_recipe('epic_pig_pet'))),
+            (250, get_recipe('pig_pet')),
             (1_000, get_recipe('pork_to_enchanted')),
             (2_500, (get_recipe('piggy_bank'),
                      get_recipe('repair_cracked_piggy_bank'),
                      get_recipe('repair_broken_piggy_bank'))),
             (5_000, 500),
             (10_000, get_recipe('pork_to_enchanted_grilled')),
-            (25_000, get_recipe('epic_pigman_pet')),
+            (25_000, get_recipe('pigman_pet')),
             (50_000, get_recipe('pigman_sword')),
         ],
     ),
     Collection(
         'chicken', 'farming',
         [
-            (50, 5),
+            (50, get_recipe('chicken_minion')),
             (100, 10),
             (250, 25),
             (1_000, get_recipe('chicken_to_enchanted')),
             (2_500, get_recipe('egg_to_enchanted')),
-            (5_000, (get_recipe('uncommon_chicken_pet'),
-                     get_recipe('epic_chicken_pet'))),
+            (5_000, get_recipe('chicken_pet')),
             (10_000, get_recipe('enchanted_cake')),
             (25_000, 2_500),
             (50_000, get_recipe('egg_to_super_enchanted')),
@@ -228,7 +208,7 @@ FARMING_COLLECTIONS = [
     Collection(
         'mutton', 'farming',
         [
-            (50, 5),
+            (50, get_recipe('sheep_minion')),
             (100, 10),
             (250, 25),
             (1_000, 100),
@@ -242,9 +222,8 @@ FARMING_COLLECTIONS = [
     Collection(
         'rabbit', 'farming',
         [
-            (50, 5),
-            (100, (get_recipe('uncommon_rabbit_pet'),
-                   get_recipe('epic_rabbit_pet'))),
+            (50, get_recipe('rabbit_minion')),
+            (100, get_recipe('rabbit_pet')),
             (250, 25),
             (1_000, get_recipe('rabbit_foot_to_enchanted')),
             (2_500, get_recipe('luck_book')),
@@ -257,7 +236,7 @@ FARMING_COLLECTIONS = [
     Collection(
         'nether_wart', 'farming',
         [
-            (50, 5),
+            (50, get_recipe('nether_wart_minion')),
             (100, 10),
             (250, 25),
             (1_000, get_recipe('nether_wart_to_enchanted')),

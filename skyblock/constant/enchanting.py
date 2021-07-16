@@ -29,7 +29,7 @@ CONFLICTS = [
     ('life_steal', 'mana_steal', 'syphon'),
     ('thunderbolt', 'thunderlord'),
 
-    # ('rejuvenate', 'respite'),
+    ('rejuvenate', 'respite'),
     ('blast_protection', 'fire_protection',
      'projectile_protection', 'protection'),
 ]

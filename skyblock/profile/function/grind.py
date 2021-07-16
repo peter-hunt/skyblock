@@ -475,12 +475,11 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
 
     enchanting_level = self.get_skill_level('enchanting')
 
-    execute_level = 0.2 * weapon_enchants.get('execute_level', 0)
-    prosecute_level = 0.1 * weapon_enchants.get('prosecute_level', 0)
+    execute = 0.2 * weapon_enchants.get('execute', 0)
     fire_aspect_level = weapon_enchants.get('fire_aspect_level', 0)
     first_strike = 0.25 * weapon_enchants.get('first_strike', 0)
     flame = weapon_enchants.get('flame', 0)
-    giant_killer = weapon_enchants.get('giant_killer', 0)
+    giant_killer = 0.001 * weapon_enchants.get('giant_killer', 0)
     infinite_quiver = weapon_enchants.get('infinite_quiver', 0)
     knockback = 1 + 0.1 * weapon_enchants.get('knockback', 0)
     life_steal = 0.005 * weapon_enchants.get('life_steal', 0)
@@ -495,11 +494,11 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
     prosecute = 0.1 * weapon_enchants.get('prosecute', 0)
     punch = 1 + 0.08 * weapon_enchants.get('punch', 0)
     scavenger = 0.3 * weapon_enchants.get('scavenger', 0)
-    coins_mult = 1 + 0.01 * bestiary_level
     if 'syphon' in weapon_enchants:
         syphon = 0.1 + 0.1 * weapon_enchants['syphon']
     else:
         syphon = 0
+    titan_killer = 0.02 * weapon_enchants.get('titan_killer', 0)
     triple_strike = 0.1 * weapon_enchants.get('triple_strike', 0)
     thunderbolt = 0.15 * weapon_enchants.get('thunderbolt', 0)
     thunderlord_level = weapon_enchants.get('thunderlord', 0)
@@ -511,6 +510,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
         thunderlord = 0.3 * thunderlord_level
     vampirism = weapon_enchants.get('vampirism', 0)
 
+    coins_mult = 1 + 0.01 * bestiary_level
     added_exp = 0.2 * bestiary_level
 
     exp_mult = 1 + 0.125 * weapon_enchants.get('experience', 0)
@@ -629,13 +629,16 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                 if strike_count < 3:
                     effective_enchants += triple_strike
                 effective_enchants += (
-                    giant_killer * (min(0.1 * (mob_hp - hp), 5) / 100)
+                    min(giant_killer * (mob_hp - hp), giant_killer * 0.05)
                 )
                 effective_enchants += (
-                    (execute_level / 100) * (mob.health - mob_hp)
+                    min(titan_killer * mob.defense / 100, 0.5)
                 )
                 effective_enchants += (
-                    min(prosecute_level * (mob_hp / mob.health), 0.35)
+                    (execute / 100) * (mob.health - mob_hp)
+                )
+                effective_enchants += (
+                    min(prosecute * (mob_hp / mob.health), 0.35)
                 )
                 damage_mult = 1 + enchants
                 damage_mult += (
@@ -649,6 +652,11 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                     fire_aspect_level * weapon_dmg
                 )
                 damage_dealt += flame * 15
+
+                if mob.name == 'ice_walker' and isinstance(weapon, Pickaxe):
+                    pass
+                else:
+                    damage_dealt /= 1 + mob.defense / 100
 
                 mob_hp = max(mob_hp - damage_dealt, 0)
                 damage_display = format_number(damage_dealt)
@@ -720,7 +728,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                  f'{GREEN}{format_number(mob_hp)}{GRAY}'
                  f'/{GREEN}{format_number(mob.health)}{RED}❤\n')
 
-            if mob_hp <= 0:
+            if mob_hp == 0:
                 green(f"\nYou've killed a {mob_name}!")
                 soul_eater_strength = mob.damage * soul_eater
                 break

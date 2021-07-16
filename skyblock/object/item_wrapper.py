@@ -93,7 +93,10 @@ def item_type(cls: type, /) -> type:
         if self.__class__.__name__ == 'Empty':
             return f'{BOLD}{WHITE}Empty{CLN}'
 
-        color = RARITY_COLORS[self.rarity]
+        if self.__class__.__name__ == 'Minion':
+            rarity_color = RARITY_COLORS['rare']
+        else:
+            rarity_color = RARITY_COLORS[self.rarity]
 
         if self.__class__.__name__ == 'TravelScroll':
             name = f'Travel Scroll to {format_zone(self.island)}'
@@ -122,9 +125,12 @@ def item_type(cls: type, /) -> type:
 
         if self.__class__.__name__ == 'Pet':
             lvl = calc_pet_level(self.rarity, self.exp)
-            return (f'{GRAY}[Lvl {lvl}] {color}{name}')
+            return (f'{GRAY}[Lvl {lvl}] {rarity_color}{name}')
+        elif self.__class__.__name__ == 'Minion':
+            tier_str = format_roman(self.tier)
+            return f'{rarity_color}{name} {tier_str}'
         else:
-            return f'{color}{name}{stars}{DARK_GRAY}{count}{CLN}'
+            return f'{rarity_color}{name}{stars}{DARK_GRAY}{count}{CLN}'
 
     cls.display = display
 
@@ -133,7 +139,10 @@ def item_type(cls: type, /) -> type:
         combat_level = profile.get_skill_level('combat')
         fishing_level = profile.get_skill_level('fishing')
         catacombs_level = profile.get_skill_level('catacombs')
-        rarity_color = RARITY_COLORS[self.rarity]
+        if self.__class__.__name__ == 'Minion':
+            rarity_color = RARITY_COLORS['rare']
+        else:
+            rarity_color = RARITY_COLORS[self.rarity]
 
         modifier = ''
         if self.__class__.__name__ == 'ReforgeStone':
@@ -161,6 +170,9 @@ def item_type(cls: type, /) -> type:
         if self.__class__.__name__ == 'Pet':
             lvl = calc_pet_level(self.rarity, self.exp)
             info = f'{GRAY}[Lvl {lvl}] {rarity_color}{name}'
+        elif self.__class__.__name__ == 'Minion':
+            tier_str = format_roman(self.tier)
+            info = f'{rarity_color}{name} {tier_str}'
         else:
             info = f'{rarity_color}{modifier}{name}{stars}'
 
@@ -683,27 +695,31 @@ def item_type(cls: type, /) -> type:
 
         footers = []
         if hasattr(self, 'modifier') and self.modifier is None:
-            footers.append(f'{DARK_GRAY}This item can be reforged!{CLN}')
+            footers.append(f'{DARK_GRAY}This item can be reforged!')
 
         if getattr(self, 'combat_skill_req', None) is not None:
             if combat_level < self.combat_skill_req:
                 footers.append(f'{DARK_RED}❣ {RED}Requires {GREEN}'
-                               f'Combat Skill'
-                               f' {self.combat_skill_req}{CLN}')
+                               f'Combat Skill {self.combat_skill_req}')
         if getattr(self, 'dungeon_skill_req', None) is not None:
             if catacombs_level < self.dungeon_skill_req:
                 footers.append(f'{DARK_RED}❣ {RED}Requires {GREEN}'
-                               f'Catacombs Skill'
-                               f' {self.dungeon_skill_req}{CLN}')
+                               f'Catacombs Skill {self.dungeon_skill_req}')
         if getattr(self, 'dungeon_completion_req', None) is not None:
             footers.append(f'{DARK_RED}❣ {RED}Requires {GREEN}'
                            f'Catacombs Floor'
                            f' {format_roman(self.dungeon_completion_req)}'
-                           f' Completion{CLN}')
+                           f' Completion')
         if getattr(self, 'fishing_skill_req', None) is not None:
             if fishing_level < self.fishing_skill_req:
                 footers.append(f'{DARK_RED}❣ {RED}Requires {GREEN}'
-                               f'Fishing Skill {self.fishing_skill_req}{CLN}')
+                               f'Fishing Skill {self.fishing_skill_req}')
+
+        if self.__class__.__name__ == 'Minion':
+            footers.extend([
+                f'{GRAY}Time Between Action: {GREEN}{self.cooldown}s',
+                f'{GRAY}Max Storage: {YELLOW}{self.slots * 64}'
+            ])
 
         if self.__class__.__name__ == 'Armor':
             type_name = self.part.upper()
@@ -712,7 +728,7 @@ def item_type(cls: type, /) -> type:
         elif self.__class__.__name__ == 'ReforgeStone':
             type_name = 'REFORGE STONE'
         elif self.__class__.__name__ in {
-            'Item', 'Pet', 'TravelScroll', 'EnchantedBook',
+            'Item', 'Pet', 'TravelScroll', 'EnchantedBook', 'Minion',
         }:
             type_name = ''
         else:
@@ -720,8 +736,11 @@ def item_type(cls: type, /) -> type:
         if getattr(self, 'stars', None) is not None:
             type_name = f'DUNGEON {type_name}'
 
-        footers.append(f'{rarity_color}{self.rarity.upper()}'
-                       f' {type_name}'.rstrip())
+        if self.__class__.__name__ == 'Minion':
+            pass
+        else:
+            footers.append(f'{rarity_color}{self.rarity.upper()}'
+                           f' {type_name}'.rstrip())
 
         info += '\n\n' + '\n'.join(footers)
 

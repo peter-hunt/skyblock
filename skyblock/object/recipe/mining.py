@@ -2,8 +2,6 @@ from ..item import get_item, get_scroll
 from ..object import *
 
 
-__all__ = ['MINING_RECIPES']
-
 MINING_RECIPES = [
     Recipe('wooden_pickaxe', 'mining',
            [(Item('planks'), 3),
@@ -108,7 +106,6 @@ MINING_RECIPES = [
            [(Item('cobblestone'), 160)],
            (Item('enchanted_cobblestone'), 1),
            collection_req=('cobblestone', 4)),
-
     Recipe('uncommon_silverfish_pet', 'mining',
            [(Item('enchanted_cobblestone'), 64),
             (Item('enchanted_egg'), 1)],
@@ -119,6 +116,9 @@ MINING_RECIPES = [
             (Item('super_enchanted_egg'), 1)],
            (get_item('silverfish_pet', rarity='epic'), 1),
            collection_req=('cobblestone', 6)),
+    RecipeGroup('silverfish_pet', 'mining',
+                ['uncommon_silverfish_pet', 'epic_silverfish_pet'],
+                collection_req=('cobblestone', 6)),
     Recipe('miners_outfit_helmet', 'mining',
            [(Item('enchanted_cobblestone'), 5)],
            (get_item('miners_outfit_helmet'), 1),
@@ -135,6 +135,10 @@ MINING_RECIPES = [
            [(Item('enchanted_cobblestone'), 4)],
            (get_item('miners_outfit_boots'), 1),
            collection_req=('cobblestone', 7)),
+    RecipeGroup('miners_outfit_armor', 'mining',
+                ['miners_outfit_helmet', 'miners_outfit_chestplate',
+                 'miners_outfit_leggings', 'miners_outfit_boots'],
+                collection_req=('cobblestone', 7)),
 
     Recipe('coal_to_enchanted', 'mining',
            [(Item('coal'), 160)],
@@ -169,7 +173,6 @@ MINING_RECIPES = [
            [(Item('iron'), 160)],
            (Item('enchanted_iron'), 1),
            collection_req=('iron', 4)),
-
     Recipe('golem_armor_helmet', 'mining',
            [(Item('enchanted_iron'), 50)],
            (get_item('golem_armor_helmet'), 1),
@@ -186,7 +189,10 @@ MINING_RECIPES = [
            [(Item('enchanted_iron'), 40)],
            (get_item('golem_armor_boots'), 1),
            collection_req=('iron', 6)),
-
+    RecipeGroup('golem_armor', 'mining',
+                ['golem_armor_helmet', 'golem_armor_chestplate',
+                 'golem_armor_leggings', 'golem_armor_boots'],
+                collection_req=('iron', 6)),
     Recipe('iron_to_enchanted_block', 'mining',
            [(Item('enchanted_iron'), 160)],
            (Item('enchanted_iron_block'), 1),
@@ -241,7 +247,6 @@ MINING_RECIPES = [
             (Item('enchanted_diamond'), 8)],
            (EnchantedBook({'critical': 4}), 1),
            collection_req=('diamond', 5)),
-
     Recipe('hardened_diamond_helmet', 'mining',
            [(Item('enchanted_diamond'), 5)],
            (get_item('hardened_diamond_helmet'), 1),
@@ -258,12 +263,14 @@ MINING_RECIPES = [
            [(Item('enchanted_diamond'), 4)],
            (get_item('hardened_diamond_boots'), 1),
            collection_req=('diamond', 7)),
-
+    RecipeGroup('hardened_diamond_armor', 'mining',
+                ['hardened_diamond_helmet', 'hardened_diamond_chestplate',
+                 'hardened_diamond_leggings', 'hardened_diamond_boots'],
+                collection_req=('diamond', 7)),
     Recipe('diamond_to_enchanted_block', 'mining',
            [(Item('enchanted_diamond'), 160)],
            (Item('enchanted_diamond_block'), 1),
            collection_req=('diamond', 8)),
-
     Recipe('perfect_helmet', 'mining',
            [(Item('enchanted_diamond_block'), 5)],
            (get_item('perfect_helmet'), 1),
@@ -280,6 +287,10 @@ MINING_RECIPES = [
            [(Item('enchanted_diamond_block'), 4)],
            (get_item('perfect_boots'), 1),
            collection_req=('diamond', 9)),
+    RecipeGroup('perfect_armor', 'mining',
+                ['perfect_helmet', 'perfect_chestplate',
+                 'perfect_leggings', 'perfect_boots'],
+                collection_req=('diamond', 9)),
 
     Recipe('experience_bottle', 'mining',
            [(Item('lapis'), 6),
@@ -331,7 +342,6 @@ MINING_RECIPES = [
             (Item('stick'), 1)],
            (get_item('emerald_blade'), 1),
            collection_req=('emerald', 8)),
-
     Recipe('emerald_helmet', 'mining',
            [(Item('enchanted_emerald_block'), 5)],
            (get_item('emerald_helmet'), 1),
@@ -348,6 +358,10 @@ MINING_RECIPES = [
            [(Item('enchanted_emerald_block'), 4)],
            (get_item('emerald_boots'), 1),
            collection_req=('emerald', 9)),
+    RecipeGroup('emerald_armor', 'mining',
+                ['emerald_helmet', 'emerald_chestplate',
+                 'emerald_leggings', 'emerald_boots'],
+                collection_req=('emerald', 9)),
 
     Recipe('efficiency_book', 'enchanting',
            [(Item('paper'), 24),
@@ -455,22 +469,22 @@ MINING_RECIPES = [
     Recipe('frozen_blaze_helmet', 'mining',
            [(Item('enchanted_packed_ice'), 64),
             (get_item('blaze_helmet'), 1)],
-           (get_item('emerald_helmet'), 1),
+           (get_item('frozen_blaze_helmet'), 1),
            collection_req=('ice', 9)),
     Recipe('frozen_blaze_chestplate', 'mining',
            [(Item('enchanted_packed_ice'), 64),
             (get_item('blaze_chestplate'), 1)],
-           (get_item('emerald_chestplate'), 1),
+           (get_item('frozen_blaze_chestplate'), 1),
            collection_req=('ice', 9)),
     Recipe('frozen_blaze_leggings', 'mining',
            [(Item('enchanted_packed_ice'), 64),
             (get_item('blaze_leggings'), 1)],
-           (get_item('emerald_leggings'), 1),
+           (get_item('frozen_blaze_leggings'), 1),
            collection_req=('ice', 9)),
     Recipe('frozen_blaze_boots', 'mining',
            [(Item('enchanted_packed_ice'), 64),
             (get_item('blaze_boots'), 1)],
-           (get_item('emerald_boots'), 1),
+           (get_item('frozen_blaze_boots'), 1),
            collection_req=('ice', 9)),
 
     Recipe('netherrack_to_enchanted', 'mining',
@@ -497,6 +511,9 @@ MINING_RECIPES = [
             (Item('super_enchanted_egg'), 1)],
            (get_item('endermite_pet', rarity='epic'), 1),
            collection_req=('end_stone', 7)),
+    RecipeGroup('endermite_pet', 'mining',
+                ['uncommon_endermite_pet', 'epic_endermite_pet'],
+                collection_req=('end_stone', 7)),
     Recipe('scroll_to_end', 'mining',
            [(Item('enchanted_ender_pearl'), 16),
             (Item('enchanted_obsidian'), 48),
@@ -527,6 +544,9 @@ MINING_RECIPES = [
             (Item('super_enchanted_egg'), 1)],
            (get_item('mithril_golem_pet', rarity='epic'), 1),
            collection_req=('mithril', 7)),
+    RecipeGroup('mithril_golem_pet', 'mining',
+                ['uncommon_mithril_golem_pet', 'epic_mithril_golem_pet'],
+                collection_req=('mithril', 7)),
 
     Recipe('titanium_to_enchanted', 'mining',
            [(Item('titanium'), 160)],

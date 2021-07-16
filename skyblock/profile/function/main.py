@@ -16,7 +16,7 @@ from ...object.collection import is_collection
 from ...object.item import ITEMS, get_item
 from ...object.mob import get_mob
 from ...object.object import *
-from ...object.recipe import RECIPES
+from ...object.recipe import CRAFTABLES, get_recipe
 from ...object.resource import get_resource
 
 
@@ -121,7 +121,9 @@ def mainloop(self):
             self.buy(chosen_trade, amount)
 
         elif words[0] == 'cheat':
-            # item = get_item('luxurious_spool')
+            # item = get_item('wheat')
+            # self.recieve_item(item, 80)
+            # item = get_item('wooden_hoe')
             # self.recieve_item(item)
             ...
 
@@ -176,9 +178,13 @@ def mainloop(self):
                 red(f'Unknown collection: {category!r}')
 
         elif words[0] == 'craft':
-            index = self.parse_index(words[1], len(RECIPES))
-            if index is None:
-                continue
+            index = self.parse_index(words[1], len(CRAFTABLES))
+            if index is not None:
+                recipe = CRAFTABLES[index]
+            else:
+                recipe = get_recipe(words[1])
+                if recipe is None:
+                    continue
 
             amount = 1
 
@@ -190,7 +196,7 @@ def mainloop(self):
                     red(f'Amount must be a positive integer.')
                     continue
 
-            self.craft(index, amount)
+            self.craft(recipe, amount)
 
         elif words[0] == 'deathcount':
             death_count = self.stats.get('deaths', 0)
@@ -586,12 +592,15 @@ def mainloop(self):
                 self.display_recipe(arg, show_all=show_all)
                 continue
 
-            index = self.parse_index(arg, len(RECIPES))
-            if index is None:
-                red(f'Invalid recipe category or index: {arg!r}')
-                continue
+            index = self.parse_index(arg, len(CRAFTABLES), warn=False)
+            if index is not None:
+                recipe = CRAFTABLES[index]
+            else:
+                recipe = get_recipe(arg)
+                if recipe is None:
+                    continue
 
-            self.display_recipe_info(index)
+            self.display_recipe_info(recipe)
 
         elif words[0] == 'save':
             self.dump()

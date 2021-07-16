@@ -103,11 +103,13 @@ SPECIAL_NAMES = {
     'ranchers_boots': "Rancher's Boots",
     'zombies_heart': "Zombie's Heart",
 
+    'miners_outfit_armor': "Miner's Outfit Armor",
     'miners_outfit_helmet': "Miner's Outfit Helmet",
     'miners_outfit_chestplate': "Miner's Outfit Chestplate",
     'miners_outfit_leggings': "Miner's Outfit Leggings",
     'miners_outfit_boots': "Miner's Outfit Boots",
 
+    'growth_armor': 'Armor of Growth',
     'growth_helmet': 'Helmet of Growth',
     'growth_chestplate': "Chestplate of Growth",
     'growth_leggings': "Leggings of Growth",
@@ -120,6 +122,7 @@ SPECIAL_NAMES = {
 
     'emperors_skull': "Emperor's Skull",
 
+    'divers_armor': "Diver's Armor",
     'divers_mask': "Diver's Mask",
     'divers_shirt': "Diver's Shirt",
     'divers_trunks': "Diver's Trunks",

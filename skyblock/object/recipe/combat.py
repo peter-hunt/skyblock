@@ -2,8 +2,6 @@ from ..item import get_item
 from ..object import *
 
 
-__all__ = ['COMBAT_RECIPES']
-
 COMBAT_RECIPES = [
     Recipe('leather_helmet', 'combat',
            [(Item('leather'), 5)],
@@ -100,7 +98,7 @@ COMBAT_RECIPES = [
 
     Recipe('zombie_pickaxe', 'combat',
            [(Item('rotten_flesh'), 3),
-            (Item('stick', 2))],
+            (Item('stick'), 2)],
            (get_item('zombie_pickaxe'), 1),
            collection_req=('rotten_flesh', 2)),
     Recipe('smite_book', 'combat',
@@ -140,6 +138,9 @@ COMBAT_RECIPES = [
             (Item('enchanted_rotten_flesh'), 2)],
            (get_item('zombie_boots'), 1),
            collection_req=('rotten_flesh', 8)),
+    RecipeGroup('zombie_armor', 'combat',
+                ['zombie_chestplate', 'zombie_leggings', 'zombie_boots'],
+                collection_req=('rotten_flesh', 8)),
     Recipe('uncommon_zombie_pet', 'combat',
            [(Item('zombies_heart'), 8),
             (Item('enchanted_egg'), 1)],
@@ -150,6 +151,9 @@ COMBAT_RECIPES = [
             (Item('super_enchanted_egg'), 1)],
            (get_item('zombie_pet', rarity='epic'), 1),
            collection_req=('rotten_flesh', 9)),
+    RecipeGroup('zombie_pet', 'combat',
+                ['uncommon_zombie_pet', 'epic_zombie_pet'],
+                collection_req=('rotten_flesh', 9)),
 
     Recipe('power_book', 'enchanting',
            [(Item('paper'), 24),
@@ -174,6 +178,9 @@ COMBAT_RECIPES = [
             (Item('super_enchanted_egg'), 1)],
            (get_item('skeleton_pet', rarity='epic'), 1),
            collection_req=('bone', 6)),
+    RecipeGroup('skeleton_pet', 'combat',
+                ['uncommon_skeleton_pet', 'epic_skeleton_pet'],
+                collection_req=('bone', 6)),
     Recipe('hurricane_bow', 'combat',
            [(Item('enchanted_bone'), 96),
             (Item('string'), 96)],
@@ -216,6 +223,9 @@ COMBAT_RECIPES = [
             (Item('super_enchanted_egg'), 1)],
            (get_item('spider_pet', rarity='epic'), 1),
            collection_req=('string', 9)),
+    RecipeGroup('spider_pet', 'combat',
+                ['uncommon_spider_pet', 'epic_spider_pet'],
+                collection_req=('string', 9)),
 
     Recipe('spider_sword', 'combat',
            [(Item('spider_eye'), 2),
@@ -393,7 +403,6 @@ COMBAT_RECIPES = [
            [(Item('enchanted_blaze_powder'), 160)],
            (Item('enchanted_blaze_rod'), 1),
            collection_req=('blaze_rod', 7)),
-
     Recipe('blaze_helmet', 'combat',
            [(Item('enchanted_blaze_rod'), 5)],
            (get_item('blaze_helmet'), 1),
@@ -410,7 +419,11 @@ COMBAT_RECIPES = [
            [(Item('enchanted_blaze_rod'), 4)],
            (get_item('blaze_boots'), 1),
            collection_req=('blaze_rod', 8)),
-    Recipe('epic_blaze_pet', 'combat',
+    RecipeGroup('blaze_armor', 'combat',
+                ['blaze_helmet', 'blaze_chestplate',
+                 'blaze_leggings', 'blaze_boots'],
+                collection_req=('blaze_rod', 8)),
+    Recipe('blaze_pet', 'combat',
            [(Item('enchanted_blaze_rod'), 64),
             (Item('super_enchanted_egg'), 1)],
            (get_item('blaze_pet', rarity='epic'), 1),
@@ -446,6 +459,10 @@ COMBAT_RECIPES = [
            [(Item('enchanted_magma_cream'), 48)],
            (get_item('armor_of_magma_boots'), 1),
            collection_req=('magma_cream', 8)),
+    RecipeGroup('armor_of_magma', 'combat',
+                ['armor_of_magma_helmet', 'armor_of_magma_chestplate',
+                 'armor_of_magma_leggings', 'armor_of_magma_boots'],
+                collection_req=('magma_cream', 8)),
 
     Recipe('magma_bow', 'combat',
            [(Item('enchanted_magma_cream'), 96),

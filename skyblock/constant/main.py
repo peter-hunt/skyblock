@@ -300,6 +300,7 @@ SELL_PRICE = {
     'book': 12,
     'hay_bale': 9,
     'golden_carrot': 9,
+    'melon_block': 4.5,
     'glistering_melon': 3.5,
     'mushroom_block': 4,
 

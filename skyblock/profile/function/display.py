@@ -1,7 +1,7 @@
 from math import ceil, floor, radians, tan
 from os import get_terminal_size
 from time import sleep
-from typing import Iterable, Optional
+from typing import Iterable, Optional, Union
 
 from ...constant.color import *
 from ...constant.main import ARMOR_PARTS
@@ -20,7 +20,7 @@ from ...object.collection import COLLECTIONS, get_collection
 from ...object.item import get_item
 from ...object.mob import MOBS
 from ...object.object import *
-from ...object.recipe import RECIPES
+from ...object.recipe import CRAFTABLES, get_recipe
 from ...map.island import ISLANDS
 from ...map.object import *
 
@@ -179,8 +179,10 @@ def display_collection_info(self, name: str, /):
                           f' {format_name(coll.category)} Experience')
             elif isinstance(reward, Recipe):
                 item = reward.result[0]
-                color = RARITY_COLORS[item.rarity]
-                print(f'  {color}{format_name(item.name)} {GRAY}Recipe'
+                print(f'  {item.display()} {GRAY}Recipe'
+                      f' {DARK_GRAY}({reward.name})')
+            elif isinstance(reward, RecipeGroup):
+                print(f'  {format_name(reward.name)} {GRAY}Recipe'
                       f' {DARK_GRAY}({reward.name})')
 
     this_level = current - past_amount
@@ -202,8 +204,9 @@ def display_collection_info(self, name: str, /):
                           f' {format_name(coll.category)} Experience')
             elif isinstance(reward, Recipe):
                 item = reward.result[0]
-                color = RARITY_COLORS[item.rarity]
-                print(f'  {color}{format_name(item.name)} {GRAY}Recipe')
+                print(f'  {item.display()} {GRAY}Recipe')
+            elif isinstance(reward, RecipeGroup):
+                print(f'  {format_name(reward.name)} {GRAY}Recipe')
 
     yellow(f"{BOLD}{'':-^{width}}")
 
@@ -383,28 +386,30 @@ def display_playtime(self, /):
     green(f'You have {hours} hours and {mins:0>2} minutes playtime!')
 
 
-def display_recipe_info(self, index: int, /):
-    if index >= len(RECIPES):
-        red('Recipe index out of bound.')
-        return
-
+def display_recipe_info(self, recipe: Union[Recipe, RecipeGroup], /):
     width, _ = get_terminal_size()
     width = ceil(width * 0.85)
     yellow(f"{BOLD}{'':-^{width}}")
 
-    recipe = RECIPES[index]
-
     green(f'{format_name(recipe.name)} '
           f'{GRAY}({format_name(recipe.category)} Recipe)')
 
-    gray('\nIngredients:')
-    for item, amount in recipe.ingredients:
+    if isinstance(recipe, Recipe):
+        recipes = [recipe]
+    else:
+        recipes = [get_recipe(name) for name in recipe.recipes]
+
+    for index, _recipe in enumerate(recipes):
+        if index != 0:
+            print()
+        gray('\nIngredients:')
+        for item, amount in _recipe.ingredients:
+            count_str = f'{DARK_GRAY} x {amount}'
+            gray(f'  {item.display()}{count_str}')
+        gray('\nResult:')
+        item, amount = _recipe.result
         count_str = f'{DARK_GRAY} x {amount}'
         gray(f'  {item.display()}{count_str}')
-    gray('\nResult:')
-    item, amount = recipe.result
-    count_str = f'{DARK_GRAY} x {amount}'
-    gray(f'  {item.display()}{count_str}')
 
     requirements = []
 
@@ -414,7 +419,8 @@ def display_recipe_info(self, index: int, /):
         if lvl < get_collection_level:
             requirements.append(
                 f'{DARK_RED}❣ {RED}Requires {GREEN}'
-                f'{format_name(coll_name)} Collection {format_roman(get_collection_level)}'
+                f'{format_name(coll_name)} Collection'
+                f' {format_roman(get_collection_level)}'
             )
 
     if len(requirements) != 0:
@@ -432,7 +438,7 @@ def display_recipe(self, category: Optional[str], /, *,
     yellow(f"{BOLD}{'':-^{width}}")
 
     green(f'{format_name(category)} Recipes')
-    recipes = [recipe for recipe in RECIPES if recipe.category == category]
+    recipes = [recipe for recipe in CRAFTABLES if recipe.category == category]
 
     if not show_all:
         recipes_copy = [recipe for recipe in recipes]
@@ -450,13 +456,13 @@ def display_recipe(self, category: Optional[str], /, *,
             else:
                 recipes.append(recipe)
 
-    digits = len(f'{len(RECIPES)}')
+    digits = len(f'{len(CRAFTABLES)}')
 
     if len(recipes) == 0:
         gray('  none')
     else:
         for recipe in recipes:
-            i = index(RECIPES, recipe.name)
+            i = index(CRAFTABLES, recipe.name)
             gray(f'  {(i + 1):>{digits}} {AQUA}{format_name(recipe.name)}')
 
     if end:

@@ -6,6 +6,7 @@ from ..object import *
 from .accessory import ACCESSORIES
 from .armor import ARMOR
 from .pet import PETS
+from .minion import MINIONS
 from .scroll import TRAVEL_SCROLLS, get_scroll
 from .stone import REFORGE_STONES, get_stone
 from .tool import TOOLS
@@ -14,7 +15,8 @@ from .weapon import WEAPONS
 
 __all__ = [
     'COLLECTION_ITEMS',  'OTHER_ITEMS',
-    'ACCESSORIES', 'ARMOR', 'PETS', 'TRAVEL_SCROLLS', 'REFORGE_STONES',
+    'ACCESSORIES', 'TRAVEL_SCROLLS', 'REFORGE_STONES',
+    'ARMOR', 'PETS', 'MINIONS',
     'TOOLS', 'WEAPONS',
     'get_scroll', 'get_stone',
     'ITEMS', 'get_item', 'validify_item', 'get_stack_size',
@@ -24,6 +26,7 @@ COLLECTION_ITEMS = [
     Item('hay_bale', 64, 'common'),
     Item('enchanted_bread', 64, 'common'),
     Item('golden_carrot', 64, 'common'),
+    Item('melon_block', 64, 'common'),
     Item('glistering_melon', 64, 'common'),
     Item('mushroom_block', 64, 'common'),
     Item('wool', 64, 'common'),
@@ -314,7 +317,8 @@ OTHER_ITEMS = [
 ]
 
 ITEMS = (COLLECTION_ITEMS + OTHER_ITEMS + WEAPONS
-         + ACCESSORIES + ARMOR + TOOLS + TRAVEL_SCROLLS + REFORGE_STONES + PETS)
+         + ACCESSORIES + ARMOR + TOOLS + TRAVEL_SCROLLS + REFORGE_STONES + PETS
+         + MINIONS)
 
 
 def get_item(name: str, /, **kwargs) -> ItemType:
@@ -339,6 +343,8 @@ def validify_item(item: ItemType, /) -> ItemType:
         attrs['modifier'] = item.modifier
     if getattr(item, 'stars', 0) != 0:
         attrs['stars'] = item.stars
+    if getattr(item, 'tier', None) is not None:
+        kwargs['tier'] = item.tier
 
     if getattr(item, 'rarity', None) != None:
         if isinstance(item, (Sword, Bow, Armor, Pet)):

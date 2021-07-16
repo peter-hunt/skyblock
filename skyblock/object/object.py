@@ -12,10 +12,10 @@ __all__ = [
     'ItemType', 'Item', 'Empty',
     'Accessory', 'EnchantedBook', 'ReforgeStone', 'TravelScroll',
     'Bow', 'Sword',
-    'Axe', 'Pickaxe', 'Drill', 'Hoe', 'FishingRod', 'Armor', 'Pet',
+    'Axe', 'Pickaxe', 'Drill', 'Hoe', 'FishingRod', 'Armor', 'Pet', 'Minion',
     'Resource',
     'Crop', 'Mineral', 'Wood', 'Mob',
-    'Recipe', 'Collection',
+    'Recipe', 'RecipeGroup', 'Collection',
     'load_item',
 ]
 
@@ -264,9 +264,17 @@ class Pet(ItemType):
     abilities: List = []
 
 
+@item_type
+class Minion(ItemType):
+    name: str
+    tier: str
+    cooldown: Number
+    slots: int
+
+
 OBJECTS = [
     Item, Empty, Accessory, EnchantedBook, ReforgeStone, TravelScroll,
-    Sword, Bow, Axe, Hoe, Pickaxe, Drill, FishingRod, Armor, Pet,
+    Sword, Bow, Axe, Hoe, Pickaxe, Drill, FishingRod, Armor, Pet, Minion,
 ]
 
 
@@ -306,6 +314,7 @@ class Mob:
     name: str
     level: int
     health: int
+    defense: int = 0
     damage: int = 0
     true_damage: int = 0
 
@@ -327,11 +336,21 @@ class Recipe:
     # slayer_req: Optional[Tuple[str, int]] = None
 
 
+@init_type
+class RecipeGroup:
+    name: str
+    category: str
+    recipes: List[str]
+    collection_req: Optional[Tuple[str, int]] = None
+    # slayer_req: Optional[Tuple[str, int]] = None
+
+
 @collection_type
 class Collection:
     name: str
     category: str
-    levels: List[Tuple[int, Union[Recipe, Tuple[Recipe], Number]]]
+    levels: List[Tuple[int, Union[Union[Recipe, RecipeGroup],
+                                  Tuple[Union[Recipe, RecipeGroup]], Number]]]
 
     def __iter__(self, /) -> Iterator:
         return iter(self.levels)

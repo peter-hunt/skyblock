@@ -2,8 +2,6 @@ from ..object import *
 from ..recipe import get_recipe
 
 
-__all__ = ['COMBAT_COLLECTIONS']
-
 COMBAT_COLLECTIONS = [
     Collection(
         'rotten_flesh', 'combat',
@@ -15,11 +13,8 @@ COMBAT_COLLECTIONS = [
             (2_500, get_recipe('zombie_hat')),
             (5_000, get_recipe('zombies_heart')),
             (10_000, get_recipe('zombie_sword')),
-            (25_000, (get_recipe('zombie_chestplate'),
-                      get_recipe('zombie_leggings'),
-                      get_recipe('zombie_boots'))),
-            (50_000, (get_recipe('uncommon_zombie_pet'),
-                      get_recipe('epic_zombie_pet'))),
+            (25_000, get_recipe('zombie_armor')),
+            (50_000, get_recipe('zombie_pet')),
         ],
     ),
     Collection(
@@ -30,8 +25,7 @@ COMBAT_COLLECTIONS = [
             (250, get_recipe('power_book')),
             (1_000, get_recipe('skeleton_hat')),
             (2_500, get_recipe('bone_to_enchanted')),
-            (5_000, (get_recipe('uncommon_skeleton_pet'),
-                     get_recipe('epic_skeleton_pet'))),
+            (5_000, get_recipe('skeleton_pet')),
             (10_000, get_recipe('hurricane_bow')),
             (25_000, get_recipe('skeletons_helmet')),
             (50_000, get_recipe('runaans_bow')),
@@ -49,8 +43,7 @@ COMBAT_COLLECTIONS = [
             (5_000, get_recipe('infinite_quiver_book')),
             (10_000, 1_000),
             (25_000, get_recipe('spiders_boots')),
-            (50_000, (get_recipe('uncommon_spider_pet'),
-                      get_recipe('epic_spider_pet'))),
+            (50_000, get_recipe('spider_pet')),
         ],
     ),
     Collection(
@@ -134,11 +127,8 @@ COMBAT_COLLECTIONS = [
             (2_500, 250),
             (5_000, get_recipe('flame_book')),
             (10_000, get_recipe('blaze_rod_to_enchanted')),
-            (25_000, (get_recipe('blaze_helmet'),
-                      get_recipe('blaze_chestplate'),
-                      get_recipe('blaze_leggings'),
-                      get_recipe('blaze_boots'))),
-            (50_000, 5_000),
+            (25_000, get_recipe('blaze_armor')),
+            (50_000, get_recipe('blaze_pet')),
         ],
     ),
     Collection(
@@ -151,10 +141,7 @@ COMBAT_COLLECTIONS = [
             (2_500, get_recipe('magma_cream_to_enchanted')),
             (5_000, 500),
             (10_000, 1_000),
-            (25_000, (get_recipe('armor_of_magma_helmet'),
-                      get_recipe('armor_of_magma_chestplate'),
-                      get_recipe('armor_of_magma_leggings'),
-                      get_recipe('armor_of_magma_boots'))),
+            (25_000, get_recipe('armor_of_magma')),
             (50_000, get_recipe('magma_bow')),
         ],
     ),

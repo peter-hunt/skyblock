@@ -186,9 +186,10 @@ def combine(self, index_1: int, index_2: int, /):
             and item_2.name == 'hot_potato_book'):
         if 10 <= item_1.hot_potato < 15:
             red('Error!')
-            gray('You have already applied the maximum number of'
-                 ' normal Hot Potato books to this item!\n'
-                 'Use Fuming Potato books to continue.')
+            gray(f'You have already applied the maximum number of'
+                 f' Hot Potato books to this item!\n'
+                 f'{YELLOW}Use Fuming Potato Books'
+                 f' to continue to upgrade this item.')
         elif item_1.hot_potato >= 15:
             red('Error!')
             gray('You have already applied the maximum number of'
@@ -278,7 +279,7 @@ def craft(self, index: int, amount: int = 1, /):
 
     for item, count in recipe.ingredients:
         if not self.has_item(item.name, count * amount):
-            red("You don't have the items to do this!")
+            red("You don't have the required items!")
             return
 
     for item, count in recipe.ingredients:

@@ -2,8 +2,6 @@ from ..item import get_item, get_scroll
 from ..object import *
 
 
-__all__ = ['FORAGING_RECIPES']
-
 FORAGING_RECIPES = [
     Recipe('wooden_axe', 'foraging',
            [(Item('planks'), 3),
@@ -71,6 +69,10 @@ FORAGING_RECIPES = [
            [(Item('oak_leaves'), 4)],
            (get_item('leaflet_boots'), 1),
            collection_req=('oak_wood', 3)),
+    RecipeGroup('leaflet_armor', 'foraging',
+                ['leaflet_helmet', 'leaflet_chestplate',
+                 'leaflet_leggings', 'leaflet_boots'],
+                collection_req=('oak_wood', 3)),
     Recipe('oak_to_enchanted', 'foraging',
            [(Item('oak_wood'), 160)],
            (Item('enchanted_oak'), 1),
@@ -113,6 +115,9 @@ FORAGING_RECIPES = [
             (Item('super_enchanted_egg'), 1)],
            (get_item('wolf_pet', rarity='epic'), 1),
            collection_req=('spruce_wood', 8)),
+    RecipeGroup('wolf_pet', 'foraging',
+                ['uncommon_wolf_pet', 'epic_wolf_pet'],
+                collection_req=('spruce_wood', 8)),
 
     Recipe('dark_oak_leaves', 'foraging',
            [(Item('dark_oak_sapling'), 1)],
@@ -127,7 +132,6 @@ FORAGING_RECIPES = [
             (Item('enchanted_dark_oak'), 8)],
            (EnchantedBook({'growth': 4}), 1),
            collection_req=('dark_oak_wood', 7)),
-
     Recipe('growth_helmet', 'foraging',
            [(Item('enchanted_dark_oak'), 320)],
            (get_item('growth_helmet'), 1),
@@ -144,6 +148,10 @@ FORAGING_RECIPES = [
            [(Item('enchanted_dark_oak'), 256)],
            (get_item('growth_boots'), 1),
            collection_req=('dark_oak_wood', 9)),
+    RecipeGroup('growth_armor', 'foraging',
+                ['growth_helmet', 'growth_chestplate',
+                 'growth_leggings', 'growth_boots'],
+                collection_req=('dark_oak_wood', 9)),
 
     Recipe('acacia_leaves', 'foraging',
            [(Item('acacia_sapling'), 1)],
@@ -182,6 +190,9 @@ FORAGING_RECIPES = [
             (Item('super_enchanted_egg'), 1)],
            (get_item('ocelot_pet', rarity='epic'), 1),
            collection_req=('jungle_wood', 9)),
+    RecipeGroup('ocelot_pet', 'foraging',
+                ['uncommon_ocelot_pet', 'epic_ocelot_pet'],
+                collection_req=('jungle_wood', 9)),
 
     Recipe('dandelion_to_enchanted', 'foraging',
            [(Item('dandelion'), 160)],

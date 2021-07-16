@@ -60,4 +60,6 @@ class Profile:
     wardrobe: List[Item] = []
     wardrobe_slot: Optional[int] = None
 
+    crafted_minions: List[str] = []
+
     npc_talked: List[str] = []
