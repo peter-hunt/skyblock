@@ -307,12 +307,12 @@ def display_location(self, /):
         elif dz == 0:
             direc = 'East' if dx > 0 else 'West'
         else:
-            if dx / dz < tan(radians(60)):
+            if dx / dz < tan(radians(66.6)):
                 direc += 'South' if dz > 0 else 'North'
-            if dz / dx < tan(radians(60)):
+            if dz / dx < tan(radians(66.6)):
                 direc += 'East' if dx > 0 else 'West'
         gray(f'  {AQUA}{format_zone(other.name)}{GRAY}'
-             f' on the {AQUA}{direc}{GRAY} ({other.name}).')
+             f' on the {direc} ({other.name}).')
 
     if len(zone.resources) > 0:
         gray('\nResources:')

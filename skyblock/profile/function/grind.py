@@ -583,6 +583,8 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
              f'{GREEN}{format_number(mob_hp)}{GRAY}'
              f'/{GREEN}{format_number(mob.health)}{RED}❤\n')
 
+        striked = False
+
         while True:
             if isinstance(weapon, Bow) and infinite_quiver != 10:
                 if not self.has_item('arrow', 1):
@@ -591,14 +593,18 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                 if random_bool(1 - infinite_quiver / 10):
                     self.remove_item('arrow', 1)
             strike_count = 0
-
             killed = False
 
             strike_chance = 1 + ferocity / 100
-            strike_chance = 1 + attack_speed / 100
+            strike_chance *= 1 + attack_speed / 100
             strike_chance *= knockback * punch
 
-            sleep(attack_time_cost)
+            if striked:
+                sleep(attack_time_cost)
+            else:
+                striked = True
+                if not random_bool((45.75 + 0.625 * (speed / 100)) / 100):
+                    strike_chance = 0
 
             for _ in range(random_int(strike_chance)):
                 damage_dealt = 5 + weapon_dmg

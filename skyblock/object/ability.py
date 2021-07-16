@@ -93,7 +93,7 @@ ABILITIES = [
         id='lapis_armor_exp_bonus',
         description=(
             f'Each piece of this armour grants'
-            f'{GREEN}50%{GRAY} bonus experience when mining ores.'
+            f' {GREEN}50%{GRAY} bonus experience when mining ores.'
         ),
     ),
     NamedAbility(
@@ -120,8 +120,9 @@ ABILITIES = [
     ),
     AnonymousAbility(
         id='ender_armor',
-        description=('All stats of this armor piece are doubled'
-                     ' while on the End Island!'),
+        description=(
+            'All stats of this armor piece are doubled while on the End Island!'
+        ),
     ),
     NamedAbility(
         id='protective_blood',
