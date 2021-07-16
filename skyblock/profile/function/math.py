@@ -374,11 +374,13 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
 
         value += delta
 
+    pet_mult = 0
+
     if has_active_pet:
         pet_mult = calc_pet_level(active_pet.rarity, active_pet.exp) / 100
         value += getattr(active_pet, name, 0) * pet_mult
-    else:
-        pet_mult = 0
+
+    cap = None
 
     if name == 'health':
         value += 100
@@ -402,6 +404,7 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
         value += min(foraging_level, 14) * 1
         value += max(min(foraging_level - 14, 36), 0) * 2
     elif name == 'speed':
+        cap = 400
         value += 100
         if set_bonus == 'speedster_armor':
             value += 20
@@ -411,12 +414,17 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
         elif set_bonus == 'farm_suit_speed':
             if self.island in {'barn', 'desert'}:
                 value += 20
+        elif set_bonus == 'young_blood':
+            cap += 100
         if has_active_pet:
             if self.island == 'park':
                 if 'epic_vine_swing' in active_pet.abilities:
                     value += 100 * pet_mult
                 elif 'rare_vine_swing' in active_pet.abilities:
                     value += 75 * pet_mult
+            if 'hunter' in active_pet.abilities:
+                value += 100 * pet_mult
+                cap += 100 * pet_mult
         if self.has_item('speed_artifact'):
             value += 5
         elif self.has_item('speed_ring'):
@@ -452,8 +460,15 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
                 value *= 1 + 0.1 * pet_mult
             elif 'rare_echolocation' in active_pet.abilities:
                 value *= 1 + 0.07 * pet_mult
+    elif name == 'magic_find':
+        if has_active_pet:
+            if 'supernatural' in active_pet.abilities:
+                value += 15 * pet_mult
     elif name == 'pet_luck':
         value += taming_level
+        if has_active_pet:
+            if 'omen' in active_pet.abilities:
+                value += 15 * pet_mult
     elif name == 'mining_speed':
         if set_bonus == 'miners_outfit':
             value += 100
@@ -492,6 +507,9 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
     if has_active_pet:
         if 'superior' in active_pet.abilities:
             value *= 1 + 0.1 * pet_mult
+
+    if cap is not None:
+        value = min(cap, value)
 
     return value
 

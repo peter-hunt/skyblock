@@ -5,7 +5,8 @@ __all__ = ['COMBAT_PETS']
 
 COMBAT_PETS = [
     Pet('black_cat_pet', rarity='legendary', category='combat',
-        speed=25, intelligence=100),
+        speed=25, intelligence=100,
+        abilities=['omen', 'supernatural', 'hunter']),
 
     Pet('blaze_pet', rarity='epic', category='combat',
         defense=30, intelligence=100),

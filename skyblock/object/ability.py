@@ -156,7 +156,8 @@ ABILITIES = [
         name='Full Set Bonus: Young Blood',
         description=(
             f'Gain {GREEN}+70{GRAY} Walk Speed while'
-            f' you are above {GREEN}50%{GRAY} HP.'
+            f' you are above {GREEN}50%{GRAY} HP.\n'
+            f'{DARK_GRAY}+100 Walk Speed Cap.'
         ),
     ),
     NamedAbility(
@@ -216,6 +217,30 @@ ABILITIES = [
     ),
 
     # pet abilities
+    NamedAbility(
+        id='omen',
+        name='Omen',
+        description=(
+            f"Grants {GREEN}%d {STAT_COLORS['pet_luck']} Pet Luck{GRAY}."
+        ),
+        values=[15],
+    ),
+    NamedAbility(
+        id='supernatural',
+        name='Supernatural',
+        description=(
+            f"Grants {GREEN}%d {STAT_COLORS['magic_find']} Magic Find{GRAY}."
+        ),
+        values=[15],
+    ),
+    NamedAbility(
+        id='hunter',
+        name='Hunter',
+        description=(
+            f'Increases your speed and speed cap by +{GREEN}%d{GRAY}.'
+        ),
+        values=[100],
+    ),
     NamedAbility(
         id='one_with_the_dragons',
         name='One with the Dragons',
