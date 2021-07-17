@@ -1,4 +1,4 @@
-from random import randint, random
+from random import random
 
 from ..constant.util import Amount, Number
 
@@ -6,11 +6,16 @@ from ..constant.util import Amount, Number
 __all__ = ['random_amount', 'random_bool', 'random_int']
 
 
-def random_amount(amount: Amount = 1, /) -> int:
+def _randint(lower: Number, upper: Number, /) -> int:
+    delta = upper - lower
+    return random_int(lower + random() * delta)
+
+
+def random_amount(amount: Amount = 1, /, *, mult: Number = 1) -> int:
     if isinstance(amount, tuple):
-        return randint(amount[0], amount[1])
+        return _randint(amount[0] * mult, amount[1] * mult)
     else:
-        return random_int(amount)
+        return random_int(amount * mult)
 
 
 def random_bool(chance: float = 0.5, /) -> bool:

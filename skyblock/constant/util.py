@@ -172,4 +172,4 @@ SPECIAL_ALTER = {
     'Refined Refined': 'Even more Refined',
 }
 
-IGNORED_WORDS = ('from', 'of', 'the', 'to')
+IGNORED_WORDS = ('and', 'from', 'of', 'the', 'to')

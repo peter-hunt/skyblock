@@ -132,6 +132,7 @@ def recieve_item(self, pointer: ItemPointer, /):
     name = pointer['name']
     kwargs = {key: pointer[key] for key in pointer
               if key not in {'name', 'count'}}
+    item_obj = get_item(name, **kwargs)
 
     for index, slot in enumerate(self.inventory):
         if isinstance(slot, Empty):
@@ -141,8 +142,10 @@ def recieve_item(self, pointer: ItemPointer, /):
             self.inventory[index] = item
             counter -= delta
 
-        elif (name != slot.name or
-              kwargs.get('rarity', '') != getattr(slot, 'rarity', '')):
+        elif name != slot.name:
+            continue
+
+        elif getattr(item_obj, 'rarity', '') != getattr(slot, 'rarity', ''):
             continue
 
         elif len(kwargs.get('enchantments', {})) != 0:

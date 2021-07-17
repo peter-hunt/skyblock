@@ -137,7 +137,7 @@ def display_bestiaries(self, /):
             gray('  unknown')
             continue
         bestiary_level = self.get_bestiary_level(mob.name)
-        aqua(f'  {format_name(mob.name)} {format_roman(bestiary_level)}')
+        aqua(f'  {format_name(family)} {format_roman(bestiary_level)}')
 
     yellow(f"{BOLD}{'':-^{width}}")
 

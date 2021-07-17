@@ -1,7 +1,7 @@
 from math import floor
 from random import choice, random
 from time import sleep, time
-from typing import Optional, Tuple
+from typing import List, Optional, Tuple
 
 from ...constant.color import *
 from ...constant.enchanting import *
@@ -288,56 +288,63 @@ def consume(self, index: int, amount: int = 1, /):
         red('This item is not consumable!')
 
 
-def craft(self, recipe: Recipe, amount: int = 1, /):
-    if recipe.collection_req is not None:
-        coll_name, lvl = recipe.collection_req
-        if self.get_collection_level(coll_name) < lvl:
-            red("You haven't reached the required collection yet!")
-            return
+def craft(self, recipes: List[Recipe], amount: int = 1, /):
+    for recipe in recipes:
+        if recipe.collection_req is not None:
+            coll_name, lvl = recipe.collection_req
+            if self.get_collection_level(coll_name) < lvl:
+                red("You haven't reached the required collection yet!")
+                return
 
-    for pointer in recipe.ingredients:
-        if not self.has_item(pointer):
-            red("You don't have the required items!")
-            return
+        for ingr_pointer in recipe.ingredients:
+            _ingr_pointer = ingr_pointer.copy()
+            _ingr_pointer['count'] = ingr_pointer.get('count', 1) * amount
+            if not self.has_item(_ingr_pointer):
+                red("You don't have the required items!")
+                return
 
-    for pointer in recipe.ingredients:
-        self.remove_item(pointer)
+        for ingr_pointer in recipe.ingredients:
+            _ingr_pointer = ingr_pointer.copy()
+            _ingr_pointer['count'] = ingr_pointer.get('count', 1) * amount
+            self.remove_item(_ingr_pointer)
 
-    pointer = recipe.result
-    name = pointer['name']
+        result_pointer = recipe.result
+        name = result_pointer['name']
 
-    if name.endswith('_pet'):
-        keep_weight = 80
-        upgrade_weight = 20 + 0.2 * self.get_stat('pet_luck')
-        total = keep_weight + upgrade_weight
-        if random() > (keep_weight / total):
-            pointer['rarity'] = {
-                'common': 'uncommon',
-                'uncommon': 'rare',
-                'rare': 'epic',
-                'epic': 'legendary',
-            }[pointer['rarity']]
+        if name.endswith('_pet'):
+            keep_weight = 80
+            upgrade_weight = 20 + 0.2 * self.get_stat('pet_luck')
+            total = keep_weight + upgrade_weight
+            if random() > (keep_weight / total):
+                result_pointer['rarity'] = {
+                    'common': 'uncommon',
+                    'uncommon': 'rare',
+                    'rare': 'epic',
+                    'epic': 'legendary',
+                }[result_pointer['rarity']]
 
-    self.recieve_item(pointer)
+        _result_pointer = result_pointer.copy()
+        _result_pointer['count'] = result_pointer.get('count', 1) * amount
+        self.recieve_item(_result_pointer)
 
-    if name.endswith('_minion'):
-        tier = pointer['tier']
+        if name.endswith('_minion'):
+            tier = result_pointer['tier']
 
-        minion_name = name.replace('_minion', f'_{tier}')
-        if minion_name not in self.crafted_minions:
-            self.crafted_minion.append(minion_name)
-            self.crafted_minion.sort()
+            minion_name = name.replace('_minion', f'_{tier}')
+            if minion_name not in self.crafted_minions:
+                self.crafted_minions.append(minion_name)
+                self.crafted_minions.sort()
 
-            tier_str = format_roman(tier)
-            green(f"You crafted a {YELLOW}Tier {tier_str}"
-                  f" {format_name(name)}{GREEN}! That's a new one!")
-            cap, to_next = get_minion_cap_info(len(self.crafted_minion))
-            if to_next > 0:
-                green(f' Craft {to_next} more unique Minions to unlock your'
-                      f' {cap + 1}th Minion slot!')
-            elif to_next == 0:
-                gold(f' You have now unlocked your {cap}th Minion slot!')
-                self.placed_minion.append(Empty())
+                tier_str = format_roman(tier)
+                green(f"You crafted a {YELLOW}Tier {tier_str}"
+                      f" {format_name(name)}{GREEN}! That's a new one!")
+                cap, to_next = get_minion_cap_info(len(self.crafted_minions))
+                if to_next > 0:
+                    green(f' Craft {to_next} more unique Minions'
+                          f' to unlock your {cap + 1}th Minion slot!')
+                elif to_next == 0:
+                    gold(f' You have now unlocked your {cap}th Minion slot!')
+                    self.placed_minions.append(Empty())
 
 
 def despawn_pet(self, /):

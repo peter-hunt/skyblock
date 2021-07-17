@@ -194,7 +194,11 @@ def mainloop(self):
                     red(f'Amount must be a positive integer.')
                     continue
 
-            self.craft(recipe, amount)
+            if isinstance(recipe, Recipe):
+                recipes = [recipe]
+            elif isinstance(recipe, RecipeGroup):
+                recipes = [get_recipe(name) for name in recipe.recipes]
+            self.craft(recipes, amount)
 
         elif words[0] == 'deathcount':
             death_count = self.stats.get('deaths', 0)

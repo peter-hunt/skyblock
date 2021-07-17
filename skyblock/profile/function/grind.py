@@ -70,7 +70,7 @@ def fish(self, rod_index: int, iteration: int = 1, /):
     last_cp = Decimal()
     cp_step = Decimal('0.1')
     for i in range(1, iteration + 1):
-        sleep(random_amount((5, 30)) * time_mult)
+        sleep(random_amount((5, 30), mult=time_mult))
         if i != 1:
             print()
 
@@ -184,19 +184,16 @@ def gather(self, name: str, tool_index: Optional[int],
         cp_step = Decimal('0.1')
         for i in range(1, iteration + 1):
             sleep(time_cost)
-            amount_pool = random_amount(default_amount)
-            drop_pool = random_int(fortune_mult)
+            count_pool = random_amount(default_amount, mult=fortune_mult)
 
-            item_type = get_item(drop_item)
-            if getattr(item_type, 'count', 1) != 1:
-                item_type.count = 1
-            self.recieve_item(item_type, amount_pool * drop_pool)
-            self.collect(drop_item, amount_pool * drop_pool)
+            self.recieve_item({'name': drop_item, 'count': count_pool})
+            self.collect(drop_item, count_pool)
 
             if resource.name == 'wheat':
-                seeds_pool = random_amount((0, 3))
-                self.recieve_item(Item('seeds'), seeds_pool * drop_pool)
-                self.collect('seeds', seeds_pool * drop_pool)
+                seeds_pool = random_amount((0, 3), mult=fortune_mult)
+                if seeds_pool != 0:
+                    self.recieve_item({'name': 'seeds', 'count': seeds_pool})
+                    self.collect('seeds', seeds_pool)
 
             self.add_skill_exp('farming', resource.farming_exp, display=True)
             if i >= (last_cp + cp_step) * iteration:
@@ -244,15 +241,11 @@ def gather(self, name: str, tool_index: Optional[int],
         cp_step = Decimal('0.1')
         for i in range(1, iteration + 1):
             sleep(time_cost)
-            amount_pool = random_amount(default_amount)
-            drop_pool = random_int(fortune_mult)
-            item_type = get_item(drop_item)
-            if getattr(item_type, 'count', 1) != 1:
-                item_type.count = 1
-            self.recieve_item(item_type, amount_pool * drop_pool)
-            self.collect(drop_item, amount_pool * drop_pool)
+            count_pool = random_amount(default_amount, mult=fortune_mult)
+            self.recieve_item({'name': drop_item, 'count': count_pool})
+            self.collect(drop_item, count_pool)
 
-            self.add_exp(random_amount(resource.exp) * random_amount(exp_mult))
+            self.add_exp(random_amount(resource.exp, mult=exp_mult))
             self.add_skill_exp('mining', resource.mining_exp, display=True)
 
             if resource.name == 'end_stone' and random_bool(0.1):
@@ -312,12 +305,6 @@ def gather(self, name: str, tool_index: Optional[int],
         fortune_mult = 1 + foraging_fortune / 100
 
         wood_name = resource.name
-        wood_item = get_item(wood_name)
-        wood_item.count = 1
-
-        if is_wood:
-            sapling_item = get_item(f'{wood_name[:-5]}_sapling')
-            sapling_item.count = 1
 
         last_cp = Decimal()
         cp_step = Decimal('0.1')
@@ -325,17 +312,18 @@ def gather(self, name: str, tool_index: Optional[int],
         for i in range(1, iteration + 1):
             sleep(max(last_harvest - time() + time_cost, 0))
             last_harvest = time()
-            drop_pool = random_int(fortune_mult)
+            count_pool = random_int(fortune_mult)
 
             for i in range(break_amount):
                 if i != 0:
                     sleep(0.02)
 
-                self.recieve_item(wood_item, drop_pool)
+                self.recieve_item({'name': wood_name, 'count': count_pool})
                 if is_wood:
-                    self.collect(wood_name, drop_pool)
+                    self.collect(wood_name, count_pool)
                     if random_amount((1, 5)) == 1:
-                        self.recieve_item(sapling_item, drop_pool)
+                        self.recieve_item({'name': f'{wood_name[:-5]}_sapling',
+                                           'count': 1})
 
                 self.add_skill_exp('foraging', resource.foraging_exp,
                                    display=True)
@@ -748,7 +736,14 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
 
         self.add_exp(mob.exp * random_int(exp_mult) + random_int(added_exp))
 
-        for item, loot_amount, rarity, drop_chance in mob.drops:
+        for pointer, loot_amount, rarity, drop_chance in mob.drops:
+            name = pointer['name']
+            kwargs = {key: pointer[key] for key in pointer
+                      if key not in {'name', 'count'}}
+            item = get_item(name, **kwargs)
+            amount_pool = random_amount(loot_amount)
+            pointer['count'] = amount_pool
+
             drop_chance *= looting
             drop_chance *= 1 + magic_find / 100
             if isinstance(item, Armor):
@@ -757,13 +752,8 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
             if not random_bool(drop_chance):
                 continue
 
-            loot = validify_item(item)
-            if getattr(loot, 'count', 1) != 1:
-                loot.count = 1
-
-            amount_pool = random_amount(loot_amount)
-            self.recieve_item(loot, amount_pool)
-            self.collect(loot.name, amount_pool)
+            self.recieve_item(pointer)
+            self.collect(name, amount_pool)
 
             if rarity not in {'common', 'uncommon'}:
                 rarity_str = rarity.replace('_', ' ').upper()
@@ -772,9 +762,9 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
 
         if 'diamond' in name:
             if random_bool(0.01 * (1 + magic_find / 100)):
-                loot = get_item('rare_diamond')
-                self.recieve_item(loot)
+                self.recieve_item({'name': 'rare_diamond'})
 
+                loot = get_item('rare_diamond')
                 rarity_color = RARITY_COLORS['rare']
                 white(f'{rarity_color}RARE DROP! '
                       f'{WHITE}({loot.display()}{WHITE})')
@@ -782,8 +772,9 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
         coins_recieved = (mob.coins + scavenger) * coins_mult
         if self.has_item({'name': 'scavenger_talisman'}):
             coins_recieved += 0.5 * mob.level
-        self.purse += coins_recieved
-        gray(f'+ {GOLD}{format_number(coins_recieved)} Coins')
+        coins_pool = random_int(coins_recieved)
+        self.purse += coins_pool
+        gray(f'+ {GOLD}{format_number(coins_pool)} Coins')
 
         if getattr(mob, 'farming_exp', 0) != 0:
             self.add_skill_exp('farming', mob.farming_exp, display=True)
@@ -794,10 +785,10 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
 
         phoenix_pool = random()
         if phoenix_pool <= 0.0000008:
-            self.recieve_item(get_item('phoenix_pet', rarity='epic'))
+            self.recieve_item({'name': 'phoenix_pet', 'rarity': 'epic'})
             yellow(f'Wow! You found a {RED}Phoenix{YELLOW} pet!')
         elif phoenix_pool <= 0.000001:
-            self.recieve_item(get_item('phoenix_pet', rarity='legendary'))
+            self.recieve_item({'name': 'phoenix_pet', 'rarity': 'legendary'})
             yellow(f'Wow! You found a {RED}Phoenix{YELLOW} pet!')
 
         if count >= (last_cp + cp_step) * iteration:
