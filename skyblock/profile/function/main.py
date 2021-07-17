@@ -31,6 +31,8 @@ profile_help = generate_help(profile_doc)
 def mainloop(self):
     last_shop: Optional[str] = None
 
+    green(f'You are playing on profile: {YELLOW}{self.name}')
+
     self.update(save=False)
 
     while True:
