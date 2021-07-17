@@ -13,9 +13,10 @@ from ...function.math import (
 from ...function.io import *
 from ...function.reforging import get_modifier
 from ...function.util import (
-    format_name, format_roman, get_family,
+    format_name, format_roman, get_family, parse_int,
 )
 from ...object.collection import is_collection, get_collection, calc_coll_level
+from ...object.recipe import get_recipe
 from ...object.object import *
 
 
@@ -23,6 +24,7 @@ __all__ = [
     'add_exp', 'add_kill', 'add_skill_exp', 'get_collection_amount',
     'get_collection_level', 'collect', 'get_bestiary_amount',
     'get_bestiary_level', 'get_skill_exp', 'get_skill_level', 'get_stat',
+    'parse_index',
 ]
 
 
@@ -213,10 +215,16 @@ def collect(self, name: str, amount: int, /):
         if isinstance(reward, (float, int)):
             dark_gray(f'  +{DARK_AQUA}{reward}{GRAY}'
                       f' {format_name(coll.category)} Experience')
-        elif isinstance(reward, Recipe):
-            item = reward.result[0]
-            color = RARITY_COLORS[item.rarity]
-            print(f'  {color}{format_name(item.name)} {GRAY}Recipe')
+        elif isinstance(reward, str):
+            recipe = get_recipe(reward)
+            if isinstance(reward, Recipe):
+                item = reward.result[0]
+                color = RARITY_COLORS[item.rarity]
+                white(f'  {color}{format_name(item.name)} {GRAY}Recipe'
+                      f' {DARK_GRAY}({recipe.name})')
+            else:
+                white(f'  {format_name(recipe.name)} {GRAY}Recipe'
+                      f' {DARK_GRAY}({recipe.name})')
 
     yellow(f"{BOLD}{'':-^{width}}")
 
@@ -512,6 +520,19 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
         value = min(cap, value)
 
     return value
+
+
+def parse_index(self, word: str, length: Optional[int] = None,
+                /, *, warn: bool = True) -> Optional[int]:
+    index = parse_int(word, warn=warn)
+    if index is None:
+        return
+    if length is None:
+        length = len(self.inventory)
+    if (index <= 0 or index > length) and warn:
+        red(f'Index out of bound: {index}')
+        return
+    return index - 1
 
 
 math_functions = {

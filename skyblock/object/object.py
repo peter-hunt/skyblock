@@ -363,8 +363,7 @@ class RecipeGroup:
 class Collection:
     name: str
     category: str
-    levels: List[Tuple[int, Union[Union[Recipe, RecipeGroup],
-                                  Tuple[Union[Recipe, RecipeGroup]], Number]]]
+    levels: List[Tuple[int, Union[str, Tuple[str], Number]]]
 
     def __iter__(self, /) -> Iterator:
         return iter(self.levels)

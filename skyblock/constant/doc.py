@@ -58,7 +58,7 @@ Combine items with anvil.
 > use <index> [amount]
 Consume item.
 
-> craft <recipe-index> [amount]
+> craft <recipe-name> [amount]
 Craft items.
 
 > deathcount
@@ -161,8 +161,8 @@ Takes all items currently in the Stash.
 > pt
 Shows your current playtime.
 
-> recipe [recipe] [--all]
-> recipes [recipe] [--all]
+> recipe [recipe-name] [--all]
+> recipes [recipe-name] [--all]
 Shows all recipes or recipes avaliable.
 
 > save

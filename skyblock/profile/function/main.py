@@ -178,13 +178,9 @@ def mainloop(self):
                 red(f'Unknown collection: {category!r}')
 
         elif words[0] == 'craft':
-            index = self.parse_index(words[1], len(CRAFTABLES))
-            if index is not None:
-                recipe = CRAFTABLES[index]
-            else:
-                recipe = get_recipe(words[1])
-                if recipe is None:
-                    continue
+            recipe = get_recipe(words[1])
+            if recipe is None:
+                continue
 
             amount = 1
 
@@ -592,13 +588,9 @@ def mainloop(self):
                 self.display_recipe(arg, show_all=show_all)
                 continue
 
-            index = self.parse_index(arg, len(CRAFTABLES), warn=False)
-            if index is not None:
-                recipe = CRAFTABLES[index]
-            else:
-                recipe = get_recipe(arg)
-                if recipe is None:
-                    continue
+            recipe = get_recipe(arg)
+            if recipe is None:
+                continue
 
             self.display_recipe_info(recipe)
 

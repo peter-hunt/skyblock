@@ -2,13 +2,11 @@ from json import load as json_load
 from os.path import join
 from pathlib import Path
 from re import sub
-from typing import Optional
 
 from ..constant.color import *
 from ..myjson import dump as json_dump
 from ..function.io import *
 from ..function.path import is_profile
-from ..function.util import parse_int
 from ..object.collection import COLLECTIONS
 from ..object.object import *
 from ..map.object import *
@@ -101,20 +99,6 @@ def profile_wrapper(cls):
     load_str = sub(r'\n\s+', '', load_str)
 
     cls.load = classmethod(eval(load_str))
-
-    def parse_index(self, word: str, length: Optional[int] = None,
-                    warn: bool = True, /) -> Optional[int]:
-        index = parse_int(word)
-        if index is None:
-            return
-        if length is None:
-            length = len(self.inventory)
-        if (index <= 0 or index > length) and warn:
-            red(f'Index out of bound: {index}')
-            return
-        return index - 1
-
-    cls.parse_index = parse_index
 
     for name, func in profile_functions.items():
         setattr(cls, name, func)

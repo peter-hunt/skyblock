@@ -28,6 +28,14 @@ def collection_type(cls: type, /) -> type:
 
     cls.__init__ = eval(init_str)
 
+    def to_obj(self, /):
+        result = {}
+        result['name'] = self.name
+        result['category'] = self.category
+        result['levels'] = self.levels
+
+    cls.to_obj = to_obj
+
     return cls
 
 

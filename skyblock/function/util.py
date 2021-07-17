@@ -226,9 +226,8 @@ def is_valid_usage(usage: str, words: List[str], /) -> bool:
     return True
 
 
-def parse_int(string: str, /) -> Optional[int]:
+def parse_int(string: str, /, *, warn=True) -> Optional[int]:
     if fullmatch(r'\d+', string):
         return int(string)
-    else:
+    elif warn:
         red('Please input a valid number!')
-        return

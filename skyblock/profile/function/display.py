@@ -162,7 +162,7 @@ def display_collection_info(self, name: str, /):
     for index, (amount, rwds) in enumerate(coll.levels):
         display = display
 
-        if not hasattr(rwds, '__iter__'):
+        if isinstance(rwds, (int, float, str)):
             rwds = [rwds]
 
         if amount > current and next_level is None:
@@ -177,13 +177,16 @@ def display_collection_info(self, name: str, /):
             if isinstance(reward, (float, int)):
                 dark_gray(f' +{DARK_AQUA}{reward}{GRAY}'
                           f' {format_name(coll.category)} Experience')
-            elif isinstance(reward, Recipe):
-                item = reward.result[0]
-                print(f'  {item.display()} {GRAY}Recipe'
-                      f' {DARK_GRAY}({reward.name})')
-            elif isinstance(reward, RecipeGroup):
-                print(f'  {format_name(reward.name)} {GRAY}Recipe'
-                      f' {DARK_GRAY}({reward.name})')
+            elif isinstance(reward, str):
+                recipe = get_recipe(reward)
+                if isinstance(recipe, Recipe):
+                    item = recipe.result[0]
+                    color = RARITY_COLORS[item.rarity]
+                    white(f'  {color}{format_name(item.name)} {GRAY}Recipe'
+                          f' {DARK_GRAY}({recipe.name})')
+                else:
+                    white(f'  {format_name(recipe.name)} {GRAY}Recipe'
+                          f' {DARK_GRAY}({recipe.name})')
 
     this_level = current - past_amount
     if next_level is None:
@@ -202,11 +205,14 @@ def display_collection_info(self, name: str, /):
             if isinstance(reward, (float, int)):
                 dark_gray(f'  +{DARK_AQUA}{reward}{GRAY}'
                           f' {format_name(coll.category)} Experience')
-            elif isinstance(reward, Recipe):
-                item = reward.result[0]
-                print(f'  {item.display()} {GRAY}Recipe')
-            elif isinstance(reward, RecipeGroup):
-                print(f'  {format_name(reward.name)} {GRAY}Recipe')
+            elif isinstance(reward, str):
+                recipe = get_recipe(reward)
+                if isinstance(recipe, Recipe):
+                    item = recipe.result[0]
+                    color = RARITY_COLORS[item.rarity]
+                    white(f'  {color}{format_name(item.name)} {GRAY}Recipe')
+                else:
+                    white(f'  {format_name(recipe.name)} {GRAY}Recipe')
 
     yellow(f"{BOLD}{'':-^{width}}")
 
@@ -391,8 +397,9 @@ def display_recipe_info(self, recipe: Union[Recipe, RecipeGroup], /):
     width = ceil(width * 0.85)
     yellow(f"{BOLD}{'':-^{width}}")
 
-    green(f'{format_name(recipe.name)} '
-          f'{GRAY}({format_name(recipe.category)} Recipe)')
+    green(f'{format_name(recipe.name)}'
+          f' {DARK_GRAY}({recipe.name})')
+    dark_gray(f'{format_name(recipe.category)} Recipe')
 
     if isinstance(recipe, Recipe):
         recipes = [recipe]
@@ -456,14 +463,12 @@ def display_recipe(self, category: Optional[str], /, *,
             else:
                 recipes.append(recipe)
 
-    digits = len(f'{len(CRAFTABLES)}')
-
     if len(recipes) == 0:
         gray('  none')
     else:
         for recipe in recipes:
-            i = index(CRAFTABLES, recipe.name)
-            gray(f'  {(i + 1):>{digits}} {AQUA}{format_name(recipe.name)}')
+            gray(f'  {AQUA}{format_name(recipe.name)}'
+                 f' {DARK_GRAY}({recipe.name})')
 
     if end:
         yellow(f"{BOLD}{'':-^{width}}")
