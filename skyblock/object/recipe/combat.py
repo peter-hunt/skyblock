@@ -119,7 +119,7 @@ COMBAT_RECIPES = [
            collection_req=('rotten_flesh', 6)),
     Recipe('zombie_sword', 'combat',
            [{'name': 'zombies_heart', 'count': 2},
-            (Item('stick', 1))],
+            {'name': 'stick', 'count': 1}],
            {'name': 'zombie_sword'},
            collection_req=('rotten_flesh', 7)),
     Recipe('zombie_chestplate', 'combat',

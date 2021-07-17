@@ -4,7 +4,10 @@ from ..constant.color import *
 from ..function.util import format_name, format_number, format_short
 
 
-__all__ = ['collection_type', 'mob_type', 'enchanted_book_type', 'init_type']
+__all__ = [
+    'collection_type', 'recipe_type', 'recipe_group_type', 'mob_type',
+    'enchanted_book_type', 'init_type',
+]
 
 
 def collection_type(cls: type, /) -> type:
@@ -50,6 +53,97 @@ def collection_type(cls: type, /) -> type:
                 rwd = tuple(rwd)
             levels.append((exp, rwd))
         return cls(obj['name'], obj['category'], levels)
+
+    cls.load = load
+
+    return cls
+
+
+def recipe_type(cls: type, /) -> type:
+    anno = getattr(cls, '__annotations__', {})
+    default = {}
+    for name in anno:
+        if hasattr(cls, name):
+            default[name] = getattr(cls, name)
+
+    init_str = 'lambda self'
+    for key in anno:
+        if key in default:
+            init_str += f', {key}={default[key]!r}'
+        else:
+            init_str += f', {key}'
+
+    init_str += ': ('
+    for key in anno:
+        init_str += f'setattr(self, {key!r}, {key}), '
+    init_str += 'None,)[-1]'
+
+    cls.__init__ = eval(init_str)
+
+    def to_obj(self, /):
+        result = {}
+        result['name'] = self.name
+        result['category'] = self.category
+        result['ingredients'] = self.ingredients
+        result['result'] = self.result
+        if self.collection_req is not None:
+            result['collection_req'] = [*self.collection_req]
+        return result
+
+    cls.to_obj = to_obj
+
+    @classmethod
+    def load(cls, obj, /):
+        collection_req = obj.get('collection_req', None)
+        if collection_req is not None:
+            collection_req = tuple(collection_req)
+        return cls(obj['name'], obj['category'],
+                   obj['ingredients'], obj['result'], collection_req)
+
+    cls.load = load
+
+    return cls
+
+
+def recipe_group_type(cls: type, /) -> type:
+    anno = getattr(cls, '__annotations__', {})
+    default = {}
+    for name in anno:
+        if hasattr(cls, name):
+            default[name] = getattr(cls, name)
+
+    init_str = 'lambda self'
+    for key in anno:
+        if key in default:
+            init_str += f', {key}={default[key]!r}'
+        else:
+            init_str += f', {key}'
+
+    init_str += ': ('
+    for key in anno:
+        init_str += f'setattr(self, {key!r}, {key}), '
+    init_str += 'None,)[-1]'
+
+    cls.__init__ = eval(init_str)
+
+    def to_obj(self, /):
+        result = {}
+        result['name'] = self.name
+        result['category'] = self.category
+        result['recipes'] = self.recipes
+        if self.collection_req is not None:
+            result['collection_req'] = [*self.collection_req]
+        return result
+
+    cls.to_obj = to_obj
+
+    @classmethod
+    def load(cls, obj, /):
+        collection_req = obj.get('collection_req', None)
+        if collection_req is not None:
+            collection_req = tuple(collection_req)
+        return cls(obj['name'], obj['category'],
+                   obj['recipes'], collection_req)
 
     cls.load = load
 

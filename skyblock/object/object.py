@@ -2,9 +2,7 @@ from typing import Dict, Iterator, List, Optional, Tuple, Union
 
 from ..constant.util import Amount, ItemPointer, Number
 
-from .other_wrapper import (
-    collection_type, mob_type, enchanted_book_type, init_type,
-)
+from .other_wrapper import *
 from .item_wrapper import item_type
 
 
@@ -340,7 +338,7 @@ class Mob:
     drops: List[Tuple[ItemType, Amount, str, Number]] = []
 
 
-@init_type
+@recipe_type
 class Recipe:
     name: str
     category: str
@@ -350,7 +348,7 @@ class Recipe:
     # slayer_req: Optional[Tuple[str, int]] = None
 
 
-@init_type
+@recipe_group_type
 class RecipeGroup:
     name: str
     category: str
