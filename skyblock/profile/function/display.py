@@ -464,6 +464,8 @@ def display_recipe_info(self, recipe: Union[Recipe, RecipeGroup], /):
             kwargs = {key: pointer[key] for key in pointer
                       if key not in {'name', 'count'}}
             item = get_item(name, **kwargs)
+            if getattr(item, 'count', 1) != 1:
+                item.count = 1
             gray(f'  {item.display()}{DARK_GRAY} x {count}')
         gray('\nResult:')
         pointer = _recipe.result
@@ -472,6 +474,8 @@ def display_recipe_info(self, recipe: Union[Recipe, RecipeGroup], /):
         kwargs = {key: pointer[key] for key in pointer
                   if key not in {'name', 'count'}}
         item = get_item(name, **kwargs)
+        if getattr(item, 'count', 1) != 1:
+            item.count = 1
         gray(f'  {item.display()}{DARK_GRAY} x {count}')
 
     requirements = []

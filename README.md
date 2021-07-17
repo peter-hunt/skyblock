@@ -61,7 +61,9 @@ python -m skyblock
 * Fairy Souls
 * Forging (Dwarven Mines)
 * HoTM Skill Tree (Dwarven Mines)
+* Minion Support Item
 * NPC usage (like Kat, Fetchur, etc.)
+* Pet Item
 
 # Furthur information
 This project is a clone of [Hypixel Skyblock](https://hypixel-skyblock.fandom.com/wiki/Hypixel_SkyBlock_Wiki)
