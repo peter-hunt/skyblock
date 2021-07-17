@@ -6,6 +6,8 @@
 Clone of Hypixel Skyblock, but in Python Cmd.
 Specifically, Ironman mode.
 
+Requires Skyblock-Data repo, [Skyblock Data](https://github.com/peter-hunt/skyblock-data), which will install automatically.
+
 # Installation
 Use git to install Skyblock.
 
