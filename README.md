@@ -40,17 +40,15 @@ python -m skyblock
 ## Added Features:
 * Abilities
 * Accessories
-* Armor pieces, Bows and Swords
-* Axes, Hoes, Pickaxes, Fishing Rods
+* Armor Pieces, Tools, and Weapons
 * Bestiary
 * Crafting
 * Collections
-* Combining Items with Enchantments, Reforge Stone, and Potato Books
-* Enchantments
+* Combining Enchantments, Reforge Stone, and Potato Books
 * Farming, Mining, Combat, Foraging, Fishing and Enchanting
 * Fast Traveling
 * NPC Buying and Trading items
-* Modifiers and Basic Reforging
+* Modifiers and Reforging
 * Pets
 * Simple Combat
 * Skills

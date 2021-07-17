@@ -12,9 +12,8 @@ from ...constant.mob import (
     PROJ_PROT_EFT, IMPALING_EFT, SEA_CREATURES, ZOMBIES, SKELETONS,
 )
 from ...function.io import *
-from ...function.math import (
-    calc_bestiary_level, calc_pet_level, random_amount, random_bool, random_int,
-)
+from ...function.math import calc_bestiary_level, calc_pet_level
+from ...function.random import random_amount, random_bool, random_int
 from ...function.util import (
     checkpoint, format_crit, format_name, format_number, format_roman,
 )

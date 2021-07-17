@@ -1,13 +1,12 @@
 from itertools import count
 from math import floor, isinf
-from random import randint, random
 from typing import Optional, Tuple
 
 from ..constant.color import *
 from ..constant.main import (
     DUNGEON_EXP, SKILL_EXP, SKILL_LIMITS, PET_EXP_DIFF, KILL_LEVELS,
 )
-from ..constant.util import Amount, Number
+from ..constant.util import Number
 
 from .io import *
 from .util import format_number, format_roman
@@ -17,7 +16,7 @@ __all__ = [
     'calc_bestiary_level', 'calc_bestiary_upgrade_amount', 'calc_exp_level',
     'calc_exp', 'calc_pet_exp', 'calc_pet_level', 'calc_pet_upgrade_exp',
     'calc_skill_level', 'calc_skill_level_info', 'display_skill_reward',
-    'dung_stat', 'fround', 'random_amount', 'random_bool', 'random_int',
+    'dung_stat', 'fround',
 ]
 
 
@@ -313,19 +312,3 @@ def fround(number: Number, digit=0, /) -> Number:
         return number
     mult = 10 ** digit
     return floor(number * mult) / mult
-
-
-def random_amount(amount: Amount = 1, /) -> int:
-    if isinstance(amount, tuple):
-        return randint(amount[0], amount[1])
-    else:
-        return random_int(amount)
-
-
-def random_bool(chance: float = 0.5, /) -> bool:
-    return random() < chance
-
-
-def random_int(num: Number, /) -> int:
-    int_part, float_part = divmod(num, 1)
-    return int(int_part + random_bool(float_part))

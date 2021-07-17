@@ -1,12 +1,10 @@
 from setuptools import setup
 
-
 with open('README.md') as file:
     long_description = file.read()
 
 with open('requirements.txt') as file:
     requirements = file.read().strip().split('\n')
-
 
 setup(
     name='skyblock-peterhunt',

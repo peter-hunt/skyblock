@@ -7,8 +7,9 @@ from ...constant.enchanting import *
 from ...constant.main import INTEREST_TABLE, SELL_PRICE
 from ...function.enchanting import get_enchantments
 from ...function.io import *
-from ...function.math import calc_exp_level, calc_exp, random_amount
+from ...function.math import calc_exp_level, calc_exp
 from ...function.minion import get_minion_cap_info
+from ...function.random import random_amount
 from ...function.reforging import combine_enchant
 from ...function.util import (
     checkpoint, format_name, format_number, format_roman, format_short,
