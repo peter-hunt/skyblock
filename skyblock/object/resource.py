@@ -22,7 +22,7 @@ RESOURCES = [
 
     Mineral('stone', drop='cobblestone', amount=1, breaking_power=1,
             hardness=1, exp=0, mining_exp=1),
-    Mineral('gravel', drop='gravel', amount=1, breaking_power=0,
+    Mineral('gravel', drop='flint', amount=1, breaking_power=0,
             hardness=0.6, exp=0, mining_exp=4),
     Mineral('coal_ore', drop='coal', amount=1, breaking_power=1,
             hardness=3, exp=1, mining_exp=5),
@@ -46,6 +46,8 @@ RESOURCES = [
             hardness=3, exp=0, mining_exp=3),
     Mineral('sand', drop='sand', amount=1, breaking_power=0,
             hardness=0.5, exp=0, mining_exp=3),
+    Mineral('ice', drop='ice', amount=1, breaking_power=0,
+            hardness=0.5, exp=0, mining_exp=0.5),
 
     Mineral('gray_mithril', drop='mithril', amount=1, breaking_power=4,
             hardness=30, exp=15, mining_exp=45, mithril_powder=(0, 1)),

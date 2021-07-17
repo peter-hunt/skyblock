@@ -1,12 +1,11 @@
 from ...object import *
 
 from .farming import FARMING_MINIONS as FARMING
+from .mining import MINING_MINIONS as MINING
 
 
 __all__ = [
-    'FARMING'
+    'MINIONS'
 ]
 
-MINIONS = (
-    FARMING
-)
+MINIONS = FARMING + MINING

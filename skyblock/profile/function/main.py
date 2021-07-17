@@ -28,6 +28,8 @@ profile_help = generate_help(profile_doc)
 
 @checkpoint
 def mainloop(self):
+    yellow(f'Welcome to {GREEN}Skyblock{YELLOW}!')
+
     last_shop: Optional[str] = None
 
     while True:

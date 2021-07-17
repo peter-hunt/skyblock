@@ -169,13 +169,13 @@ MINING_COLLECTIONS = [
         ],
     ),
     Collection(
-        'gravel', 'mining',
+        'flint', 'mining',
         [
             (50, 5),
             (100, 10),
             (250, 25),
             (1_000, get_recipe('sharpness_book')),
-            (2_500, get_recipe('gravel_to_enchanted')),
+            (2_500, get_recipe('flint_to_enchanted')),
             (5_000, get_recipe('first_strike_book')),
             (10_000, 1_000),
             (15_000, get_recipe('scroll_to_spider')),

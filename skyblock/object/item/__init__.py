@@ -99,7 +99,7 @@ COLLECTION_ITEMS = [
     Item('quartz', 64, 'common'),
     Item('obsidian', 64, 'common'),
     Item('glowstone', 64, 'common'),
-    Item('gravel', 64, 'common'),
+    Item('flint', 64, 'common'),
     Item('ice', 64, 'common'),
     Item('netherrack', 64, 'common'),
     Item('sand', 64, 'common'),
@@ -254,7 +254,6 @@ COLLECTION_ITEMS = [
 ]
 
 OTHER_ITEMS = [
-    Item('flint', 64, 'common'),
     Item('glowstone_block', 64, 'common'),
     Item('gold_nugget', 64, 'common'),
     Item('iron_nugget', 64, 'common'),

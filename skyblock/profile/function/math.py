@@ -180,7 +180,7 @@ def collect(self, name: str, amount: int, /):
     original_level = self.get_collection_level(name)
 
     if self.collection[name] == 0 and amount > 0:
-        gold(f'{BOLD}COLLECTION UNLOCKED {YELLOW}{display}')
+        gold(f' {BOLD}COLLECTION UNLOCKED {YELLOW}{display}')
 
     self.collection[name] += amount
 
