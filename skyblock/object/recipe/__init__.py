@@ -5,7 +5,8 @@ from ...function.util import includes, get
 
 from ..object import *
 
-from .combat import COMBAT_RECIPES as COMBAT
+from .combat import COMBAT_RECIPES as _COMBAT
+from .combat_minion import COMBAT_MINION_RECIPES as _COMBAT_MINION
 from .farming import FARMING_RECIPES as _FARMING
 from .farming_minion import FARMING_MINION_RECIPES as _FARMING_MINION
 from .foraging import FORAGING_RECIPES as FORAGING
@@ -38,6 +39,7 @@ def _gen_recipes(recipes: List[Recipe],
 
 FARMING = _gen_recipes(_FARMING, _FARMING_MINION)
 MINING = _gen_recipes(_MINING, _MINING_MINION)
+COMBAT = _gen_recipes(_COMBAT, _COMBAT_MINION)
 RECIPES = FARMING + MINING + COMBAT + FORAGING + FISHING + MISC
 CRAFTABLES = [recipe for recipe in RECIPES
               if isinstance(recipe, Recipe)]

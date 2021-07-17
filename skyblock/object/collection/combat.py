@@ -6,7 +6,7 @@ COMBAT_COLLECTIONS = [
     Collection(
         'rotten_flesh', 'combat',
         [
-            (50, 5),
+            (50, get_recipe('zombie_minion')),
             (100, get_recipe('zombie_pickaxe')),
             (250, get_recipe('smite_book')),
             (1_000, get_recipe('rotten_flesh_to_enchanted')),
@@ -20,7 +20,7 @@ COMBAT_COLLECTIONS = [
     Collection(
         'bone', 'combat',
         [
-            (50, 5),
+            (50, get_recipe('skeleton_minion')),
             (100, 10),
             (250, get_recipe('power_book')),
             (1_000, get_recipe('skeleton_hat')),
@@ -35,7 +35,7 @@ COMBAT_COLLECTIONS = [
     Collection(
         'string', 'combat',
         [
-            (60, 6),
+            (60, get_recipe('spider_minion')),
             (100, 10),
             (250, 25),
             (1_000, get_recipe('string_to_enchanted')),
@@ -49,7 +49,7 @@ COMBAT_COLLECTIONS = [
     Collection(
         'spider_eye', 'combat',
         [
-            (50, 5),
+            (50, get_recipe('cave_spider_minion')),
             (100, get_recipe('spider_sword')),
             (250, get_recipe('spider_hat')),
             (1_000, get_recipe('spider_eye_to_enchanted')),
@@ -63,7 +63,7 @@ COMBAT_COLLECTIONS = [
     Collection(
         'gunpowder', 'combat',
         [
-            (50, 5),
+            (50, get_recipe('creeper_minion')),
             (100, get_recipe('creeper_hat')),
             (250, get_recipe('blast_protection_book')),
             (1_000, get_recipe('gunpowder_to_enchanted')),
@@ -77,7 +77,7 @@ COMBAT_COLLECTIONS = [
     Collection(
         'ender_pearl', 'combat',
         [
-            (50, 5),
+            (50, get_recipe('enderman_minion')),
             (250, get_recipe('ender_pearl_to_enchanted')),
             (1_000, get_recipe('ender_slayer_book')),
             (2_500, 250),
@@ -92,7 +92,7 @@ COMBAT_COLLECTIONS = [
     Collection(
         'ghast_tear', 'combat',
         [
-            (20, 2),
+            (20, get_recipe('ghast_minion')),
             (100, get_recipe('ghast_head')),
             (250, get_recipe('giant_killer_book')),
             (1_000, get_recipe('ghast_tear_to_enchanted')),
@@ -106,7 +106,7 @@ COMBAT_COLLECTIONS = [
     Collection(
         'slime_ball', 'combat',
         [
-            (50, 5),
+            (50, get_recipe('slime_minion')),
             (100, get_recipe('slime_hat')),
             (250, get_recipe('knockback_book')),
             (1_000, 100),
@@ -120,7 +120,7 @@ COMBAT_COLLECTIONS = [
     Collection(
         'blaze_rod', 'combat',
         [
-            (50, 5),
+            (50, get_recipe('blaze_minion')),
             (100, get_recipe('blaze_hat')),
             (250, get_recipe('fire_aspect_book')),
             (1_000, get_recipe('blaze_rod_to_enchanted_powder')),
@@ -134,7 +134,7 @@ COMBAT_COLLECTIONS = [
     Collection(
         'magma_cream', 'combat',
         [
-            (50, 5),
+            (50, get_recipe('magma_cube_minion')),
             (100, get_recipe('magma_cube_head')),
             (250, get_recipe('fire_protection_book')),
             (1_000, 100),

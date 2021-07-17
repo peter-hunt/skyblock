@@ -57,7 +57,6 @@ python -m skyblock
 * Combat while mining
 * Commissions
 * Dungeons
-* EHP display
 * Fairy Souls
 * Forging (Dwarven Mines)
 * HoTM Skill Tree (Dwarven Mines)

@@ -178,7 +178,6 @@ COLLECTION_ITEMS = [
     Item('enchanted_spider_eye', 64, 'uncommon'),
     Item('enchanted_gunpowder', 64, 'uncommon'),
     Item('enchanted_ender_pearl', 16, 'uncommon'),
-    Item('enchanted_eye_of_ender', 64, 'uncommon'),
     Item('enchanted_ghast_tear', 64, 'uncommon'),
     Item('enchanted_slime_ball', 64, 'uncommon'),
     Item('enchanted_blaze_powder', 64, 'uncommon'),
