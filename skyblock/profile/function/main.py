@@ -16,6 +16,7 @@ from ...object.collection import is_collection
 from ...object.item import ITEMS
 from ...object.mob import get_mob
 from ...object.object import *
+from ...object.placed_minion import *
 from ...object.recipe import get_recipe
 from ...object.resource import get_resource
 
@@ -123,8 +124,7 @@ def mainloop(self):
             self.buy(chosen_trade, amount)
 
         elif words[0] == 'cheat':
-            self.recieve_item({'name': 'hot_potato_book'})
-            self.recieve_item({'name': 'fuming_potato_book'})
+            self.recieve_item({'name': 'wheat_minion', 'tier': 2})
             ...
 
         elif words[0] == 'clear':
@@ -484,6 +484,60 @@ def mainloop(self):
 
             self.merge(index_1, index_2)
 
+        elif words[0] == 'minion':
+            if len(words) == 1 or words[1] == 'ls':
+                self.display_minions()
+
+            elif words[1] == 'claim':
+                slot = self.parse_index(words[2], len(self.placed_minions))
+                if slot is None:
+                    continue
+
+                minion = self.placed_minions[slot]
+                if not isinstance(minion, PlacedMinion):
+                    red('This slot is empty!')
+                    continue
+
+                self.claim_minion(slot)
+
+            elif words[1] == 'info':
+                slot = self.parse_index(words[2], len(self.placed_minions))
+                if slot is None:
+                    continue
+
+                minion = self.placed_minions[slot]
+                if not isinstance(minion, PlacedMinion):
+                    red('This slot is empty!')
+                    continue
+
+                self.display_minion_info(slot)
+
+            elif words[1] == 'place':
+                index = self.parse_index(words[2])
+                if index is None:
+                    continue
+
+                minion = self.inventory[index]
+                if not isinstance(minion, Minion):
+                    red('This is not a Minion!')
+                    continue
+
+                slot = self.parse_index(words[3], len(self.placed_minions))
+                if slot is None:
+                    continue
+
+                self.place_minion(index, slot)
+
+            elif words[1] == 'remove':
+                slot = self.parse_index(words[2], len(self.placed_minions))
+                if slot is None:
+                    continue
+
+                self.remove_minion(slot)
+
+            else:
+                red(f'Invalid subcommand of {words[0]}: {words[1]!r}')
+
         elif words[0] == 'money':
             self.display_money()
 
@@ -707,7 +761,7 @@ def mainloop(self):
 
         else:
             red(f'Unknown command: {words[0]!r}')
-            yellow("Use 'help' for help.")
+            yellow("Use `help` for help.")
 
 
 main_functions = {

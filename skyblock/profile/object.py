@@ -2,7 +2,7 @@ from typing import Dict, List, Optional
 
 from ..constant.util import Number
 from ..object.collection import COLLECTIONS
-from ..object.object import Item, Empty, Armor
+from ..object.object import *
 
 from .wrapper import profile_wrapper
 
@@ -44,13 +44,10 @@ class Profile:
     fast_travel: List[str] = [('hub', None)]
 
     play_time: int = 0
-    stats: Dict[str, int] = {
-        'deaths': 0,
-        'kills': 0,
-    }
+    stats: Dict[str, int] = {'deaths': 0, 'kills': 0}
 
     armor: List[Armor] = [Empty() for _ in range(4)]
-    pets: List[Item] = []
+    pets: List[Pet] = []
     ender_chest: List[Item] = []
     inventory: List[Item] = [Empty() for _ in range(36)]
     potion_bag: List[Item] = []
@@ -61,5 +58,6 @@ class Profile:
     wardrobe_slot: Optional[int] = None
 
     crafted_minions: List[str] = []
+    placed_minions: List[str] = [Empty() for _ in range(5)]
 
     npc_talked: List[str] = []

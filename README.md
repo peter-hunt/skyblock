@@ -48,6 +48,7 @@ python -m skyblock
 * Farming, Mining, Combat, Foraging, Fishing and Enchanting
 * Fast Traveling
 * NPC Buying and Trading items
+* Minions
 * Modifiers and Reforging
 * Pets
 * Simple Combat
@@ -60,7 +61,6 @@ python -m skyblock
 * Fairy Souls
 * Forging (Dwarven Mines)
 * HoTM Skill Tree (Dwarven Mines)
-* Minions
 * NPC usage (like Kat, Fetchur, etc.)
 
 # Furthur information

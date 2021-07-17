@@ -9,6 +9,7 @@ from ..function.io import *
 from ..function.path import is_profile
 from ..object.collection import COLLECTIONS
 from ..object.object import *
+from ..object.placed_minion import load_minion
 from ..map.object import *
 
 from .function import profile_functions
@@ -46,9 +47,11 @@ def profile_wrapper(cls):
             for key in anno:
                 value = getattr(self, key)
 
-                if key in {'armor', 'pets', 'ender_chest', 'inventory',
-                           'potion_bag', 'quiver', 'stash', 'talisman_bag',
-                           'wardrobe'}:
+                if key in {
+                    'armor', 'pets', 'ender_chest', 'inventory',
+                    'placed_minions', 'potion_bag', 'quiver', 'stash',
+                    'talisman_bag', 'wardrobe',
+                }:
                     obj[key] = [item.to_obj() for item in value]
                 elif key in {'collection', 'stats'}:
                     obj[key] = {
@@ -81,10 +84,13 @@ def profile_wrapper(cls):
         if i != 0:
             content += ', '
 
-        if key in {'armor', 'pets', 'ender_chest', 'inventory',
-                   'potion_bag', 'quiver', 'stash', 'talisman_bag',
-                   'wardrobe'}:
+        if key in {'armor', 'pets', 'ender_chest', 'inventory', 'potion_bag',
+                   'quiver', 'stash', 'talisman_bag', 'wardrobe'}:
             content += (f'{key}=[load_item(item)'
+                        f' for item in obj.get({key!r}, {default[key]!r})]')
+        elif key == 'placed_minions':
+            content += (f'{key}=[result if'
+                        f' (result := load_minion(item)) != {{}} else Empty()'
                         f' for item in obj.get({key!r}, {default[key]!r})]')
         elif key == 'collection':
             coll_names = [coll.name for coll in COLLECTIONS]

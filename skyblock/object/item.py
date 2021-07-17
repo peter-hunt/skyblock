@@ -8,7 +8,7 @@ from ..function.util import get, includes
 from .object import *
 
 
-__all__ = ['ITEMS', 'get_item', 'validify_item', 'get_stack_size']
+__all__ = ['ITEMS', 'get_item', 'get_stack_size', 'validify_item']
 
 
 ITEMS = []

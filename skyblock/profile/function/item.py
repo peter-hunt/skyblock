@@ -89,7 +89,7 @@ def pickupstash(self, /):
     stash = [pointer.copy() for pointer in self.stash]
     self.stash = []
     for pointer in stash:
-        self.recieve_pointer(pointer)
+        self.recieve_item(pointer)
 
 
 def put_stash(self, pointer: ItemPointer, /):
@@ -123,6 +123,9 @@ def put_stash(self, pointer: ItemPointer, /):
 
 
 def recieve_item(self, pointer: ItemPointer, /):
+    if len(pointer) == 0:
+        return
+
     stack_count = get_stack_size(pointer['name'])
     count = pointer.get('count', 1)
     counter = count

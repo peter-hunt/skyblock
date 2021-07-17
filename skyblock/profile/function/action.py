@@ -1,3 +1,4 @@
+from math import floor
 from random import choice, random
 from time import sleep, time
 from typing import Optional, Tuple
@@ -8,8 +9,8 @@ from ...constant.main import INTEREST_TABLE, SELL_PRICE
 from ...function.enchanting import get_enchantments
 from ...function.io import *
 from ...function.math import calc_exp_level, calc_exp
-from ...function.minion import get_minion_cap_info
-from ...function.random import random_amount
+from ...function.minion import get_minion_cap, get_minion_cap_info
+from ...function.random import random_amount, random_int
 from ...function.reforging import combine_enchant
 from ...function.util import (
     checkpoint, format_name, format_number, format_roman, format_short,
@@ -17,14 +18,16 @@ from ...function.util import (
 )
 from ...map.island import ISLANDS
 from ...map.object import *
-from ...object.item import get_item, validify_item
+from ...object.item import get_item
+from ...object.minion import MINION_LOOT
 from ...object.object import *
+from ...object.placed_minion import PlacedMinion
 
 
 __all__ = [
-    'add_pet', 'buy', 'combine', 'consume', 'craft', 'despawn_pet', 'die',
-    'enchant', 'goto', 'remove_pet', 'sell', 'summon_pet', 'talkto_npc',
-    'update', 'warp',
+    'add_pet', 'buy', 'claim_minion', 'combine', 'consume', 'craft',
+    'despawn_pet', 'die', 'enchant', 'goto', 'place_minion', 'remove_minion',
+    'remove_pet', 'sell', 'summon_pet', 'talkto_npc', 'update', 'warp',
 ]
 
 
@@ -46,7 +49,6 @@ def buy(self, trade: Tuple, amount: int, /):
     if isinstance(cost, (int, float)):
         cost = [cost]
 
-    price = None
     for pointer in cost:
         if isinstance(pointer, (int, float)):
             if self.purse < pointer * amount:
@@ -83,11 +85,31 @@ def buy(self, trade: Tuple, amount: int, /):
 
     display_str = f'{GREEN}, '.join(display)
 
-    if isinstance(price, (float, int)):
+    if len(cost) == 1 and isinstance(cost[0], (float, int)):
         green(f'You bought {display_str}{GREEN} for '
-              f'{GOLD}{format_short(price)} Coins{GREEN}!')
+              f'{GOLD}{format_short(cost[0])} Coins{GREEN}!')
     else:
         green(f'You bought {display_str}{GREEN}!')
+
+
+def claim_minion(self, slot: int, /):
+    if isinstance(self.placed_minions[slot], Empty):
+        red('This slot is empty!')
+        return
+
+    minion = self.placed_minions[slot]
+    for index, item in enumerate(minion.inventory):
+        if isinstance(item, Empty):
+            continue
+
+        pointer = item.to_obj()
+        self.recieve_item(pointer)
+        self.collect(pointer['name'], pointer.get('count', 1))
+        minion.inventory[index] = Empty()
+
+    self.placed_minions[slot] = minion
+
+    aqua(f"You claimed the {minion.display()}{AQUA}'s inventory!")
 
 
 def combine(self, index_1: int, index_2: int, /):
@@ -310,9 +332,12 @@ def craft(self, recipe: Recipe, amount: int = 1, /):
             green(f"You crafted a {YELLOW}Tier {tier_str}"
                   f" {format_name(name)}{GREEN}! That's a new one!")
             cap, to_next = get_minion_cap_info(len(self.crafted_minion))
-            if to_next != 0:
-                green(f'Craft {to_next} more unique Minions to unlock your'
+            if to_next > 0:
+                green(f' Craft {to_next} more unique Minions to unlock your'
                       f' {cap + 1}th Minion slot!')
+            elif to_next == 0:
+                gold(f' You have now unlocked your {cap}th Minion slot!')
+                self.placed_minion.append(Empty())
 
 
 def despawn_pet(self, /):
@@ -566,6 +591,54 @@ def goto(self, dest: str, /):
             dark_gray(f'Powerful creatures reside in the Mist')
 
 
+def place_minion(self, index: int, slot: int, /):
+    if not isinstance(self.placed_minions[slot], Empty):
+        red('This slot is not empty!')
+        return
+
+    minion = self.inventory[index]
+    self.placed_minions[slot] = PlacedMinion(
+        minion.name, minion.tier, minion.cooldown, floor(time()),
+        [Empty() for _ in range(minion.slots)],
+    )
+    self.inventory[index] = Empty()
+
+    placed_minion_count = 0
+    for _minion in self.placed_minions:
+        if isinstance(_minion, PlacedMinion):
+            placed_minion_count += 1
+
+    aqua(f'You placed a minion! ({placed_minion_count}'
+         f'/{get_minion_cap(len(self.crafted_minions))})')
+
+
+def remove_minion(self, slot: int, /):
+    if isinstance(self.placed_minions[slot], Empty):
+        red('This slot is empty!')
+        return
+
+    minion = self.placed_minions[slot]
+    self.recieve_item({'name': minion.name, 'tier': minion.tier})
+    for item in minion.inventory:
+        if isinstance(item, Empty):
+            continue
+
+        pointer = item.to_obj()
+        self.recieve_item(pointer)
+        self.collect(pointer['name'], pointer.get('count', 1))
+
+    self.placed_minions[slot] = Empty()
+
+    placed_minion_count = 0
+    for _minion in self.placed_minions:
+        if isinstance(_minion, PlacedMinion):
+            placed_minion_count += 1
+
+    green(f'You picked up a minion!'
+          f' You currently have {placed_minion_count} out of a maximum of'
+          f' {get_minion_cap(len(self.crafted_minions))} minions placed.')
+
+
 def remove_pet(self, index: int, /):
     pet = self.pets[index]
     pointer = pet.to_obj()
@@ -692,6 +765,20 @@ def update(self, /, *, save=True):
     self.play_time += dt
 
     self.last_update = now
+
+    inow = floor(now)
+    for index, minion in enumerate(self.placed_minions):
+        if isinstance(minion, Empty):
+            continue
+        if minion.last_action + minion.cooldown > floor(inow):
+            continue
+
+        iteration = (inow - minion.last_action) // minion.cooldown
+        minion.last_action += minion.cooldown * iteration
+        for pointer, average in MINION_LOOT[minion.name[:-7]]:
+            _pointer = {**pointer, 'count': random_int(average * iteration)}
+            minion.recieve_item(_pointer)
+        self.placed_minions[index] = minion
 
 
 def warp(self, dest: str, /):

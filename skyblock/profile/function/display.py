@@ -29,10 +29,11 @@ __all__ = [
     'display_armor', 'display_bestiary', 'display_bestiaries',
     'display_collection_info', 'display_collection', 'display_collections',
     'display_hotm', 'display_item', 'display_inv', 'display_location',
-    'display_money', 'display_pets', 'display_playtime', 'display_recipe_info',
-    'display_recipe', 'display_recipes', 'display_shop', 'display_stats',
-    'display_skill_add', 'display_skill', 'display_skills', 'display_warp',
-    'npc_silent', 'npc_speak',
+    'display_minion_info', 'display_minions', 'display_money', 'display_pets',
+    'display_playtime', 'display_recipe_info', 'display_recipe',
+    'display_recipes', 'display_shop', 'display_stats', 'display_skill_add',
+    'display_skill', 'display_skills', 'display_warp', 'npc_silent',
+    'npc_speak',
 ]
 
 
@@ -295,9 +296,9 @@ def display_inv(self, /):
         is_empty = False
         if empty_slots:
             for empty_index in empty_slots:
-                gray(f'{(empty_index + 1):>{digits * 2 + 1}}')
+                gray(f'{(empty_index + 1):>{digits + 2}}')
             empty_slots.clear()
-        gray(f'{(index + 1):>{digits * 2 + 1}} {item.display()}')
+        gray(f'{(index + 1):>{digits + 2}} {item.display()}')
         index += 1
 
     if is_empty:
@@ -351,6 +352,42 @@ def display_location(self, /):
              f' ({zone.portal})')
 
     gray()
+
+
+def display_minion_info(self, slot: int, /):
+    minion = self.placed_minions[slot]
+
+    gray(minion.display())
+
+    length = len(minion.inventory)
+    digits = len(f'{length}')
+    index = 0
+    while index < length:
+        item = minion.inventory[index]
+        if isinstance(item, Empty):
+            while index < length:
+                if not isinstance(minion.inventory[index], Empty):
+                    break
+                gray(f'{(index + 1):>{digits + 2}}')
+                index += 1
+            if index == length:
+                break
+
+        gray(f'{(index + 1):>{digits + 2}} {item.display()}')
+        index += 1
+
+
+def display_minions(self, /):
+    length = len(self.placed_minions)
+    digits = len(f'{length}')
+
+    gray('Your placed minions:')
+
+    for index, minion in enumerate(self.placed_minions):
+        if isinstance(minion, Empty):
+            gray(f'  {index + 1:>{digits}} empty')
+        else:
+            gray(f'  {index + 1:>{digits}} {minion.display()}')
 
 
 def display_money(self, /):
@@ -558,21 +595,21 @@ def display_stats(self, index: Optional[int] = None, /):
         value = floor(self.get_stat(stat_name, index))
         if value == 0 and stat_name in HIDDEN_STATS:
             continue
-        color = STAT_COLORS[stat_name]
-        if stat_name == 'health':
-            ext = ' HP'
+        icon = STAT_COLORS[stat_name]
+        if stat_name in PERC_STATS:
+            ext = '%'
         else:
-            ext = '%' if stat_name in PERC_STATS else ''
-        white(f'  {color} {format_name(stat_name)}'
+            ext = ' HP' if stat_name == 'health' else ''
+        white(f'  {icon} {format_name(stat_name)}'
               f' {WHITE}{format_number(value)}{ext}')
         if stat_name == 'defense':
             health = self.get_stat('health', index)
             defense = self.get_stat('defense', index)
             ext = ' EHP'
-            color = STAT_COLORS['ehp']
+            icon = STAT_COLORS['ehp']
             ehp = floor(health * (1 + defense / 100))
-            white(f"  {color} {format_name('ehp')}"
-                  f" {WHITE}{format_number(ehp)}{ext}")
+            white(f"  {icon} {format_name('ehp')}"
+                  f" {WHITE}{format_number(ehp)} EHP")
 
 
 def display_skill_add(self, name: str, amount: Number, /):

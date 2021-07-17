@@ -125,6 +125,25 @@ Get information about the region.
 > merge <index> <index>
 Merge stackable items in the inventory.
 
+> minion
+> minion ls
+List all placed minion.
+
+> minion claim <slot>
+Claim a minion's inventory.
+
+> minion info <slot>
+Display minion inventory.
+
+> minion organize
+Organize placed minions.
+
+> minion place <index> <slot>
+Place a minion.
+
+> minion remove <slot>
+Convert a minion to item.
+
 > money
 Display information about your money.
 
@@ -133,7 +152,7 @@ Display information about your money.
 Switch items slot in the inventory.
 
 > organize
-Organize your inventory. (replace empty slots and make stacks)
+Organize your inventory.
 
 > pet
 > pet ls
