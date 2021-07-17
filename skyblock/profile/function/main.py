@@ -13,10 +13,10 @@ from ...function.util import (
 )
 from ...map.island import get_island
 from ...object.collection import is_collection
-from ...object.item import ITEMS, get_item
+from ...object.item import ITEMS
 from ...object.mob import get_mob
 from ...object.object import *
-from ...object.recipe import CRAFTABLES, get_recipe
+from ...object.recipe import get_recipe
 from ...object.resource import get_resource
 
 
@@ -123,8 +123,8 @@ def mainloop(self):
             self.buy(chosen_trade, amount)
 
         elif words[0] == 'cheat':
-            item = get_item('black_cat_pet')
-            self.recieve_item(item)
+            self.recieve_item({'name': 'hot_potato_book'})
+            self.recieve_item({'name': 'fuming_potato_book'})
             ...
 
         elif words[0] == 'clear':

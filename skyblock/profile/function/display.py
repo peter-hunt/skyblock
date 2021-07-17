@@ -180,9 +180,13 @@ def display_collection_info(self, name: str, /):
             elif isinstance(reward, str):
                 recipe = get_recipe(reward)
                 if isinstance(recipe, Recipe):
-                    item = recipe.result[0]
+                    pointer = recipe.result
+                    item_name = pointer['name']
+                    kwargs = {key: pointer[key] for key in pointer
+                              if key not in {'name', 'count'}}
+                    item = get_item(item_name, **kwargs)
                     color = RARITY_COLORS[item.rarity]
-                    white(f'  {color}{format_name(item.name)} {GRAY}Recipe'
+                    white(f'  {color}{format_name(item_name)} {GRAY}Recipe'
                           f' {DARK_GRAY}({recipe.name})')
                 else:
                     white(f'  {format_name(recipe.name)} {GRAY}Recipe'
@@ -208,11 +212,17 @@ def display_collection_info(self, name: str, /):
             elif isinstance(reward, str):
                 recipe = get_recipe(reward)
                 if isinstance(recipe, Recipe):
-                    item = recipe.result[0]
+                    pointer = recipe.result
+                    item_name = pointer['name']
+                    kwargs = {key: pointer[key] for key in pointer
+                              if key not in {'name', 'count'}}
+                    item = get_item(item_name, **kwargs)
                     color = RARITY_COLORS[item.rarity]
-                    white(f'  {color}{format_name(item.name)} {GRAY}Recipe')
+                    white(f'  {color}{format_name(item_name)} {GRAY}Recipe'
+                          f' {DARK_GRAY}({recipe.name})')
                 else:
-                    white(f'  {format_name(recipe.name)} {GRAY}Recipe')
+                    white(f'  {format_name(recipe.name)} {GRAY}Recipe'
+                          f' {DARK_GRAY}({recipe.name})')
 
     yellow(f"{BOLD}{'':-^{width}}")
 
@@ -344,7 +354,8 @@ def display_location(self, /):
 
 
 def display_money(self, /):
-    if self.has_item('piggy_bank') or self.has_item('cracked_piggy_bank'):
+    if (self.has_item({'name': 'piggy_bank'})
+            or self.has_item({'name': 'cracked_piggy_bank'})):
         bank_type = 'Piggy'
     else:
         bank_type = 'Purse'
@@ -408,15 +419,23 @@ def display_recipe_info(self, recipe: Union[Recipe, RecipeGroup], /):
 
     for index, _recipe in enumerate(recipes):
         if index != 0:
-            print()
+            gray()
         gray('\nIngredients:')
-        for item, amount in _recipe.ingredients:
-            count_str = f'{DARK_GRAY} x {amount}'
-            gray(f'  {item.display()}{count_str}')
+        for pointer in _recipe.ingredients:
+            name = pointer['name']
+            count = pointer.get('count', 1)
+            kwargs = {key: pointer[key] for key in pointer
+                      if key not in {'name', 'count'}}
+            item = get_item(name, **kwargs)
+            gray(f'  {item.display()}{DARK_GRAY} x {count}')
         gray('\nResult:')
-        item, amount = _recipe.result
-        count_str = f'{DARK_GRAY} x {amount}'
-        gray(f'  {item.display()}{count_str}')
+        pointer = _recipe.result
+        name = pointer['name']
+        count = pointer.get('count', 1)
+        kwargs = {key: pointer[key] for key in pointer
+                  if key not in {'name', 'count'}}
+        item = get_item(name, **kwargs)
+        gray(f'  {item.display()}{DARK_GRAY} x {count}')
 
     requirements = []
 
@@ -457,8 +476,8 @@ def display_recipe(self, category: Optional[str], /, *,
                 if lvl < get_collection_level:
                     continue
 
-            for item, count in recipe.ingredients:
-                if not self.has_item(item.name, count):
+            for pointer in recipe.ingredients:
+                if not self.has_item(pointer):
                     break
             else:
                 recipes.append(recipe)
@@ -492,28 +511,45 @@ def display_shop(self, npc: Npc, trade_index: Optional[int] = None, /):
             return
 
         digits = len(f'{len(npc.trades)}')
-        for index, (cost, item) in enumerate(npc.trades):
+        for index, (cost, pointer) in enumerate(npc.trades):
+            name = pointer['name']
+            kwargs = {key: pointer[key] for key in pointer
+                      if key not in {'name', 'count'}}
+            item = get_item(name, **kwargs)
+            if getattr(item, 'count', 1) != 1:
+                item.count = 1
+
             if isinstance(cost, (int, float)):
                 gray(f'  {(index + 1):>{digits}} {item.display()}{GRAY}'
                      f' for {GOLD}{format_number(cost)} coins{GRAY}.')
                 continue
 
             gray(f'  {(index + 1):>{digits}} {item.display()}{GRAY}')
-            for cost_item in cost:
-                if isinstance(cost_item, int):
+            for cost_pointer in cost:
+                if isinstance(cost_pointer, int):
                     gray(f"  {'':>{digits}}   {GOLD}"
-                         f"{format_number(cost_item)} coins{GRAY}")
+                         f"{format_number(cost_pointer)} coins{GRAY}")
                     continue
 
-                item, amount = cost_item
-                item_type = get_item(item.name)
-                color = RARITY_COLORS[item_type.rarity]
-                cost_display = f'{color}{format_name(item.name)}{GRAY}'
-                count = ('' if amount == 1
-                         else f' {GRAY}x {amount}')
-                gray(f"  {'':>{digits}}   {cost_display}{count}")
+                cost_name = cost_pointer['name']
+                count = cost_pointer.get('count', 1)
+                cost_kwargs = {key: cost_pointer[key] for key in cost_pointer
+                               if key not in {'name', 'count'}}
+                cost_item = get_item(cost_name, **cost_kwargs)
+                if getattr(cost_item, 'count', 1) != 1:
+                    cost_item.count = 1
+                count_str = '' if count == 1 else f' {GRAY}x {count}'
+                gray(f"  {'':>{digits}}   {cost_item.display()}{count_str}")
     else:
-        self.display_item(npc.trades[trade_index][1])
+        pointer = npc.trades[trade_index][1]
+        name = pointer['name']
+        count = pointer.get('count', 1)
+        kwargs = {key: pointer[key] for key in pointer
+                  if key not in {'name', 'count'}}
+        item = get_item(name, **kwargs)
+        if getattr(item, 'count', 1) != 1:
+            item.count = 1
+        self.display_item(item)
 
 
 def display_stats(self, index: Optional[int] = None, /):

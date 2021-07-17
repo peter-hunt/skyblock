@@ -1,7 +1,10 @@
+from os import walk
+from os.path import join
 from typing import List, Optional, Union
 
 from ...function.io import *
 from ...function.util import includes, get
+from ...myjson import dump
 
 from ..object import *
 
@@ -47,6 +50,11 @@ FISHING = _gen_recipes(_FISHING, _FISHING_MINION)
 RECIPES = FARMING + MINING + COMBAT + FORAGING + FISHING + MISC
 CRAFTABLES = [recipe for recipe in RECIPES
               if isinstance(recipe, Recipe)]
+
+# for recipe in RECIPES:
+#     with open(f'/Users/peterhunt/Library/Mobile Documents/com~apple~CloudDocs'
+#               f'/Documents/github/skyblock-data/recipes', 'w') as file:
+#         pass
 
 
 def get_recipe(name: str, warn: bool = True

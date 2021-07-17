@@ -1,4 +1,3 @@
-from ...object.item import get_item
 from ...object.object import *
 
 from ..object import *
@@ -11,12 +10,12 @@ GOLD_NPCS = [
             'Talk to me again to open the Gold Forger Shop!',
         ],
         trades=[
-            (5.5, Item('gold')),
-            (10, get_item('golden_helmet')),
-            (16, get_item('golden_chestplate')),
-            (14, get_item('golden_leggings')),
-            (9, get_item('golden_boots')),
-            (80, get_item('fancy_sword')),
+            (5.5, {'name': 'gold'}),
+            (10, {'name': 'golden_helmet'}),
+            (16, {'name': 'golden_chestplate'}),
+            (14, {'name': 'golden_leggings'}),
+            (9, {'name': 'golden_boots'}),
+            (80, {'name': 'fancy_sword'}),
         ]),
     Npc('iron_forger',
         init_dialog=[
@@ -25,11 +24,11 @@ GOLD_NPCS = [
             'Talk to me again to open the Iron Forger Shop!',
         ],
         trades=[
-            (60, get_item('iron_pickaxe')),
-            (5, Item('iron')),
-            (50, get_item('chainmail_helmet')),
-            (100, get_item('chainmail_chestplate')),
-            (75, get_item('chainmail_leggings')),
-            (100, get_item('chainmail_boots')),
+            (60, {'name': 'iron_pickaxe'}),
+            (5, {'name': 'iron'}),
+            (50, {'name': 'chainmail_helmet'}),
+            (100, {'name': 'chainmail_chestplate'}),
+            (75, {'name': 'chainmail_leggings'}),
+            (100, {'name': 'chainmail_boots'}),
         ]),
 ]

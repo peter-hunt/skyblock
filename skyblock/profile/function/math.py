@@ -433,22 +433,22 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
             if 'hunter' in active_pet.abilities:
                 value += 100 * pet_mult
                 cap += 100 * pet_mult
-        if self.has_item('speed_artifact'):
+        if self.has_item({'name': 'speed_artifact'}):
             value += 5
-        elif self.has_item('speed_ring'):
+        elif self.has_item({'name': 'speed_ring'}):
             value += 3
-        elif self.has_item('speed_talisman'):
+        elif self.has_item({'name': 'speed_talisman'}):
             value += 1
-        if self.has_item('farming_talisman'):
+        if self.has_item({'name': 'farming_talisman'}):
             if self.island in {'barn', 'desert'} or self.zone == 'farm':
                 value *= 1.1
-        if self.has_item('wood_affinity_talisman'):
+        if self.has_item({'name': 'wood_affinity_talisman'}):
             if self.zone in {'forest', 'graveyard', 'wilderness'}:
                 value *= 1.1
-        if self.has_item('village_affinity_talisman'):
+        if self.has_item({'name': 'village_affinity_talisman'}):
             if self.zone == 'village':
                 value *= 1.1
-        if self.has_item('mine_affinity_talisman'):
+        if self.has_item({'name': 'mine_affinity_talisman'}):
             if (self.island in {'gold', 'deep', 'mines'}
                     or self.zone == 'coal_mine'):
                 value *= 1.1
@@ -482,15 +482,15 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
             value += 100
         if set_bonus == 'glacite_armor':
             value += 2 * mining_level
-        if self.has_item('haste_ring'):
+        if self.has_item({'name': 'haste_ring'}):
             value += 50
-        if self.has_item('titanium_relic'):
+        if self.has_item({'name': 'titanium_relic'}):
             value += 60
-        elif self.has_item('titanium_artifact'):
+        elif self.has_item({'name': 'titanium_artifact'}):
             value += 45
-        elif self.has_item('titanium_ring'):
+        elif self.has_item({'name': 'titanium_ring'}):
             value += 30
-        elif self.has_item('titanium_talisman'):
+        elif self.has_item({'name': 'titanium_talisman'}):
             value += 15
     elif name == 'ferocity':
         if has_active_pet:

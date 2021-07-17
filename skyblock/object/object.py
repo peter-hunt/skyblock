@@ -1,6 +1,6 @@
 from typing import Dict, Iterator, List, Optional, Tuple, Union
 
-from ..constant.util import Amount, Number
+from ..constant.util import Amount, ItemPointer, Number
 
 from .other_wrapper import (
     collection_type, mob_type, enchanted_book_type, init_type,
@@ -344,8 +344,8 @@ class Mob:
 class Recipe:
     name: str
     category: str
-    ingredients: List[Tuple[ItemType, Amount]]
-    result: Tuple[ItemType, Amount]
+    ingredients: List[ItemPointer]
+    result: ItemPointer
     collection_req: Optional[Tuple[str, int]] = None
     # slayer_req: Optional[Tuple[str, int]] = None
 

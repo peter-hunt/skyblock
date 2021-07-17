@@ -172,7 +172,7 @@ def gather(self, name: str, tool_index: Optional[int],
 
     if isinstance(resource, Crop):
         time_cost = 0.4
-        if self.has_item('farmer_orb'):
+        if self.has_item({'name': 'farmer_orb'}):
             time_cost -= 0.05
 
         farming_fortune = self.get_stat('farming_fortune', tool_index)
@@ -222,7 +222,7 @@ def gather(self, name: str, tool_index: Optional[int],
         mining_fortune = self.get_stat('mining_fortune', tool_index)
         fortune_mult = 1 + mining_fortune / 100
         exp_mult = 1 + 0.125 * enchants.get('experience', 0)
-        if self.has_item('experience_artifact'):
+        if self.has_item({'name': 'experience_artifact'}):
             exp_mult *= 1.25
 
         lapis_exp_bonus = 1
@@ -514,33 +514,33 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
 
     exp_mult = 1 + 0.125 * weapon_enchants.get('experience', 0)
     exp_mult *= 1 + 0.04 * enchanting_level
-    if self.has_item('experience_artifact'):
+    if self.has_item({'name': 'experience_artifact'}):
         exp_mult *= 1.25
 
     damage_recieved_mult = 1
     if name in SEA_CREATURES:
-        if self.has_item('sea_creature_artifact'):
+        if self.has_item({'name': 'sea_creature_artifact'}):
             damage_recieved_mult *= 0.85
-        elif self.has_item('sea_creature_ring'):
+        elif self.has_item({'name': 'sea_creature_ring'}):
             damage_recieved_mult *= 0.9
-        elif self.has_item('sea_creature_talisman'):
+        elif self.has_item({'name': 'sea_creature_talisman'}):
             damage_recieved_mult *= 0.95
     if name in ZOMBIES:
-        if self.has_item('zombie_talisman'):
+        if self.has_item({'name': 'zombie_talisman'}):
             damage_recieved_mult *= 0.95
     if name in SKELETONS:
-        if self.has_item('skeleton_talisman'):
+        if self.has_item({'name': 'skeleton_talisman'}):
             damage_recieved_mult *= 0.95
 
-    if self.has_item('intimidation_talisman') and mob.level <= 1:
+    if self.has_item({'name': 'intimidation_talisman'}) and mob.level <= 1:
         damage_recieved_mult = 0
 
     if set_bonus == 'pumpkin_buff':
         damage_recieved_mult *= 0.9
 
-    if self.has_item('healing_ring'):
+    if self.has_item({'name': 'healing_ring'}):
         healing_mult *= 1.1
-    elif self.has_item('healing_talisman'):
+    elif self.has_item({'name': 'healing_talisman'}):
         healing_mult *= 1.05
 
     soul_eater = weapon_enchants.get('soul_eater', 0) * 2
@@ -586,11 +586,11 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
 
         while True:
             if isinstance(weapon, Bow) and infinite_quiver != 10:
-                if not self.has_item('arrow', 1):
+                if not self.has_item({'name': 'arrow', 'count': 1}):
                     red("You don't have any arrows in your inventory!")
                     return
                 if random_bool(1 - infinite_quiver / 10):
-                    self.remove_item('arrow', 1)
+                    self.remove_item({'name': 'arrow', 'count': 1})
             strike_count = 0
             killed = False
 
@@ -780,7 +780,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                       f'{WHITE}({loot.display()}{WHITE})')
 
         coins_recieved = (mob.coins + scavenger) * coins_mult
-        if self.has_item('scavenger_talisman'):
+        if self.has_item({'name': 'scavenger_talisman'}):
             coins_recieved += 0.5 * mob.level
         self.purse += coins_recieved
         gray(f'+ {GOLD}{format_number(coins_recieved)} Coins')

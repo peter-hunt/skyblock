@@ -162,9 +162,9 @@ def get(ls: List[Any], /, name: Optional[str] = None,
     attrs = {}
     args = {}
     for key, value in kwargs.items():
-        if key in {'count', 'enchantments'}:
+        if key in {'count', 'enchantments', 'hot_potato', 'stars'}:
             attrs[key] = value
-        else:
+        elif key not in {'type'}:
             args[key] = value
 
     for item in ls:

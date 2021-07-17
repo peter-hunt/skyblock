@@ -1,9 +1,10 @@
 from typing import Union
 
 from ...constant.color import *
+from ...constant.util import ItemPointer
 from ...function.io import *
-from ...function.util import format_name, format_number, includes
-from ...object.item import ITEMS, get_item, get_stack_size, validify_item
+from ...function.util import format_number
+from ...object.item import get_item, get_stack_size
 from ...object.object import *
 
 
@@ -25,19 +26,20 @@ def get_active_pet(self, /) -> Union[Pet, Empty]:
     return Empty()
 
 
-def has_item(self, name: str, count: int = 1, /, **kwargs):
+def has_item(self, pointer: ItemPointer, /):
     counter = 0
 
-    for _item in self.inventory:
-        if not hasattr(_item, 'name') or _item.name != name:
+    for item in self.inventory:
+        if not hasattr(item, 'name') or item.name != pointer['name']:
             continue
-        for key in kwargs:
-            if (not hasattr(_item, key)
-                    or getattr(_item, key) != kwargs[key]):
+        for key in pointer:
+            if key in {'name', 'count'}:
+                continue
+            if (not hasattr(item, key) or getattr(item, key) != pointer[key]):
                 break
         else:
-            counter += getattr(_item, 'count', 1)
-            if counter >= count:
+            counter += getattr(item, 'count', 1)
+            if counter >= pointer.get('count', 1):
                 return True
 
     return False
@@ -83,58 +85,64 @@ def pickupstash(self, /):
     if len(self.stash) == 0:
         red("Your stash isn't holding any item!")
         return
-    stash = [item.copy() for item in self.stash]
+
+    stash = [pointer.copy() for pointer in self.stash]
     self.stash = []
-    for item in stash:
-        self.recieve_item(item, getattr(item, 'count', 1))
+    for pointer in stash:
+        self.recieve_pointer(pointer)
 
 
-def put_stash(self, item: ItemType, count: int, /):
-    stack_count = get_stack_size(item.name)
+def put_stash(self, pointer: ItemPointer, /):
+    name = pointer['name']
+    count = pointer.get('count', 1)
+    kwargs = {key: pointer[key] for key in pointer
+              if key not in {'count', 'name'}}
+    item = get_item(name, **kwargs)
+    stack_count = get_stack_size(name)
 
-    if stack_count != 0:
+    if stack_count != 1:
         for index, slot in enumerate(self.stash):
             if not isinstance(slot, Item):
                 continue
-            if slot.name != item.name or slot.rarity != item.rarity:
+            if slot.name != name:
+                continue
+            if getattr(slot, 'rarity', '') != pointer.get('rarity', ''):
                 continue
             self.stash[index].count += count
             break
         else:
-            item_copy = item.copy()
+            item_copy = get_item(name, **kwargs)
             item_copy.count = count
             self.stash.append(item_copy)
     else:
         for _ in range(count):
             self.stash.append(item)
 
-    red("An item didn't fit in your inventory and was added to your item\n"
-        " stash! Use `pickupstash` to get it back!")
+    red("An item didn't fit in your inventory and was added to your"
+        " item stash! Use `pickupstash` to get it back!")
 
 
-def recieve_item(self, item: ItemType, count: int = 1, /):
-    if isinstance(item, Empty):
-        return
-
-    item_copy = validify_item(item)
-    stack_count = get_stack_size(item.name)
+def recieve_item(self, pointer: ItemPointer, /):
+    stack_count = get_stack_size(pointer['name'])
+    count = pointer.get('count', 1)
     counter = count
+    name = pointer['name']
+    kwargs = {key: pointer[key] for key in pointer
+              if key not in {'name', 'count'}}
 
     for index, slot in enumerate(self.inventory):
         if isinstance(slot, Empty):
             delta = min(counter, stack_count)
-            item_copy.count = delta
-            self.inventory[index] = item_copy.copy()
+            item = get_item(name, **kwargs)
+            item.count = delta
+            self.inventory[index] = item
             counter -= delta
 
-        elif not isinstance(slot, Item) or not isinstance(item, Item):
+        elif (name != slot.name or
+              kwargs.get('rarity', '') != getattr(slot, 'rarity', '')):
             continue
 
-        elif (item.name != slot.name or
-              getattr(item, 'rarity', '') != getattr(slot, 'rarity', '')):
-            continue
-
-        elif len(getattr(item, 'enchantments', {})) != 0:
+        elif len(kwargs.get('enchantments', {})) != 0:
             continue
 
         elif slot.count < stack_count:
@@ -145,33 +153,40 @@ def recieve_item(self, item: ItemType, count: int = 1, /):
         if counter == 0:
             break
     else:
-        item_copy.count = 1
-        self.put_stash(item_copy, counter)
+        item = get_item(name, **kwargs)
+        item.count = counter
+        self.put_stash(item, counter)
         return
 
-    if getattr(item_copy, 'count', 1) != 1:
-        item_copy.count = 1
+    item = get_item(name, **kwargs)
+    item.count = counter
+    if getattr(item, 'count', 1) != 1:
+        item.count = 1
     count_str = '' if count <= 1 else f' {DARK_GRAY}x {format_number(count)}'
-    gray(f'+ {item_copy.display()}{count_str}')
+    gray(f'+ {item.display()}{count_str}')
 
 
-def remove_item(self, name: str, count: int = 1, /, **kwargs):
+def remove_item(self, pointer: ItemPointer, /):
+    name = pointer['name']
+    count = pointer.get('count', 1)
     counter = count
+    kwargs = {key: pointer[key] for key in pointer
+              if key not in {'name', 'count'}}
 
-    for index, _item in enumerate(self.inventory):
-        if not hasattr(_item, 'name') or _item.name != name:
+    for index, item in enumerate(self.inventory):
+        if not hasattr(item, 'name') or item.name != name:
             continue
         for key in kwargs:
-            if (not hasattr(_item, key)
-                    or getattr(_item, key) != kwargs[key]):
+            if (not hasattr(item, key)
+                    or getattr(item, key) != kwargs[key]):
                 break
         else:
-            if not hasattr(_item, 'count'):
+            if not hasattr(item, 'count'):
                 counter -= 1
                 self.inventory[index] = Empty()
             else:
-                delta = min(counter, _item.count)
-                if delta == _item.count:
+                delta = min(counter, item.count)
+                if delta == item.count:
                     self.inventory[index] = Empty()
                 else:
                     self.inventory[index].count -= delta
@@ -180,14 +195,11 @@ def remove_item(self, name: str, count: int = 1, /, **kwargs):
             if counter == 0:
                 break
 
+    item = get_item(name, **kwargs)
+    if getattr(item, 'count', 1) != 1:
+        item.count = 1
     count_str = '' if count <= 1 else f' {DARK_GRAY}x {format_number(count)}'
-    if includes(ITEMS, name):
-        item = get_item(name)
-        if getattr(item, 'count', 1) != 1:
-            item.count = 1
-        gray(f'- {item.display()}{count_str}')
-    else:
-        gray(f'- {WHITE}{format_name(name)}{count_str}')
+    gray(f'- {item.display()}{count_str}')
 
 
 def split(self, index_1: int, index_2: int, amount: int, /):

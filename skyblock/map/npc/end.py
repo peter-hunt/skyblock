@@ -1,5 +1,4 @@
 from ...constant.color import *
-from ...object.item import get_item
 from ...object.object import *
 
 from ..object import *
@@ -17,9 +16,10 @@ END_NPCS = [
             ('The items in my shop may be of help as you'
              ' descend into the depths of The End')],
         trades=[
-            (10, Item('end_stone')),
-            (50, Item('obsidian')),
-            (499_999, get_item('stonk')),
-            (1_500_000, EnchantedBook({'ender_slayer': 4})),
+            (10, {'name': 'end_stone'}),
+            (50, {'name': 'obsidian'}),
+            (499_999, {'name': 'stonk'}),
+            (1_500_000, {'name': 'enchanted_book',
+                         'enchantments': {'ender_slayer': 4}}),
         ]),
 ]

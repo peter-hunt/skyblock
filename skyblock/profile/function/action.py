@@ -19,7 +19,6 @@ from ...map.island import ISLANDS
 from ...map.object import *
 from ...object.item import get_item, validify_item
 from ...object.object import *
-from ...object.recipe import RECIPES
 
 
 __all__ = [
@@ -45,36 +44,24 @@ def buy(self, trade: Tuple, amount: int, /):
     cost = trade[0]
 
     if isinstance(cost, (int, float)):
-        price = cost * amount
-        if self.purse < price:
-            red('Not enough coins!')
-            return
-        self.purse -= price
-    else:
-        price = None
-        for item in cost:
-            if isinstance(item, (int, float)):
-                if self.purse < item * amount:
-                    red('Not enough coins!')
-                    return
-                continue
-            kwargs = {}
-            for attr in ('rarity',):
-                if hasattr(item, attr):
-                    kwargs[attr] = getattr(item, attr)
-            if not self.has_item(item[0].name, item[1] * amount, **kwargs):
-                red("You don't have the required items.")
-                return
+        cost = [cost]
 
-        for item in cost:
-            if isinstance(item, (int, float)):
-                self.purse -= item * amount
-                continue
-            kwargs = {}
-            for attr in ('rarity',):
-                if hasattr(item, attr):
-                    kwargs[attr] = getattr(item, attr)
-            self.remove_item(item[0].name, item[1] * amount, **kwargs)
+    price = None
+    for pointer in cost:
+        if isinstance(pointer, (int, float)):
+            if self.purse < pointer * amount:
+                red("You don't have enough coins!")
+                return
+            continue
+        if not self.has_item(pointer):
+            red("You don't have the required items.")
+            return
+
+    for pointer in cost:
+        if isinstance(pointer, (int, float)):
+            self.purse -= pointer * amount
+            continue
+        self.remove_item(pointer)
 
     good = trade[1]
     if not isinstance(good, list):
@@ -82,13 +69,17 @@ def buy(self, trade: Tuple, amount: int, /):
 
     display = []
 
-    for item in good:
-        item_copy = validify_item(item)
-        if getattr(item_copy, 'count', 1) != 1:
-            item_copy.count = 1
-        self.recieve_item(item_copy, amount)
-        amt_str = '' if amount == 1 else f'{GRAY} x {amount}'
-        display.append(f'{item_copy.display()}{amt_str}')
+    for pointer in good:
+        self.recieve_item(pointer)
+        name = pointer['name']
+        count = pointer.get('count', 1)
+        kwargs = {key: pointer[key] for key in pointer
+                  if key not in {'count', 'name'}}
+        item = get_item(name, kwargs)
+        if getattr(item, 'count', 1) != 1:
+            item.count = 1
+        count_str = '' if count == 1 else f'{GRAY} x {count}'
+        display.append(f'{load_item.display()}{count_str}')
 
     display_str = f'{GREEN}, '.join(display)
 
@@ -113,7 +104,8 @@ def combine(self, index_1: int, index_2: int, /):
 
         self.inventory[index_1] = Empty()
         self.inventory[index_2] = Empty()
-        self.recieve_item(EnchantedBook(enchantments=result_enchants))
+        self.recieve_item({'name': 'enchanted_book',
+                           'enchantments': result_enchants})
 
         return
 
@@ -129,14 +121,15 @@ def combine(self, index_1: int, index_2: int, /):
         result_enchants = combine_enchant(item_1.enchantments,
                                           item_2.enchantments)
         enchant_table = get_enchantments(item_1)
-        item_1.enchantments = {
+        pointer = item_1.to_obj()
+        pointer['enchantments'] = {
             name: value
             for name, value in result_enchants.items()
             if name in enchant_table
         }
         self.inventory[index_1] = Empty()
         self.inventory[index_2] = Empty()
-        self.recieve_item(item_1)
+        self.recieve_item(pointer)
         return
 
     if (isinstance(item_2, (Accessory, Armor, Bow, Sword, FishingRod))
@@ -172,11 +165,12 @@ def combine(self, index_1: int, index_2: int, /):
 
         self.purse -= cost
 
-        item_1.modifier = item_2.modifier
+        pointer = item_1.to_obj()
+        pointer['modifier'] = item_2.modifier
         self.inventory[index_1] = Empty()
         self.inventory[index_2] = Empty()
         gray(f'- {GOLD}{format_number(cost)} Coins')
-        self.recieve_item(item_1)
+        self.recieve_item(pointer)
         return
 
     if (item_1.name in {'hot_potato_book', 'fuming_potato_book'} and
@@ -189,18 +183,19 @@ def combine(self, index_1: int, index_2: int, /):
         if 10 <= item_1.hot_potato < 15:
             red('Error!')
             gray(f'You have already applied the maximum number of'
-                 f' Hot Potato books to this item!\n'
-                 f'{YELLOW}Use Fuming Potato Books'
-                 f' to continue to upgrade this item.')
+                 f' Hot Potato books to this item!')
+            yellow(f'Use Fuming Potato Books to continue to upgrade this item.')
         elif item_1.hot_potato >= 15:
             red('Error!')
             gray('You have already applied the maximum number of'
                  ' Hot Potato books to this item!')
         else:
-            item_1.hot_potato += 1
+            pointer = item_1.to_obj()
+            print(pointer)
+            pointer['hot_potato'] = pointer.get('hot_potato', 0) + 1
             self.inventory[index_1] = Empty()
             self.inventory[index_2] = Empty()
-            self.recieve_item(item_1)
+            self.recieve_item(pointer)
         return
 
     if (isinstance(item_1, (Armor, Bow, Sword, FishingRod))
@@ -210,10 +205,11 @@ def combine(self, index_1: int, index_2: int, /):
             gray('You have already applied the maximum number of'
                  ' Hot Potato books to this item!')
         else:
-            item_1.hot_potato += 1
+            pointer = item_1.to_obj()
+            pointer['hot_potato'] = pointer.get('hot_potato', 0) + 1
             self.inventory[index_1] = Empty()
             self.inventory[index_2] = Empty()
-            self.recieve_item(item_1)
+            self.recieve_item(pointer)
         return
 
     red('These items cannot be combined!')
@@ -253,7 +249,7 @@ def consume(self, index: int, amount: int = 1, /):
         elif item.name == 'tiantium_experience_bottle':
             exp_amount = 250_000
 
-        if self.has_item('experience_artifact'):
+        if self.has_item({'name': 'experience_artifact'}):
             exp_amount *= 1.25
 
         item_copy = item.copy()
@@ -277,40 +273,42 @@ def craft(self, recipe: Recipe, amount: int = 1, /):
             red("You haven't reached the required collection yet!")
             return
 
-    for item, count in recipe.ingredients:
-        if not self.has_item(item.name, count * amount):
+    for pointer in recipe.ingredients:
+        if not self.has_item(pointer):
             red("You don't have the required items!")
             return
 
-    for item, count in recipe.ingredients:
-        self.remove_item(item.name, count * amount)
+    for pointer in recipe.ingredients:
+        self.remove_item(pointer)
 
-    result, result_count = recipe.result
+    pointer = recipe.result
+    name = pointer['name']
 
-    if isinstance(result, Pet):
+    if name.endswith('_pet'):
         keep_weight = 80
         upgrade_weight = 20 + 0.2 * self.get_stat('pet_luck')
         total = keep_weight + upgrade_weight
         if random() > (keep_weight / total):
-            result.rarity = {
+            pointer['rarity'] = {
                 'common': 'uncommon',
                 'uncommon': 'rare',
                 'rare': 'epic',
                 'epic': 'legendary',
-            }[result.rarity]
+            }[pointer['rarity']]
 
-    self.recieve_item(result, result_count * amount)
+    self.recieve_item(pointer)
 
-    if isinstance(result, Minion):
-        minion_name = result.name.replace('_minion', f'_{result.tier}')
+    if name.endswith('_minion'):
+        tier = pointer['tier']
+
+        minion_name = name.replace('_minion', f'_{tier}')
         if minion_name not in self.crafted_minions:
             self.crafted_minion.append(minion_name)
             self.crafted_minion.sort()
 
-            tier_str = format_roman(result.tier)
+            tier_str = format_roman(tier)
             green(f"You crafted a {YELLOW}Tier {tier_str}"
-                  f" {format_name(result.name)}{GREEN}!"
-                  f" That's a new one!")
+                  f" {format_name(name)}{GREEN}! That's a new one!")
             cap, to_next = get_minion_cap_info(len(self.crafted_minion))
             if to_next != 0:
                 green(f'Craft {to_next} more unique Minions to unlock your'
@@ -330,8 +328,8 @@ def despawn_pet(self, /):
 
 
 def die(self, killer: Optional[str] = None, /) -> bool:
-    if self.has_item('saving_grace'):
-        self.remove_item('saving_grace')
+    if self.has_item({'name': 'saving_grace'}):
+        self.remove_item({'name': 'saving_grace'})
         self.island = 'hub'
         self.zone = 'village'
         green('Saving Grace has activated! '
@@ -364,21 +362,21 @@ def die(self, killer: Optional[str] = None, /) -> bool:
 
     did_crack_piggy = False
 
-    if self.has_item('piggy_bank'):
+    if self.has_item({'name': 'piggy_bank'}):
         if lost_coins >= 20_000:
             did_crack_piggy = True
             lost_coins = 0
-            self.remove_item('piggy_bank')
-            self.recieve_item(get_item('cracked_piggy_bank'))
+            self.remove_item({'name': 'piggy_bank'})
+            self.recieve_item({'name': 'cracked_piggy_bank'})
 
     did_broke_piggy = False
 
-    if not did_crack_piggy and self.has_item('cracked_piggy_bank'):
+    if not did_crack_piggy and self.has_item({'name': 'cracked_piggy_bank'}):
         if lost_coins >= 20_000:
             did_broke_piggy = True
             lost_coins *= 0.25
-            self.remove_item('cracked_piggy_bank')
-            self.recieve_item(get_item('broken_piggy_bank'))
+            self.remove_item({'name': 'cracked_piggy_bank'})
+            self.recieve_item({'name': 'broken_piggy_bank'})
 
     self.purse -= lost_coins
 
@@ -570,9 +568,10 @@ def goto(self, dest: str, /):
 
 def remove_pet(self, index: int, /):
     pet = self.pets[index]
-    pet.active = False
+    pointer = pet.to_obj()
+    pointer['active'] = False
     self.pets.pop(index)
-    self.recieve_item(pet)
+    self.recieve_item(pointer)
 
     green(f'You converted {pet.display()}{GREEN} into an item!')
 
@@ -652,14 +651,14 @@ def update(self, /, *, save=True):
     last = now if self.last_update == 0 else self.last_update
     dt = now - last
 
-    if self.has_item('talisman_of_coins'):
+    if self.has_item({'name': 'talisman_of_coins'}):
         last_coins_cp = last // 10
         now_coins_cp = now // 10
         if now_coins_cp > last_coins_cp:
             self.purse += (random_amount((1, 5))
                            * (now_coins_cp - last_coins_cp))
 
-    if self.has_item('emerald_ring'):
+    if self.has_item({'name': 'emerald_ring'}):
         last_min_cp = last // 60
         now_min_cp = now // 60
         if now_min_cp > last_min_cp:

@@ -1,5 +1,4 @@
 from ...constant.color import *
-from ...object.item import get_item
 from ...object.object import *
 
 from ..object import *
@@ -10,17 +9,17 @@ MINES_NPCS = [
     Npc('bubu',
         trades=[
             (10_000,
-             get_item('fractured_mithril_pickaxe')),
+             {'name': 'fractured_mithril_pickaxe'}),
             ((100_000,
-              (Item('mithril'), 200)),
-             get_item('bandaged_mithril_pickaxe')),
+              {'name': 'mithril', 'count': 200}),
+             {'name': 'bandaged_mithril_pickaxe'}),
             ((1_000_000,
-              (Item('titanium'), 100),
-              (Item('bejeweled_handle'), 1)),
-             get_item('titanium_pickaxe')),
-            (((Item('titanium_pickaxe'), 1),
-              (Item('refined_titanium'), 3)),
-             get_item('refined_titanium_pickaxe')),
+              {'name': 'titanium', 'count': 100},
+              {'name': 'bejeweled_handle'}),
+             {'name': 'titanium_pickaxe'}),
+            (({'name': 'titanium_pickaxe'},
+              {'name': 'refined_titanium', 'count': 3}),
+             {'name': 'refined_titanium_pickaxe'}),
         ]),
     Npc('emkam'),
     Npc('emmor'),
