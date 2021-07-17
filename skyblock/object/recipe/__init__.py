@@ -9,8 +9,10 @@ from .combat import COMBAT_RECIPES as _COMBAT
 from .combat_minion import COMBAT_MINION_RECIPES as _COMBAT_MINION
 from .farming import FARMING_RECIPES as _FARMING
 from .farming_minion import FARMING_MINION_RECIPES as _FARMING_MINION
-from .foraging import FORAGING_RECIPES as FORAGING
-from .fishing import FISHING_RECIPES as FISHING
+from .foraging import FORAGING_RECIPES as _FORAGING
+from .foraging_minion import FORAGING_MINION_RECIPES as _FORAGING_MINION
+from .fishing import FISHING_RECIPES as _FISHING
+from .fishing_minion import FISHING_MINION_RECIPES as _FISHING_MINION
 from .mining import MINING_RECIPES as _MINING
 from .mining_minion import MINING_MINION_RECIPES as _MINING_MINION
 from .misc import MISC_RECIPES as MISC
@@ -40,6 +42,8 @@ def _gen_recipes(recipes: List[Recipe],
 FARMING = _gen_recipes(_FARMING, _FARMING_MINION)
 MINING = _gen_recipes(_MINING, _MINING_MINION)
 COMBAT = _gen_recipes(_COMBAT, _COMBAT_MINION)
+FORAGING = _gen_recipes(_FORAGING, _FORAGING_MINION)
+FISHING = _gen_recipes(_FISHING, _FISHING_MINION)
 RECIPES = FARMING + MINING + COMBAT + FORAGING + FISHING + MISC
 CRAFTABLES = [recipe for recipe in RECIPES
               if isinstance(recipe, Recipe)]

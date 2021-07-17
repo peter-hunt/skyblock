@@ -6,7 +6,7 @@ FORAGING_COLLECTIONS = [
     Collection(
         'oak_wood', 'foraging',
         [
-            (50, 5),
+            (50, get_recipe('oak_minion')),
             (100, get_recipe('oak_leaves')),
             (250, get_recipe('leaflet_armor')),
             (500, 50),
@@ -20,7 +20,7 @@ FORAGING_COLLECTIONS = [
     Collection(
         'birch_wood', 'foraging',
         [
-            (50, 5),
+            (50, get_recipe('birch_minion')),
             (100, get_recipe('birch_leaves')),
             (250, 25),
             (500, 50),
@@ -34,7 +34,7 @@ FORAGING_COLLECTIONS = [
     Collection(
         'spruce_wood', 'foraging',
         [
-            (50, 5),
+            (50, get_recipe('spruce_minion')),
             (100, get_recipe('spruce_leaves')),
             (250, 25),
             (1_000, 100),
@@ -48,7 +48,7 @@ FORAGING_COLLECTIONS = [
     Collection(
         'dark_oak_wood', 'foraging',
         [
-            (50, 5),
+            (50, get_recipe('dark_oak_minion')),
             (100, get_recipe('dark_oak_leaves')),
             (250, 25),
             (1_000, 100),
@@ -62,7 +62,7 @@ FORAGING_COLLECTIONS = [
     Collection(
         'acacia_wood', 'foraging',
         [
-            (50, 5),
+            (50, get_recipe('acacia_minion')),
             (100, get_recipe('acacia_leaves')),
             (250, 25),
             (1_000, 100),
@@ -76,7 +76,7 @@ FORAGING_COLLECTIONS = [
     Collection(
         'jungle_wood', 'foraging',
         [
-            (50, 5),
+            (50, get_recipe('jungle_minion')),
             (100, get_recipe('jungle_leaves')),
             (250, 25),
             (1_000, 100),

@@ -49,6 +49,13 @@ FORAGING_RECIPES = [
            [(Item('planks'), 8)],
            (Item('chest'), 1)),
 
+    Recipe('dandelion_to_enchanted', 'foraging',
+           [(Item('dandelion'), 160)],
+           (Item('enchanted_dandelion'), 1)),
+    Recipe('poppy_to_enchanted', 'foraging',
+           [(Item('poppy'), 576)],
+           (Item('enchanted_poppy'), 1)),
+
     Recipe('oak_leaves', 'foraging',
            [(Item('oak_sapling'), 1)],
            (Item('oak_leaves'), 1),
@@ -193,11 +200,4 @@ FORAGING_RECIPES = [
     RecipeGroup('ocelot_pet', 'foraging',
                 ['uncommon_ocelot_pet', 'epic_ocelot_pet'],
                 collection_req=('jungle_wood', 9)),
-
-    Recipe('dandelion_to_enchanted', 'foraging',
-           [(Item('dandelion'), 160)],
-           (Item('enchanted_dandelion'), 1)),
-    Recipe('poppy_to_enchanted', 'foraging',
-           [(Item('poppy'), 576)],
-           (Item('enchanted_poppy'), 1)),
 ]

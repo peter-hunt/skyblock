@@ -7,7 +7,7 @@ FISHING_COLLECTIONS = [
         'fish', 'fishing',
         [
             (20, get_recipe('fish_hat')),
-            (50, 5),
+            (50, get_recipe('fishing_minion')),
             (100, 10),
             (250, 25),
             (500, get_recipe('angler_armor')),
@@ -84,7 +84,7 @@ FISHING_COLLECTIONS = [
     Collection(
         'clay', 'fishing',
         [
-            (50, 5),
+            (50, get_recipe('clay_minion')),
             (100, get_recipe('clay_to_enchanted')),
             (250, 25),
             (1_000, get_recipe('frail_book')),
