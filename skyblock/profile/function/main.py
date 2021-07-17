@@ -1,7 +1,7 @@
-from gnureadline import add_history
 from re import fullmatch
 from typing import Optional
 
+from ..._io import add_history
 from ...constant.color import *
 from ...constant.doc import profile_doc
 from ...constant.main import ARMOR_PARTS
