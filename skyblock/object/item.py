@@ -1,7 +1,5 @@
 from json import load
-from os import mkdir, walk
-from pathlib import Path
-from subprocess import run
+from os import walk
 
 from ..function.io import *
 from ..function.path import join_path
@@ -11,12 +9,6 @@ from .object import *
 
 
 __all__ = ['ITEMS', 'get_item', 'validify_item', 'get_stack_size']
-
-if not Path(join_path('skyblock', 'data')).is_dir():
-    green('Installing assets...')
-    mkdir(join_path('skyblock', 'data'))
-    run(['git', 'clone', 'https://github.com/peter-hunt/skyblock-data',
-         join_path('skyblock', 'data')])
 
 
 ITEMS = []

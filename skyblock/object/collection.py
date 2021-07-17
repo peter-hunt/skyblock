@@ -1,19 +1,26 @@
+from json import load
+from os import walk
 from typing import Optional
 
-from ...function.io import *
+from ..function.io import *
+from ..function.path import join_path
 
-from ..object import *
-
-from .combat import COMBAT_COLLECTIONS as COMBAT
-from .farming import FARMING_COLLECTIONS as FARMING
-from .fishing import FISHING_COLLECTIONS as FISHING
-from .foraging import FORAGING_COLLECTIONS as FORAGING
-from .mining import MINING_COLLECTIONS as MINING
+from .object import *
 
 
 __all__ = ['COLLECTIONS', 'is_collection', 'get_collection', 'calc_coll_level']
 
-COLLECTIONS = COMBAT + FARMING + FISHING + FORAGING + MINING
+
+COLLECTIONS = []
+for category in [*walk(join_path('skyblock', 'data', 'collections'))][0][1]:
+    for file_name in [*walk(join_path('skyblock', 'data',
+                                      'collections', category))][0][2]:
+        if not file_name.endswith('.json'):
+            continue
+
+        with open(join_path('skyblock', 'data', 'collections',
+                            category, file_name)) as file:
+            COLLECTIONS.append(Collection.load(load(file)))
 
 
 def is_collection(name: str) -> bool:

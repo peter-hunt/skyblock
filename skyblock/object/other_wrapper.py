@@ -32,9 +32,26 @@ def collection_type(cls: type, /) -> type:
         result = {}
         result['name'] = self.name
         result['category'] = self.category
-        result['levels'] = self.levels
+        levels = []
+        for exp, rwd in self.levels:
+            if isinstance(rwd, tuple):
+                rwd = [*rwd]
+            levels.append([exp, rwd])
+        result['levels'] = levels
+        return result
 
     cls.to_obj = to_obj
+
+    @classmethod
+    def load(cls, obj, /):
+        levels = []
+        for exp, rwd in obj['levels']:
+            if isinstance(rwd, list):
+                rwd = tuple(rwd)
+            levels.append((exp, rwd))
+        return cls(obj['name'], obj['category'], levels)
+
+    cls.load = load
 
     return cls
 
