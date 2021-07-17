@@ -1,7 +1,3 @@
-"""
-Contains constants of many categories.
-"""
-
 from typing import List
 
 
@@ -10,10 +6,8 @@ __all__ = [
     'SKILL_EXP', 'SKILL_LIMITS', 'KILL_LEVELS',
 ]
 
-# names of armor parts used by iterating and displaying
 ARMOR_PARTS = ['helmet', 'chestplate', 'leggings', 'boots']
 
-# collection alternative counter
 COLL_ALTER = {
     'enchanted_bread': ('wheat', 144),
     'enchanted_hay_bale': ('wheat', 1296),
@@ -118,7 +112,6 @@ COLL_ALTER = {
     'enchanted_sponge': ('sponge', 160),
 }
 
-# dungeon level exp requirements
 DUNGEON_EXP = [
     (0, 0, 0),
     (1, 50, 50),
@@ -172,7 +165,6 @@ DUNGEON_EXP = [
     (49, 93000000, 453559640),
     (50, 116250000, 569809640)]
 
-# balance interest table
 INTEREST_TABLE = {
     'starter': [
         (0, 10_000_000, 0.02),
@@ -268,10 +260,8 @@ for dod in range(35000, 105000, 5000):
 for dod in range(110000, 150000, 10000):
     append_exp(dod, FL)
 
-# derivative of culumative pet exp requirements for each level
 PET_EXP_DIFF = [common, uncommon, rare, epic, legendary]
 
-# items sell price at npc
 SELL_PRICE = {
     'wheat': 1,
     'carrot': 1,
@@ -520,7 +510,6 @@ SELL_PRICE = {
     'bag_of_cash': 1_000_000,
 }
 
-# other level exp requirements
 SKILL_EXP = [
     (0, 0, 0, 0),
     (1, 50, 50, 25),
@@ -585,7 +574,6 @@ SKILL_EXP = [
     (60, 7_000_000, 111_672_425, 1_000_000),
 ]
 
-# maximum levels for each skill
 SKILL_LIMITS = {
     'farming': 60,
     'mining': 60,

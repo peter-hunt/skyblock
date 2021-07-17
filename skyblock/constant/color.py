@@ -1,7 +1,3 @@
-"""
-Constant of color codes used by displaying.
-"""
-
 __all__ = [
     'CLN', 'BOLD',
     'BLACK', 'DARK_BLUE', 'DARK_GREEN', 'DARK_AQUA', 'DARK_RED', 'DARK_PURPLE',
@@ -10,7 +6,6 @@ __all__ = [
     'RARITY_COLORS', 'STAT_COLORS', 'CRIT_COLORS',
 ]
 
-# color codes for text formatting
 CLN = '\x1b[0m'
 BOLD = '\x1b[1m'
 
@@ -31,7 +26,6 @@ LIGHT_PURPLE = '\x1b[0;38;2;255;85;255m'
 YELLOW = '\x1b[0;38;2;255;255;85m'
 WHITE = '\x1b[0;38;2;255;255;255m'
 
-# item and drop rarity notation colors
 RARITY_COLORS = {
     'common': f'{BOLD}{WHITE}',
     'uncommon': f'{BOLD}{GREEN}',
@@ -50,7 +44,6 @@ RARITY_COLORS = {
     'great_catch': f'{BOLD}{LIGHT_PURPLE}',
 }
 
-# colors and symbols for more convenient statistics displaying
 STAT_COLORS = {
     'health': f'{RED}❤',
     'defense': f'{GREEN}❈',
@@ -73,5 +66,4 @@ STAT_COLORS = {
     'foraging_fortune': f'{GOLD}☘',
 }
 
-# colors used to display critical hit damage
-CRIT_COLORS = (WHITE, YELLOW, GOLD, RED, RED, WHITE)
+CRIT_COLORS = WHITE, YELLOW, GOLD, RED, RED, WHITE

@@ -32,17 +32,6 @@ def combine_enchant(ench_1: Ench, ench_2: Ench, /) -> Ench:
 
 
 def get_modifier(name: Optional[str], rarity: str, /) -> Dict[str, int]:
-    """
-    Get modifier bonus from the item.
-
-    Args:
-        name: Name of the modifier.
-        rarity: Rarity of the item.
-
-    Returns:
-        A dict of stat boost by the modifier.
-    """
-
     if name is None:
         return {}
     elif name not in MODIFIERS:

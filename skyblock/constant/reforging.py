@@ -1,7 +1,3 @@
-"""
-Constants of reforging stats.
-"""
-
 __all__ = [
     'STAT_ALIASES',
     'ACCESSORY_REFORGES', 'ARMOR_REFORGES', 'BOW_REFORGES', 'MELEE_REFORGES',

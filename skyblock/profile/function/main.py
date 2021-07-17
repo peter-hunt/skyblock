@@ -32,6 +32,8 @@ def mainloop(self):
 
     last_shop: Optional[str] = None
 
+    self.update(save=False)
+
     while True:
         island = get_island(self.island)
         if island is None:

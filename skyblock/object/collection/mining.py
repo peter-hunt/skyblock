@@ -6,7 +6,7 @@ MINING_COLLECTIONS = [
     Collection(
         'cobblestone', 'mining',
         [
-            (50, 5),
+            (50, get_recipe('cobblestone_minion')),
             (100, 10),
             (250, 25),
             (1_000, get_recipe('cobblestone_to_enchanted')),
@@ -20,7 +20,7 @@ MINING_COLLECTIONS = [
     Collection(
         'coal', 'mining',
         [
-            (50, 5),
+            (50, get_recipe('coal_minion')),
             (100, 10),
             (250, 25),
             (1_000, get_recipe('coal_to_enchanted')),
@@ -34,7 +34,7 @@ MINING_COLLECTIONS = [
     Collection(
         'iron', 'mining',
         [
-            (50, 5),
+            (50, get_recipe('iron_minion')),
             (100, get_recipe('golem_hat')),
             (250, get_recipe('protection_book')),
             (1_000, get_recipe('iron_to_enchanted')),
@@ -51,7 +51,7 @@ MINING_COLLECTIONS = [
     Collection(
         'gold', 'mining',
         [
-            (50, 5),
+            (50, get_recipe('gold_minion')),
             (100, get_recipe('cleaver')),
             (250, get_recipe('looting_book')),
             (1_000, get_recipe('gold_to_enchanted')),
@@ -65,7 +65,7 @@ MINING_COLLECTIONS = [
     Collection(
         'diamond', 'mining',
         [
-            (50, 5),
+            (50, get_recipe('diamond_minion')),
             (100, get_recipe('execute_book')),
             (250, 25),
             (1_000, get_recipe('diamond_to_enchanted')),
@@ -79,7 +79,7 @@ MINING_COLLECTIONS = [
     Collection(
         'lapis', 'mining',
         [
-            (250, 25),
+            (250, get_recipe('lapis_minion')),
             (500, get_recipe('experience_bottle')),
             (1_000, get_recipe('experience_book')),
             (2_000, get_recipe('lapis_to_enchanted')),
@@ -93,7 +93,7 @@ MINING_COLLECTIONS = [
     Collection(
         'emerald', 'mining',
         [
-            (50, 5),
+            (50, get_recipe('emerald_minion')),
             (100, 10),
             (250, 25),
             (1_000, get_recipe('emerald_to_enchanted')),
@@ -107,7 +107,7 @@ MINING_COLLECTIONS = [
     Collection(
         'redstone', 'mining',
         [
-            (100, 10),
+            (100, get_recipe('redstone_minion')),
             (250, 25),
             (750, get_recipe('efficiency_book')),
             (1_500, get_recipe('redstone_to_enchanted')),
@@ -128,7 +128,7 @@ MINING_COLLECTIONS = [
     Collection(
         'quartz', 'mining',
         [
-            (50, 5),
+            (50, get_recipe('quartz_minion')),
             (100, 10),
             (250, 25),
             (1_000, get_recipe('quartz_to_enchanted')),
@@ -142,7 +142,7 @@ MINING_COLLECTIONS = [
     Collection(
         'obsidian', 'mining',
         [
-            (50, 5),
+            (50, get_recipe('obsidian_minion')),
             (100, get_recipe('lethality_book')),
             (250, 25),
             (1_000, get_recipe('obsidian_to_enchanted')),
@@ -157,7 +157,7 @@ MINING_COLLECTIONS = [
     Collection(
         'glowstone', 'mining',
         [
-            (50, 5),
+            (50, get_recipe('glowstone_minion')),
             (100, 10),
             (250, 25),
             (1_000, get_recipe('glowstone_to_enchanted')),
@@ -171,7 +171,7 @@ MINING_COLLECTIONS = [
     Collection(
         'flint', 'mining',
         [
-            (50, 5),
+            (50, get_recipe('flint_minion')),
             (100, 10),
             (250, 25),
             (1_000, get_recipe('sharpness_book')),
@@ -185,7 +185,7 @@ MINING_COLLECTIONS = [
     Collection(
         'ice', 'mining',
         [
-            (50, 5),
+            (50, get_recipe('ice_minion')),
             (100, 10),
             (250, get_recipe('ice_to_packed')),
             (500, get_recipe('ice_to_enchanted')),
@@ -210,7 +210,7 @@ MINING_COLLECTIONS = [
     Collection(
         'sand', 'mining',
         [
-            (50, 5),
+            (50, get_recipe('sand_minion')),
             (100, 10),
             (250, 25),
             (500, 50),
@@ -222,7 +222,7 @@ MINING_COLLECTIONS = [
     Collection(
         'end_stone', 'mining',
         [
-            (50, 5),
+            (50, get_recipe('end_stone_minion')),
             (100, 10),
             (250, 25),
             (1_000, get_recipe('end_stone_to_enchanted')),
@@ -237,7 +237,7 @@ MINING_COLLECTIONS = [
     Collection(
         'mithril', 'mining',
         [
-            (50, 5),
+            (50, get_recipe('mithril_minion')),
             (250, 25),
             (1_000, get_recipe('mithril_to_enchanted')),
             (2_500, 250),

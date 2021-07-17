@@ -25,16 +25,6 @@ __all__ = [
 
 
 def checkpoint(func: FunctionType, /) -> FunctionType:
-    """
-    Make the function immute to KeyboardInterrupt.
-
-    Args:
-        func: Original function.
-
-    Returns:
-        Wrapped function.
-    """
-
     def result(*args, **kwargs):
         try:
             return func(*args, **kwargs)
@@ -47,38 +37,14 @@ def checkpoint(func: FunctionType, /) -> FunctionType:
 
 
 def clear():
-    """
-    Clear the command line buffer.
-    """
-
     call(['clear'])
 
 
 def _format_word(word: str, /) -> str:
-    """
-    Display a word. Used in name displaying.
-
-    Args:
-        word: A word to format.
-
-    Returns:
-        A string of the formatted word.
-    """
-
     return word.lower() if word in IGNORED_WORDS else word.capitalize()
 
 
 def format_crit(string: str, /) -> str:
-    """
-    Format a crit damage.
-
-    Args:
-        string: Formatted string to be colored.
-
-    Returns:
-        A string of the colored damage.
-    """
-
     result = ''
     color_iter = iter(cycle(CRIT_COLORS))
     last_color = next(color_iter)
@@ -99,16 +65,6 @@ def format_crit(string: str, /) -> str:
 
 
 def format_name(name: str, /) -> str:
-    """
-    Format a name.
-
-    Args:
-        name: A name to format.
-
-    Returns:
-        A string of the formatted name.
-    """
-
     result = name
 
     for original, alternative in SPECIAL_NAMES.items():
@@ -128,16 +84,6 @@ def format_name(name: str, /) -> str:
 
 
 def format_number(number: Union[int, float], /, *, sign: bool = False) -> str:
-    """
-    Format an number with commas for readability.
-
-    Args:
-        number: A float or an integer.
-
-    Returns:
-        A string of the formatted number.
-    """
-
     if isinf(number):
         if sign:
             return '+∞' if number > 0 else '-∞'
@@ -163,16 +109,6 @@ def format_number(number: Union[int, float], /, *, sign: bool = False) -> str:
 
 
 def format_roman(number: int, /) -> str:
-    """
-    Format an number in roman numerals.
-
-    Args:
-        number: An integer to be converted.
-
-    Returns:
-        A string of the formatted number.
-    """
-
     result = ''
     for letter, amount in reversed(ROMAN_NUM):
         while number >= amount:
@@ -182,16 +118,6 @@ def format_roman(number: int, /) -> str:
 
 
 def format_short(number: Union[int, float], /) -> str:
-    """
-    Format an number in shortened form.
-
-    Args:
-        number: An integer to be converted.
-
-    Returns:
-        A string of the formatted number.
-    """
-
     for letter, amount in reversed(NUMBER_SCALES):
         if number >= amount:
             break
@@ -206,16 +132,6 @@ def format_short(number: Union[int, float], /) -> str:
 
 
 def format_zone(name: str, /) -> str:
-    """
-    Format a zone name.
-
-    Args:
-        name: A zone name to format.
-
-    Returns:
-        A string of the formatted zone name.
-    """
-
     if name in SPECIAL_ZONES:
         return SPECIAL_ZONES[name]
     else:
@@ -224,16 +140,6 @@ def format_zone(name: str, /) -> str:
 
 
 def generate_help(doc: str, /) -> Dict[str, str]:
-    """
-    Generate help dict.
-
-    Args:
-        doc: Original documentation string.
-
-    Returns:
-        A dict of the commands and descriptions.
-    """
-
     description = {}
 
     for para in doc.split('\n\n'):
@@ -249,19 +155,6 @@ def generate_help(doc: str, /) -> Dict[str, str]:
 
 def get(ls: List[Any], /, name: Optional[str] = None,
         default: Optional[Any] = None, **kwargs) -> Any:
-    """
-    Get an object from the list.
-
-    Args:
-        ls: List to find the object from.
-        name: Name of the target object.
-        default: Object returned if object with the given name is not found.
-        **kwargs: Restrictions to be found and attributes to be added.
-
-    Returns:
-        An object found or default if not found.
-    """
-
     attrs = {}
     args = {}
     for key, value in kwargs.items():
@@ -286,16 +179,6 @@ def get(ls: List[Any], /, name: Optional[str] = None,
 
 
 def get_ench(name: str, /) -> Tuple[str, Tuple[int]]:
-    """
-    Get experience level costs for an enchantment.
-
-    Args:
-        name: Name of the enchantment.
-
-    Returns:
-        Tuple of level cost to enchant the item with the enchantment.
-    """
-
     for row in ENCHS:
         if row[0] == name:
             if isinstance(row[2], tuple):
@@ -308,16 +191,6 @@ def get_ench(name: str, /) -> Tuple[str, Tuple[int]]:
 
 
 def get_family(name: str, /) -> str:
-    """
-    Get bestiary family from mob name.
-
-    Args:
-        name: Name of the original mob.
-
-    Returns:
-        Valid bestiary family.
-    """
-
     for family, others in BESTIARY_ALTER.items():
         if name in others:
             return family
@@ -325,17 +198,6 @@ def get_family(name: str, /) -> str:
 
 
 def includes(ls: List[Any], name: str, /) -> bool:
-    """
-    Detect whether if object with given name is in the list.
-
-    Args:
-        ls: List to find the object from.
-        name: Name of the object.
-
-    Returns:
-        Boolean of whether if the name is found from the list
-    """
-
     for obj in ls:
         if obj.name == name:
             return True
@@ -343,17 +205,6 @@ def includes(ls: List[Any], name: str, /) -> bool:
 
 
 def index(ls: List[Any], name: str, /) -> int:
-    """
-    Get index of the object with the given name from the list.
-
-    Args:
-        ls: List to find the object from.
-        name: Name of the object.
-
-    Returns:
-        Integer of the object
-    """
-
     for i, obj in enumerate(ls):
         if obj.name == name:
             return i
@@ -361,17 +212,6 @@ def index(ls: List[Any], name: str, /) -> int:
 
 
 def is_valid_usage(usage: str, words: List[str], /) -> bool:
-    """
-    Detect whether command usage is valid.
-
-    Args:
-        usage: Command from the user.
-        words: Usage of the command from the documentation.
-
-    Returns:
-        Boolean of whether if the command usage is valid.
-    """
-
     all_words = usage.split()[1:]
     pos_words = [word for word in all_words if word[0] != '[']
 
@@ -383,16 +223,6 @@ def is_valid_usage(usage: str, words: List[str], /) -> bool:
 
 
 def parse_int(string: str, /) -> Optional[int]:
-    """
-    Parse integer from string.
-
-    Args:
-        string: String of the integer to be parsed.
-
-    Returns:
-        Integer parsed if the string is valid, otherwise warn the user.
-    """
-
     if fullmatch(r'\d+', string):
         return int(string)
     else:

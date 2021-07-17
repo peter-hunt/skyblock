@@ -1,7 +1,3 @@
-"""
-Constants used by displaying.
-"""
-
 from typing import Dict, Tuple, Union
 
 
@@ -10,24 +6,20 @@ __all__ = [
     'SPECIAL_ZONES', 'SPECIAL_NAMES', 'SPECIAL_ALTER', 'IGNORED_WORDS',
 ]
 
-# util type notation classes
 Amount = Union[Tuple[int, int], int]
 Ench = Dict[str, int]
 Number = Union[float, int]
 
-# used to display numbers in short
 NUMBER_SCALES = [
     ('', 1), ('K', 10 ** 3), ('M', 10 ** 6), ('B', 10 ** 9), ('T', 10 ** 12),
 ]
 
-# used to display numbers in roman numeral
 ROMAN_NUM = [
     ('I', 1), ('IV', 4), ('V', 5), ('IX', 9), ('X', 10),
     ('XL', 40), ('L', 50), ('XC', 90), ('C', 100),
     ('CD', 400), ('D', 500), ('CM', 900), ('M', 1000),
 ]
 
-# zone names to be translated
 SPECIAL_ZONES = {
     'builders_house': "Builder's House",
     'castle': 'Hub Castle',
@@ -179,5 +171,4 @@ SPECIAL_ALTER = {
     'Refined Refined': 'Even more Refined',
 }
 
-# words ignored by capitalization
 IGNORED_WORDS = ('from', 'of', 'the', 'to')

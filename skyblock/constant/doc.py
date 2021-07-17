@@ -1,10 +1,5 @@
-"""
-Docstring for user cli.
-"""
-
 __all__ = ['menu_doc', 'profile_doc']
 
-# documentation for commands at menu and profiles
 menu_doc = """
 > clear
 Clear the screen.

@@ -8,6 +8,7 @@ from ...constant.main import INTEREST_TABLE, SELL_PRICE
 from ...function.enchanting import get_enchantments
 from ...function.io import *
 from ...function.math import calc_exp_level, calc_exp, random_amount
+from ...function.minion import get_minion_cap_info
 from ...function.reforging import combine_enchant
 from ...function.util import (
     checkpoint, format_name, format_number, format_roman, format_short,
@@ -268,9 +269,7 @@ def consume(self, index: int, amount: int = 1, /):
         red('This item is not consumable!')
 
 
-def craft(self, index: int, amount: int = 1, /):
-    recipe = RECIPES[index]
-
+def craft(self, recipe: Recipe, amount: int = 1, /):
     if recipe.collection_req is not None:
         coll_name, lvl = recipe.collection_req
         if self.get_collection_level(coll_name) < lvl:
@@ -300,6 +299,21 @@ def craft(self, index: int, amount: int = 1, /):
             }[result.rarity]
 
     self.recieve_item(result, result_count * amount)
+
+    if isinstance(result, Minion):
+        minion_name = result.name.replace('_minion', f'_{result.tier}')
+        if minion_name not in self.crafted_minions:
+            self.crafted_minion.append(minion_name)
+            self.crafted_minion.sort()
+
+            tier_str = format_roman(result.tier)
+            green(f"You crafted a {YELLOW}Tier {tier_str}"
+                  f" {format_name(result.name)}{GREEN}!"
+                  f" That's a new one!")
+            cap, to_next = get_minion_cap_info(len(self.crafted_minion))
+            if to_next != 0:
+                green(f'Craft {to_next} more unique Minions to unlock your'
+                      f' {cap + 1}th Minion slot!')
 
 
 def despawn_pet(self, /):
@@ -632,7 +646,7 @@ def talkto_npc(self, npc: Npc, /) -> Optional[str]:
         self.npc_silent(npc)
 
 
-def update(self, /):
+def update(self, /, *, save=True):
     now = int(time())
     last = now if self.last_update == 0 else self.last_update
     dt = now - last
@@ -652,7 +666,7 @@ def update(self, /):
 
     last_save_cp = last // 300
     now_save_cp = now // 300
-    if now_save_cp > last_save_cp:
+    if save and now_save_cp > last_save_cp:
         self.dump()
         green('Saved!')
 
