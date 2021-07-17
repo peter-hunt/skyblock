@@ -10,8 +10,10 @@ from ..function.math import (
 )
 from ..function.reforging import get_modifier
 from ..function.util import (
-    format_name, format_number, format_roman, format_short, format_zone,
+    camel_to_under, format_name, format_number, format_roman, format_short,
+    format_zone,
 )
+
 from .ability import get_ability
 
 
@@ -53,7 +55,7 @@ def item_type(cls: type, /) -> type:
             else:
                 result[key] = getattr(self, key)
 
-        result['type'] = cls.__name__.lower()
+        result['type'] = camel_to_under(cls.__name__)
         return result
 
     cls.to_obj = to_obj

@@ -1,4 +1,4 @@
-from ..item import get_item, get_scroll
+from ..item import get_item
 from ..object import *
 
 
@@ -146,7 +146,7 @@ FARMING_RECIPES = [
            [(Item('enchanted_ender_pearl'), 16),
             (Item('enchanted_carrot'), 48),
             (Item('enchanted_potato'), 80)],
-           (get_scroll('barn'), 1),
+           (get_item('travel_scroll_to_barn'), 1),
            collection_req=('potato', 6)),
     Recipe('potato_to_enchanted_baked', 'farming',
            [(Item('enchanted_potato'), 160)],
@@ -273,7 +273,7 @@ FARMING_RECIPES = [
            [(Item('enchanted_ender_pearl'), 16),
             (Item('enchanted_cactus_green'), 48),
             (Item('enchanted_cocoa'), 80)],
-           (get_scroll('desert'), 1),
+           (get_item('travel_scroll_to_desert'), 1),
            collection_req=('cocoa', 5)),
     Recipe('cocoa_to_enchanted_cookie', 'farming',
            [(Item('enchanted_cocoa'), 128),

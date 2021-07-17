@@ -71,10 +71,10 @@ class ReforgeStone(ItemType):
 
 @item_type
 class TravelScroll(ItemType):
+    name: str
     island: str
     zone: Optional[str] = None
     rarity: str = 'rare'
-    name: str = 'travel_scroll'
 
 
 @item_type
@@ -272,10 +272,24 @@ class Minion(ItemType):
     slots: int
 
 
-OBJECTS = [
-    Item, Empty, Accessory, EnchantedBook, ReforgeStone, TravelScroll,
-    Sword, Bow, Axe, Hoe, Pickaxe, Drill, FishingRod, Armor, Pet, Minion,
-]
+OBJECT_NAMES = {
+    'item': Item,
+    'empty': Empty,
+    'accessory': Accessory,
+    'enchanted_book': EnchantedBook,
+    'reforge_stone': ReforgeStone,
+    'travel_scroll': TravelScroll,
+    'armor': Armor,
+    'bow': Bow,
+    'sword': Sword,
+    'axe': Axe,
+    'fishing_rod': FishingRod,
+    'hoe': Hoe,
+    'drill': Drill,
+    'pickaxe': Pickaxe,
+    'pet': Pet,
+    'minion': Minion,
+}
 
 
 class Resource:
@@ -361,8 +375,8 @@ def load_item(obj):
         return obj
     elif 'type' not in obj:
         return Empty()
-    for cls in OBJECTS:
-        if obj['type'] == cls.__name__.lower():
+    for name, cls in OBJECT_NAMES.items():
+        if obj['type'] == name:
             return cls.from_obj(obj)
     else:
         raise ValueError(f"invalid item obj type: {obj['type']!r}")

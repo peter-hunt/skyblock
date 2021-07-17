@@ -1,5 +1,5 @@
 from ...constant.color import *
-from ...object.item import get_item, get_scroll, get_stone
+from ...object.item import get_item
 from ...object.object import *
 
 from ..object import *
@@ -175,12 +175,12 @@ HUB_NPCS = [
         init_dialog=[
             ('Fishing is my trade. I buy and sell any fish,'
              ' rod, or treasure you can find!'),
-            'Click me again to open the Fisherman Shop!',
+            'Talk to me again to open the Fisherman Shop!',
         ],
         trades=[
             (100, get_item('fishing_rod', enchantments={'magnet': 1})),
-            (20, Item('raw_fish')),
-            (30, Item('raw_salmon')),
+            (20, Item('fish')),
+            (30, Item('salmon')),
             (100, Item('clownfish')),
             (40, Item('pufferfish')),
         ]),
@@ -230,7 +230,7 @@ HUB_NPCS = [
     Npc('lonely_philosopher',
         init_dialog=['To fast travel or not to fast travel?'],
         trades=[
-            (150_000, get_scroll('castle')),
+            (150_000, get_item('travel_scroll_to_castle')),
         ]),
     Npc('lumber_merchant',
         init_dialog=[
@@ -368,7 +368,7 @@ HUB_NPCS = [
             'You like flint? I like flint! I sell flint!',
             ("My brother is mining the gravel from the Spider's Den."
              " We are the Flint Bros!"),
-            'Click me again to open my shop!',
+            'Talk to me again to open my shop!',
         ],
         trades=[
             (6, Item('flint')),
@@ -396,7 +396,7 @@ HUB_NPCS = [
         ]),
     Npc('smithmonger',
         trades=[
-            (100_000, get_stone('dirt_bottle')),
+            (100_000, get_item('dirt_bottle')),
         ]),
     Npc('taylor',
         dialog=[

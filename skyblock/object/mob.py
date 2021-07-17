@@ -3,7 +3,7 @@ from typing import Optional
 from ..function.io import *
 from ..function.util import get, includes
 
-from .item import get_item, get_scroll, get_stone
+from .item import get_item
 from .object import *
 
 
@@ -110,7 +110,7 @@ MOBS = [
         drops=[
             (Item('string'), 1, 'common', 1),
             (Item('spider_eye'), 1, 'common', 0.5),
-            (get_scroll('nest'), 1, 'legendary', 0.0002),
+            (get_item('travel_scroll_to_nest'), 1, 'legendary', 0.0002),
             (get_item('tarantula_pet', rarity='epic'),
              1, 'pray_rngesus', 0.0001),
             (get_item('tarantula_pet', rarity='legendary'),
@@ -121,7 +121,7 @@ MOBS = [
         drops=[
             (Item('string'), 1, 'common', 1),
             (Item('spider_eye'), 1, 'common', 0.5),
-            (get_scroll('nest'), 1, 'legendary', 0.0002),
+            (get_item('travel_scroll_to_nest'), 1, 'legendary', 0.0002),
             (get_item('tarantula_pet', rarity='epic'),
              1, 'pray_rngesus', 0.0001),
             (get_item('tarantula_pet', rarity='legendary'),
@@ -132,7 +132,7 @@ MOBS = [
         drops=[
             (Item('string'), 1, 'common', 1),
             (Item('spider_eye'), 1, 'common', 0.5),
-            (get_scroll('nest'), 1, 'legendary', 0.0002),
+            (get_item('travel_scroll_to_nest'), 1, 'legendary', 0.0002),
             (get_item('tarantula_pet', rarity='epic'),
              1, 'pray_rngesus', 0.0001),
             (get_item('tarantula_pet', rarity='legendary'),
@@ -143,7 +143,7 @@ MOBS = [
         drops=[
             (Item('string'), 1, 'common', 1),
             (Item('spider_eye'), 1, 'common', 0.5),
-            (get_scroll('nest'), 1, 'legendary', 0.0002),
+            (get_item('travel_scroll_to_nest'), 1, 'legendary', 0.0002),
             (get_item('tarantula_pet', rarity='epic'),
              1, 'pray_rngesus', 0.0001),
             (get_item('tarantula_pet', rarity='legendary'),
@@ -468,7 +468,7 @@ MOBS = [
         coins=50, exp=60, combat_exp=70,
         drops=[
             (Item('starfall'), (1, 2), 'common', 1),
-            (get_stone('salmon_opal'), 1, 'rare', 0.01),
+            (get_item('salmon_opal'), 1, 'rare', 0.01),
             (Item('treasurite'), 1, 'rare', 0.005),
         ]),
     Mob('ice_walker', level=45, health=888, defense=800, damage=500,
@@ -490,7 +490,7 @@ MOBS = [
             (Item('spruce'), 1, 'uncommon', 0.15),
             (Item('dark'), 1, 'uncommon', 0.15),
             (Item('acacia'), 1, 'uncommon', 0.15),
-            (get_scroll('howl'), 1, 'legendary', 0.0002),
+            (get_item('travel_scroll_to_howl'), 1, 'legendary', 0.0002),
             (get_item('hound_pet', rarity='epic'),
              1, 'pray_rngesus', 0.0002 / 3),
             (get_item('hound_pet', rarity='legendary'),
@@ -502,7 +502,7 @@ MOBS = [
             (Item('spruce'), 1, 'uncommon', 0.15),
             (Item('dark'), 1, 'uncommon', 0.15),
             (Item('acacia'), 1, 'uncommon', 0.15),
-            (get_scroll('howl'), 1, 'legendary', 0.0002),
+            (get_item('travel_scroll_to_howl'), 1, 'legendary', 0.0002),
             (get_item('hound_pet', rarity='epic'),
              1, 'pray_rngesus', 0.0002 / 3),
             (get_item('hound_pet', rarity='legendary'),
@@ -512,7 +512,7 @@ MOBS = [
         coins=50, exp=15, combat_exp=50,
         drops=[
             (Item('jungle'), 1, 'common', 1),
-            (get_scroll('howl'), 1, 'legendary', 0.00035),
+            (get_item('travel_scroll_to_howl'), 1, 'legendary', 0.00035),
             (get_item('hound_pet', rarity='epic'),
              1, 'pray_rngesus', 0.0002 / 3),
             (get_item('hound_pet', rarity='legendary'),

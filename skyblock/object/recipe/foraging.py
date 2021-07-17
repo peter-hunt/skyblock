@@ -1,4 +1,4 @@
-from ..item import get_item, get_scroll
+from ..item import get_item
 from ..object import *
 
 
@@ -101,7 +101,7 @@ FORAGING_RECIPES = [
     Recipe('scroll_to_park', 'foraging',
            [(Item('enchanted_ender_pearl'), 16),
             (Item('enchanted_birch'), 128)],
-           (get_scroll('park'), 1),
+           (get_item('travel_scroll_to_park'), 1),
            collection_req=('birch_wood', 8)),
 
     Recipe('spruce_leaves', 'foraging',

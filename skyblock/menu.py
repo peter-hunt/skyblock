@@ -7,7 +7,7 @@ from typing import List
 from .constant.color import *
 from .constant.doc import menu_doc
 from .function.io import *
-from .function.path import is_dir, is_profile
+from .function.path import is_dir, is_profile, join_path
 from .function.util import checkpoint, clear, generate_help, is_valid_usage
 from .profile.object import Profile
 
@@ -15,10 +15,6 @@ from .profile.object import Profile
 __all__ = ['main']
 
 menu_help = generate_help(menu_doc)
-
-
-def join_path(*names) -> str:
-    return join(Path.home(), *names)
 
 
 def init_home_dir(*names):
@@ -62,6 +58,8 @@ def ls():
 @checkpoint
 def main():
     init_env()
+
+    yellow(f'Welcome to {GREEN}Skyblock{YELLOW}!')
 
     if not is_dir(warn=True) or not is_dir('saves', warn=True):
         pass

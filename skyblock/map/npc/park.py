@@ -1,4 +1,4 @@
-from ...object.item import get_item, get_scroll
+from ...object.item import get_item
 from ...object.object import *
 
 from ..object import *
@@ -12,7 +12,7 @@ PARK_NPCS = [
     Npc('melancholic_viking',
         trades=[
             (130_000, get_item('raider_axe')),
-            (70_000, get_scroll('jungle')),
+            (70_000, get_item('travel_scroll_to_jungle')),
             (400_000, EnchantedBook({'experience': 4})),
         ]),
     Npc('old_shaman_nyko',

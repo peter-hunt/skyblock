@@ -4,7 +4,7 @@ from pathlib import Path
 from .io import *
 
 
-__all__ = ['is_dir', 'is_file', 'is_profile']
+__all__ = ['is_dir', 'is_file', 'is_profile', 'join_path']
 
 
 def is_dir(*names, warn: bool = False):
@@ -27,3 +27,7 @@ def is_file(*names, warn: bool = False):
 
 def is_profile(name: str, /):
     return is_dir() and is_dir('saves') and is_file('saves', f'{name}.json')
+
+
+def join_path(*names) -> str:
+    return join(Path.home(), *names)

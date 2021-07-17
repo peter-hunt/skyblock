@@ -1,6 +1,6 @@
 from itertools import cycle
 from math import isinf
-from re import fullmatch
+from re import fullmatch, sub
 from subprocess import call
 from textwrap import wrap
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -18,10 +18,14 @@ from .io import red, yellow
 
 
 __all__ = [
-    'checkpoint', 'clear', 'format_name', 'format_number', 'format_roman',
-    'format_short', 'format_zone',  'get', 'generate_help', 'includes', 'index',
-    'is_valid_usage',
+    'camel_to_under', 'checkpoint', 'clear', 'format_name', 'format_number',
+    'format_roman', 'format_short', 'format_zone',  'get', 'generate_help',
+    'includes', 'index', 'is_valid_usage',
 ]
+
+
+def camel_to_under(string: str) -> str:
+    return sub(r'([A-Z])', r'_\1', string)[1:].lower()
 
 
 def checkpoint(func: FunctionType, /) -> FunctionType:

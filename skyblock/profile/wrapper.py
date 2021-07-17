@@ -5,7 +5,7 @@ from re import sub
 from typing import Optional
 
 from ..constant.color import *
-from ..data import dump as json_dump
+from ..myjson import dump as json_dump
 from ..function.io import *
 from ..function.path import is_profile
 from ..function.util import parse_int

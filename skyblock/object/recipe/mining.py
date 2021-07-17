@@ -1,4 +1,4 @@
-from ..item import get_item, get_scroll
+from ..item import get_item
 from ..object import *
 
 
@@ -148,7 +148,7 @@ MINING_RECIPES = [
            [(Item('enchanted_ender_pearl'), 16),
             (Item('enchanted_iron'), 48),
             (Item('enchanted_gold'), 80)],
-           (get_scroll('gold'), 1),
+           (get_item('travel_scroll_to_gold'), 1),
            collection_req=('coal', 6)),
     Recipe('coal_to_enchanted_block', 'mining',
            [(Item('enchanted_coal'), 160)],
@@ -376,7 +376,7 @@ MINING_RECIPES = [
            [(Item('enchanted_ender_pearl'), 16),
             (Item('enchanted_redstone'), 48),
             (Item('enchanted_lapis'), 80)],
-           (get_scroll('deep'), 1),
+           (get_item('travel_scroll_to_deep'), 1),
            collection_req=('redstone', 7)),
     Recipe('redstone_to_enchanted_block', 'mining',
            [(Item('enchanted_redstone'), 160)],
@@ -440,7 +440,7 @@ MINING_RECIPES = [
     Recipe('scroll_to_spider', 'mining',
            [(Item('enchanted_ender_pearl'), 16),
             (Item('enchanted_flint'), 128)],
-           (get_scroll('spider'), 1),
+           (get_item('travel_scroll_to_spider'), 1),
            collection_req=('flint', 8)),
 
     Recipe('ice_to_packed', 'mining',
@@ -518,7 +518,7 @@ MINING_RECIPES = [
            [(Item('enchanted_ender_pearl'), 16),
             (Item('enchanted_obsidian'), 48),
             (Item('enchanted_end_stone'), 80)],
-           (get_scroll('end'), 1),
+           (get_item('travel_scroll_to_end'), 1),
            collection_req=('end_stone', 8)),
     Recipe('end_stone_sword', 'mining',
            [(Item('enchanted_end_stone'), 128),

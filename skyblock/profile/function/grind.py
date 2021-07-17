@@ -19,7 +19,7 @@ from ...function.util import (
     checkpoint, format_crit, format_name, format_number, format_roman,
 )
 from ...object.fishing import FISHING_TABLE, SC_TABLE
-from ...object.item import get_item, get_stone, validify_item
+from ...object.item import get_item, validify_item
 from ...object.mob import get_mob
 from ...object.object import *
 from ...object.resource import get_resource
@@ -261,7 +261,7 @@ def gather(self, name: str, tool_index: Optional[int],
 
             if 'diamond' in resource.name:
                 if random_bool(0.01 * (1 + magic_find / 100)):
-                    loot = get_stone('rare_diamond')
+                    loot = get_item('rare_diamond')
                     self.recieve_item(loot)
 
                     rarity_color = RARITY_COLORS['rare']
@@ -773,7 +773,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
 
         if 'diamond' in name:
             if random_bool(0.01 * (1 + magic_find / 100)):
-                loot = get_stone('rare_diamond')
+                loot = get_item('rare_diamond')
                 self.recieve_item(loot)
 
                 rarity_color = RARITY_COLORS['rare']
