@@ -21,7 +21,7 @@ from ...object.fishing import FISHING_TABLE, SC_TABLE
 from ...object.items import get_item
 from ...object.mobs import get_mob
 from ...object.object import *
-from ...object.resource import get_resource
+from ...object.resources import get_resource
 
 
 __all__ = ['fish', 'gather', 'slay']

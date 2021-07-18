@@ -1,4 +1,4 @@
-from ...object.resource import get_resource
+from ...object.resources import get_resource
 
 from ..npc import get_npc
 from ..object import *

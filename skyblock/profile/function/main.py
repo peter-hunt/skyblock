@@ -18,7 +18,7 @@ from ...object.mobs import get_mob
 from ...object.object import *
 from ...object.placed_minion import *
 from ...object.recipes import get_recipe
-from ...object.resource import get_resource
+from ...object.resources import get_resource
 
 
 __all__ = ['mainloop']

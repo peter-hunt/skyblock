@@ -295,14 +295,14 @@ class Resource:
         return type(self).__name__
 
 
-@init_type
+@resource_type
 class Crop(Resource):
     name: str
     amount: int = 1
     farming_exp: Number = 1
 
 
-@init_type
+@resource_type
 class Mineral(Resource):
     name: str
     drop: str
@@ -314,7 +314,7 @@ class Mineral(Resource):
     mithril_powder: Amount = 0
 
 
-@init_type
+@resource_type
 class Wood(Resource):
     name: str
     hardness: int = 2

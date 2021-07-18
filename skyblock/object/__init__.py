@@ -16,12 +16,12 @@ from .placed_minion import *
 from .placed_minion import __all__ as __placed_minion_all__
 from .recipes import *
 from .recipes import __all__ as __recipes_all__
-from .resource import *
-from .resource import __all__ as __resource_all__
+from .resources import *
+from .resources import __all__ as __resources_all__
 
 
 __all__ = (
     __ability_all__ + __collection_all__ + __fishing_all__ + __items_all__
     + __minions_all__ + __mobs_all__ + __object_all__ + __placed_minion_all__
-    + __recipes_all__ + __resource_all__
+    + __recipes_all__ + __resources_all__
 )
