@@ -18,7 +18,7 @@ from ...function.util import (
     checkpoint, format_crit, format_name, format_number, format_roman,
 )
 from ...object.fishing import FISHING_TABLE, SC_TABLE
-from ...object.item import get_item, validify_item
+from ...object.item import get_item
 from ...object.mob import get_mob
 from ...object.object import *
 from ...object.resource import get_resource
@@ -47,7 +47,7 @@ def fish(self, rod_index: int, iteration: int = 1, /):
     time_mult /= 1 + rod.get_stat('fishing_speed', self) / 100
     blessing = 0.05 * enchants.get('blessing', 0)
     expertise = 1 + 0.02 * enchants.get('expertise', 0)
-    frail = 1 - 0.05 * enchants.get('frail', 0)
+    frail_mult = 1 - 0.05 * enchants.get('frail', 0)
     luck = 1 + 0.01 * enchants.get('luck_of_the_sea', 0)
     luck += fishing_level * 0.002
     magnet = enchants.get('magnet', 0)
@@ -62,10 +62,10 @@ def fish(self, rod_index: int, iteration: int = 1, /):
 
     total_weight = 0
     for choice in table:
-        if 'catch' in choice[2]:
-            total_weight += choice[3] * luck
+        if 'catch' in choice[1]:
+            total_weight += choice[2] * luck
         else:
-            total_weight += choice[3]
+            total_weight += choice[2]
 
     last_cp = Decimal()
     cp_step = Decimal('0.1')
@@ -76,14 +76,12 @@ def fish(self, rod_index: int, iteration: int = 1, /):
 
         is_sc = random_bool(sea_creature_chance / 100)
         if is_sc and fishing_level >= 1:
-            avaliable_sc = [
-                line for line in SC_TABLE
-                if line[2] <= fishing_level
-            ]
+            avaliable_sc = [line for line in SC_TABLE
+                            if line[2] <= fishing_level]
             total_sc_weight = sum(line[1] for line in avaliable_sc)
 
             pool = random() * total_sc_weight
-            for mob, weight, _, text in avaliable_sc:
+            for mob_name, weight, _, text in avaliable_sc:
                 if pool < weight:
                     break
                 pool -= weight
@@ -91,16 +89,16 @@ def fish(self, rod_index: int, iteration: int = 1, /):
             green(text)
             sleep(1)
 
-            mob_copy = mob.copy()
-            mob_copy.health *= frail
+            mob = get_mob(mob_name).copy()
+            mob.health *= frail_mult
 
-            alive = self.slay(mob_copy, rod_index)
+            alive = self.slay(mob, rod_index)
             if not alive:
                 return
 
         else:
             pool = random() * total_weight
-            for drop, amount, rarity, weight, fishing_exp in table:
+            for drop, rarity, weight, fishing_exp in table:
                 if 'catch' in rarity:
                     weight *= luck
                 if pool < weight:
@@ -125,21 +123,24 @@ def fish(self, rod_index: int, iteration: int = 1, /):
                     gray(f'{RARITY_COLORS[rarity]}{rarity_display}! {AQUA}'
                          f'You found {GOLD}{format_number(drop)} Coins{AQUA}.')
             else:
-                item_type = drop.copy()
-                if getattr(item_type, 'count', 1) != 1:
-                    item_type.count = 1
-
                 if random_bool(blessing):
                     green('Your Blessing enchant got you double drops!')
-                    amount *= 2
+                    drop['count'] = 2
 
-                self.recieve_item(item_type, amount)
-                self.collect(drop.name, amount)
+                drop_name = drop['name']
+                drop_kwargs = {key: drop[key] for key in drop
+                               if key not in {'name', 'count'}}
+                drop_item = get_item(drop_name, **drop_kwargs)
+                if getattr(drop_item, 'count', 1) != 1:
+                    drop_item.count = 1
+
+                self.recieve_item(drop)
+                self.collect(drop_name, drop.get('count', 1))
 
                 if 'catch' in rarity:
                     rarity_display = rarity.upper().replace('_', ' ')
                     gray(f'{RARITY_COLORS[rarity]}{rarity_display}! {AQUA}'
-                         f'You found a {item_type.display()}{AQUA}.')
+                         f'You found a {drop_item.display()}{AQUA}.')
 
             exp_gained = fishing_exp * expertise
             self.add_skill_exp('fishing', exp_gained, display=True)

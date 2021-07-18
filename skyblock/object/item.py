@@ -8,7 +8,7 @@ from ..function.util import get, includes
 from .object import *
 
 
-__all__ = ['ITEMS', 'get_item', 'get_stack_size', 'validify_item']
+__all__ = ['ITEMS', 'get_item', 'get_stack_size']
 
 
 ITEMS = []
@@ -32,30 +32,3 @@ def get_item(name: str, /, **kwargs) -> ItemType:
 
 def get_stack_size(name: str, /) -> int:
     return getattr(get_item(name), 'count', 1)
-
-
-def validify_item(item: ItemType, /) -> ItemType:
-    attrs = {}
-    kwargs = {}
-    if getattr(item, 'enchantments', {}) != {}:
-        attrs['enchantments'] = item.enchantments.copy()
-    if getattr(item, 'hot_potato', 0) != 0:
-        attrs['hot_potato'] = item.hot_potato
-    if getattr(item, 'modifier', None) is not None:
-        attrs['modifier'] = item.modifier
-    if getattr(item, 'stars', 0) != 0:
-        attrs['stars'] = item.stars
-    if getattr(item, 'tier', None) is not None:
-        kwargs['tier'] = item.tier
-
-    if getattr(item, 'rarity', None) != None:
-        if isinstance(item, (Sword, Bow, Armor, Pet)):
-            kwargs['rarity'] = item.rarity
-        else:
-            attrs['rarity'] = item.rarity
-
-    item_copy = get_item(item.name, **kwargs)
-    for key, value in attrs.items():
-        setattr(item_copy, key, value)
-
-    return item_copy
