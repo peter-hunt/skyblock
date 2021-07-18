@@ -34,9 +34,9 @@ for category in [*walk(join_path('skyblock', 'data', 'recipes'))][0][1]:
                             category, file_name)) as file:
             obj = load(file)
             if 'recipes' in obj:
-                _RECIPES.append(RecipeGroup.load(obj))
+                _RECIPES.append(RecipeGroup.from_obj(obj))
             else:
-                _RECIPES.append(Recipe.load(obj))
+                _RECIPES.append(Recipe.from_obj(obj))
 
 
 for category in {'farming', 'combat', 'mining', 'fishing', 'foraging',

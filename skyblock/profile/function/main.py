@@ -11,7 +11,7 @@ from ...function.util import (
     checkpoint, clear, format_number, format_roman, format_short, format_zone,
     generate_help, get, includes, is_valid_usage, parse_int,
 )
-from ...map.island import get_island
+from ...map.islands import get_island
 from ...object.collection import is_collection
 from ...object.items import ITEMS
 from ...object.mobs import get_mob

@@ -16,7 +16,7 @@ from ...function.util import (
     checkpoint, format_name, format_number, format_roman, format_short,
     format_zone, get, get_ench, includes,
 )
-from ...map.island import ISLANDS
+from ...map.islands import ISLANDS
 from ...map.object import *
 from ...object.items import get_item
 from ...object.minions import MINION_LOOT

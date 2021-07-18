@@ -335,7 +335,7 @@ class Mob:
     farming_exp: int = 0
     combat_exp: int = 0
     fishing_exp: int = 0
-    drops: List[Tuple[ItemType, Amount, str, Number]] = []
+    drops: List[Tuple[ItemPointer, Amount, str, Number]] = []
 
 
 @recipe_type

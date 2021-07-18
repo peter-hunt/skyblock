@@ -93,14 +93,14 @@ def recipe_type(cls: type, /) -> type:
     cls.to_obj = to_obj
 
     @classmethod
-    def load(cls, obj, /):
+    def from_obj(cls, obj, /):
         collection_req = obj.get('collection_req', None)
         if collection_req is not None:
             collection_req = tuple(collection_req)
         return cls(obj['name'], obj['category'],
                    obj['ingredients'], obj['result'], collection_req)
 
-    cls.load = load
+    cls.from_obj = from_obj
 
     return cls
 
@@ -138,14 +138,14 @@ def recipe_group_type(cls: type, /) -> type:
     cls.to_obj = to_obj
 
     @classmethod
-    def load(cls, obj, /):
+    def from_obj(cls, obj, /):
         collection_req = obj.get('collection_req', None)
         if collection_req is not None:
             collection_req = tuple(collection_req)
         return cls(obj['name'], obj['category'],
                    obj['recipes'], collection_req)
 
-    cls.load = load
+    cls.from_obj = from_obj
 
     return cls
 
@@ -175,6 +175,31 @@ def mob_type(cls):
     copy_str += ')'
 
     cls.copy = eval(copy_str)
+
+    def to_obj(self, /):
+        result = {}
+        for key in anno:
+            if key in default and default[key] == getattr(self, key, None):
+                continue
+            result[key] = getattr(self, key)
+
+        return result
+
+    cls.to_obj = to_obj
+
+    from_obj_str = 'lambda cls, obj: cls('
+    from_obj_str += ', '.join(
+        (f'[[pointer, (tuple(amount) if isinstance(amount, list) else amount),'
+         f' display, chance]'
+         f' for pointer, amount, display, chance in'
+         f' obj.get({key!r}, {default[key]!r})]')
+        if key == 'drops' else
+        f'obj.get({key!r}, {default[key]!r})' if key in default
+        else f'obj[{key!r}]' for key in anno
+    )
+    from_obj_str += ')'
+
+    cls.from_obj = classmethod(eval(from_obj_str))
 
     def display(self):
         if self.health < 100_000:

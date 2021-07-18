@@ -21,7 +21,7 @@ from ...object.items import get_item
 from ...object.mobs import MOBS
 from ...object.object import *
 from ...object.recipes import CRAFTABLES, get_recipe
-from ...map.island import ISLANDS
+from ...map.islands import ISLANDS
 from ...map.object import *
 
 
