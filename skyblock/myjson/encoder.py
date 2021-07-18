@@ -1,7 +1,16 @@
+from decimal import Context
 from math import isinf, isnan
 
 
 NoneType = type(None)
+
+ctx = Context()
+ctx.prec = 20
+
+
+def _float_to_str(f):
+    d1 = ctx.create_decimal(repr(f))
+    return format(d1, 'f')
 
 
 def _dumps(obj, /, *, current_indent=0, current_width=0,
@@ -30,6 +39,8 @@ def _dumps(obj, /, *, current_indent=0, current_width=0,
             return 'NaN'
         elif isinf(obj):
             return 'Infinity' if obj > 0 else '-Infinity'
+        elif isinstance(obj, float):
+            return _float_to_str(obj)
         else:
             return f'{obj}'
     elif isinstance(obj, str):
@@ -50,13 +61,9 @@ def _dumps(obj, /, *, current_indent=0, current_width=0,
         if len(obj) == 0:
             return '[]'
 
-        for item in obj:
-            if not isinstance(item, (bool, float, int, str, NoneType)):
-                break
-        else:
-            compact = ', '.join(_dumps(item) for item in obj)
-            if current_width + len(compact) + 2 <= 80:
-                return f'[{compact}]'
+        compact = ', '.join(_dumps(item) for item in obj)
+        if current_width + len(compact) + 2 <= 80:
+            return f'[{compact}]'
 
         result = '['
         for index, item in enumerate(obj):

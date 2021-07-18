@@ -1,7 +1,10 @@
 .DS_Store
 .vscode
 __pycache__
+
 build
 dist
 skyblock_peterhunt.egg-info
 *.pyc
+
+skyblock/format.py
