@@ -3,7 +3,7 @@ from os import get_terminal_size
 from time import sleep
 from typing import Iterable, Optional, Union
 
-from ...constant.color import *
+from ...constant.colors import *
 from ...constant.main import ARMOR_PARTS
 from ...constant.stat import ALL_STAT, HIDDEN_STATS, PERC_STATS
 from ...constant.util import Number
@@ -17,10 +17,10 @@ from ...function.util import (
     get, get_family, index,
 )
 from ...object.collection import COLLECTIONS, get_collection
-from ...object.item import get_item
-from ...object.mob import MOBS
+from ...object.items import get_item
+from ...object.mobs import MOBS
 from ...object.object import *
-from ...object.recipe import CRAFTABLES, get_recipe
+from ...object.recipes import CRAFTABLES, get_recipe
 from ...map.island import ISLANDS
 from ...map.object import *
 

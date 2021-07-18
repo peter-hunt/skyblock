@@ -6,8 +6,8 @@ from time import sleep, time
 from typing import Optional
 
 from ...constant.ability import SET_BONUSES
-from ...constant.color import *
-from ...constant.mob import (
+from ...constant.colors import *
+from ...constant.mobs import (
     CUBISM_EFT, ENDER_SLAYER_EFT, BOA_EFT, SMITE_EFT, BLAST_PROT_EFT,
     PROJ_PROT_EFT, IMPALING_EFT, SEA_CREATURES, ZOMBIES, SKELETONS,
 )
@@ -18,8 +18,8 @@ from ...function.util import (
     checkpoint, format_crit, format_name, format_number, format_roman,
 )
 from ...object.fishing import FISHING_TABLE, SC_TABLE
-from ...object.item import get_item
-from ...object.mob import get_mob
+from ...object.items import get_item
+from ...object.mobs import get_mob
 from ...object.object import *
 from ...object.resource import get_resource
 

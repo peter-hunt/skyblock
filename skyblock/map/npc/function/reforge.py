@@ -1,6 +1,6 @@
 from random import choice
 
-from ....constant.color import GOLD, GREEN
+from ....constant.colors import GOLD, GREEN
 from ....constant.reforging import (
     ACCESSORY_REFORGES, ARMOR_REFORGES, BOW_REFORGES, MELEE_REFORGES,
     REFORGE_COST,

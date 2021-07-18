@@ -639,7 +639,6 @@ MOBS = [
         ]),
 ]
 
-
 def get_mob(name: str, /, *, warn=True, **kwargs) -> Optional[ItemType]:
     if not includes(MOBS, name):
         if warn:

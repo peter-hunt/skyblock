@@ -2,7 +2,7 @@ from math import floor, sqrt
 from typing import Any, Dict
 
 from ..constant.ability import SET_BONUSES
-from ..constant.color import *
+from ..constant.colors import *
 from ..constant.enchanting import ENCH_LVLS, ULTIMATE_ENCHS
 from ..constant.util import Number
 from ..function.math import (

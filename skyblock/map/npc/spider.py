@@ -1,4 +1,4 @@
-from ...constant.color import *
+from ...constant.colors import *
 
 from ..object import *
 

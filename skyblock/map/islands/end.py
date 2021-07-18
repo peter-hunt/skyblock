@@ -1,4 +1,4 @@
-from ...object.mob import get_mob
+from ...object.mobs import get_mob
 from ...object.resource import get_resource
 
 from ..npc import get_npc

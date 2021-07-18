@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import List
 
 from ._io import add_history
-from .constant.color import *
+from .constant.colors import *
 from .constant.doc import menu_doc
 from .function.io import *
 from .function.path import is_dir, is_profile, join_path

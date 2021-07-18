@@ -3,7 +3,7 @@ from os import get_terminal_size
 from typing import Optional
 
 from ...constant.ability import SET_BONUSES
-from ...constant.color import *
+from ...constant.colors import *
 from ...constant.main import COLL_ALTER, SKILL_EXP
 from ...constant.util import Number
 from ...function.math import (
@@ -16,7 +16,7 @@ from ...function.util import (
     format_name, format_roman, get_family, parse_int,
 )
 from ...object.collection import is_collection, get_collection, calc_coll_level
-from ...object.recipe import get_recipe
+from ...object.recipes import get_recipe
 from ...object.object import *
 
 

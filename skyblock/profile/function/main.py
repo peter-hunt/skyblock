@@ -2,7 +2,7 @@ from re import fullmatch
 from typing import Optional
 
 from ..._io import add_history
-from ...constant.color import *
+from ...constant.colors import *
 from ...constant.doc import profile_doc
 from ...constant.main import ARMOR_PARTS
 from ...function.io import *
@@ -13,11 +13,11 @@ from ...function.util import (
 )
 from ...map.island import get_island
 from ...object.collection import is_collection
-from ...object.item import ITEMS
-from ...object.mob import get_mob
+from ...object.items import ITEMS
+from ...object.mobs import get_mob
 from ...object.object import *
 from ...object.placed_minion import *
-from ...object.recipe import get_recipe
+from ...object.recipes import get_recipe
 from ...object.resource import get_resource
 
 

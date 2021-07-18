@@ -1,6 +1,6 @@
 from typing import Dict
 
-from ..constant.color import *
+from ..constant.colors import *
 from ..function.util import format_name, format_number, format_short
 
 

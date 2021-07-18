@@ -2,7 +2,7 @@ from itertools import count
 from math import floor, isinf
 from typing import Optional, Tuple
 
-from ..constant.color import *
+from ..constant.colors import *
 from ..constant.main import (
     DUNGEON_EXP, SKILL_EXP, SKILL_LIMITS, PET_EXP_DIFF, KILL_LEVELS,
 )

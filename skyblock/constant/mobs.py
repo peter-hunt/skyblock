@@ -72,7 +72,6 @@ SKELETONS = [
     'diamond_skeleton',
 ]
 
-
 BESTIARY_ALTER = {
     'crypt_ghoul': ('crypt_ghoul', 'golden_ghoul'),
     'blaze': ('blaze', 'mini_blaze'),

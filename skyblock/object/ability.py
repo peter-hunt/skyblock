@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from ..constant.color import *
+from ..constant.colors import *
 from ..constant.util import Number
 from ..function.io import red
 from ..function.util import get

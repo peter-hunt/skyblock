@@ -1,4 +1,3 @@
-from .mob import get_mob
 from .object import *
 
 

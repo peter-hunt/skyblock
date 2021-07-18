@@ -1,7 +1,7 @@
 from re import compile as re_compile, error as re_error, escape
 from sys import stdout
 
-from ..constant.color import *
+from ..constant.colors import *
 
 
 __all__ = [

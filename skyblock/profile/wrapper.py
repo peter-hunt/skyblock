@@ -3,7 +3,7 @@ from os.path import join
 from pathlib import Path
 from re import sub
 
-from ..constant.color import *
+from ..constant.colors import *
 from ..myjson import dump as json_dump
 from ..function.io import *
 from ..function.path import is_profile

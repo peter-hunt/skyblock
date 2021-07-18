@@ -1,10 +1,10 @@
 from typing import Union
 
-from ...constant.color import *
+from ...constant.colors import *
 from ...constant.util import ItemPointer
 from ...function.io import *
 from ...function.util import format_number
-from ...object.item import get_item, get_stack_size
+from ...object.items import get_item, get_stack_size
 from ...object.object import *
 
 

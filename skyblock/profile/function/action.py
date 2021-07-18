@@ -3,13 +3,13 @@ from random import choice, random
 from time import sleep, time
 from typing import List, Optional, Tuple
 
-from ...constant.color import *
+from ...constant.colors import *
 from ...constant.enchanting import *
 from ...constant.main import INTEREST_TABLE, SELL_PRICE
 from ...function.enchanting import get_enchantments
 from ...function.io import *
 from ...function.math import calc_exp_level, calc_exp
-from ...function.minion import get_minion_cap, get_minion_cap_info
+from ...function.minions import get_minion_cap, get_minion_cap_info
 from ...function.random import random_amount, random_int
 from ...function.reforging import combine_enchant
 from ...function.util import (
@@ -18,8 +18,8 @@ from ...function.util import (
 )
 from ...map.island import ISLANDS
 from ...map.object import *
-from ...object.item import get_item
-from ...object.minion import MINION_LOOT
+from ...object.items import get_item
+from ...object.minions import MINION_LOOT
 from ...object.object import *
 from ...object.placed_minion import PlacedMinion
 

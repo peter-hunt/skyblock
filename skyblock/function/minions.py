@@ -1,6 +1,6 @@
 from typing import Tuple
 
-from ..constant import MINION_CAP
+from ..constant.minions import MINION_CAP
 
 
 __all__ = ['get_minion_cap', 'get_minion_cap_info']

@@ -6,9 +6,9 @@ from textwrap import wrap
 from typing import Any, Dict, List, Optional, Tuple, Union
 from types import FunctionType
 
-from ..constant.color import CRIT_COLORS
+from ..constant.colors import CRIT_COLORS
 from ..constant.enchanting import ENCHS
-from ..constant.mob import BESTIARY_ALTER
+from ..constant.mobs import BESTIARY_ALTER
 from ..constant.util import (
     NUMBER_SCALES, ROMAN_NUM, SPECIAL_ZONES, SPECIAL_NAMES,
     SPECIAL_ALTER, IGNORED_WORDS,
