@@ -1,91 +1,16 @@
+from json import load
+
+from ..function.path import join_path
+
 from .object import *
 
 
-__all__ = ['FISHING_TABLE', 'SC_TABLE']
+__all__ = ['FISHING_TABLE', 'SEA_CREATRUE_TABLE']
 
-FISHING_TABLE = [
-    # pointer, rarity, weight, fishing exp, avaliable zones
-    ({'name': 'clay'}, 'normal',
-     0.04, 30, ()),
-    ({'name': 'fish'}, 'normal',
-     0.28, 25, ()),
-    ({'name': 'salmon'}, 'normal',
-     0.13, 35, ()),
-    ({'name': 'pufferfish'}, 'normal',
-     0.07, 50, ()),
-    ({'name': 'prismarine_shard'}, 'good_catch',
-     0.01, 160, ()),
-    ({'name': 'prismarine_crystals'}, 'good_catch',
-     0.01, 160, ()),
-    ({'name': 'clownfish'}, 'normal',
-     0.02, 100, ()),
-    ({'name': 'golden_apple'}, 'good_catch',
-     0.005, 160, ()),
-    ((5_000, 10_000), 'good_catch',
-     0.03, 160, ()),
-    ({'name': 'grand_experience_bottle'}, 'great_catch',
-     0.005, 160, ()),
-    ({'name': 'titanic_experience_bottle'}, 'great_catch',
-     0.001, 300, ()),
-    ({'name': 'fairys_fedora'}, 'great_catch',
-     0.01, 300, ('wilderness',)),
-    ({'name': 'fairys_polo'}, 'great_catch',
-     0.01, 300, ('wilderness',)),
-    ({'name': 'fairys_trousers'}, 'great_catch',
-     0.01, 300, ('wilderness',)),
-    ({'name': 'fairys_galoshes'}, 'great_catch',
-     0.01, 300, ('wilderness',)),
-    ({'name': 'enchanted_clay'}, 'great_catch',
-     0.01, 300, ()),
-    ({'name': 'enchanted_iron'}, 'great_catch',
-     0.01, 300, ()),
-    ({'name': 'enchanted_gold'}, 'great_catch',
-     0.01, 300, ()),
-    ({'name': 'enchanted_diamond'}, 'great_catch',
-     0.01, 300, ()),
-    ({'name': 'enchanted_pufferfish'}, 'great_catch',
-     0.01, 300, ()),
-    ((10_000, 20_000), 'great_catch',
-     0.01, 300, ()),
-    ({'name': 'guardian_pet', 'rarity': 'epic'}, 'great_catch',
-     0.008, 300, ()),
-    ({'name': 'guardian_pet', 'rarity': 'legendary'}, 'great_catch',
-     0.002, 300, ()),
-    ({'name': 'squid_pet', 'rarity': 'epic'}, 'great_catch',
-     0.02, 300, ('birch',)),
-    ({'name': 'squid_pet', 'rarity': 'legendary'}, 'great_catch',
-     0.02, 300, ('birch',)),
-    ({'name': 'treasurite'}, 'good_catch',
-     0.01, 300, ('upper',)),
-]
+with open(join_path('skyblock', 'data',
+                    'fishing', 'fishing_table.json')) as file:
+    FISHING_TABLE = load(file)
 
-SC_TABLE = [
-    # mob, weight, fishing lvl requirement, text
-    ('squid', 0.12, 1,
-     'A Squid appeared.'),
-    ('sea_walker', 0.07, 2,
-     'You caught a Sea Walker.'),
-    ('night_squid', 0.06, 3,
-     "Pitch Darkness reveals you've caught a Night Squid."),
-    ('sea_guardian', 0.05, 5,
-     'You stumbled upon a Sea Guardian.'),
-    ('sea_witch', 0.04, 7,
-     ("It looks like you've disrupted the Sea Witch's brewing session."
-      " Watch out, she's furious!")),
-    ('sea_archer', 0.04, 10,
-     'You reeled in a Sea Archer.'),
-    ('monster_of_the_deep', 0.03, 11,
-     'The Monster of The Deep emerges from the dark depths...'),
-    ('catfish', 0.02, 13,
-     'Huh? A Catfish!'),
-    ('sea_leech', 0.012, 16,
-     'Gross! A Sea Leech!'),
-    ('guardian_defender', 0.01, 17,
-     "You've discovered a Guardian Defender of the sea."),
-    ('deep_sea_protector', 0.008, 18,
-     'You have awoken the Deep Sea Protector, prepare for a battle!'),
-    ('water_hydra', 0.006, 19,
-     'The Water Hydra has come to test your Strength.'),
-    ('sea_emperor', 0.005, 20,
-     'The Sea Emperor arises from the depths...'),
-]
+with open(join_path('skyblock', 'data',
+                    'fishing', 'sea_creature_table.json')) as file:
+    SEA_CREATRUE_TABLE = load(file)

@@ -17,7 +17,7 @@ from ...function.random import random_amount, random_bool, random_int
 from ...function.util import (
     checkpoint, format_crit, format_name, format_number, format_roman,
 )
-from ...object.fishing import FISHING_TABLE, SC_TABLE
+from ...object.fishing import FISHING_TABLE, SEA_CREATRUE_TABLE
 from ...object.items import get_item
 from ...object.mobs import get_mob
 from ...object.object import *
@@ -76,7 +76,7 @@ def fish(self, rod_index: int, iteration: int = 1, /):
 
         is_sc = random_bool(sea_creature_chance / 100)
         if is_sc and fishing_level >= 1:
-            avaliable_sc = [line for line in SC_TABLE
+            avaliable_sc = [line for line in SEA_CREATRUE_TABLE
                             if line[2] <= fishing_level]
             total_sc_weight = sum(line[1] for line in avaliable_sc)
 

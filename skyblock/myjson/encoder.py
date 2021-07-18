@@ -74,6 +74,16 @@ def _dumps(obj, /, *, current_indent=0, current_width=0,
         if len(obj) == 0:
             return '{}'
 
+        for item in obj:
+            if not isinstance(item, (bool, float, int, str, NoneType)):
+                break
+        else:
+            compact = ', '.join(
+                f'{_dumps(key)}: {_dumps(value)}' for key, value in obj.items()
+            )
+            if current_width + len(compact) + 2 <= 80:
+                return f'{{{compact}}}'
+
         keys = [*obj.keys()]
         if sort_keys:
             keys.sort()
