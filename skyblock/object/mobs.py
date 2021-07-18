@@ -16,7 +16,6 @@ for file_name in [*walk(join_path('skyblock', 'data', 'mobs'))][0][2]:
     if not file_name.endswith('.json'):
         continue
 
-    print(file_name)
     with open(join_path('skyblock', 'data', 'mobs', file_name)) as file:
         MOBS.append(Mob.from_obj(load(file)))
 
