@@ -744,8 +744,8 @@ def update(self, /, *, save=True):
         if now_min_cp > last_min_cp:
             self.purse += now_min_cp - last_min_cp
 
-    last_save_cp = last // 300
-    now_save_cp = now // 300
+    last_save_cp = last // 120
+    now_save_cp = now // 120
     if save and now_save_cp > last_save_cp:
         self.dump()
         green('Saved!')

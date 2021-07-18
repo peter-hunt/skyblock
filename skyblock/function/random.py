@@ -12,7 +12,7 @@ def _randint(lower: Number, upper: Number, /) -> int:
 
 
 def random_amount(amount: Amount = 1, /, *, mult: Number = 1) -> int:
-    if isinstance(amount, tuple):
+    if isinstance(amount, (tuple, list)):
         return _randint(amount[0] * mult, amount[1] * mult)
     else:
         return random_int(amount * mult)

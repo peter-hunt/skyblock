@@ -189,11 +189,6 @@ def mob_type(cls):
 
     from_obj_str = 'lambda cls, obj: cls('
     from_obj_str += ', '.join(
-        (f'[[pointer, (tuple(amount) if isinstance(amount, list) else amount),'
-         f' display, chance]'
-         f' for pointer, amount, display, chance in'
-         f' obj.get({key!r}, {default[key]!r})]')
-        if key == 'drops' else
         f'obj.get({key!r}, {default[key]!r})' if key in default
         else f'obj[{key!r}]' for key in anno
     )

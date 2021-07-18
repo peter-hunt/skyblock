@@ -1,4 +1,4 @@
-from typing import Any, Dict, Tuple, Union
+from typing import Any, Dict, List, Tuple, Union
 
 
 __all__ = [
@@ -6,7 +6,7 @@ __all__ = [
     'SPECIAL_ZONES', 'SPECIAL_NAMES', 'SPECIAL_ALTER', 'IGNORED_WORDS',
 ]
 
-Amount = Union[Tuple[int, int], int]
+Amount = Union[List[int], Tuple[int, int], int]
 Ench = Dict[str, int]
 ItemPointer = Dict[str, Any]
 Number = Union[float, int]
