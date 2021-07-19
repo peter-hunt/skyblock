@@ -1,5 +1,5 @@
 from decimal import Decimal
-from math import ceil
+from math import ceil, floor
 from os import get_terminal_size
 from random import randint, random
 from time import sleep, time
@@ -149,7 +149,8 @@ def fish(self, rod_index: int, iteration: int = 1, /):
         if i >= (last_cp + cp_step) * iteration:
             while i >= (last_cp + cp_step) * iteration:
                 last_cp += cp_step
-            gray(f'{i} / {iteration} ({(last_cp * 100):.0f}%) done')
+            perc = floor((i / iteration) * 100)
+            gray(f'{i} / {iteration} ({perc}%) done')
 
 
 @checkpoint
@@ -200,7 +201,8 @@ def gather(self, name: str, tool_index: Optional[int],
             if i >= (last_cp + cp_step) * iteration:
                 while i >= (last_cp + cp_step) * iteration:
                     last_cp += cp_step
-                gray(f'{i} / {iteration} ({(last_cp * 100):.0f}%) done')
+                perc = floor((i / iteration) * 100)
+                gray(f'{i} / {iteration} ({perc}%) done')
 
     elif isinstance(resource, Mineral):
         magic_find = self.get_stat('magic_find', tool_index)
@@ -270,7 +272,8 @@ def gather(self, name: str, tool_index: Optional[int],
             if i >= (last_cp + cp_step) * iteration:
                 while i >= (last_cp + cp_step) * iteration:
                     last_cp += cp_step
-                gray(f'{i} / {iteration} ({(last_cp * 100):.0f}%) done')
+                perc = floor((i / iteration) * 100)
+                gray(f'{i} / {iteration} ({perc}%) done')
 
             if 'mithril' in resource.name and randint(1, 50) == 1:
                 white('Titanium has spawned nearby!')
@@ -797,7 +800,8 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
         if count >= (last_cp + cp_step) * iteration:
             while count >= (last_cp + cp_step) * iteration:
                 last_cp += cp_step
-            gray(f'{count} / {iteration} ({(last_cp * 100):.0f}%) killed')
+            perc = floor((count / iteration) * 100)
+            gray(f'{count} / {iteration} ({perc}%) killed')
 
     width, _ = get_terminal_size()
     width = ceil(width * 0.85)
