@@ -759,7 +759,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
             if rarity not in {'common', 'uncommon'}:
                 rarity_str = rarity.replace('_', ' ').upper()
                 white(f'{RARITY_COLORS[rarity]}{rarity_str} DROP! '
-                      f'{WHITE}({loot.display()}{WHITE})')
+                      f'{WHITE}({item.display()}{WHITE})')
 
         if 'diamond' in name:
             if random_bool(0.01 * (1 + magic_find / 100)):
