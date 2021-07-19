@@ -439,7 +439,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
     enchants += 0.08 * weapon_enchants.get('power', 0)
     enchants += 0.05 * weapon_enchants.get('spiked_hook', 0)
 
-    crit_damage += 10 * weapon_enchants.get('critical', 0)
+    crit_damage *= 1 + 0.1 * weapon_enchants.get('critical', 0)
     ferocity += weapon_enchants.get('vicious', 0)
 
     healing_mult = 1

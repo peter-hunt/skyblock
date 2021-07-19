@@ -9,7 +9,7 @@ Specifically, Ironman mode.
 Requires Skyblock-Data repo, [Skyblock Data](https://github.com/peter-hunt/skyblock-data), which will install automatically.
 
 # Installation
-Use git to install Skyblock.
+Use pip or git to install Skyblock.
 
 Use pip to install the project straight as an executable library.
 
@@ -41,29 +41,30 @@ python -m skyblock
 * Abilities
 * Accessories
 * Armor Pieces, Tools, and Weapons
-* Bestiary
+* Bestiaries
 * Crafting
 * Collections
 * Combining Enchantments, Reforge Stone, and Potato Books
-* Farming, Mining, Combat, Foraging, Fishing and Enchanting
+* Farming, Mining, Simple Combat, Foraging, Fishing, and Enchanting
 * Fast Traveling
 * NPC Buying and Trading items
 * Minions
 * Modifiers and Reforging
 * Pets
-* Simple Combat
 * Skills
 
 ## Features Planned:
-* Combat while mining
+* Bestiary Milestones
+* Combat while Mining
 * Commissions
 * Dungeons
 * Fairy Souls
 * Forging (Dwarven Mines)
 * HoTM Skill Tree (Dwarven Mines)
-* Minion Support Item
-* NPC usage (like Kat, Fetchur, etc.)
-* Pet Item
+* Milestone Pets
+* Minion Support Items
+* NPC Usage (like Kat, Fetchur, etc.)
+* Pet Items
 
 # Furthur information
 This project is a clone of [Hypixel Skyblock](https://hypixel-skyblock.fandom.com/wiki/Hypixel_SkyBlock_Wiki)

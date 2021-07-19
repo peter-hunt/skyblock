@@ -12,7 +12,7 @@ ItemPointer = Dict[str, Any]
 Number = Union[float, int]
 
 NUMBER_SCALES = [
-    ('', 1), ('K', 10 ** 3), ('M', 10 ** 6), ('B', 10 ** 9), ('T', 10 ** 12),
+    ('', 1), ('k', 10 ** 3), ('m', 10 ** 6), ('b', 10 ** 9), ('t', 10 ** 12),
 ]
 
 ROMAN_NUM = [
