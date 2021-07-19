@@ -204,6 +204,7 @@ def gather(self, name: str, tool_index: Optional[int],
 
     elif isinstance(resource, Mineral):
         magic_find = self.get_stat('magic_find', tool_index)
+        magic_find_str = f'{AQUA}(+{format_number(magic_find)}% Magic Find!)'
 
         breaking_power = tool.get_stat('breaking_power', self)
         mining_speed = tool.get_stat('mining_speed', self, default=50)
@@ -259,7 +260,7 @@ def gather(self, name: str, tool_index: Optional[int],
 
                     rarity_color = RARITY_COLORS['rare']
                     white(f'{rarity_color}RARE DROP! '
-                          f'{WHITE}({loot.display()}{WHITE})')
+                          f'{WHITE}({loot.display()}{WHITE}) {magic_find_str}')
 
             mithril_powder = random_amount(resource.mithril_powder)
             if mithril_powder != 0:
@@ -385,6 +386,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
     attack_speed = self.get_stat('attack_speed', weapon_index)
     magic_find = self.get_stat('magic_find', weapon_index)
     magic_find += bestiary_stat
+    magic_find_str = f'{AQUA}(+{format_number(magic_find)}% Magic Find!)'
     ferocity = self.get_stat('ferocity', weapon_index)
 
     thorns = 0
@@ -730,7 +732,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
         if 'kills' not in self.stats:
             self.stats['kills'] = 0
         self.stats['kills'] += 1
-        self.add_kill(name)
+        self.add_kill(mob.name)
 
         if vampirism != 0 and hp != health:
             hp += (health - hp) * (vampirism / 100)
@@ -759,7 +761,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
             if rarity not in {'common', 'uncommon'}:
                 rarity_str = rarity.replace('_', ' ').upper()
                 white(f'{RARITY_COLORS[rarity]}{rarity_str} DROP! '
-                      f'{WHITE}({item.display()}{WHITE})')
+                      f'{WHITE}({item.display()}{WHITE}) {magic_find_str}')
 
         if 'diamond' in name:
             if random_bool(0.01 * (1 + magic_find / 100)):
@@ -768,7 +770,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                 loot = get_item('rare_diamond')
                 rarity_color = RARITY_COLORS['rare']
                 white(f'{rarity_color}RARE DROP! '
-                      f'{WHITE}({loot.display()}{WHITE})')
+                      f'{WHITE}({loot.display()}{WHITE}) {magic_find_str}')
 
         coins_recieved = (mob.coins + scavenger) * coins_mult
         if self.has_item({'name': 'scavenger_talisman'}):

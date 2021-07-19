@@ -142,6 +142,9 @@ def recieve_item(self, pointer: ItemPointer, /):
             self.inventory[index] = item
             counter -= delta
 
+        elif not hasattr(item_obj, 'count') or not hasattr(slot, 'count'):
+            continue
+
         elif name != slot.name:
             continue
 
