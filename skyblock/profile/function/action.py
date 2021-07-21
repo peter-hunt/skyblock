@@ -52,7 +52,7 @@ def buy(self, trade: Tuple, amount: int, /):
     for pointer in cost:
         if isinstance(pointer, (int, float)):
             if self.purse < pointer * amount:
-                red("You don't have enough coins!")
+                red("You don't have enough Coins!")
                 return
             continue
         if not self.has_item(pointer):
@@ -182,7 +182,7 @@ def combine(self, index_1: int, index_2: int, /):
                 return
 
         if self.purse < cost:
-            red("You don't have enough coins to do that!")
+            red("You don't have enough Coins!")
             return
 
         self.purse -= cost
@@ -213,7 +213,6 @@ def combine(self, index_1: int, index_2: int, /):
                  ' Hot Potato books to this item!')
         else:
             pointer = item_1.to_obj()
-            print(pointer)
             pointer['hot_potato'] = pointer.get('hot_potato', 0) + 1
             self.inventory[index_1] = Empty()
             self.inventory[index_2] = Empty()
@@ -353,7 +352,7 @@ def despawn_pet(self, /):
             self.pets[i].active = False
             break
     else:
-        green("You don't have a pet spawned!")
+        red("You don't have a pet spawned!")
         return
 
     green(f'You despawned your {pet.display()}{GREEN}!')
@@ -522,7 +521,7 @@ def enchant(self, item_index: int, /):
         white(f'Cost: {DARK_AQUA}{lvl} Experience Levels')
 
         if exp_level < lvl:
-            red("You don't have enough Levels!")
+            red("You don't have enough Experience Levels!")
             return
 
         self.experience -= calc_exp(lvl)

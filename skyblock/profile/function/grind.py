@@ -1,7 +1,7 @@
 from decimal import Decimal
 from math import ceil, floor
 from os import get_terminal_size
-from random import randint, random
+from random import randint, random, vonmisesvariate
 from time import sleep, time
 from typing import Optional
 
@@ -570,10 +570,12 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
 
         mob_hp = mob.health
 
-        gray(f'Your HP: {GREEN}{format_number(hp)}{GRAY}/'
+        player_color = GREEN if hp >= health * 0.5 else YELLOW
+        mob_color = GREEN if mob_hp >= mob.health * 0.5 else YELLOW
+        gray(f'Your HP: {player_color}{format_number(hp)}{GRAY}/'
              f'{GREEN}{format_number(health)}{RED}❤\n'
              f"{mob_name}'s HP: "
-             f'{GREEN}{format_number(mob_hp)}{GRAY}'
+             f'{mob_color}{format_number(mob_hp)}{GRAY}'
              f'/{GREEN}{format_number(mob.health)}{RED}❤\n')
 
         striked = False
@@ -721,10 +723,12 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
 
             mob_hp = max(mob_hp, 0)
 
-            gray(f'Your HP: {GREEN}{format_number(hp)}{GRAY}/'
+            player_color = GREEN if hp >= health * 0.5 else YELLOW
+            mob_color = GREEN if mob_hp >= mob.health * 0.5 else YELLOW
+            gray(f'Your HP: {player_color}{format_number(hp)}{GRAY}/'
                  f'{GREEN}{format_number(health)}{RED}❤\n'
                  f"{mob_name}'s HP: "
-                 f'{GREEN}{format_number(mob_hp)}{GRAY}'
+                 f'{mob_color}{format_number(mob_hp)}{GRAY}'
                  f'/{GREEN}{format_number(mob.health)}{RED}❤\n')
 
             if mob_hp == 0:
