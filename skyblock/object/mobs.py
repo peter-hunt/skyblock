@@ -18,6 +18,7 @@ for file_name in [*walk(join_path('skyblock', 'data', 'mobs'))][0][2]:
 
     with open(join_path('skyblock', 'data', 'mobs', file_name)) as file:
         MOBS.append(Mob.from_obj(load(file)))
+MOBS = sorted(MOBS, key=lambda mob: (mob.name, mob.level))
 
 
 def get_mob(name: str, /, *, warn=True, **kwargs) -> Optional[ItemType]:

@@ -196,8 +196,9 @@ def display_collection_info(self, name: str, /):
     this_level = current - past_amount
     if next_level is None:
         next_level = 0
-
-    progress = min(this_level / next_level, 1)
+        progress = 1
+    else:
+        progress = min(this_level / next_level, 1)
     bar = floor(progress * 20)
     left, right = '-' * bar, '-' * (20 - bar)
     if rewards is not None:

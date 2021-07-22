@@ -293,9 +293,11 @@ SELL_PRICE = {
     'melon_block': 4.5,
     'glistering_melon': 3.5,
     'mushroom_block': 4,
+    'cactus_green': 1,
 
     'enchanted_hay_bale': 1_300,
     'tightly_tied_hay_bale': 187_200,
+    'enchanted_seeds': 80,
     'enchanted_carrot': 160,
     'enchanted_golden_carrot': 20_608,
     'enchanted_potato': 160,
@@ -415,7 +417,7 @@ SELL_PRICE = {
     'enchanted_gunpowder': 640,
     'enchanted_firework_rocket': 41_000,
     'enchanted_ender_pearl': 140,
-    'enchanted_eye_of_ender': 3_520,
+    'enchanted_ender_eye': 3_520,
     'absolute_ender_pearl': 11_200,
     'enchanted_ghast_tear': 80,
     'enchanted_slime_ball': 800,
@@ -425,9 +427,6 @@ SELL_PRICE = {
     'enchanted_magma_cream': 1_280,
 
     'blaze_powder': 4,
-
-    'enchanted_ender_pearl': 140,
-    'enchanted_eye_of_ender': 3_520,
 
     'oak_wood': 2,
     'birch_wood': 2,
@@ -477,6 +476,7 @@ SELL_PRICE = {
     'enchanted_cooked_fish': 150_000,
     'enchanted_salmon': 1_600,
     'enchanted_cooked_salmon': 256_000,
+    'enchanted_clownfish': 3_200,
     'enchanted_pufferfish': 2_400,
     'enchanted_prismarine_shard': 400,
     'enchanted_prismarine_crystals': 400,

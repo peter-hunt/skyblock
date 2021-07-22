@@ -21,6 +21,7 @@ for item_type in [*walk(join_path('skyblock', 'data', 'items'))][0][1]:
         with open(join_path('skyblock', 'data', 'items',
                             item_type, file_name)) as file:
             ITEMS.append(load_item(load(file)))
+ITEMS = sorted(ITEMS, key=lambda item: item.name)
 
 
 def get_item(name: str, /, **kwargs) -> ItemType:

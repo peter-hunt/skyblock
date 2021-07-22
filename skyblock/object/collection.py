@@ -21,6 +21,7 @@ for category in [*walk(join_path('skyblock', 'data', 'collections'))][0][1]:
         with open(join_path('skyblock', 'data', 'collections',
                             category, file_name)) as file:
             COLLECTIONS.append(Collection.load(load(file)))
+COLLECTIONS = sorted(COLLECTIONS, key=lambda collection: collection.name)
 
 
 def is_collection(name: str) -> bool:

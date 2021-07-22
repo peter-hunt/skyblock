@@ -37,6 +37,7 @@ for category in [*walk(join_path('skyblock', 'data', 'recipes'))][0][1]:
                 _RECIPES.append(RecipeGroup.from_obj(obj))
             else:
                 _RECIPES.append(Recipe.from_obj(obj))
+_RECIPES = sorted(_RECIPES, key=lambda recipe: recipe.name)
 
 
 for category in {'farming', 'combat', 'mining', 'fishing', 'foraging',
