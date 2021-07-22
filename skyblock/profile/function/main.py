@@ -563,7 +563,9 @@ def mainloop(self):
                          if not isinstance(item, Empty)]
             self.inventory = [Empty() for _ in range(36)]
             for item in inventory:
-                self.recieve_item(item, getattr(item, 'count', 1))
+                if isinstance(item, Empty):
+                    continue
+                self.recieve_item(item.to_obj())
 
         elif words[0] == 'pickupstash':
             self.pickupstash()

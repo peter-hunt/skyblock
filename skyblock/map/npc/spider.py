@@ -51,4 +51,10 @@ SPIDER_NPCS = [
             "Have you met Pat? He's my brother, We're the Flint Bros!",
             'Mining gravel is hard work, but the flint is worth it.',
         ]),
+    Npc('shaggy',
+        dialog=[
+            ('I used to think this world was peaceful, but there are some'
+             ' beings in this world that are stronger than I could ever hope'
+             ' to handle...'),
+        ]),
 ]

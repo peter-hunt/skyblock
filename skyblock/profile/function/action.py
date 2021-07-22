@@ -97,16 +97,24 @@ def claim_minion(self, slot: int, /):
         red('This slot is empty!')
         return
 
+    items_left = []
+
     minion = self.placed_minions[slot]
     for index, item in enumerate(minion.inventory):
         if isinstance(item, Empty):
             continue
 
         pointer = item.to_obj()
-        self.recieve_item(pointer)
+        item_left = self._recieve_item(pointer)
+        if len(item_left) != 0:
+            items_left.append(item_left)
         self.collect(pointer['name'], pointer.get('count', 1))
         minion.inventory[index] = Empty()
 
+    if len(items_left) != 0:
+        red('Your inventory does not have enough space to add all items!')
+        for pointer in items_left:
+            minion.recieve_item(pointer)
     self.placed_minions[slot] = minion
 
     aqua(f"You claimed the {minion.display()}{AQUA}'s inventory!")

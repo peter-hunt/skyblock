@@ -10,7 +10,7 @@ from ...object.object import *
 
 __all__ = [
     'clearstash', 'get_active_pet', 'has_item', 'merge', 'pickupstash',
-    'put_stash', 'recieve_item', 'remove_item', 'split',
+    'put_stash', '_recieve_item', 'recieve_item', 'remove_item', 'split',
 ]
 
 
@@ -122,9 +122,9 @@ def put_stash(self, pointer: ItemPointer, /):
         " item stash! Use `pickupstash` to get it back!")
 
 
-def recieve_item(self, pointer: ItemPointer, /):
+def _recieve_item(self, pointer: ItemPointer, /) -> ItemPointer:
     if len(pointer) == 0:
-        return
+        return {}
 
     stack_count = get_stack_size(pointer['name'])
     count = pointer.get('count', 1)
@@ -162,13 +162,25 @@ def recieve_item(self, pointer: ItemPointer, /):
         if counter == 0:
             break
     else:
-        item = get_item(name, **kwargs)
-        item.count = counter
-        self.put_stash(item, counter)
+        item_left = pointer.copy()
+        item_left['count'] = counter
+        return item_left
+
+    return {}
+
+
+def recieve_item(self, pointer: ItemPointer, /):
+    item_left = self._recieve_item(pointer)
+    if len(item_left) != 0:
+        self.put_stash(item_left)
         return
 
+    count = pointer.get('count', 1)
+    name = pointer['name']
+    kwargs = {key: pointer[key] for key in pointer
+              if key not in {'name', 'count'}}
     item = get_item(name, **kwargs)
-    item.count = counter
+    item.count = count
     if getattr(item, 'count', 1) != 1:
         item.count = 1
     count_str = '' if count <= 1 else f' {DARK_GRAY}x {format_number(count)}'
