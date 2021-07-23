@@ -1,14 +1,19 @@
-from typing import Dict, List, Tuple
 from json import load
 from os import walk
+from pathlib import Path
 
-from ..constant.util import Number, ItemPointer
 from ..function.path import join_path
 
 
 __all__ = ['MINION_LOOT']
 
-MINION_LOOT: Dict[str, List[Tuple[ItemPointer, Number]]] = {}
+if not Path(join_path('skyblock', 'data', 'minions')).is_dir():
+    raise FileNotFoundError(
+        'Required data folder not found.\n'
+        'Delete the `data` folder in ~/skyblock to fix it automatically.'
+    )
+
+MINION_LOOT = {}
 for category in [*walk(join_path('skyblock', 'data', 'minions'))][0][1]:
     for file_name in [*walk(join_path('skyblock', 'data',
                                       'minions', category))][0][2]:

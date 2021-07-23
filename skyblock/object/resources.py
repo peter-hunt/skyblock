@@ -1,5 +1,6 @@
 from json import load
 from os import walk
+from pathlib import Path
 from typing import Optional
 
 from ..function.io import *
@@ -24,6 +25,12 @@ def load_resource(obj, /):
     else:
         return obj
 
+
+if not Path(join_path('skyblock', 'data', 'resources')).is_dir():
+    raise FileNotFoundError(
+        'Required data folder not found.\n'
+        'Delete the `data` folder in ~/skyblock to fix it automatically.'
+    )
 
 RESOURCES = []
 for file_name in [*walk(join_path('skyblock', 'data', 'resources'))][0][2]:

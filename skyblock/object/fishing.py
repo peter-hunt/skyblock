@@ -1,4 +1,5 @@
 from json import load
+from pathlib import Path
 
 from ..function.path import join_path
 
@@ -6,6 +7,12 @@ from .object import *
 
 
 __all__ = ['FISHING_TABLE', 'SEA_CREATRUE_TABLE']
+
+if not Path(join_path('skyblock', 'data', 'fishing')).is_dir():
+    raise FileNotFoundError(
+        'Required data folder not found.\n'
+        'Delete the `data` folder in ~/skyblock to fix it automatically.'
+    )
 
 with open(join_path('skyblock', 'data',
                     'fishing', 'fishing_table.json')) as file:

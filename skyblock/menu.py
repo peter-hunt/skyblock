@@ -3,7 +3,7 @@ from os.path import join
 from pathlib import Path
 from typing import List
 
-from ._io import add_history
+from ._lib import add_history
 from .constant.colors import *
 from .constant.doc import menu_doc
 from .function.io import *

@@ -1,7 +1,7 @@
 from re import fullmatch
 from typing import Optional
 
-from ..._io import add_history
+from ..._lib import add_history
 from ...constant.colors import *
 from ...constant.doc import profile_doc
 from ...constant.main import ARMOR_PARTS

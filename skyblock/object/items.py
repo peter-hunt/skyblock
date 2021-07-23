@@ -1,5 +1,6 @@
 from json import load
 from os import walk
+from pathlib import Path
 
 from ..function.io import *
 from ..function.path import join_path
@@ -10,6 +11,11 @@ from .object import *
 
 __all__ = ['ITEMS', 'get_item', 'get_stack_size']
 
+if not Path(join_path('skyblock', 'data', 'items')).is_dir():
+    raise FileNotFoundError(
+        'Required data folder not found.\n'
+        'Delete the `data` folder in ~/skyblock to fix it automatically.'
+    )
 
 ITEMS = []
 for item_type in [*walk(join_path('skyblock', 'data', 'items'))][0][1]:

@@ -8,6 +8,10 @@ Hypixel Skyblock Remake in Python.
 
 Requires Skyblock-Data repo, [Skyblock Data](https://github.com/peter-hunt/skyblock-data), which will install automatically.
 
+The data required will be auto-cached, and it will auto-update every 12 hours.
+
+If your data folder corrupts, delete the whole `~/skyblock/data` folder to let the program fix it.
+
 # Installation
 Use pip or git to install Skyblock.
 

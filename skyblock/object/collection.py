@@ -1,5 +1,6 @@
 from json import load
 from os import walk
+from pathlib import Path
 from typing import Optional
 
 from ..function.io import *
@@ -10,6 +11,11 @@ from .object import *
 
 __all__ = ['COLLECTIONS', 'is_collection', 'get_collection', 'calc_coll_level']
 
+if not Path(join_path('skyblock', 'data', 'collections')).is_dir():
+    raise FileNotFoundError(
+        'Required data folder not found.\n'
+        'Delete the `data` folder in ~/skyblock to fix it automatically.'
+    )
 
 COLLECTIONS = []
 for category in [*walk(join_path('skyblock', 'data', 'collections'))][0][1]:

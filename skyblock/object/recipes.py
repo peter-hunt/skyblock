@@ -1,5 +1,6 @@
 from json import load
 from os import walk
+from pathlib import Path
 from typing import List, Optional, Union
 
 from ..function.io import *
@@ -21,6 +22,12 @@ def _select_recipes(recipes: List[Recipe], category: str) -> List[Recipe]:
 
     return has_not_req + has_req
 
+
+if not Path(join_path('skyblock', 'data', 'recipes')).is_dir():
+    raise FileNotFoundError(
+        'Required data folder not found.\n'
+        'Delete the `data` folder in ~/skyblock to fix it automatically.'
+    )
 
 _RECIPES = []
 RECIPES = []
