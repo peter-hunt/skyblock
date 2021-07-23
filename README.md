@@ -1,4 +1,4 @@
-# Skyblock Alpha
+# Skyblock Beta
 ![](https://img.shields.io/github/repo-size/peter-hunt/skyblock)
 ![](https://img.shields.io/github/license/peter-hunt/skyblock)
 
@@ -10,7 +10,13 @@ Requires Skyblock-Data repo, [Skyblock Data](https://github.com/peter-hunt/skybl
 
 The data required will be auto-cached, and it will auto-update every 12 hours.
 
+The project is in Beta cause there is no Alpha!
+
+# Warning!
+This project is still in heavy development, so the data structures used for caching and saving data will change. If you'd like to play this game in Beta, and your saved files get out of data or just from strange bugs, your files will corrupt.
+
 If your data folder corrupts, delete the whole `~/skyblock/data` folder to let the program fix it.
+If your saved files go corrupt, then it's probably not going to be resolved. Maybe I'll implement better usage, but the profile isn't like going to work again.
 
 # Installation
 Use pip or git to install Skyblock.
