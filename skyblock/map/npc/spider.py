@@ -2,6 +2,8 @@ from ...constant.colors import *
 
 from ..object import *
 
+from .function import grandma_wolf
+
 
 SPIDER_NPCS = [
     Npc('bramass_beastslayer',
@@ -45,6 +47,7 @@ SPIDER_NPCS = [
             ('Those Dashing Spiders are pretty obnoxious.'
              ' I find a well-placed arrow can help with that.'),
         ]),
+    Npc('grandma_wolf', function=grandma_wolf),
     Npc('rick',
         dialog=[
             'Careful when it rains around here, it gets dangerous!',

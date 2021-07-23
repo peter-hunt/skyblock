@@ -123,6 +123,54 @@ def display_bestiaries(self, /):
 
     yellow(f"{BOLD}{'':-^{width}}")
 
+    bestiary_total = self.get_bestiary_total()
+    bestiary_ms = self.get_bestiary_milestone()
+    gold(f'Bestiary Milestone {format_roman(bestiary_ms)}\n')
+    gray(
+        f'Reach new {GREEN}Milestones {GRAY}in your Bestiary by unlocking'
+        f' unique family tiers.'
+    )
+    if bestiary_ms != 0:
+        green(
+            f"\nMilestone Bonus\n"
+            f"{DARK_GRAY}+{GREEN}{format_number(2 * bestiary_ms)} HP"
+            f" {STAT_COLORS['health']} Health"
+        )
+    gray(f'\nTotal Tiers Unlocked: {GREEN}{format_number(bestiary_total)}')
+
+    ms_progress = bestiary_total % 10
+    gray(
+        f'\nProgress to Milestone {format_roman(bestiary_ms + 1)}: '
+        f'{YELLOW}{ms_progress * 10}%'
+    )
+    bar = min(floor(ms_progress * 2), 20)
+    left, right = '-' * bar, '-' * (20 - bar)
+    green(f'{BOLD}{left}{GRAY}{BOLD}{right} {AQUA}{ms_progress}'
+          f'{DARK_AQUA}/{AQUA}10')
+
+    combat_xp_reward = 0
+    if bestiary_ms + 1 == 2:
+        combat_xp_reward = 100
+    elif bestiary_ms + 1 == 10:
+        combat_xp_reward = 10000
+    elif bestiary_ms + 1 == 14:
+        combat_xp_reward = 100000
+    elif bestiary_ms + 1 == 16:
+        combat_xp_reward = 500000
+    elif bestiary_ms + 1 > 16:
+        combat_xp_reward = 1000000
+
+    gray(
+        f"Milestone {format_roman(bestiary_ms + 1)} Reward\n"
+        f"  {DARK_GRAY}+{GREEN}2 HP {STAT_COLORS['health']} Health"
+    )
+    if combat_xp_reward != 0:
+        dark_gray(
+            f'  +{DARK_AQUA}{format_number(combat_xp_reward)}'
+            f' {GRAY}Combat Experience'
+        )
+    gray()
+
     displayed_families = []
 
     for mob in MOBS:

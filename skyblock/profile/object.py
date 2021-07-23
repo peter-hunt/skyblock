@@ -36,8 +36,7 @@ class Profile:
     experience_skill_mining: Number = 0
     experience_skill_taming: Number = 0
     collection: Dict[str, int] = {
-        collection.name: 0
-        for collection in COLLECTIONS
+        collection.name: 0 for collection in COLLECTIONS
     }
 
     crafted_minions: List[str] = []

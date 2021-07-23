@@ -20,6 +20,7 @@ DEEPER_SPIDER_CAVES = Zone(
 FOSSIL = Zone(
     'fossil', -340, -255, portal='end', fishable=True,
     npcs=[get_npc('bramass_beastslayer'),
+          get_npc('grandma_wolf'),
           get_npc('shaggy')],
 )
 SPIDER_CAVES = Zone(

@@ -725,11 +725,12 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
 
             player_color = GREEN if hp >= health * 0.5 else YELLOW
             mob_color = GREEN if mob_hp >= mob.health * 0.5 else YELLOW
-            gray(f'Your HP: {player_color}{format_number(hp)}{GRAY}/'
-                 f'{GREEN}{format_number(health)}{RED}❤\n'
-                 f"{mob_name}'s HP: "
-                 f'{mob_color}{format_number(mob_hp)}{GRAY}'
-                 f'/{GREEN}{format_number(mob.health)}{RED}❤\n')
+            if damage_recieved != 0 or true_damage_recieved != 0:
+                gray(f"Your HP: {player_color}{format_number(hp)}{GRAY}/"
+                     f"{GREEN}{format_number(health)}{RED}❤\n"
+                     f"{mob_name}'s HP: "
+                     f"{mob_color}{format_number(mob_hp)}{GRAY}"
+                     f"/{GREEN}{format_number(mob.health)}{RED}❤\n")
 
             if mob_hp == 0:
                 green(f"\nYou've killed a {mob_name}!")
@@ -766,6 +767,8 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
             self.collect(name, amount_pool)
 
             if rarity not in {'common', 'uncommon'}:
+                if getattr(item, 'count', 1) != 1:
+                    item.count = 1
                 rarity_str = rarity.replace('_', ' ').upper()
                 white(f'{RARITY_COLORS[rarity]}{rarity_str} DROP! '
                       f'{WHITE}({item.display()}{WHITE}) {magic_find_str}')
@@ -775,6 +778,8 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                 self.recieve_item({'name': 'rare_diamond'})
 
                 loot = get_item('rare_diamond')
+                if getattr(loot, 'count', 1) != 1:
+                    loot.count = 1
                 rarity_color = RARITY_COLORS['rare']
                 white(f'{rarity_color}RARE DROP! '
                       f'{WHITE}({loot.display()}{WHITE}) {magic_find_str}')

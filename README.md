@@ -3,8 +3,8 @@
 ![](https://img.shields.io/github/license/peter-hunt/skyblock)
 
 
-Clone of Hypixel Skyblock, but in Python Cmd.
-Specifically, Ironman mode.
+Hypixel Skyblock Remake in Python.
+(only support Ironman mode for now)
 
 Requires Skyblock-Data repo, [Skyblock Data](https://github.com/peter-hunt/skyblock-data), which will install automatically.
 
@@ -41,7 +41,7 @@ python -m skyblock
 * Abilities
 * Accessories
 * Armor Pieces, Tools, and Weapons
-* Bestiaries
+* Bestiaries and Bestiary Milestones
 * Crafting
 * Collections
 * Combining Enchantments, Reforge Stone, and Potato Books
@@ -65,6 +65,7 @@ python -m skyblock
 * Minion Support Items
 * NPC Usage (like Kat, Fetchur, etc.)
 * Pet Items
+* Pet Score
 
 # Furthur information
 This project is a clone of [Hypixel Skyblock](https://hypixel-skyblock.fandom.com/wiki/Hypixel_SkyBlock_Wiki)

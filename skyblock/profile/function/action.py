@@ -433,8 +433,10 @@ def die(self, killer: Optional[str] = None, /) -> bool:
     elif did_broke_piggy:
         red(f'You died, lost {format_number(lost_coins)} coins'
             f' and your piggy bank broke!')
+    elif 'eternal_coins' in pet.abilities:
+        red('You died with eternal coins from your Phoenix pet!')
     elif perc_lost == 0:
-        red(f'You died!')
+        red('You died!')
     else:
         red(f'You died and lost {format_number(lost_coins)} coins!')
     self.zone = get(ISLANDS, self.island).spawn
@@ -655,6 +657,10 @@ def remove_minion(self, slot: int, /):
 
 def remove_pet(self, index: int, /):
     pet = self.pets[index]
+    if pet.name == 'grandma_wolf_pet':
+        red('The Grandma Wolf Pet cannot be converted into an item!')
+        return
+
     pointer = pet.to_obj()
     pointer['active'] = False
     self.pets.pop(index)

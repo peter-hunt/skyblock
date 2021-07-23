@@ -61,9 +61,7 @@ def main():
 
     yellow(f'Welcome to {GREEN}Skyblock{YELLOW}!')
 
-    if not is_dir(warn=True) or not is_dir('saves', warn=True):
-        pass
-    else:
+    if is_dir(warn=True) and is_dir('saves', warn=True):
         names = get_profiles()
         if len(names) != 0:
             lastest, lastest_profile = 0, None

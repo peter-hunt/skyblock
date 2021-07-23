@@ -15,21 +15,6 @@ def _float_to_str(f):
 
 def _dumps(obj, /, *, current_indent=0, current_width=0,
            indent=2, sort_keys=True):
-    """
-    Private implementation of custom JSON encoder.
-
-    Args:
-        obj: Object to encode.
-        current_indent: Current local indentation.
-        current_width: Indentation of the current line to determine
-                        if new line should be used.
-        indent: Indentation size.
-        sort_keys: Whether to sort keys in dict or not.
-
-    Returns:
-        String of the encoded object.
-    """
-
     if obj is None:
         return 'null'
     elif isinstance(obj, bool):
@@ -115,31 +100,9 @@ def _dumps(obj, /, *, current_indent=0, current_width=0,
 
 
 def dumps(obj, /, *, indent=2, sort_keys=False):
-    """
-    Custom JSON encoder.
-
-    Args:
-        obj: Object to encode.
-        indent: Indentation size.
-        sort_keys: Whether to sort keys in dict or not.
-
-    Returns:
-        String of the encoded object.
-    """
-
     return _dumps(obj, indent=indent, sort_keys=sort_keys)
 
 
 def dump(obj, file, /, *, indent=2, sort_keys=False):
-    """
-    Custom JSON file writer.
-
-    Args:
-        obj: Object to write into the file.
-        file: A file stream to write the object to.
-        indent: Indentation size.
-        sort_keys: Whether to sort keys in dict or not.
-    """
-
     content = _dumps(obj, indent=indent, sort_keys=sort_keys)
     file.write(content)

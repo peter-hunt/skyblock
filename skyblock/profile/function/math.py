@@ -13,18 +13,19 @@ from ...function.math import (
 from ...function.io import *
 from ...function.reforging import get_modifier
 from ...function.util import (
-    format_name, format_roman, get_family, parse_int,
+    format_name, format_number, format_roman, get_family, parse_int,
 )
 from ...object.collection import is_collection, get_collection, calc_coll_level
-from ...object.recipes import get_recipe
+from ...object.mobs import MOBS
 from ...object.object import *
+from ...object.recipes import get_recipe
 
 
 __all__ = [
-    'add_exp', 'add_kill', 'add_skill_exp', 'get_collection_amount',
-    'get_collection_level', 'collect', 'get_bestiary_amount',
-    'get_bestiary_level', 'get_skill_exp', 'get_skill_level', 'get_stat',
-    'parse_index',
+    'add_exp', 'add_kill', 'add_skill_exp', 'get_bestiary_amount',
+    'get_bestiary_level', 'get_bestiary_milestone', 'get_bestiary_total',
+    'get_collection_amount', 'get_collection_level', 'collect', 'get_skill_exp',
+    'get_skill_level', 'get_stat', 'parse_index',
 ]
 
 
@@ -47,8 +48,10 @@ def add_kill(self, name: str, value: int = 1):
         dark_aqua(f'{BOLD}BESTIARY FAMILY UNLOCKED {AQUA}{display}')
 
     original_level = self.get_bestiary_level(name)
+    original_ms = self.get_bestiary_milestone()
     self.stats[f'kills_{family}'] = kills + value
     current_level = self.get_bestiary_level(name)
+    current_ms = self.get_bestiary_milestone()
 
     if original_level == current_level:
         return
@@ -81,6 +84,33 @@ def add_kill(self, name: str, value: int = 1):
         f'  {DARK_GRAY}+{GREEN}{lvl_delta * 20}%'
         f' {GRAY}chance for extra XP orbs'
     )
+
+    if current_ms > original_ms:
+        original_ms_str = format_roman(original_ms)
+        current_ms_str = format_roman(current_ms)
+        ms_delta = current_ms - original_ms
+        gold(
+            f"\n {BOLD}BESTIARY MILESTONE {DARK_GRAY}{original_ms_str}➜"
+            f"{YELLOW}{current_ms_str}\n"
+            f"  {DARK_GRAY}+{GREEN}{ms_delta * 2} HP"
+            f" {STAT_COLORS['health']} Health"
+        )
+        combat_xp_reward = 0
+        for level in range(original_ms + 1,
+                           min(current_ms + 1, 17)):
+            if level == 2:
+                combat_xp_reward += 100
+            elif level == 10:
+                combat_xp_reward += 10000
+            elif level == 14:
+                combat_xp_reward += 100000
+            elif level == 16:
+                combat_xp_reward += 500000
+        combat_xp_reward += 1000000 * max(current_ms - 16, 0)
+        if combat_xp_reward != 0:
+            combat_xp_str = format_number(combat_xp_reward)
+            dark_gray(f'  +{DARK_AQUA}{combat_xp_str} {GRAY}Combat Experience')
+            self.add_skill_exp('combat', combat_xp_reward)
 
     dark_aqua(f"{BOLD}{'':-^{width}}")
 
@@ -152,6 +182,32 @@ def add_skill_exp(self, name: str, amount: Number, /, *, display=False):
                 pet_str = pet.display().split(']')[1].lstrip()
                 green(f'Your {pet_str}{GREEN} levelled up to'
                       f' level {BLUE}{current_pet_level}{GREEN}!')
+
+
+def get_bestiary_amount(self, name: str, /) -> int:
+    family = get_family(name)
+    return self.stats.get(f'kills_{family}', 0)
+
+
+def get_bestiary_level(self, name: str, /) -> int:
+    return calc_bestiary_level(self.get_bestiary_amount(name))
+
+
+def get_bestiary_milestone(self, /) -> int:
+    return self.get_bestiary_total() // 10
+
+
+def get_bestiary_total(self, /) -> int:
+    count = 0
+    used_families = {*()}
+    for mob in MOBS:
+        family = get_family(mob.name)
+        if family in used_families:
+            continue
+        used_families.add(family)
+        count += self.get_bestiary_level(family)
+
+    return count
 
 
 def get_collection_amount(self, name: str, /) -> Optional[int]:
@@ -233,15 +289,6 @@ def collect(self, name: str, amount: int, /):
             self.add_skill_exp(coll.category, reward, display=True)
 
 
-def get_bestiary_amount(self, name: str, /) -> int:
-    family = get_family(name)
-    return self.stats.get(f'kills_{family}', 0)
-
-
-def get_bestiary_level(self, name: str, /) -> int:
-    return calc_bestiary_level(self.get_bestiary_amount(name))
-
-
 def get_skill_exp(self, name: str, /) -> int:
     if not hasattr(self, f'experience_skill_{name}'):
         red(f'Skill not found: {name}')
@@ -309,6 +356,7 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
     fishing_level = self.get_skill_level('fishing')
     mining_level = self.get_skill_level('mining')
     taming_level = self.get_skill_level('taming')
+    bestiary_ms = self.get_bestiary_milestone()
 
     set_bonus = True
 
@@ -400,6 +448,7 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
         value += max(min(fishing_level - 14, 5), 0) * 3
         value += max(min(fishing_level - 19, 6), 0) * 4
         value += max(min(fishing_level - 25, 35), 0) * 5
+        value += 2 * bestiary_ms
         if set_bonus == 'lapis_armor':
             value += 60
         if has_active_pet:
