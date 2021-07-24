@@ -19,16 +19,23 @@ It requires the Skyblock Data repo, [Skyblock Data](https://github.com/peter-hun
 
 # Table of Contents
 
-[Reasons to Install](#reasons-for-installing-skyblock)
-[Credits](#credits)
-[License](#license)
-[Warnings](#warnings)
-[Installation](#installation)
-[Usage](#usage)
-[Content](#content)
-[Screenshots](#screenshots)
-[How to Contribute](#how-to-contribute)
-[Helpful Links](#helpful-links)
+- [Skyblock Beta](#skyblock-beta)
+  - [Hypixel Skyblock Remake in Python.](#hypixel-skyblock-remake-in-python)
+- [Table of Contents](#table-of-contents)
+- [Reasons for installing Skyblock](#reasons-for-installing-skyblock)
+- [Credits](#credits)
+- [License](#license)
+- [Warnings](#warnings)
+- [Installation](#installation)
+  - [With Pip](#with-pip)
+  - [With Git](#with-git)
+- [Usage](#usage)
+- [Content](#content)
+  - [Added Features:](#added-features)
+  - [Planned Features:](#planned-features)
+- [Screenshots](#screenshots)
+- [How to Contribute](#how-to-contribute)
+- [Helpful Links](#helpful-links)
 
 # Reasons for installing Skyblock
 
