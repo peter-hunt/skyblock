@@ -69,25 +69,27 @@ def display_bestiary(self, name: str, /):
 
     amt_left, amt_to_next = calc_bestiary_upgrade_amount(kills)
 
-    stat_boost = min(lvl, 5)
-    stat_boost += 2 * max(min(lvl - 5, 5), 0)
-    stat_boost += 3 * max(lvl - 10, 0)
-
-    xp_orbs, chance = divmod(100 + lvl * 20, 100)
-    if chance == 0:
-        xp_orbs -= 1
-        chance = 100
-
     magic_find = STAT_COLORS['magic_find']
     strength = STAT_COLORS['strength']
-    aqua(
-        f' {BOLD}REWARDS\n'
-        f'  {DARK_GRAY}+{AQUA}{stat_boost} {magic_find} Magic Find\n'
-        f'  {DARK_GRAY}+{RED}{stat_boost} {strength} Strength\n'
-        f'  {DARK_GRAY}+{GOLD}{lvl}% {GRAY}coin gain\n'
-        f'  {DARK_GRAY}+{GREEN}{chance}% {GRAY}chance for'
-        f' {GREEN}+{xp_orbs}{GRAY} XP orbs\n'
-    )
+
+    if lvl > 0:
+        stat_boost = min(lvl, 5)
+        stat_boost += 2 * max(min(lvl - 5, 5), 0)
+        stat_boost += 3 * max(lvl - 10, 0)
+
+        xp_orbs, chance = divmod(100 + lvl * 20, 100)
+        if chance == 0:
+            xp_orbs -= 1
+            chance = 100
+
+        aqua(
+            f' {BOLD}REWARDS\n'
+            f'  {DARK_GRAY}+{AQUA}{stat_boost} {magic_find} Magic Find\n'
+            f'  {DARK_GRAY}+{RED}{stat_boost} {strength} Strength\n'
+            f'  {DARK_GRAY}+{GOLD}{lvl}% {GRAY}coin gain\n'
+            f'  {DARK_GRAY}+{GREEN}{chance}% {GRAY}chance for'
+            f' {GREEN}+{xp_orbs}{GRAY} XP orbs\n'
+        )
 
     perc = fround(amt_left / amt_to_next * 100, 2)
     gray(f'Progress to Tier {format_roman(lvl + 1)}: {AQUA}{perc}%')
