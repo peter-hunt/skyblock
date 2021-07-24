@@ -625,7 +625,8 @@ def item_type(cls: type, /) -> type:
                 if isinstance(param_value, (int, float)):
                     temp_param[param_key] = param_value * stat_mult
 
-            temp_str = format_temp(get_template(temp_id), temp_param)
+            temp_str = format_temp(get_template('abilities', temp_id),
+                                   temp_param)
             ability_list.append(f'{ability_str}{GRAY}{temp_str}')
 
         if len(ability_list) != 0:

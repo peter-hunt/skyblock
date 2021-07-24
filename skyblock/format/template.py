@@ -16,6 +16,7 @@ if not Path(join_path('skyblock', 'data', 'templates')).is_dir():
 
 TEMPLATES = {}
 for category in [*walk(join_path('skyblock', 'data', 'templates'))][0][1]:
+    TEMPLATES[category] = {}
     for file_name in sorted([*walk(join_path('skyblock', 'data',
                                              'templates', category))][0][2]):
         if not file_name.endswith('.txt'):
@@ -23,11 +24,13 @@ for category in [*walk(join_path('skyblock', 'data', 'templates'))][0][1]:
 
         with open(join_path('skyblock', 'data', 'templates',
                             category, file_name)) as file:
-            TEMPLATES[file_name[:-4]] = file.read()
+            TEMPLATES[category][file_name[:-4]] = file.read()
 
 
-def get_template(name: str) -> Optional[str]:
-    if name in TEMPLATES:
-        return TEMPLATES[name]
-    else:
+def get_template(category: str, name: str, /) -> Optional[str]:
+    if category not in TEMPLATES:
+        red(f'Template category not found: {name!r}')
+    elif name not in TEMPLATES[category]:
         red(f'Template not found: {name!r}')
+    else:
+        return TEMPLATES[category][name]
