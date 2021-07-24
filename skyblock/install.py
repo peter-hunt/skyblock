@@ -22,6 +22,6 @@ def install(*, force=False, is_update=False):
             run(['rm', '-rf', data_dir])
         mkdir(data_dir)
         print(f'\x1b[0;38;2;85;255;85m{doing_str} Assets...\x1b[0m')
-        run(['git', 'clone', 'https://github.com/peter-hunt/skyblock-data',
-             data_dir])
+        run(['git', 'clone', '-q',
+             'https://github.com/peter-hunt/skyblock-data', data_dir])
         print(f'\x1b[0;38;2;85;255;85mAssets {done_str}!\x1b[0m')

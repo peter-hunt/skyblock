@@ -5,7 +5,7 @@
 ![](https://img.shields.io/github/stars/peter-hunt/skyblock)
 
 
-Hypixel Skyblock Remake in Python.
+Hypixel Skyblock Remake in Python. A command-line-based RPG game.
 (only support Ironman mode for now)
 
 Requires Skyblock-Data repo, [Skyblock Data](https://github.com/peter-hunt/skyblock-data), which will install automatically.
