@@ -28,8 +28,7 @@ def load_resource(obj, /):
 
 if not Path(join_path('skyblock', 'data', 'resources')).is_dir():
     raise FileNotFoundError(
-        'Required data not found.\n'
-        'Restart skyblock to fix it automatically.'
+        'Required data not found.\nRestart skyblock to fix it automatically.'
     )
 
 RESOURCES = []
@@ -42,7 +41,7 @@ for file_name in [*walk(join_path('skyblock', 'data', 'resources'))][0][2]:
 
 
 def get_resource(name: str, **kwargs) -> Optional[ItemType]:
-    if not includes(RESOURCES, name):
+    if includes(RESOURCES, name):
+        return get(RESOURCES, name, **kwargs)
+    else:
         red(f'Resource not found: {name!r}')
-        return
-    return get(RESOURCES, name, **kwargs)

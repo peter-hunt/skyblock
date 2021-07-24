@@ -26,9 +26,7 @@ def is_data():
 
 
 def is_profile(name: str, /):
-    if not is_dir():
-        return False
-    elif not is_dir('saves'):
+    if not is_dir() or not is_dir('saves'):
         return False
     else:
         return is_file('saves', f'{name}.json')

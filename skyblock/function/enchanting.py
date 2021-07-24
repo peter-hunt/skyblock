@@ -26,4 +26,5 @@ def get_enchantments(item) -> List[str]:
         table = SWORD_ENCHS
     else:
         table = []
+
     return table

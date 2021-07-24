@@ -14,8 +14,7 @@ __all__ = ['MOBS', 'get_mob']
 
 if not Path(join_path('skyblock', 'data', 'mobs')).is_dir():
     raise FileNotFoundError(
-        'Required data not found.\n'
-        'Restart skyblock to fix it automatically.'
+        'Required data not found.\nRestart skyblock to fix it automatically.'
     )
 
 MOBS = []
@@ -29,8 +28,7 @@ MOBS = sorted(MOBS, key=lambda mob: (mob.name, mob.level))
 
 
 def get_mob(name: str, /, *, warn=True, **kwargs) -> Optional[ItemType]:
-    if not includes(MOBS, name):
-        if warn:
-            red(f'Mob not found: {name!r}')
-        return
-    return get(MOBS, name, **kwargs)
+    if includes(MOBS, name):
+        return get(MOBS, name, **kwargs)
+    elif warn:
+        red(f'Mob not found: {name!r}')

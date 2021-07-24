@@ -13,8 +13,7 @@ __all__ = ['COLLECTIONS', 'is_collection', 'get_collection', 'calc_coll_level']
 
 if not Path(join_path('skyblock', 'data', 'collections')).is_dir():
     raise FileNotFoundError(
-        'Required data not found.\n'
-        'Restart skyblock to fix it automatically.'
+        'Required data not found.\nRestart skyblock to fix it automatically.'
     )
 
 COLLECTIONS = []
@@ -34,16 +33,16 @@ def is_collection(name: str) -> bool:
     for collection in COLLECTIONS:
         if collection.name == name:
             return True
-    else:
-        return False
+
+    return False
 
 
 def get_collection(name: str) -> Optional[Collection]:
     for collection in COLLECTIONS:
         if collection.name == name:
             return collection
-    else:
-        red(f'Collection not found: {name!r}')
+
+    red(f'Collection not found: {name!r}')
 
 
 def calc_coll_level(name: str, amount: int) -> Optional[int]:
@@ -53,5 +52,5 @@ def calc_coll_level(name: str, amount: int) -> Optional[int]:
     for lvl, (lvl_amount, _) in enumerate(collection):
         if amount < lvl_amount:
             return lvl
-    else:
-        return lvl + 1
+
+    return lvl + 1

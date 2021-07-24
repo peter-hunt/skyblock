@@ -25,8 +25,7 @@ def _select_recipes(recipes: List[Recipe], category: str) -> List[Recipe]:
 
 if not Path(join_path('skyblock', 'data', 'recipes')).is_dir():
     raise FileNotFoundError(
-        'Required data not found.\n'
-        'Restart skyblock to fix it automatically.'
+        'Required data not found.\nRestart skyblock to fix it automatically.'
     )
 
 _RECIPES = []
@@ -57,8 +56,7 @@ CRAFTABLES = [recipe for recipe in RECIPES
 
 def get_recipe(name: str, /, *, warn: bool = True
                ) -> Optional[Union[Recipe, RecipeGroup]]:
-    if not includes(RECIPES, name):
-        if warn:
-            red(f'Recipe or Group not found: {name!r}')
-        return
-    return get(RECIPES, name)
+    if includes(RECIPES, name):
+        return get(RECIPES, name)
+    elif warn:
+        red(f'Recipe or Group not found: {name!r}')
