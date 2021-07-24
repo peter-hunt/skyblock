@@ -38,5 +38,5 @@ def install_data(*, force=False, is_update=False):
 
 
 def init():
-    init_env('skyblock')
+    init_env()
     install_data()
