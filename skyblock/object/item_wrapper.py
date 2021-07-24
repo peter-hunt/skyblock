@@ -13,8 +13,10 @@ from ..function.util import (
     camel_to_under, format_name, format_number, format_roman, format_short,
     format_zone,
 )
+from ..format.function import format_temp
+from ..format.template import get_template
 
-from .ability import get_ability
+from .abilities import get_ability
 
 
 __all__ = ['item_type']
@@ -614,16 +616,17 @@ def item_type(cls: type, /) -> type:
             item_abilities = [self.name] + item_abilities
         for ability_id in item_abilities:
             ability = get_ability(ability_id)
+            ability_str = ''
             if ability.__class__.__name__ == 'NamedAbility':
-                values = tuple(floor(value * stat_mult)
-                               for value in ability.values)
-                desc = ability.description
-                if len(values) != 0:
-                    desc = desc % values
-                ability_list.append(f'{GOLD}{ability.name}'
-                                    f'\n{GRAY}{desc}')
-            elif ability.__class__.__name__ == 'AnonymousAbility':
-                ability_list.append(f'{GRAY}{ability.description}')
+                ability_str += f'{GOLD}{ability.name}\n'
+
+            temp_id, temp_param = ability.description
+            for param_key, param_value in temp_param.items():
+                if isinstance(param_value, (int, float)):
+                    temp_param[param_key] = param_value * stat_mult
+
+            temp_str = format_temp(get_template(temp_id), temp_param)
+            ability_list.append(f'{ability_str}{GRAY}{temp_str}')
 
         if len(ability_list) != 0:
             if len(basic_stats) + len(bonus_stats) != 0:

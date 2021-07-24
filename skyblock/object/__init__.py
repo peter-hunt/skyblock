@@ -1,5 +1,5 @@
-from .ability import *
-from .ability import __all__ as __ability_all__
+from .abilities import *
+from .abilities import __all__ as __abilities_all__
 from .collection import *
 from .collection import __all__ as __collection_all__
 from .fishing import *
@@ -21,7 +21,7 @@ from .resources import __all__ as __resources_all__
 
 
 __all__ = (
-    __ability_all__ + __collection_all__ + __fishing_all__ + __items_all__
+    __abilities_all__ + __collection_all__ + __fishing_all__ + __items_all__
     + __minions_all__ + __mobs_all__ + __object_all__ + __placed_minion_all__
     + __recipes_all__ + __resources_all__
 )

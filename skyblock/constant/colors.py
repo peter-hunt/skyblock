@@ -3,7 +3,7 @@ __all__ = [
     'BLACK', 'DARK_BLUE', 'DARK_GREEN', 'DARK_AQUA', 'DARK_RED', 'DARK_PURPLE',
     'GOLD', 'GRAY', 'DARK_GRAY', 'BLUE', 'GREEN', 'AQUA', 'RED', 'LIGHT_PURPLE',
     'YELLOW', 'WHITE',
-    'RARITY_COLORS', 'STAT_COLORS', 'CRIT_COLORS',
+    'COLOR_CODE', 'RARITY_COLORS', 'STAT_COLORS', 'CRIT_COLORS',
 ]
 
 CLN = '\x1b[0m'
@@ -26,6 +26,12 @@ LIGHT_PURPLE = '\x1b[0;38;2;255;85;255m'
 YELLOW = '\x1b[0;38;2;255;255;85m'
 WHITE = '\x1b[0;38;2;255;255;255m'
 
+COLOR_CODE = {}
+for color in ('bold', 'black', 'dark_blue', 'dark_green', 'dark_aqua',
+              'dark_red', 'dark_purple', 'gold', 'gray', 'dark_gray', 'blue',
+              'green', 'aqua', 'red', 'light_purple', 'yellow', 'white'):
+    COLOR_CODE[color] = globals()[color.upper()]
+
 RARITY_COLORS = {
     'common': f'{BOLD}{WHITE}',
     'uncommon': f'{BOLD}{GREEN}',
@@ -46,6 +52,7 @@ RARITY_COLORS = {
 
 STAT_COLORS = {
     'health': f'{RED}❤',
+    'damage': f'{RED}❁',
     'defense': f'{GREEN}❈',
     'ehp': f'{DARK_AQUA}❤',
     'true_defense': f'{WHITE}❂',

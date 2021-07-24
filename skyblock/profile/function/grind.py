@@ -526,7 +526,11 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
         if self.has_item({'name': 'skeleton_talisman'}):
             damage_recieved_mult *= 0.95
 
-    if self.has_item({'name': 'intimidation_talisman'}) and mob.level <= 1:
+    if self.has_item({'name': 'intimidation_artifact'}) and mob.level <= 25:
+        damage_recieved_mult = 0
+    elif self.has_item({'name': 'intimidation_ring'}) and mob.level <= 5:
+        damage_recieved_mult = 0
+    elif self.has_item({'name': 'intimidation_talisman'}) and mob.level <= 1:
         damage_recieved_mult = 0
 
     if set_bonus == 'pumpkin_buff':

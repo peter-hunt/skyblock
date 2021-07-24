@@ -13,8 +13,8 @@ __all__ = ['ITEMS', 'get_item', 'get_stack_size']
 
 if not Path(join_path('skyblock', 'data', 'items')).is_dir():
     raise FileNotFoundError(
-        'Required data folder not found.\n'
-        'Delete the `data` folder in ~/skyblock to fix it automatically.'
+        'Required data not found.\n'
+        'Restart skyblock to fix it automatically.'
     )
 
 ITEMS = []

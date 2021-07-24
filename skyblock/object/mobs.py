@@ -14,8 +14,8 @@ __all__ = ['MOBS', 'get_mob']
 
 if not Path(join_path('skyblock', 'data', 'mobs')).is_dir():
     raise FileNotFoundError(
-        'Required data folder not found.\n'
-        'Delete the `data` folder in ~/skyblock to fix it automatically.'
+        'Required data not found.\n'
+        'Restart skyblock to fix it automatically.'
     )
 
 MOBS = []

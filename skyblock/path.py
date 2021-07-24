@@ -10,30 +10,19 @@ def is_dir(*names):
 
 
 def is_file(*names):
-    return  Path(join(Path.home(), 'skyblock', *names)).is_file()
+    return Path(join(Path.home(), 'skyblock', *names)).is_file()
 
 
 def is_data():
-    if not is_dir():
+    if not is_dir() or not is_dir('data'):
         return False
-    elif not is_dir('data'):
-        return False
-    elif not is_dir('data', 'collections'):
-        return False
-    elif not is_dir('data', 'fishing'):
-        return False
-    elif not is_dir('data', 'items'):
-        return False
-    elif not is_dir('data', 'minions'):
-        return False
-    elif not is_dir('data', 'mobs'):
-        return False
-    elif not is_dir('data', 'recipes'):
-        return False
-    elif not is_dir('data', 'resources'):
-        return False
-    else:
-        return True
+
+    for category in {'collections', 'fishing', 'items', 'minions', 'mobs',
+                     'recipes', 'resources', 'templates'}:
+        if not is_dir('data', category):
+            return False
+
+    return True
 
 
 def is_profile(name: str, /):

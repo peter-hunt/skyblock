@@ -527,8 +527,6 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
             if 'omen' in active_pet.abilities:
                 value += 15 * pet_mult
     elif name == 'mining_speed':
-        if set_bonus == 'miners_outfit':
-            value += 100
         if set_bonus == 'glacite_armor':
             value += 2 * mining_level
         if self.has_item({'name': 'haste_ring'}):

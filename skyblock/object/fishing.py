@@ -10,8 +10,8 @@ __all__ = ['FISHING_TABLE', 'SEA_CREATRUE_TABLE']
 
 if not Path(join_path('skyblock', 'data', 'fishing')).is_dir():
     raise FileNotFoundError(
-        'Required data folder not found.\n'
-        'Delete the `data` folder in ~/skyblock to fix it automatically.'
+        'Required data not found.\n'
+        'Restart skyblock to fix it automatically.'
     )
 
 with open(join_path('skyblock', 'data',

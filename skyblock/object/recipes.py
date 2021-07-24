@@ -25,8 +25,8 @@ def _select_recipes(recipes: List[Recipe], category: str) -> List[Recipe]:
 
 if not Path(join_path('skyblock', 'data', 'recipes')).is_dir():
     raise FileNotFoundError(
-        'Required data folder not found.\n'
-        'Delete the `data` folder in ~/skyblock to fix it automatically.'
+        'Required data not found.\n'
+        'Restart skyblock to fix it automatically.'
     )
 
 _RECIPES = []

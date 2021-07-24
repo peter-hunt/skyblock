@@ -28,8 +28,8 @@ def load_resource(obj, /):
 
 if not Path(join_path('skyblock', 'data', 'resources')).is_dir():
     raise FileNotFoundError(
-        'Required data folder not found.\n'
-        'Delete the `data` folder in ~/skyblock to fix it automatically.'
+        'Required data not found.\n'
+        'Restart skyblock to fix it automatically.'
     )
 
 RESOURCES = []
