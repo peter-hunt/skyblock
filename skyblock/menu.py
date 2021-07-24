@@ -17,16 +17,6 @@ __all__ = ['main']
 menu_help = generate_help(menu_doc)
 
 
-def init_home_dir(*names):
-    if not Path(join_path(*names)).is_dir():
-        Path(join_path(*names)).mkdir()
-
-
-def init_env():
-    init_home_dir('skyblock')
-    init_home_dir('skyblock', 'saves')
-
-
 @checkpoint
 def new():
     name = input_regex('Please enter the name of the profile.', r'\w+')
@@ -58,8 +48,6 @@ def ls():
 
 @checkpoint
 def main():
-    init_env()
-
     yellow(f'Welcome to {GREEN}Skyblock{YELLOW}!')
 
     if is_dir() and is_dir('saves'):
