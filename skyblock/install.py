@@ -14,16 +14,11 @@ def init_home_dir(*names):
         Path(join_path(*names)).mkdir()
 
 
-def init_env():
-    init_home_dir('skyblock')
-    init_home_dir('skyblock', 'saves')
-
-
 def install_data(*, is_update=False):
     data_dir = join(Path.home(), 'skyblock', 'data')
     if is_update:
         doing_str, done_str = 'Updating', 'Updated'
-    elif is_data():
+    elif not is_data():
         doing_str, done_str = 'Installing', 'Installed'
     else:
         doing_str, done_str = 'Fixing', 'Fixed'
@@ -38,5 +33,6 @@ def install_data(*, is_update=False):
 
 
 def init():
-    init_env()
+    init_home_dir('skyblock')
+    init_home_dir('skyblock', 'saves')
     install_data()
