@@ -126,7 +126,7 @@ def mainloop(self):
             self.buy(chosen_trade, amount)
 
         elif words[0] == 'cheat':
-            self.recieve_item({'name': 'wheat_minion', 'tier': 2})
+            # self.recieve_item({'name': 'raider_axe'})
             ...
 
         elif words[0] == 'clear':

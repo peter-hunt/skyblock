@@ -397,6 +397,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
     last_stand = 0
     no_pain_no_gain = []
 
+    weapon_abilities = getattr(weapon, 'abilities', {})
     weapon_enchants = getattr(weapon, 'enchantments', {})
 
     weapon_dmg = 0
@@ -444,7 +445,6 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
     enchants += 0.08 * weapon_enchants.get('power', 0)
     enchants += 0.05 * weapon_enchants.get('spiked_hook', 0)
 
-    crit_damage *= 1 + 0.1 * weapon_enchants.get('critical', 0)
     ferocity += weapon_enchants.get('vicious', 0)
 
     healing_mult = 1
@@ -487,6 +487,8 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
     prosecute = 0.1 * weapon_enchants.get('prosecute', 0)
     punch = 1 + 0.08 * weapon_enchants.get('punch', 0)
     scavenger = 0.3 * weapon_enchants.get('scavenger', 0)
+    if 'raider_coins' in weapon_abilities and mob.level >= 10:
+        scavenger += 20
     if 'syphon' in weapon_enchants:
         syphon = 0.1 + 0.1 * weapon_enchants['syphon']
     else:

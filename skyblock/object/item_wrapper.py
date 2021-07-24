@@ -851,6 +851,8 @@ def item_type(cls: type, /) -> type:
                     value += pet_mult * 3
         elif name == 'speed':
             value += enchants.get('sugar_rush', 0) * 2
+        elif name == 'crit_damage':
+            value += enchants.get('critical', 0) * 10
         elif name == 'mining_speed':
             if enchants.get('efficiency', 0) != 0:
                 value += 10 + 20 * enchants['efficiency']

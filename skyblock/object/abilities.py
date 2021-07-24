@@ -143,6 +143,10 @@ ABILITIES = [
 
     # weapon abilities
     AnonymousAbility(
+        id='raider_coins',
+        description=('raider_coins', {'coins': 20}),
+    ),
+    AnonymousAbility(
         id='tacticians_sword',
         description=('tacticians_sword', {'value': 15}),
     ),
