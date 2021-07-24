@@ -2,7 +2,7 @@ from json import load
 from os import walk
 from pathlib import Path
 
-from ..function.path import join_path
+from ..path import join_path
 
 
 __all__ = ['MINION_LOOT']

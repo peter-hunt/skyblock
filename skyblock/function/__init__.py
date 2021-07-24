@@ -6,8 +6,6 @@ from .math import *
 from .math import __all__ as __math__
 from .minions import *
 from .minions import __all__ as __minions__
-from .path import *
-from .path import __all__ as ___path__
 from .random import *
 from .random import __all__ as __random__
 from .reforging import *
@@ -17,6 +15,6 @@ from .util import __all__ as __util__
 
 
 __all__ = (
-    __enchanting__ + __io__ + __math__ + __minions__ + ___path__
+    __enchanting__ + __io__ + __math__ + __minions__
     + __random__ + __reforging__ + __util__
 )

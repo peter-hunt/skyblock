@@ -187,7 +187,7 @@ Shows all recipes or recipes avaliable.
 > save
 Save the profile.
 
-> sell <index>
+> sell <index-or-name>
 Sell the item.
 
 > shop [index]

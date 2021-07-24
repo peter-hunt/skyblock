@@ -4,8 +4,8 @@ from pathlib import Path
 from typing import List, Optional, Union
 
 from ..function.io import *
-from ..function.path import join_path
 from ..function.util import includes, get
+from ..path import join_path
 
 from .object import *
 

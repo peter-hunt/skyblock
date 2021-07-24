@@ -7,8 +7,8 @@ from ._lib import add_history
 from .constant.colors import *
 from .constant.doc import menu_doc
 from .function.io import *
-from .function.path import is_dir, is_profile, join_path
 from .function.util import checkpoint, clear, generate_help, is_valid_usage
+from .path import is_dir, is_profile, join_path
 from .profile.object import Profile
 
 
@@ -35,7 +35,8 @@ def new():
 
 
 def get_profiles() -> List[str]:
-    if not is_dir(warn=True) or not is_dir('saves', warn=True):
+    if not is_dir() or not is_dir('saves'):
+        red('path not found: ~/skyblock/saves')
         return []
     names = [*walk(join(Path.home(), 'skyblock', 'saves'))][0][2]
     return [name[:-5] for name in names if name.endswith('.json')]
@@ -61,7 +62,7 @@ def main():
 
     yellow(f'Welcome to {GREEN}Skyblock{YELLOW}!')
 
-    if is_dir(warn=True) and is_dir('saves', warn=True):
+    if is_dir() and is_dir('saves'):
         names = get_profiles()
         if len(names) != 0:
             lastest, lastest_profile = 0, None
@@ -73,6 +74,8 @@ def main():
 
             if lastest_profile is not None:
                 lastest_profile.mainloop()
+    else:
+        red('folder not found: ~/skyblock/saves')
 
     while True:
         original_input = input('> ')

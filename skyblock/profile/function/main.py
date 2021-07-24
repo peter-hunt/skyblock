@@ -13,7 +13,7 @@ from ...function.util import (
 )
 from ...map.islands import get_island
 from ...object.collection import is_collection
-from ...object.items import ITEMS
+from ...object.items import ITEMS, get_item
 from ...object.mobs import get_mob
 from ...object.object import *
 from ...object.placed_minion import *
@@ -661,11 +661,28 @@ def mainloop(self):
             green('Saved!')
 
         elif words[0] == 'sell':
-            index = self.parse_index(words[1])
-            if index is None:
+            index = self.parse_index(words[1], warn=False)
+            if index is not None:
+                self.sell(index)
                 continue
 
-            self.sell(index)
+            sell_item = get_item(words[1])
+            if sell_item is None:
+                red(f'Item name not found: {sell_item}')
+                continue
+
+            sell_name = words[1]
+            sold = False
+            for i, item in enumerate(self.inventory):
+                if isinstance(item, Empty):
+                    continue
+                if item.name == sell_name:
+                    if not sold:
+                        sold = True
+                    self.sell(i)
+
+            if not sold:
+                red("You don't have this item in your inventory!")
 
         elif words[0] == 'shop':
             if last_shop is None:

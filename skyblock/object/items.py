@@ -3,8 +3,8 @@ from os import walk
 from pathlib import Path
 
 from ..function.io import *
-from ..function.path import join_path
 from ..function.util import get, includes
+from ..path import join_path
 
 from .object import *
 

@@ -1,7 +1,7 @@
 from json import load
 from pathlib import Path
 
-from ..function.path import join_path
+from ..path import join_path
 
 from .object import *
 

@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Optional
 
 from ..function.io import *
-from ..function.path import join_path
+from ..path import join_path
 
 from .object import *
 

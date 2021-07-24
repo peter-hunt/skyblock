@@ -3,16 +3,22 @@ from os.path import join
 from pathlib import Path
 from subprocess import run
 
+from .path import is_data
+
 
 __all__ = ['install']
 
 
-def install(*, is_update=False):
+def install(*, force=False, is_update=False):
     data_dir = join(Path.home(), 'skyblock', 'data')
-    doing_str = 'Updating' if is_update else 'Installing'
-    done_str = 'Updated' if is_update else 'Installed'
-    if is_update or not Path(data_dir).is_dir():
-        if is_update:
+    if is_update:
+        doing_str, done_str = 'Updating', 'Updated'
+    elif is_data():
+        doing_str, done_str = 'Installing', 'Installed'
+    else:
+        doing_str, done_str = 'Fixing', 'Fixed'
+    if is_update or force or not is_data():
+        if Path(data_dir).is_dir():
             run(['rm', '-rf', data_dir])
         mkdir(data_dir)
         print(f'\x1b[0;38;2;85;255;85m{doing_str} Assets...\x1b[0m')

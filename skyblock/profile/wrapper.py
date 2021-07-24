@@ -4,13 +4,13 @@ from pathlib import Path
 from re import sub
 
 from ..constant.colors import *
-from ..myjson import dump as json_dump
 from ..function.io import *
-from ..function.path import is_profile
+from ..map.object import *
+from ..myjson import dump as json_dump
 from ..object.collection import COLLECTIONS
 from ..object.object import *
 from ..object.placed_minion import load_minion
-from ..map.object import *
+from ..path import is_profile
 
 from .function import profile_functions
 
