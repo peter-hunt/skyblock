@@ -8,8 +8,8 @@ from ...constant.main import ARMOR_PARTS
 from ...function.io import *
 from ...function.math import calc_exp_level, calc_exp, calc_pet_exp
 from ...function.util import (
-    checkpoint, clear, format_number, format_roman, format_short, format_zone,
-    generate_help, get, includes, is_valid_usage, parse_int,
+    checkpoint, clear, format_name, format_number, format_roman, format_short,
+    format_zone, generate_help, get, includes, is_valid_usage, parse_int,
 )
 from ...map.islands import get_island
 from ...object.collection import is_collection
@@ -429,14 +429,48 @@ def mainloop(self):
 
         elif words[0] == 'item':
             name = words[1]
+
+            rarity = None
+            tier = None
+            if match := fullmatch(r'(\w+_minion)_([1-9]|1[0-2])', name):
+                name = match.group(1)
+                tier = int(match.group(2))
+            elif match := fullmatch(
+                    (r'(common|uncommon|rare|epic|legendary|mythic'
+                     r'|supreme|special|very_special)_(\w+)'),
+                    name,
+                ):
+                rarity = match.group(1)
+                name = match.group(2)
+
             for item in ITEMS:
+                if rarity is None:
+                    pass
+                elif getattr(item, 'rarity', None) != rarity:
+                    continue
+
+                if tier is None:
+                    pass
+                elif getattr(item, 'tier', None) != tier:
+                    continue
+
                 if item.name == name:
                     if isinstance(item, Pet):
                         item.exp = calc_pet_exp(item.rarity, 100)
                     self.display_item(item)
                     break
             else:
-                red(f'Item not found: {name!r}')
+                restric = []
+                if rarity is not None:
+                    restric.append(f'{format_name(rarity)} rarity')
+                if tier is not None:
+                    restric.append(f'tier {tier}')
+
+                if len(restric) == 0:
+                    red(f'Item not found: {name!r}')
+                else:
+                    restric_str = ', '.join(restric)
+                    red(f'Item not found: {name!r} with {restric_str}')
 
         elif words[0] in {'kill', 'slay'}:
             name = words[1]
