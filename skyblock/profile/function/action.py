@@ -16,7 +16,7 @@ from ...function.util import (
     checkpoint, format_name, format_number, format_roman, format_short,
     format_zone, get, get_ench, includes,
 )
-from ...install import install
+from ...install import install_data
 from ...map.islands import ISLANDS
 from ...map.object import *
 from ...object.items import get_item
@@ -767,7 +767,7 @@ def update(self, /, *, save=True):
     last_data_cp = last // (12 * 3600)
     now_data_cp = now // (12 * 3600)
     if now_data_cp > last_data_cp:
-        install(is_update=True)
+        install_data(is_update=True)
 
     last_cp = last // (31 * 3600)
     now_cp = now // (31 * 3600)

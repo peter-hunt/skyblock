@@ -19,7 +19,7 @@ def init_env():
     init_home_dir('skyblock', 'saves')
 
 
-def install_data(*, force=False, is_update=False):
+def install_data(*, is_update=False):
     data_dir = join(Path.home(), 'skyblock', 'data')
     if is_update:
         doing_str, done_str = 'Updating', 'Updated'
@@ -27,7 +27,7 @@ def install_data(*, force=False, is_update=False):
         doing_str, done_str = 'Installing', 'Installed'
     else:
         doing_str, done_str = 'Fixing', 'Fixed'
-    if is_update or force or not is_data():
+    if is_update or not is_data():
         if Path(data_dir).is_dir():
             run(['rm', '-rf', data_dir])
         mkdir(data_dir)
