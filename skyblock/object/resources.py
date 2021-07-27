@@ -3,6 +3,7 @@ from os import walk
 from pathlib import Path
 from typing import Optional
 
+from .._lib import _open
 from ..function.io import *
 from ..function.util import get, includes
 from ..path import join_path
@@ -36,7 +37,7 @@ for file_name in [*walk(join_path('skyblock', 'data', 'resources'))][0][2]:
     if not file_name.endswith('.json'):
         continue
 
-    with open(join_path('skyblock', 'data', 'resources', file_name)) as file:
+    with _open(join_path('skyblock', 'data', 'resources', file_name)) as file:
         RESOURCES.append(load_resource(load(file)))
 
 

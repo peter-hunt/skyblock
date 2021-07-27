@@ -2,6 +2,7 @@ from json import load
 from os import walk
 from pathlib import Path
 
+from .._lib import _open
 from ..path import join_path
 
 
@@ -21,8 +22,8 @@ for category in [*walk(join_path('skyblock', 'data', 'minions'))][0][1]:
 
         minion_name = file_name[:-5]
 
-        with open(join_path('skyblock', 'data', 'minions',
-                            category, file_name)) as file:
+        with _open(join_path('skyblock', 'data', 'minions',
+                             category, file_name)) as file:
             MINION_LOOT[minion_name] = [
                 (pointer, count) for pointer, count in load(file)
             ]

@@ -3,6 +3,7 @@ from os import walk
 from pathlib import Path
 from typing import List, Optional, Union
 
+from .._lib import _open
 from ..function.io import *
 from ..function.util import includes, get
 from ..path import join_path
@@ -36,8 +37,8 @@ for category in [*walk(join_path('skyblock', 'data', 'recipes'))][0][1]:
         if not file_name.endswith('.json'):
             continue
 
-        with open(join_path('skyblock', 'data', 'recipes',
-                            category, file_name)) as file:
+        with _open(join_path('skyblock', 'data', 'recipes',
+                             category, file_name)) as file:
             obj = load(file)
             if 'recipes' in obj:
                 _RECIPES.append(RecipeGroup.from_obj(obj))

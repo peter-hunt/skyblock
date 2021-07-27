@@ -3,6 +3,7 @@ from os.path import join
 from pathlib import Path
 from re import sub
 
+from .._lib import _open
 from ..constant.colors import *
 from ..function.io import *
 from ..map.object import *
@@ -67,8 +68,8 @@ def profile_wrapper(cls):
 
     load_str = '''
     lambda cls, name: ((
-        file := open(join(Path.home(), 'skyblock',
-                          'saves', f'{name}.json')),
+        file := _open(join(Path.home(), 'skyblock',
+                           'saves', f'{name}.json')),
         obj := json_load(file),
         result := cls(name, %s),
         file.close(),

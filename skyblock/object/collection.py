@@ -3,6 +3,7 @@ from os import walk
 from pathlib import Path
 from typing import Optional
 
+from .._lib import _open
 from ..function.io import *
 from ..path import join_path
 
@@ -23,8 +24,8 @@ for category in [*walk(join_path('skyblock', 'data', 'collections'))][0][1]:
         if not file_name.endswith('.json'):
             continue
 
-        with open(join_path('skyblock', 'data', 'collections',
-                            category, file_name)) as file:
+        with _open(join_path('skyblock', 'data', 'collections',
+                             category, file_name)) as file:
             COLLECTIONS.append(Collection.load(load(file)))
 COLLECTIONS = sorted(COLLECTIONS, key=lambda collection: collection.name)
 

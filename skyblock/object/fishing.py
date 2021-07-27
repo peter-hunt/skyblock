@@ -1,6 +1,7 @@
 from json import load
 from pathlib import Path
 
+from .._lib import _open
 from ..path import join_path
 
 from .object import *
@@ -13,10 +14,10 @@ if not Path(join_path('skyblock', 'data', 'fishing')).is_dir():
         'Required data not found.\nRestart skyblock to fix it automatically.'
     )
 
-with open(join_path('skyblock', 'data',
-                    'fishing', 'fishing_table.json')) as file:
+with _open(join_path('skyblock', 'data',
+                     'fishing', 'fishing_table.json')) as file:
     FISHING_TABLE = load(file)
 
-with open(join_path('skyblock', 'data',
-                    'fishing', 'sea_creature_table.json')) as file:
+with _open(join_path('skyblock', 'data',
+                     'fishing', 'sea_creature_table.json')) as file:
     SEA_CREATRUE_TABLE = load(file)

@@ -13,7 +13,7 @@
 
 I started this project because **my friends couldn't log onto Hypixel**. I'm also learning many of the mechanics and getting better at Hypixel Skyblock by the time.
 
-I chose Python because **I'm sort of familiar with Python**. Plus, Python code is more readable and easier to understand than most of the other languages. And since this is a command-line project, which doesn't need to run fast, Python is the choice.
+I chose Python because **I'm the most familiar with Python**. Plus, Python code is more readable and understandable than most of the other languages. And since this is a command-line project, which doesn't need to run fast, Python is the choice.
 
 It requires the Skyblock Data repo, [Skyblock Data](https://github.com/peter-hunt/skyblock-data), which **will install automatically**.
 
