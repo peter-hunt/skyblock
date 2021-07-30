@@ -565,6 +565,8 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
 
     if cap is not None:
         value = min(cap, value)
+    elif name in {'defense', 'speed', 'crit_chance'}:
+        value = max(value, 0)
 
     return value
 
