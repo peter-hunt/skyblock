@@ -75,7 +75,7 @@ def mainloop(self):
             red(f'Command not found: {phrase!r}.')
             continue
         if not is_valid_usage(profile_help[phrase][0], words):
-            red(f'Invalid usage of command {words[0]}.')
+            red(f'Invalid usage of command: {words[0]}.')
             continue
 
         if words[0] == 'armor':
@@ -436,10 +436,10 @@ def mainloop(self):
                 name = match.group(1)
                 tier = int(match.group(2))
             elif match := fullmatch(
-                    (r'(common|uncommon|rare|epic|legendary|mythic'
-                     r'|supreme|special|very_special)_(\w+)'),
-                    name,
-                ):
+                (r'(common|uncommon|rare|epic|legendary|mythic'
+                 r'|supreme|special|very_special)_(\w+)'),
+                name,
+            ):
                 rarity = match.group(1)
                 name = match.group(2)
 
@@ -467,10 +467,10 @@ def mainloop(self):
                     restric.append(f'tier {tier}')
 
                 if len(restric) == 0:
-                    red(f'Item not found: {name!r}')
+                    red(f'Item not found: {name!r}.')
                 else:
                     restric_str = ', '.join(restric)
-                    red(f'Item not found: {name!r} with {restric_str}')
+                    red(f'Item not found: {name!r} with {restric_str}.')
 
         elif words[0] in {'kill', 'slay'}:
             name = words[1]
@@ -702,7 +702,7 @@ def mainloop(self):
 
             sell_item = get_item(words[1])
             if sell_item is None:
-                red(f'Item name not found: {sell_item}')
+                red(f'Item name not found: {sell_item!r}.')
                 continue
 
             sell_name = words[1]
@@ -774,7 +774,7 @@ def mainloop(self):
         elif words[0] == 'talkto':
             name = words[1]
             if not includes(zone.npcs, name):
-                red(f'Npc not found: {name!r}')
+                red(f'Npc not found: {name!r}.')
                 continue
 
             result = self.talkto_npc(get(zone.npcs, name))
@@ -815,12 +815,11 @@ def mainloop(self):
                 island = get_island(self.island)
                 self.zone = 'forge'
                 zone = get(island.zones, self.zone)
-                gray(f'Warped to {AQUA}{zone}{GRAY}'
-                     f' of {AQUA}{island}{GRAY}.')
+                gray(f'Warped to {AQUA}{zone}{GRAY} of {AQUA}{island}{GRAY}.')
 
         else:
-            red(f'Unknown command: {words[0]!r}')
-            yellow("Use `help` for help.")
+            red(f'Unknown command: {words[0]!r}.')
+            yellow('Use `help` for help.')
 
 
 main_functions = {

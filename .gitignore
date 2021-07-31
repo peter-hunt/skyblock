@@ -2,7 +2,7 @@
 .vscode
 __pycache__
 
-build
+build/bdist.*
 dist
 skyblock_peterhunt.egg-info
 *.pyc

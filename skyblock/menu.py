@@ -8,7 +8,7 @@ from .constant.colors import *
 from .constant.doc import menu_doc
 from .function.io import *
 from .function.util import checkpoint, clear, generate_help, is_valid_usage
-from .path import is_dir, is_profile, join_path
+from .path import is_dir, is_profile
 from .profile.object import Profile
 
 
@@ -26,7 +26,7 @@ def new():
 
 def get_profiles() -> List[str]:
     if not is_dir() or not is_dir('saves'):
-        red('path not found: ~/skyblock/saves')
+        red('path not found: ~/skyblock/saves.')
         return []
     names = [*walk(join(Path.home(), 'skyblock', 'saves'))][0][2]
     return [name[:-5] for name in names if name.endswith('.json')]
@@ -63,7 +63,7 @@ def main():
             if lastest_profile is not None:
                 lastest_profile.mainloop()
     else:
-        red('folder not found: ~/skyblock/saves')
+        red('folder not found: ~/skyblock/saves.')
 
     while True:
         original_input = input('> ')
@@ -84,7 +84,7 @@ def main():
             red(f'Command not found: {phrase!r}.')
             continue
         if not is_valid_usage(menu_help[phrase][0], words):
-            red(f'Invalid usage of command {words[0]}.')
+            red(f'Invalid usage of command: {words[0]}.')
             continue
 
         if words[0] == 'clear':
@@ -97,7 +97,7 @@ def main():
                 path.unlink()
                 green(f'Deleted profile {AQUA}{words[1]}{GREEN}!')
             else:
-                red(f'Profile not found: {words[1]}')
+                red(f'Profile not found: {words[1]!r}.')
 
         elif words[0] in {'exit', 'quit'}:
             break

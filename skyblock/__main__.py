@@ -6,7 +6,7 @@ __all__ = ['skyblock_main']
 
 def skyblock_main():
     if version_info < (3, 8):
-        raise ValueError('at least python 3.8 is required to run this project')
+        raise ValueError('at least python 3.8 is required by this project')
 
     from .install import init
     init()
