@@ -93,7 +93,7 @@ def buy(self, trade: Tuple, amount: int, /):
         green(f'You bought {display_str}{GREEN}!')
 
 
-def claim_minion(self, slot: int, /):
+def claim_minion(self, slot: int, /) -> bool:
     if isinstance(self.placed_minions[slot], Empty):
         red('This slot is empty!')
         return
@@ -116,9 +116,9 @@ def claim_minion(self, slot: int, /):
         red('Your inventory does not have enough space to add all items!')
         for pointer in items_left:
             minion.recieve_item(pointer)
+    else:
+        aqua(f"You claimed the {minion.display()}{AQUA}'s inventory!")
     self.placed_minions[slot] = minion
-
-    aqua(f"You claimed the {minion.display()}{AQUA}'s inventory!")
 
 
 def combine(self, index_1: int, index_2: int, /):
@@ -172,23 +172,24 @@ def combine(self, index_1: int, index_2: int, /):
             and isinstance(item_2, ReforgeStone)):
         cost = item_2.cost['curelm'.index(item_1.rarity[0])]
 
+        combinable = True
         if item_2.category == 'accessory':
             if not isinstance(item_1, Accessory):
-                red('These items cannot be combined!')
-                return
+                combinable = False
         elif item_2.category == 'armor':
             if not isinstance(item_1, Armor):
-                red('These items cannot be combined!')
-                return
+                combinable = False
         elif item_2.category == 'bow':
             if not isinstance(item_1, Bow):
-                red('These items cannot be combined!')
-                return
+                combinable = False
         elif item_2.category == 'melee':
             if not (isinstance(item_1, (Sword, FishingRod))
                     and getattr(item_1, 'damage', 0) != 0):
-                red('These items cannot be combined!')
-                return
+                combinable = False
+
+        if not combinable:
+            red('These items cannot be combined!')
+            return
 
         if self.purse < cost:
             red("You don't have enough Coins!")
@@ -250,10 +251,6 @@ def consume(self, index: int, amount: int = 1, /):
     item = self.inventory[index]
 
     if isinstance(item, TravelScroll):
-        if amount != 1:
-            red('Can only use 1 travel scroll at a time!')
-            return
-
         if [item.island, item.zone] in self.fast_travel:
             red('You already unlocked this fast travel!')
             return

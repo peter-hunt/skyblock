@@ -537,8 +537,16 @@ def mainloop(self):
                 if not isinstance(minion, PlacedMinion):
                     red('This slot is empty!')
                     continue
-
-                self.claim_minion(slot)
+                elif slot is None:
+                    for item in minion.inventory:
+                        if not isinstance(item, Empty):
+                            break
+                    else:
+                        self.claim_minion(slot)
+                        continue
+                    red('This Minion does not have any items stored!')
+                else:
+                    self.claim_minion(slot)
 
             elif words[1] == 'info':
                 slot = self.parse_index(words[2], len(self.placed_minions))
@@ -818,8 +826,7 @@ def mainloop(self):
                 gray(f'Warped to {AQUA}{zone}{GRAY} of {AQUA}{island}{GRAY}.')
 
         else:
-            red(f'Unknown command: {words[0]!r}.')
-            yellow('Use `help` for help.')
+            red('Unknown command. Type `help` for help.')
 
 
 main_functions = {
