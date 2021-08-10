@@ -125,6 +125,7 @@ To check command usage, type `help` for command documentation.
 
 ## Planned Features:
 
+* Brewing and Potion effects
 * Commissions
 * Dungeons
 * Fairy Souls

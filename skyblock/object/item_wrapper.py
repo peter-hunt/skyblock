@@ -620,12 +620,13 @@ def item_type(cls: type, /) -> type:
             if ability.__class__.__name__ == 'NamedAbility':
                 ability_str += f'{GOLD}{ability.name}\n'
 
-            temp_id, temp_param = ability.description
+            temp_param = ability.variables.copy()
             for param_key, param_value in temp_param.items():
                 if isinstance(param_value, (int, float)):
                     temp_param[param_key] = param_value * stat_mult
 
-            temp_str = format_temp(get_template('abilities', temp_id),
+            temp_str = format_temp(get_template('abilities',
+                                                ability.display_id),
                                    temp_param)
             ability_list.append(f'{ability_str}{GRAY}{temp_str}')
 
