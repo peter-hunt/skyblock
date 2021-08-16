@@ -1,3 +1,4 @@
+from collections import defaultdict
 from math import ceil
 from os import get_terminal_size
 from typing import Optional
@@ -521,6 +522,20 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
         if has_active_pet:
             if 'supernatural' in active_pet.abilities:
                 value += 15 * pet_mult
+
+        pet_rarities = defaultdict(int)
+
+        for index, pet in enumerate(self.pets):
+            pet_rarities[pet.name] = max(pet_rarities[pet.name],
+                                        ' curelm'.index(pet.rarity[0]))
+
+        pet_score = sum({**pet_rarities}.values())
+        pet_milestones = [10, 25, 50, 75, 100, 130, 175]
+        for milestone in pet_milestones:
+            if pet_score >= milestone:
+                value += 1
+            else:
+                break
     elif name == 'pet_luck':
         value += taming_level
         if has_active_pet:

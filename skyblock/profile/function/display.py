@@ -1,3 +1,4 @@
+from collections import defaultdict
 from math import ceil, floor, radians, tan
 from os import get_terminal_size
 from time import sleep
@@ -476,9 +477,35 @@ def display_pets(self, /):
 
     gray('Your pets:')
 
+    pet_rarities = defaultdict(int)
+
     for index, pet in enumerate(self.pets):
         active = f'{AQUA}*{GRAY}' if pet.active else ' '
         gray(f'{active} {index + 1:>{digits}} {pet.display()}')
+        pet_rarities[pet.name] = max(pet_rarities[pet.name],
+                                     ' curelm'.index(pet.rarity[0]))
+
+    pet_score = sum({**pet_rarities}.values())
+    pet_milestones = [10, 25, 50, 75, 100, 130, 175]
+    milestone_tier = 0
+    for milestone in pet_milestones:
+        if pet_score >= milestone:
+            milestone_tier += 1
+        else:
+            break
+
+    green(
+        f'\nPet Score Rewards\n'
+        f'{GRAY}Pet score is calculated based on how many'
+        f' {GREEN}unique {GRAY}pets you have and the {GREEN}rarity'
+        f' {GRAY}of these pets.\n'
+    )
+
+    for tier, milestone in enumerate(pet_milestones, 1):
+        pointer_str = f' {DARK_PURPLE}≪' if tier == milestone_tier else ''
+        gold(f'{milestone} Score{GRAY}: +{AQUA}{tier} Magic Find{pointer_str}')
+
+    blue(f'\nYour Pet Score: {WHITE}{pet_score}')
 
 
 def display_playtime(self, /):
