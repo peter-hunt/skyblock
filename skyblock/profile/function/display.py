@@ -129,8 +129,8 @@ def display_bestiaries(self, /):
     bestiary_ms = self.get_bestiary_milestone()
     gold(f'Bestiary Milestone {format_roman(bestiary_ms)}\n')
     gray(
-        f'Reach new {GREEN}Milestones {GRAY}in your Bestiary by unlocking'
-        f' unique family tiers.'
+        f'Reach new {GREEN}Milestones {GRAY}in your Bestiary'
+        f' by unlocking unique family tiers.'
     )
     if bestiary_ms != 0:
         green(
@@ -317,7 +317,7 @@ def display_hotm(self, /):
 
 def display_item(self, item: ItemType, /):
     if isinstance(item, Empty):
-        gray('Empty')
+        gray('empty')
         return
 
     width, _ = get_terminal_size()
@@ -738,18 +738,19 @@ def display_warp(self, /):
 
 
 @staticmethod
-def npc_silent(npc: Npc, /):
-    yellow(f'[NPC] {format_name(npc.name)}'
-           f"{WHITE}: ({format_name(npc.name)} said nothing)")
+def npc_silent(name: str, /):
+    npc_name = format_name(name)
+    yellow(f'[NPC] {npc_name}{WHITE}: ({npc_name} said nothing)')
 
 
 @staticmethod
 def npc_speak(name: str, dialog: Iterable):
     iterator = iter(dialog)
-    yellow(f'[NPC] {format_name(name)}{WHITE}: {next(iterator)}')
+    npc_name = format_name(name)
+    yellow(f'[NPC] {npc_name}{WHITE}: {next(iterator)}')
     for sentence in iterator:
         sleep(1.5)
-        yellow(f'[NPC] {format_name(name)}{WHITE}: {sentence}')
+        yellow(f'[NPC] {npc_name}{WHITE}: {sentence}')
 
 
 display_functions = {

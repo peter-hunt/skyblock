@@ -718,7 +718,7 @@ def talkto_npc(self, npc: Npc, /) -> Optional[str]:
             self.display_shop(npc, None)
             return npc.name
         else:
-            self.npc_silent(npc)
+            self.npc_silent(npc.name)
         if npc.claim_item is not None:
             self.recieve_item(npc.claim_item)
         self.npc_talked.append(npc.name)
@@ -734,7 +734,7 @@ def talkto_npc(self, npc: Npc, /) -> Optional[str]:
     elif npc.function is not None:
         npc.function(self)
     else:
-        self.npc_silent(npc)
+        self.npc_silent(npc.name)
 
 
 def update(self, /, *, save=True):
@@ -785,7 +785,8 @@ def update(self, /, *, save=True):
               f'{GOLD}{format_number(interest)} coins{GREEN} '
               f'as interest in your personal bank account!')
 
-    self.play_time += dt
+    if save:
+        self.play_time += dt
 
     self.last_update = now
 

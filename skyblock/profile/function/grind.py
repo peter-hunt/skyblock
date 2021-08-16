@@ -214,7 +214,7 @@ def gather(self, name: str, tool_index: Optional[int],
             mining_speed += 10 + 20 * enchants['efficiency']
 
         if resource.breaking_power > breaking_power:
-            red(f'You need a strong tool to mine {format_name(resource.name)}!')
+            red(f'You need a strong tool to mine {format_name(resource.name)}.')
             return
 
         time_cost = 30 * resource.hardness / mining_speed
