@@ -60,4 +60,4 @@ def get_recipe(name: str, /, *, warn: bool = True
     if includes(RECIPES, name):
         return get(RECIPES, name)
     elif warn:
-        red(f'Recipe or Group not found: {name!r}')
+        raise ValueError(f'Recipe or Group not found: {name!r}')

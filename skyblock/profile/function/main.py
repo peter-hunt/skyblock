@@ -377,7 +377,7 @@ def mainloop(self):
                 if not isinstance(tool_item,
                                   (Empty, Axe, Hoe, Pickaxe, Drill)):
                     yellow(f'{tool_item.display()} {YELLOW}is not tool.\n'
-                           f'Using barehand by default.')
+                           f'Using barehand.')
                     tool_index = None
 
             amount = 1

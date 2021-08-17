@@ -32,8 +32,7 @@ ITEMS = sorted(ITEMS, key=lambda item: item.name)
 
 def get_item(name: str, /, **kwargs) -> ItemType:
     if not includes(ITEMS, name):
-        red(f'Item not found: {name!r}')
-        exit()
+        raise ValueError(f'Item not found: {name!r}')
     return get(ITEMS, name, **kwargs)
 
 

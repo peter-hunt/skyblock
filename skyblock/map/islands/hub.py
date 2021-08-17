@@ -52,7 +52,7 @@ FLOWER_HOUSE = Zone(
 )
 FOREST = Zone(
     'forest', -95, -40, portal='park',
-    resources=[get_resource('oak_wood')],
+    resources=[get_resource('oak_log')],
 )
 GRAVEYARD = Zone(
     'graveyard', -99, -54, portal='spider',

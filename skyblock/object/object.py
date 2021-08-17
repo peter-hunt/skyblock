@@ -12,7 +12,7 @@ __all__ = [
     'Bow', 'Sword',
     'Axe', 'Pickaxe', 'Drill', 'Hoe', 'FishingRod', 'Armor', 'Pet', 'Minion',
     'Resource',
-    'Crop', 'Mineral', 'Wood', 'Mob',
+    'Crop', 'Mineral', 'Log', 'Mob',
     'Recipe', 'RecipeGroup', 'Collection',
     'load_item',
 ]
@@ -303,6 +303,13 @@ class Crop(Resource):
 
 
 @resource_type
+class Log(Resource):
+    name: str
+    hardness: int = 2
+    foraging_exp: Number = 1
+
+
+@resource_type
 class Mineral(Resource):
     name: str
     drop: str
@@ -312,13 +319,6 @@ class Mineral(Resource):
     exp: Amount = 1
     mining_exp: Number = 1
     mithril_powder: Amount = 0
-
-
-@resource_type
-class Wood(Resource):
-    name: str
-    hardness: int = 2
-    foraging_exp: Number = 1
 
 
 @mob_type

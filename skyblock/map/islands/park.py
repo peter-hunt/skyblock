@@ -9,7 +9,7 @@ __all__ = ['PARK']
 
 BIRCH_PARK = Zone(
     'birch', -300, -20, portal='hub', fishable=True,
-    resources=[get_resource('birch_wood')],
+    resources=[get_resource('birch_log')],
 )
 HOWLING_CAVE = Zone(
     'howl', -330, -55, fishable=True,
@@ -19,24 +19,24 @@ HOWLING_CAVE = Zone(
 )
 SPRUCE_WOOD = Zone(
     'spruce', -325, 0,
-    resources=[get_resource('spruce_wood'), get_resource('ice')],
+    resources=[get_resource('spruce_log'), get_resource('ice')],
     npcs=[get_npc('melancholic_viking')],
     skill_req=('foraging', 2),
 )
 DARK_THICKET = Zone(
     'dark', -330, -45,
-    resources=[get_resource('dark_oak_wood')],
+    resources=[get_resource('dark_oak_log')],
     skill_req=('foraging', 3),
 )
 SAVANNA_WOODLAND = Zone(
     'savanna', -350, -15,
-    resources=[get_resource('acacia_wood')],
+    resources=[get_resource('acacia_log')],
     npcs=[get_npc('master_tactician_funk')],
     skill_req=('foraging', 4),
 )
 JUNGLE_ISLAND = Zone(
     'jungle', -55, -60,
-    resources=[get_resource('jungle_wood')],
+    resources=[get_resource('jungle_log')],
     skill_req=('foraging', 5),
 )
 

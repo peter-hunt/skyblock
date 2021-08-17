@@ -32,4 +32,4 @@ def get_mob(name: str, /, *, warn=True, **kwargs) -> Optional[ItemType]:
     if includes(MOBS, name):
         return get(MOBS, name, **kwargs)
     elif warn:
-        red(f'Mob not found: {name!r}')
+        raise ValueError(f'Mob not found: {name!r}')

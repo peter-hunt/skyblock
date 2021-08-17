@@ -43,7 +43,7 @@ def get_collection(name: str) -> Optional[Collection]:
         if collection.name == name:
             return collection
 
-    red(f'Collection not found: {name!r}')
+    raise ValueError(f'Collection not found: {name!r}')
 
 
 def calc_coll_level(name: str, amount: int) -> Optional[int]:

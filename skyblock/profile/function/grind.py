@@ -177,8 +177,6 @@ def gather(self, name: str, tool_index: Optional[int],
         if self.has_item({'name': 'farmer_orb'}):
             time_cost -= 0.05
 
-        farming_fortune = self.get_stat('farming_fortune', tool_index)
-        fortune_mult = 1 + farming_fortune / 100
         drop_item = resource.name
         default_amount = resource.amount
 
@@ -186,6 +184,9 @@ def gather(self, name: str, tool_index: Optional[int],
         cp_step = Decimal('0.1')
         for i in range(1, iteration + 1):
             sleep(time_cost)
+            farming_fortune = self.get_stat('farming_fortune', tool_index)
+            fortune_mult = 1 + farming_fortune / 100
+
             count_pool = random_amount(default_amount, mult=fortune_mult)
 
             self.recieve_item({'name': drop_item, 'count': count_pool})
@@ -204,6 +205,66 @@ def gather(self, name: str, tool_index: Optional[int],
                 perc = floor((i / iteration) * 100)
                 gray(f'{i} / {iteration} ({perc}%) done')
 
+    elif isinstance(resource, Log):
+        is_wood = True
+
+        break_amount = 1
+        cooldown = 0
+        time_cost = 0.5
+        if 'log' not in resource.name:
+            time_cost = 0.5
+            is_wood = False
+        elif getattr(tool, 'name', None) in {'jungle_axe', 'treecapitator'}:
+            cooldown = 2
+            if has_active_pet:
+                if 'evolves_axes' in active_pet.abilities:
+                    cooldown *= 1 - 0.5 * pet_mult
+            break_amount = 10 if tool.name[0] == 'j' else 35
+        else:
+            if isinstance(tool, Axe):
+                tool_speed = tool.tool_speed
+                if 'efficiency' in enchants:
+                    tool_speed += enchants['efficiency'] ** 2 + 1
+                time_cost = 1.5 * resource.hardness / tool_speed
+            else:
+                tool_speed = 1
+                time_cost = 5 * resource.hardness / tool_speed
+            time_cost = ceil(time_cost * 20) / 20
+        time_cost += cooldown
+
+        wood_name = resource.name.replace('_log', '_wood')
+
+        last_cp = Decimal()
+        cp_step = Decimal('0.1')
+        last_harvest = time()
+        for i in range(1, iteration + 1):
+            sleep(max(last_harvest - time() + time_cost, 0))
+
+            foraging_fortune = self.get_stat('foraging_fortune', tool_index)
+            fortune_mult = 1 + foraging_fortune / 100
+
+            last_harvest = time()
+            count_pool = random_int(fortune_mult)
+
+            for i in range(break_amount):
+                if i != 0:
+                    sleep(0.02)
+
+                self.recieve_item({'name': wood_name, 'count': count_pool})
+                if is_wood:
+                    self.collect(wood_name, count_pool)
+                    if random_amount((1, 5)) == 1:
+                        self.recieve_item({'name': f'{wood_name[:-5]}_sapling',
+                                           'count': 1})
+
+                self.add_skill_exp('foraging', resource.foraging_exp,
+                                   display=True)
+
+            if i >= (last_cp + cp_step) * iteration:
+                while i >= (last_cp + cp_step) * iteration:
+                    last_cp += cp_step
+                gray(f'{i} / {iteration} ({(last_cp * 100):.0f}%) done')
+
     elif isinstance(resource, Mineral):
         magic_find = self.get_stat('magic_find', tool_index)
         magic_find_str = f'{AQUA}(+{format_number(magic_find)}% Magic Find!)'
@@ -219,8 +280,6 @@ def gather(self, name: str, tool_index: Optional[int],
 
         time_cost = 30 * resource.hardness / mining_speed
 
-        mining_fortune = self.get_stat('mining_fortune', tool_index)
-        fortune_mult = 1 + mining_fortune / 100
         exp_mult = 1 + 0.125 * enchants.get('experience', 0)
         if self.has_item({'name': 'experience_artifact'}):
             exp_mult *= 1.25
@@ -244,6 +303,9 @@ def gather(self, name: str, tool_index: Optional[int],
         cp_step = Decimal('0.1')
         for i in range(1, iteration + 1):
             sleep(time_cost)
+            mining_fortune = self.get_stat('mining_fortune', tool_index)
+            fortune_mult = 1 + mining_fortune / 100
+
             count_pool = random_amount(default_amount, mult=fortune_mult)
             self.recieve_item({'name': drop_item, 'count': count_pool})
             self.collect(drop_item, count_pool)
@@ -277,65 +339,6 @@ def gather(self, name: str, tool_index: Optional[int],
             if 'mithril' in resource.name and randint(1, 50) == 1:
                 white('Titanium has spawned nearby!')
                 self.gather('titanium', tool_index)
-
-    elif isinstance(resource, Wood):
-        is_wood = True
-
-        break_amount = 1
-        cooldown = 0
-        time_cost = 0.5
-        if 'wood' not in resource.name:
-            time_cost = 0.5
-            is_wood = False
-        elif getattr(tool, 'name', None) in {'jungle_axe', 'treecapitator'}:
-            cooldown = 2
-            if has_active_pet:
-                if 'evolves_axes' in active_pet.abilities:
-                    cooldown *= 1 - 0.5 * pet_mult
-            break_amount = 10 if tool.name[0] == 'j' else 35
-        else:
-            if isinstance(tool, Axe):
-                tool_speed = tool.tool_speed
-                if 'efficiency' in enchants:
-                    tool_speed += enchants['efficiency'] ** 2 + 1
-                time_cost = 1.5 * resource.hardness / tool_speed
-            else:
-                tool_speed = 1
-                time_cost = 5 * resource.hardness / tool_speed
-            time_cost = ceil(time_cost * 20) / 20
-        time_cost += cooldown
-
-        foraging_fortune = self.get_stat('foraging_fortune', tool_index)
-        fortune_mult = 1 + foraging_fortune / 100
-
-        wood_name = resource.name
-
-        last_cp = Decimal()
-        cp_step = Decimal('0.1')
-        last_harvest = time()
-        for i in range(1, iteration + 1):
-            sleep(max(last_harvest - time() + time_cost, 0))
-            last_harvest = time()
-            count_pool = random_int(fortune_mult)
-
-            for i in range(break_amount):
-                if i != 0:
-                    sleep(0.02)
-
-                self.recieve_item({'name': wood_name, 'count': count_pool})
-                if is_wood:
-                    self.collect(wood_name, count_pool)
-                    if random_amount((1, 5)) == 1:
-                        self.recieve_item({'name': f'{wood_name[:-5]}_sapling',
-                                           'count': 1})
-
-                self.add_skill_exp('foraging', resource.foraging_exp,
-                                   display=True)
-
-            if i >= (last_cp + cp_step) * iteration:
-                while i >= (last_cp + cp_step) * iteration:
-                    last_cp += cp_step
-                gray(f'{i} / {iteration} ({(last_cp * 100):.0f}%) done')
 
     else:
         red('Unknown resource type.')
@@ -595,18 +598,18 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
             strike_count = 0
             killed = False
 
-            strike_chance = 1 + ferocity / 100
-            strike_chance *= 1 + attack_speed / 100
-            strike_chance *= knockback * punch
+            strike_count = 1 + ferocity / 100
+            strike_count *= 1 + attack_speed / 100
+            strike_count *= knockback * punch
 
             if striked:
                 sleep(attack_time_cost)
             else:
                 striked = True
                 if not random_bool((45.75 + 0.625 * (speed / 100)) / 100):
-                    strike_chance = 0
+                    strike_count = 0
 
-            for _ in range(random_int(strike_chance)):
+            for _ in range(random_int(strike_count)):
                 damage_dealt = 5 + weapon_dmg
 
                 if strike_count % 3 == 2:
@@ -620,11 +623,8 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                         damage_dealt *= 1.1
                     is_crit = True
 
-                effective_strength = strength + soul_eater_strength
-                damage_dealt *= 1 + effective_strength / 100
-
-                if soul_eater_strength != 0:
-                    soul_eater_strength = 0
+                damage_dealt *= 1 + (strength + soul_eater_strength) / 100
+                soul_eater_strength = 0
 
                 combat_level = self.get_skill_level('combat')
 

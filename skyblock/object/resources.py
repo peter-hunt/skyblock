@@ -19,12 +19,13 @@ def load_resource(obj, /):
         return obj
     elif obj['type'] == 'crop':
         return Crop.from_obj(obj)
+    elif obj['type'] == 'log':
+        return Log.from_obj(obj)
     elif obj['type'] == 'mineral':
         return Mineral.from_obj(obj)
-    elif obj['type'] == 'wood':
-        return Wood.from_obj(obj)
     else:
-        return obj
+        red(f"Invalid Resource type: {obj['type']}")
+        exit()
 
 
 if not Path(join_path('skyblock', 'data', 'resources')).is_dir():
@@ -45,4 +46,4 @@ def get_resource(name: str, **kwargs) -> Optional[ItemType]:
     if includes(RESOURCES, name):
         return get(RESOURCES, name, **kwargs)
     else:
-        red(f'Resource not found: {name!r}')
+        raise ValueError(f'Resource not found: {name!r}')
