@@ -8,7 +8,7 @@ from ..function.util import format_name, format_number, format_zone
 __all__ = ['format_temp']
 
 
-def format_temp(template: str, params: Dict[str, Any], /) -> str:
+def format_temp(template: str, params: Dict[str, Any] = {}, /) -> str:
     result = template
 
     for code, color in COLOR_CODE.items():

@@ -1,6 +1,6 @@
-__all__ = ['ALL_STAT', 'HIDDEN_STATS', 'PERC_STATS']
+__all__ = ['ALL_STATS', 'HIDDEN_STATS', 'PERC_STATS']
 
-ALL_STAT = [
+ALL_STATS = [
     'health',
     'defense',
     'true_defense',

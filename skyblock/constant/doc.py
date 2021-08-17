@@ -200,10 +200,9 @@ Get information about your skills.
 > split <index> <index> <amount>
 Split items to another slot.
 
-> stat [index]
-> stats [index]
+> stat [stat-name] [index]
+> stats [stat-name] [index]
 Get information about your stats.
-Can be done holding item.
 
 > talkto <npc>
 Talk to an npc.

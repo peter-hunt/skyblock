@@ -30,7 +30,7 @@ for category in [*walk(join_path('skyblock', 'data', 'templates'))][0][1]:
 
 def get_template(category: str, name: str, /) -> Optional[str]:
     if category not in TEMPLATES:
-        red(f'Template category not found: {name!r}')
+        red(f'Template category not found: {category!r}')
     elif name not in TEMPLATES[category]:
         red(f'Template not found: {name!r}')
     else:

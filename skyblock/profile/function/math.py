@@ -306,8 +306,10 @@ def get_skill_level(self, name: str, /) -> int:
     return calc_skill_level(name, getattr(self, f'experience_skill_{name}'))
 
 
-def get_stat(self, name: str, index: Optional[int] = None, /):
-    value = 0
+def get_stat(self, name: str, index: Optional[int] = None, /, *,
+             separated: bool = False):
+    base_value = 0
+    bonus_value = 0
 
     active_pet = self.get_active_pet()
     has_active_pet = isinstance(active_pet, Pet)
@@ -324,31 +326,31 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
 
     if getattr(item, 'modifier', None) is not None:
         modifier_bonus = get_modifier(item.modifier, item.rarity)
-        value += modifier_bonus.get(name, 0)
+        bonus_value += modifier_bonus.get(name, 0)
 
     item_ench = getattr(item, 'enchantments', {})
 
     if name == 'strength':
         if isinstance(item, (Bow, Sword, FishingRod)):
-            value += item.hot_potato * 2
+            bonus_value += item.hot_potato * 2
     if name == 'crit_damage':
-        value += item_ench.get('critical', 0) * 10
+        bonus_value += item_ench.get('critical', 0) * 10
     elif name == 'mining_speed':
         if item_ench.get('efficiency', 0) != 0:
-            value += 10 + item_ench['efficiency'] * 20
+            bonus_value += 10 + item_ench['efficiency'] * 20
     elif name == 'sea_creature_chance':
-        value += item_ench.get('angler', 0)
-        value += item_ench.get('expertise', 0) * 0.6
+        bonus_value += item_ench.get('angler', 0)
+        bonus_value += item_ench.get('expertise', 0) * 0.6
     elif name == 'ferocity':
-        value += item_ench.get('vicious', 0)
+        bonus_value += item_ench.get('vicious', 0)
     elif name == 'mining_fortune':
-        value += item_ench.get('fortune', 0) * 10
+        bonus_value += item_ench.get('fortune', 0) * 10
     elif name == 'farming_fortune':
-        value += item_ench.get('cultivating', 0)
-        value += item_ench.get('harvesting', 0) * 12.6
+        bonus_value += item_ench.get('cultivating', 0)
+        bonus_value += item_ench.get('harvesting', 0) * 12.6
 
     if not isinstance(item, Accessory):
-        value += item.get_stat(name, self)
+        bonus_value += item.get_stat(name, self)
 
     combat_level = self.get_skill_level('combat')
     farming_level = self.get_skill_level('farming')
@@ -366,11 +368,11 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
             set_bonus = False
             continue
 
-        value += getattr(piece, name, 0)
+        bonus_value += getattr(piece, name, 0)
 
         if getattr(piece, 'modifier', None) is not None:
             modifier_bonus = get_modifier(piece.modifier, piece.rarity)
-            value += modifier_bonus.get(name, 0)
+            bonus_value += modifier_bonus.get(name, 0)
 
         for current_ability in piece.abilities:
             if current_ability in SET_BONUSES:
@@ -387,7 +389,7 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
         if isinstance(item, Accessory):
             if item.modifier is not None:
                 modifier_bonus = get_modifier(item.modifier, item.rarity)
-                value += modifier_bonus.get(name, 0)
+                bonus_value += modifier_bonus.get(name, 0)
 
     for piece in self.armor:
         if not isinstance(piece, Armor):
@@ -429,99 +431,99 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
             if self.island in {'gold', 'deep', 'mines'}:
                 delta *= 2
 
-        value += delta
+        bonus_value += delta
 
     pet_mult = 0
 
     if has_active_pet:
         pet_mult = calc_pet_level(active_pet.rarity, active_pet.exp) / 100
-        value += getattr(active_pet, name, 0) * pet_mult
+        bonus_value += getattr(active_pet, name, 0) * pet_mult
 
     cap = None
 
     if name == 'health':
-        value += 100
-        value += min(farming_level, 14) * 2
-        value += max(min(farming_level - 14, 5), 0) * 3
-        value += max(min(farming_level - 19, 6), 0) * 4
-        value += max(min(farming_level - 25, 35), 0) * 5
-        value += min(fishing_level, 14) * 2
-        value += max(min(fishing_level - 14, 5), 0) * 3
-        value += max(min(fishing_level - 19, 6), 0) * 4
-        value += max(min(fishing_level - 25, 35), 0) * 5
-        value += 2 * bestiary_ms
+        base_value += 100
+        base_value += min(farming_level, 14) * 2
+        base_value += max(min(farming_level - 14, 5), 0) * 3
+        base_value += max(min(farming_level - 19, 6), 0) * 4
+        base_value += max(min(farming_level - 25, 35), 0) * 5
+        base_value += min(fishing_level, 14) * 2
+        base_value += max(min(fishing_level - 14, 5), 0) * 3
+        base_value += max(min(fishing_level - 19, 6), 0) * 4
+        base_value += max(min(fishing_level - 25, 35), 0) * 5
+        base_value += 2 * bestiary_ms
         if set_bonus == 'lapis_armor':
-            value += 60
+            bonus_value += 60
         if has_active_pet:
             if 'archimedes' in active_pet.abilities:
-                value *= 1 + 0.2 * pet_mult
+                bonus_value += (base_value + bonus_value) * (0.2 * pet_mult)
     elif name == 'defense':
-        value += min(mining_level, 14) * 1
-        value += max(min(mining_level - 14, 46), 0) * 2
+        base_value += min(mining_level, 14) * 1
+        base_value += max(min(mining_level - 14, 46), 0) * 2
     elif name == 'strength':
-        value += min(foraging_level, 14) * 1
-        value += max(min(foraging_level - 14, 36), 0) * 2
+        base_value += min(foraging_level, 14) * 1
+        base_value += max(min(foraging_level - 14, 36), 0) * 2
     elif name == 'speed':
         cap = 400
-        value += 100
+        base_value += 100
         if set_bonus == 'speedster_armor':
-            value += 20
+            bonus_value += 20
         elif set_bonus == 'farm_armor_speed':
             if self.island in {'barn', 'desert'} or self.zone == 'farm':
-                value += 25
+                bonus_value += 25
         elif set_bonus == 'farm_suit_speed':
             if self.island in {'barn', 'desert'}:
-                value += 20
+                bonus_value += 20
         elif set_bonus == 'young_blood':
             cap += 100
         if has_active_pet:
             if self.island == 'park':
                 if 'epic_vine_swing' in active_pet.abilities:
-                    value += 100 * pet_mult
+                    bonus_value += 100 * pet_mult
                 elif 'rare_vine_swing' in active_pet.abilities:
-                    value += 75 * pet_mult
+                    bonus_value += 75 * pet_mult
             if 'hunter' in active_pet.abilities:
-                value += 100 * pet_mult
+                bonus_value += 100 * pet_mult
                 cap += 100 * pet_mult
         if self.has_item({'name': 'speed_artifact'}):
-            value += 5
+            bonus_value += 5
         elif self.has_item({'name': 'speed_ring'}):
-            value += 3
+            bonus_value += 3
         elif self.has_item({'name': 'speed_talisman'}):
-            value += 1
+            bonus_value += 1
         if self.has_item({'name': 'farming_talisman'}):
             if self.island in {'barn', 'desert'} or self.zone == 'farm':
-                value *= 1.1
+                bonus_value += (base_value + bonus_value) * 0.1
         if self.has_item({'name': 'wood_affinity_talisman'}):
             if self.zone in {'forest', 'graveyard', 'wilderness'}:
-                value *= 1.1
+                bonus_value += (base_value + bonus_value) * 0.1
         if self.has_item({'name': 'village_affinity_talisman'}):
             if self.zone == 'village':
-                value *= 1.1
+                bonus_value += (base_value + bonus_value) * 0.1
         if self.has_item({'name': 'mine_affinity_talisman'}):
             if (self.island in {'gold', 'deep', 'mines'}
                     or self.zone == 'coal_mine'):
-                value *= 1.1
+                bonus_value += (base_value + bonus_value) * 0.1
     elif name == 'crit_chance':
-        value += 30
-        value += combat_level * 0.5
+        base_value += 30
+        base_value += combat_level * 0.5
     elif name == 'crit_damage':
-        value += 50
+        base_value += 50
     elif name == 'intelligence':
-        value += 100
-        value += min(enchanting_level, 14) * 1
-        value += max(min(enchanting_level - 14, 46), 0) * 2
+        base_value += 100
+        base_value += min(enchanting_level, 14) * 1
+        base_value += max(min(enchanting_level - 14, 46), 0) * 2
     elif name == 'sea_creature_chance':
-        value += 20
+        base_value += 20
         if has_active_pet:
             if 'epic_echolocation' in active_pet.abilities:
-                value *= 1 + 0.1 * pet_mult
+                bonus_value += (base_value + bonus_value) * (0.1 * pet_mult)
             elif 'rare_echolocation' in active_pet.abilities:
-                value *= 1 + 0.07 * pet_mult
+                bonus_value += (base_value + bonus_value) * (0.07 * pet_mult)
     elif name == 'magic_find':
         if has_active_pet:
             if 'supernatural' in active_pet.abilities:
-                value += 15 * pet_mult
+                bonus_value += 15 * pet_mult
 
         pet_rarities = defaultdict(int)
 
@@ -533,57 +535,62 @@ def get_stat(self, name: str, index: Optional[int] = None, /):
         pet_milestones = [10, 25, 50, 75, 100, 130, 175]
         for milestone in pet_milestones:
             if pet_score >= milestone:
-                value += 1
+                base_value += 1
             else:
                 break
     elif name == 'pet_luck':
-        value += taming_level
+        base_value += taming_level
         if has_active_pet:
             if 'omen' in active_pet.abilities:
-                value += 15 * pet_mult
+                bonus_value += 15 * pet_mult
     elif name == 'mining_speed':
         if set_bonus == 'glacite_armor':
-            value += 2 * mining_level
+            bonus_value += 2 * mining_level
         if self.has_item({'name': 'haste_ring'}):
-            value += 50
+            bonus_value += 50
         if self.has_item({'name': 'titanium_relic'}):
-            value += 60
+            bonus_value += 60
         elif self.has_item({'name': 'titanium_artifact'}):
-            value += 45
+            bonus_value += 45
         elif self.has_item({'name': 'titanium_ring'}):
-            value += 30
+            bonus_value += 30
         elif self.has_item({'name': 'titanium_talisman'}):
-            value += 15
+            bonus_value += 15
     elif name == 'ferocity':
         if has_active_pet:
             if 'legendary_merciless_swipe' in active_pet.abilities:
-                value *= 1 + 0.5 * pet_mult
+                bonus_value += (base_value + bonus_value) * (0.5 * pet_mult)
             elif 'uncommon_merciless_swipe' in active_pet.abilities:
-                value *= 1 + 0.33 * pet_mult
+                bonus_value += (base_value + bonus_value) * (0.33 * pet_mult)
             elif 'common_merciless_swipe' in active_pet.abilities:
-                value *= 1 + 0.15 * pet_mult
+                bonus_value += (base_value + bonus_value) * (0.15 * pet_mult)
     elif name == 'mining_fortune':
-        value += mining_level * 4
+        base_value += mining_level * 4
     elif name == 'foraging_fortune':
-        value += foraging_level * 4
+        base_value += foraging_level * 4
     elif name == 'farming_fortune':
-        value += farming_level * 4
+        base_value += farming_level * 4
 
     if set_bonus == 'superior_dragon_armor':
-        value *= 1.05
+        bonus_value += (base_value + bonus_value) * 0.05
     if set_bonus == 'fairy_armor' and name == 'speed':
-        value *= 1.1
+        bonus_value += (base_value + bonus_value) * 0.1
 
     if has_active_pet:
         if 'superior' in active_pet.abilities:
-            value *= 1 + 0.1 * pet_mult
+            bonus_value += (base_value + bonus_value) * (0.1 * pet_mult)
 
     if cap is not None:
-        value = min(cap, value)
+        base_value = min(cap, base_value)
+        bonus_value = min(cap - base_value, bonus_value)
     elif name in {'defense', 'speed', 'crit_chance'}:
-        value = max(value, 0)
+        base_value = max(base_value, 0)
+        bonus_value = max(base_value + bonus_value, 0) - base_value
 
-    return value
+    if separated:
+        return base_value, bonus_value
+    else:
+        return base_value + bonus_value
 
 
 def parse_index(self, word: str, length: Optional[int] = None,

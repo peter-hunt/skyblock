@@ -6,8 +6,10 @@ from typing import Iterable, Optional, Union
 
 from ...constant.colors import *
 from ...constant.main import ARMOR_PARTS
-from ...constant.stat import ALL_STAT, HIDDEN_STATS, PERC_STATS
+from ...constant.stat import ALL_STATS, HIDDEN_STATS, PERC_STATS
 from ...constant.util import Number
+from ...format.function import format_temp
+from ...format.template import get_template
 from ...function.io import *
 from ...function.math import (
     calc_bestiary_upgrade_amount, calc_skill_level_info, display_skill_reward,
@@ -32,9 +34,9 @@ __all__ = [
     'display_hotm', 'display_item', 'display_inv', 'display_location',
     'display_minion_info', 'display_minions', 'display_money', 'display_pets',
     'display_playtime', 'display_recipe_info', 'display_recipe',
-    'display_recipes', 'display_shop', 'display_stats', 'display_skill_add',
-    'display_skill', 'display_skills', 'display_warp', 'npc_silent',
-    'npc_speak',
+    'display_recipes', 'display_shop', 'display_stat', 'display_stats',
+    'display_skill_add', 'display_skill', 'display_skills', 'display_warp',
+    'npc_silent', 'npc_speak',
 ]
 
 
@@ -671,27 +673,109 @@ def display_shop(self, npc: Npc, trade_index: Optional[int] = None, /):
         self.display_item(item)
 
 
+def display_stat(self, stat_name: str, index: Optional[int] = None, /):
+    width, _ = get_terminal_size()
+    width = ceil(width * 0.85)
+
+    dark_blue(f"{BOLD}{'':-^{width}}")
+
+    value = floor(self.get_stat(stat_name, index))
+    base_value, bonus_value = self.get_stat(stat_name, index, separated=True)
+    base_value = floor(base_value)
+    bonus_value = floor(bonus_value)
+    if stat_name in PERC_STATS:
+        ext = '%'
+    else:
+        ext = ' HP' if stat_name == 'health' else ''
+    white(f'{STAT_COLORS[stat_name]} {format_name(stat_name)}'
+          f' {WHITE}{format_number(value)}{ext}')
+
+    temp_param = {}
+    if stat_name == 'health':
+        regen = value * 0.01 + 1.5
+        if self.has_item({'name': 'healing_ring'}):
+            regen *= 1.1
+        elif self.has_item({'name': 'healing_talisman'}):
+            regen *= 1.05
+        temp_param['amount'] = regen
+
+    desc_str = format_temp(get_template('stats', f'{stat_name}_desc'),
+                           temp_param)
+    gray(desc_str)
+
+    gray(f'\nBase {format_name(stat_name)}: '
+         f'{GREEN}{format_number(base_value)}{ext}')
+    base_str = format_temp(get_template('stats', f'{stat_name}_base'))
+    dark_gray(f'  {base_str}')
+
+    gray(f'\nBonus {format_name(stat_name)}: '
+         f'{DARK_GRAY}+{YELLOW}{format_number(bonus_value)}{ext}')
+    bonus_str = format_temp(get_template('stats', f'{stat_name}_bonus'))
+    dark_gray(f'  {bonus_str}')
+
+    if stat_name == 'defense':
+        if value <= 0:
+            reduction = 0
+        else:
+            reduction = value / (100 + value) * 100
+
+        health = self.get_stat('health', index)
+        ehp = health * (1 + value / 100)
+        ehp_str = format_number(floor(ehp))
+        health_icon = STAT_COLORS['health']
+        gray(f'\nDamage Reduction: {GREEN}{reduction:.1f}%')
+        gray(f'Effective Health: {RED}{ehp_str}{health_icon}')
+    elif stat_name == 'speed':
+        gray(f'\nYou are {GREEN}{value - 100:.0f}% {GRAY}faster!')
+    elif stat_name == 'intelligence':
+        gray(f'\nMagic Damage: +{AQUA}{format_number(value)}%')
+        gray(f'Mana Pool: {AQUA}{format_number(value + 100)}')
+    elif stat_name.endswith('_fortune'):
+        extra = value % 100
+        if value <= 100:
+            gray(f'Chance for {GREEN}double {GRAY}drops: {GREEN}'
+                 f'{format_number(extra)}%')
+        elif value <= 200:
+            gray(f'Chance for {GREEN}double {GRAY}drops: {GREEN}'
+                 f'100%')
+            gray(f'Chance for {GOLD}triple {GRAY}drops: {GREEN}'
+                 f'{format_number(extra)}%')
+        elif value <= 300:
+            gray(f'Chance for {GOLD}triple {GRAY}drops: {GREEN}'
+                 f'100%')
+            gray(f'Chance for {DARK_PURPLE}quadruple {GRAY}drops: {GREEN}'
+                 f'{format_number(extra)}%')
+        else:
+            gray(f'Average drop multiplier: {GREEN}'
+                 f'{format_number(value)}%')
+    elif stat_name == 'ferocity':
+        base, chance = divmod(value, 100)
+        chance = floor(chance)
+        gray(f'\nBase extra strikes: {RED}{format_number(base)}')
+        gray(f'Chance for 1 more: {RED}{format_number(chance)}%')
+
+    dark_blue(f"{BOLD}{'':-^{width}}")
+
+
 def display_stats(self, index: Optional[int] = None, /):
+    width, _ = get_terminal_size()
+    width = ceil(width * 0.85)
+
+    dark_blue(f"{BOLD}{'':-^{width}}")
+
     green('Your SkyBlock Profile')
-    for stat_name in ALL_STAT:
+    for stat_name in ALL_STATS:
         value = floor(self.get_stat(stat_name, index))
         if value == 0 and stat_name in HIDDEN_STATS:
             continue
-        icon = STAT_COLORS[stat_name]
         if stat_name in PERC_STATS:
             ext = '%'
         else:
             ext = ' HP' if stat_name == 'health' else ''
-        white(f'  {icon} {format_name(stat_name)}'
+        white(f'  {STAT_COLORS[stat_name]} {format_name(stat_name)}'
               f' {WHITE}{format_number(value)}{ext}')
-        if stat_name == 'defense':
-            health = self.get_stat('health', index)
-            defense = self.get_stat('defense', index)
-            ext = ' EHP'
-            icon = STAT_COLORS['ehp']
-            ehp = floor(health * (1 + defense / 100))
-            white(f"  {icon} {format_name('ehp')}"
-                  f" {WHITE}{format_number(ehp)} EHP")
+
+    dark_blue(f"{BOLD}{'':-^{width}}")
 
 
 def display_skill_add(self, name: str, amount: Number, /):

@@ -15,7 +15,7 @@ I started this project because **my friends couldn't log onto Hypixel**. I'm als
 
 I chose Python because **I'm the most familiar with Python**. Plus, Python code is more readable and understandable than most of the other languages. And since this is a command-line project, which doesn't need to run fast, Python is the choice.
 
-It requires the Skyblock Data repo, [Skyblock Data](https://github.com/peter-hunt/skyblock-data), which **will install automatically**.
+It requires the Skyblock Data repo, [Skyblock Data](https://github.com/peter-hunt/skyblock-data), which **will install and update automatically** (the main program updates the data every 12 hours).
 
 # Table of Contents
 
@@ -120,7 +120,7 @@ To check command usage, type `help` for command documentation.
 * NPC Buying and Trading items
 * Minions
 * Modifiers and Reforging
-* Pets
+* Pets and Pet Score
 * Skills
 
 ## Planned Features:
@@ -131,17 +131,16 @@ To check command usage, type `help` for command documentation.
 * Fairy Souls
 * Forging (Dwarven Mines)
 * HoTM Skill Tree (Dwarven Mines)
-* Mayors and Perks
+* Mayors and Unique Perks
 * Milestone Pets (Grandma Wolf Pet added)
 * Minion Support Items
 * NPC Usage (like Kat, Fetchur, etc.)
 * Pet Support Items
-* Pet Score
 * Sentences organized into files for translation update (abilities added)
 
 # Screenshots
 
-Here's some footage on the gameplay:
+Here's some footage on the gameplay: (Outdated)
 
 ![](screenshots/usage-1.png)
 ![](screenshots/usage-2.png)

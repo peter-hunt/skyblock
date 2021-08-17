@@ -5,6 +5,7 @@ from ..._lib import add_history
 from ...constant.colors import *
 from ...constant.doc import profile_doc
 from ...constant.main import ARMOR_PARTS
+from ...constant.stat import ALL_STATS
 from ...function.io import *
 from ...function.math import calc_exp_level, calc_exp, calc_pet_exp
 from ...function.util import (
@@ -770,14 +771,28 @@ def mainloop(self):
             self.split(index_1, index_2, amount)
 
         elif words[0] in {'stat', 'stats'}:
-            if len(words) == 2:
-                index = self.parse_index(words[1])
+            stat_name = 'all'
+            index = None
+            if len(words) == 3:
+                stat_name = self.parse_index(words[1])
+                index = self.parse_index(words[2])
                 if index is None:
                     continue
+            elif len(words) == 2:
+                if words[1] in ALL_STATS:
+                    stat_name = words[1]
+                else:
+                    index = self.parse_index(words[1])
+                    if index is None:
+                        red('Invalid stat name!')
+                        continue
             else:
                 index = None
 
-            self.display_stats(index)
+            if stat_name == 'all':
+                self.display_stats(index)
+            else:
+                self.display_stat(stat_name, index)
 
         elif words[0] == 'talkto':
             name = words[1]
