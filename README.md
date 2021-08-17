@@ -140,11 +140,14 @@ To check command usage, type `help` for command documentation.
 
 # Screenshots
 
-Here's some footage on the gameplay: (Outdated)
+Here's some footage on the gameplay:
 
 ![](screenshots/usage-1.png)
 ![](screenshots/usage-2.png)
 ![](screenshots/usage-3.png)
+![](screenshots/usage-4.png)
+![](screenshots/usage-5.png)
+![](screenshots/usage-6.png)
 
 # How to Contribute
 

@@ -1,4 +1,5 @@
 from sys import version_info
+from subprocess import run
 
 
 __all__ = ['skyblock_main']
@@ -15,4 +16,6 @@ def skyblock_main():
 
 
 if __name__ == '__main__':
+    run(['clear'])
+    print('% python -m skyblock')
     skyblock_main()
