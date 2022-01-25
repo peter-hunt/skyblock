@@ -431,7 +431,7 @@ def die(self, killer: Optional[str] = None, /) -> bool:
     elif did_broke_piggy:
         red(f'You died, lost {format_number(lost_coins)} coins'
             f' and your piggy bank broke!')
-    elif 'eternal_coins' in pet.abilities:
+    elif pet is not None and 'eternal_coins' in pet.abilities:
         red('You died with eternal coins from your Phoenix pet!')
     elif perc_lost == 0:
         red('You died!')
