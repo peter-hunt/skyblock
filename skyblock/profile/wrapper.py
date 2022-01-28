@@ -54,10 +54,12 @@ def profile_wrapper(cls):
                     'talisman_bag', 'wardrobe',
                 }:
                     obj[key] = [item.to_obj() for item in value]
+                elif key in {'crafted_minions', 'npc_talked', 'visited_zones'}:
+                    obj[key] = sorted(value)
                 elif key in {'collection', 'stats'}:
                     obj[key] = {
-                        name: param for name, param in value.items()
-                        if param != 0
+                        name: value[name] for name in sorted(value)
+                        if value[name] != 0
                     }
                 else:
                     obj[key] = value
