@@ -471,45 +471,46 @@ def enchant(self, item_index: int, /):
     avaliable = []
 
     all_ench = [row[0] for row in ENCHS]
+    requirements = dict(ENCH_REQUIREMENTS)
+    print(requirements)
 
     gray('Avaliable enchantments and xp level needed:')
     for name in enchant_table:
         if name not in all_ench:
             continue
 
-        for _ench, req in ENCH_REQUIREMENTS:
-            if name == _ench and req > enchanting_level:
-                break
-        else:
-            current = item.enchantments.get(name, 0)
-            xps = get_ench(name)
-            if current != 0:
-                current_xp = calc_exp(xps[min(current - 1, len(xps) - 1)])
-            else:
-                current_xp = 0
-            discounted = [
-                calc_exp(xp) if lvl + 1 == current else
-                calc_exp(xp) - current_xp
-                for lvl, xp in enumerate(xps)
-            ]
-            discounted_level = [calc_exp_level(xp) for xp in discounted]
-            avaliable.append((name, discounted_level))
+        if requirements.get(name, 0) > enchanting_level:
+            continue
 
-            blue(f'{len(avaliable):>2} {name}')
-            if current > 0:
-                xp_str = ', '.join(
-                    f'{GRAY}{xp}' if lvl + 1 < current
-                    else f'{RED}{xp}' if lvl + 1 == current
-                    else (f'{DARK_AQUA}{xp}{AQUA}➜{dxp}' if dxp <= exp_level
-                          else f'{DARK_AQUA}{xp}{AQUA}➜{YELLOW}{dxp}')
-                    if xp != dxp else f'{AQUA}{xp}'
-                    for lvl, (xp, dxp) in enumerate(
-                        zip(xps, discounted_level)))
-            else:
-                xp_str = ', '.join(
-                    f'{AQUA}{xp}' if xp <= exp_level
-                    else f'{YELLOW}{xp}' for xp in xps)
-            aqua(f'   {xp_str}')
+        current = item.enchantments.get(name, 0)
+        xps = get_ench(name)
+        if current != 0:
+            current_xp = calc_exp(xps[min(current - 1, len(xps) - 1)])
+        else:
+            current_xp = 0
+        discounted = [
+            calc_exp(xp) if lvl + 1 == current else
+            calc_exp(xp) - current_xp
+            for lvl, xp in enumerate(xps)
+        ]
+        discounted_level = [calc_exp_level(xp) for xp in discounted]
+        avaliable.append((name, discounted_level))
+
+        blue(f'{len(avaliable):>2} {name}')
+        if current > 0:
+            xp_str = ', '.join(
+                f'{GRAY}{xp}' if lvl + 1 < current
+                else f'{RED}{xp}' if lvl + 1 == current
+                else (f'{DARK_AQUA}{xp}{AQUA}➜{dxp}' if dxp <= exp_level
+                        else f'{DARK_AQUA}{xp}{AQUA}➜{YELLOW}{dxp}')
+                if xp != dxp else f'{AQUA}{xp}'
+                for lvl, (xp, dxp) in enumerate(
+                    zip(xps, discounted_level)))
+        else:
+            xp_str = ', '.join(
+                f'{AQUA}{xp}' if xp <= exp_level
+                else f'{YELLOW}{xp}' for xp in xps)
+        aqua(f'   {xp_str}')
 
     while True:
         green('Please enter the enchantment index and level.')

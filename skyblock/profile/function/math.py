@@ -6,6 +6,7 @@ from typing import Optional
 from ...constant.ability import SET_BONUSES
 from ...constant.colors import *
 from ...constant.main import COLL_ALTER, SKILL_EXP
+from ...constant.mobs import BESTIARY_ALTER
 from ...constant.util import Number
 from ...function.math import (
     calc_exp_level, calc_bestiary_level, calc_pet_level, calc_skill_level,
@@ -17,7 +18,7 @@ from ...function.util import (
     format_name, format_number, format_roman, get_family, parse_int,
 )
 from ...object.collection import is_collection, get_collection, calc_coll_level
-from ...object.mobs import MOBS
+from ...object.mobs import MOBS, get_mob
 from ...object.object import *
 from ...object.recipes import get_recipe
 
@@ -75,10 +76,22 @@ def add_kill(self, name: str, value: int = 1):
     current_stat += 3 * max(current_level - 10, 0)
     stat_delta = current_stat - original_stat
 
+    if name in BESTIARY_ALTER:
+        mob_names = BESTIARY_ALTER[name]
+    else:
+        mob_names = [name]
+    mobs = [get_mob(mob_name) for mob_name in mob_names]
+    drops = []
+    for mob in mobs:
+        drops += mob.drops
+    drops = sorted(drops, key=lambda drop: ('curlp'.index(drop[2][0]), drop[0]['name']))
+    drop_rarities = [*{*[drop[2] for drop in drops]}]
+    drop_rarities = sorted(drop_rarities, key=lambda rarity: 'curlp'.index(rarity[0]))
+
     magic_find = STAT_COLORS['magic_find']
     strength = STAT_COLORS['strength']
     loot_unlocked = {1: 'common', 3: 'uncommon', 5: 'rare', 7: 'legendary', 9: 'pray_rngesus'}.get(current_level, '')
-    if loot_unlocked:
+    if loot_unlocked in drop_rarities:
         loot_str = f'\n  {RARITY_COLORS[loot_unlocked]}{format_name(loot_unlocked)} Loot Info'
     else:
         loot_str = ''

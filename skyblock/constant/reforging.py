@@ -444,10 +444,14 @@ MELEE_MODIFIERS = {
 }
 
 PICKAXE_REFORGES = (
-    'fruitful', 'magnetic', 'refined',
+    'fleet', 'fruitful', 'magnetic', 'refined',
 )
 
 PICKAXE_MODIFIERS = {
+    'fleet': (
+        {'min_spd': 9}, {'min_spd': 15}, {'min_spd': 25},
+        {'min_spd': 40}, {'min_spd': 55}, {'min_spd': 75},
+    ),
     'fruitful': (
         {'def': 3, 'int': 1, 'min_ftn': 3},
         {'def': 4, 'int': 1, 'min_ftn': 3},

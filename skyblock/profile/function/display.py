@@ -151,7 +151,7 @@ def display_bestiary(self, name: str, /):
     else:
         stat_delta = 3
     loot_unlocked = {1: 'common', 3: 'uncommon', 5: 'rare', 7: 'legendary', 9: 'pray_rngesus'}.get(lvl + 1, '')
-    if loot_unlocked:
+    if loot_unlocked in drop_rarities:
         loot_str = f'\n  {RARITY_COLORS[loot_unlocked]}{format_name(loot_unlocked)} Loot Info'
     else:
         loot_str = ''
