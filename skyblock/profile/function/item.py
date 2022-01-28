@@ -131,14 +131,22 @@ def _recieve_item(self, pointer: ItemPointer, /) -> ItemPointer:
     counter = count
     name = pointer['name']
     kwargs = {key: pointer[key] for key in pointer
-              if key not in {'name', 'count'}}
+              if key not in {'name', 'count', 'active', 'exp', 'kill_count'} | {*STAT_COLORS.keys()}}
+    set_attrs = {key: pointer[key] for key in pointer
+                 if key in {'exp', 'kill_count'} | {*STAT_COLORS.keys()}}
+
     item_obj = get_item(name, **kwargs)
+    item_obj.count = count
+    for attr, value in set_attrs.items():
+        setattr(item_obj, attr, value)
 
     for index, slot in enumerate(self.inventory):
         if isinstance(slot, Empty):
             delta = min(counter, stack_count)
             item = get_item(name, **kwargs)
             item.count = delta
+            for attr, value in set_attrs.items():
+                setattr(item, attr, value)
             self.inventory[index] = item
             counter -= delta
 
@@ -178,11 +186,16 @@ def recieve_item(self, pointer: ItemPointer, /):
     count = pointer.get('count', 1)
     name = pointer['name']
     kwargs = {key: pointer[key] for key in pointer
-              if key not in {'name', 'count'}}
+              if key not in {'name', 'count', 'active', 'exp', 'kill_count'} | {*STAT_COLORS.keys()}}
+    set_attrs = {key: pointer[key] for key in pointer
+                 if key in {'exp', 'kill_count'} | {*STAT_COLORS.keys()}}
+
     item = get_item(name, **kwargs)
     item.count = count
     if getattr(item, 'count', 1) != 1:
         item.count = 1
+    for attr, value in set_attrs.items():
+        setattr(item, attr, value)
     count_str = '' if count <= 1 else f' {DARK_GRAY}x {format_number(count)}'
     gray(f'+ {item.display()}{count_str}')
 

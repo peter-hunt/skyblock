@@ -701,6 +701,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
              f'/{GREEN}{format_number(mob.health)}{RED}❤\n')
 
         striked = False
+        strike_count = 0
 
         while True:
             weapon_dmg = 0 if isinstance(weapon, Empty) else weapon.get_stat('damage', self)
@@ -711,21 +712,21 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                     return
                 if random_bool(1 - infinite_quiver / 10):
                     self.remove_item({'name': 'arrow', 'count': 1})
-            strike_count = 0
+
             killed = False
 
-            strike_count = 1 + ferocity / 100
-            strike_count *= 1 + attack_speed / 100
-            strike_count *= knockback * punch
+            round_count = 1 + ferocity / 100
+            round_count *= 1 + attack_speed / 100
+            round_count *= knockback * punch
 
             if striked:
                 sleep(attack_time_cost)
             else:
                 striked = True
                 if not random_bool((45.75 + 0.625 * (speed / 100)) / 100):
-                    strike_count = 0
+                    round_count = 0
 
-            for _ in range(random_int(strike_count)):
+            for _ in range(random_int(round_count)):
                 damage_dealt = 5 + weapon_dmg
 
                 if strike_count % 3 == 2:
@@ -757,12 +758,12 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                     min(titan_killer * mob.defense / 100, 0.5)
                 )
                 effective_enchants += (
-                    (execute / 100) * (mob.health - mob_hp)
+                    (execute / 100) * (1 - mob_hp / mob.health)
                 )
                 effective_enchants += (
                     min(prosecute * (mob_hp / mob.health), 0.35)
                 )
-                damage_mult = 1 + enchants
+                damage_mult = 1 + effective_enchants
                 damage_mult += (
                     0.04 * min(combat_level, 50)
                     + 0.01 * max(min(combat_level - 50, 10), 0)
