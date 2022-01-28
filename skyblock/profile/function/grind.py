@@ -10,7 +10,7 @@ from ...constant.colors import *
 from ...constant.mobs import (
     CUBISM_EFT, ENDER_SLAYER_EFT, BOA_EFT, SMITE_EFT, BLAST_PROT_EFT,
     PROJ_PROT_EFT, IMPALING_EFT, SEA_CREATURES, ZOMBIES, SKELETONS,
-    END_MOBS, WITHERS,
+    END_MOBS, WITHERS, NETHER_MOBS,
 )
 from ...function.io import *
 from ...function.math import calc_bestiary_level, calc_pet_level
