@@ -393,7 +393,6 @@ def die(self, killer: Optional[str] = None, /) -> bool:
 
     for i, pet in enumerate(self.pets):
         if pet.active:
-            self.pets[i].active = False
             break
     else:
         pet = None

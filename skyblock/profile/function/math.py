@@ -77,13 +77,18 @@ def add_kill(self, name: str, value: int = 1):
 
     magic_find = STAT_COLORS['magic_find']
     strength = STAT_COLORS['strength']
+    loot_unlocked = {1: 'common', 3: 'uncommon', 5: 'rare', 7: 'legendary', 9: 'pray_rngesus'}.get(current_level, '')
+    if loot_unlocked:
+        loot_str = f'\n  {RARITY_COLORS[loot_unlocked]}{format_name(loot_unlocked)} Loot Info'
+    else:
+        loot_str = ''
     aqua(
         f' {BOLD}REWARDS\n'
         f'  {DARK_GRAY}+{GREEN}{stat_delta} {display} {magic_find} Magic Find\n'
         f'  {DARK_GRAY}+{GREEN}{stat_delta} {display} {strength} Strength\n'
         f'  {DARK_GRAY}+{GOLD}{lvl_delta}% {GREEN}{display} {GRAY}coins\n'
         f'  {DARK_GRAY}+{GREEN}{lvl_delta * 20}%'
-        f' {GRAY}chance for extra XP orbs'
+        f' {GRAY}chance for extra XP orbs{loot_str}'
     )
 
     if current_ms > original_ms:

@@ -7,6 +7,7 @@ from typing import Iterable, Optional, Union
 
 from ...constant.colors import *
 from ...constant.main import ARMOR_PARTS
+from ...constant.mobs import BESTIARY_ALTER
 from ...constant.stat import ALL_STATS, HIDDEN_STATS, PERC_STATS
 from ...constant.util import Number
 from ...format.function import format_temp
@@ -22,7 +23,7 @@ from ...function.util import (
 )
 from ...object.collection import COLLECTIONS, get_collection
 from ...object.items import get_item
-from ...object.mobs import MOBS
+from ...object.mobs import MOBS, get_mob
 from ...object.object import *
 from ...object.recipes import CRAFTABLES, get_recipe
 from ...map.islands import ISLANDS
@@ -62,6 +63,18 @@ def display_bestiary(self, name: str, /):
     deaths = self.stats.get(f'deaths_{name}', 0)
     lvl = self.get_bestiary_level(family)
 
+    if name in BESTIARY_ALTER:
+        mob_names = BESTIARY_ALTER[name]
+    else:
+        mob_names = [name]
+    mobs = [get_mob(mob_name) for mob_name in mob_names]
+    drops = []
+    for mob in mobs:
+        drops += mob.drops
+    drops = sorted(drops, key=lambda drop: ('curlp'.index(drop[2][0]), drop[0]['name']))
+    drop_rarities = [*{*[drop[2] for drop in drops]}]
+    drop_rarities = sorted(drop_rarities, key=lambda rarity: 'curlp'.index(rarity[0]))
+
     if kills == 0:
         red("You haven't unlocked this bestiary family yet!")
         return
@@ -69,7 +82,34 @@ def display_bestiary(self, name: str, /):
     yellow(f"{BOLD}{'':-^{width}}")
     aqua(f'{display} {format_roman(lvl)}\n')
     gray(f'Kills: {GREEN}{kills}')
-    gray(f'Deaths: {GREEN}{deaths}\n')
+    gray(f'Deaths: {GREEN}{deaths}')
+
+    for rarity in drop_rarities:
+        print(f'\n{RARITY_COLORS[rarity]}{format_name(rarity)} Loot{CLN}')
+        required_lvl = {'c': 1, 'u': 3, 'r': 5, 'l': 7, 'p': 9}[rarity[0]]
+        if lvl >= required_lvl:
+            for drop in drops:
+                if drop[2] != rarity:
+                    continue
+                name = drop[0]['name']
+                kwargs = {key: drop[0][key] for key in drop[0]
+                        if key not in {'name', 'count'}}
+                item = get_item(name, **kwargs)
+                if getattr(item, 'count', 1) != 1:
+                    item.count = 1
+                count = drop[1]
+                if count == 1:
+                    count_str = ''
+                elif isinstance(count, int):
+                    count_str = f' x {count}'
+                else:
+                    count_str = f' x {count[0]}-{count[1]}'
+                chance = '' if drop[3] == 1 else f' ({GREEN}{format_number(drop[3] * 100)}%{GRAY})'
+                print(f' + {item.display()}{GRAY}{count_str}{chance}{CLN}')
+        else:
+            for drop in drops:
+                if drop[2] == rarity:
+                    print(f' + {RED}???{CLN}')
 
     amt_left, amt_to_next = calc_bestiary_upgrade_amount(kills)
 
@@ -87,11 +127,11 @@ def display_bestiary(self, name: str, /):
             chance = 100
 
         aqua(
-            f' {BOLD}REWARDS\n'
-            f'  {DARK_GRAY}+{AQUA}{stat_boost} {magic_find} Magic Find\n'
-            f'  {DARK_GRAY}+{RED}{stat_boost} {strength} Strength\n'
-            f'  {DARK_GRAY}+{GOLD}{lvl}% {GRAY}coin gain\n'
-            f'  {DARK_GRAY}+{GREEN}{chance}% {GRAY}chance for'
+            f'\n {BOLD}{format_name(name)} Bonuses\n'
+            f'{DARK_GRAY}+{AQUA}{stat_boost} {magic_find} Magic Find\n'
+            f'{DARK_GRAY}+{RED}{stat_boost} {strength} Strength\n'
+            f'{DARK_GRAY}+{GOLD}{lvl}% {GRAY}coin gain\n'
+            f'{DARK_GRAY}+{GREEN}{chance}% {GRAY}chance for'
             f' {GREEN}+{xp_orbs}{GRAY} XP orbs\n'
         )
 
@@ -110,14 +150,18 @@ def display_bestiary(self, name: str, /):
         stat_delta = 2
     else:
         stat_delta = 3
+    loot_unlocked = {1: 'common', 3: 'uncommon', 5: 'rare', 7: 'legendary', 9: 'pray_rngesus'}.get(lvl + 1, '')
+    if loot_unlocked:
+        loot_str = f'\n  {RARITY_COLORS[loot_unlocked]}{format_name(loot_unlocked)} Loot Info'
+    else:
+        loot_str = ''
     aqua(
-        f' {BOLD}REWARDS\n'
         f'  {DARK_GRAY}+{GREEN}{stat_delta} {AQUA}{display}'
         f' {magic_find} Magic Find\n'
         f'  {DARK_GRAY}+{GREEN}{stat_delta} {AQUA}{display}'
         f' {strength} Strength\n'
         f'  {DARK_GRAY}+{GOLD}1% {AQUA}{display} {GRAY}coins\n'
-        f'  {DARK_GRAY}+{GREEN}20% {GRAY}chance for extra XP orbs'
+        f'  {DARK_GRAY}+{GREEN}20% {GRAY}chance for extra XP orbs{loot_str}'
     )
 
     yellow(f"{BOLD}{'':-^{width}}")
