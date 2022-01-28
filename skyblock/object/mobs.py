@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Optional
 
 from .._lib import _open
-from ..function.io import *
+from ..function.io import red
 from ..function.util import get, includes
 from ..path import join_path
 
@@ -32,4 +32,4 @@ def get_mob(name: str, /, *, warn=True, **kwargs) -> Optional[ItemType]:
     if includes(MOBS, name):
         return get(MOBS, name, **kwargs)
     elif warn:
-        raise ValueError(f'Mob not found: {name!r}')
+        red(f'Mob not found: {name!r}')

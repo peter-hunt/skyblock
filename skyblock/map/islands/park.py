@@ -20,7 +20,7 @@ HOWLING_CAVE = Zone(
 SPRUCE_WOOD = Zone(
     'spruce', -325, 0,
     resources=[get_resource('spruce_log'), get_resource('ice')],
-    npcs=[get_npc('melancholic_viking')],
+    npcs=[get_npc('viking')],
     skill_req=('foraging', 2),
 )
 DARK_THICKET = Zone(

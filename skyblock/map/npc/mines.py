@@ -27,13 +27,13 @@ MINES_NPCS = [
     Npc('gimley',
         dialog=[(
             'Burp', 'Buurp', 'Buuuuurp', 'Buuuuuuuuuuuuuurp',
-            'BURP', 'BUURRPPP', '‎*Inception BRRRAAWWWWWBRBRBB noises*',
+            'BURP', 'BUURRPPP', '*Inception BRRRAAWWWWWBRBRBB noises*',
         )]),
     Npc('grandan'),
     Npc('hornum',
         dialog=[(
             'Burp', 'Buurp', 'Buuuuurp', 'Buuuuuuuuuuuuuurp',
-            'BURP', 'BUURRPPP', '‎*Inception BRRRAAWWWWWBRBRBB noises*',
+            'BURP', 'BUURRPPP', '*Inception BRRRAAWWWWWBRBRBB noises*',
         )]),
     Npc('jotraeline_greatforge',
         dialog=[
@@ -58,12 +58,12 @@ MINES_NPCS = [
     Npc('sargwyn',
         dialog=[(
             'Burp', 'Buurp', 'Buuuuurp', 'Buuuuuuuuuuuuuurp',
-            'BURP', 'BUURRPPP', '‎*Inception BRRRAAWWWWWBRBRBB noises*',
+            'BURP', 'BUURRPPP', '*Inception BRRRAAWWWWWBRBRBB noises*',
         )]),
     Npc('tarwen',
         dialog=[(
             'Burp', 'Buurp', 'Buuuuurp', 'Buuuuuuuuuuuuuurp',
-            'BURP', 'BUURRPPP', '‎*Inception BRRRAAWWWWWBRBRBB noises*',
+            'BURP', 'BUURRPPP', '*Inception BRRRAAWWWWWBRBRBB noises*',
         )]),
     Npc('thormyr'),
 ]

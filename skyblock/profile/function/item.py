@@ -86,7 +86,7 @@ def pickupstash(self, /):
         red("Your stash isn't holding any item!")
         return
 
-    stash = [pointer.copy() for pointer in self.stash]
+    stash = [item.copy().to_obj() for item in self.stash]
     self.stash = []
     for pointer in stash:
         self.recieve_item(pointer)

@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import List, Optional, Union
 
 from .._lib import _open
-from ..function.io import *
+from ..function.io import red
 from ..function.util import includes, get
 from ..path import join_path
 
@@ -60,4 +60,4 @@ def get_recipe(name: str, /, *, warn: bool = True
     if includes(RECIPES, name):
         return get(RECIPES, name)
     elif warn:
-        raise ValueError(f'Recipe or Group not found: {name!r}')
+        red(f'Recipe or Group not found: {name!r}')

@@ -8,7 +8,7 @@ PARK_NPCS = [
         trades=[
             (35_000, {'name': 'tacticians_sword'}),
         ]),
-    Npc('melancholic_viking',
+    Npc('viking',
         trades=[
             (130_000, {'name': 'raider_axe'}),
             (70_000, {'name': 'travel_scroll_to_jungle'}),

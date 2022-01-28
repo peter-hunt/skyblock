@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Optional
 
 from .._lib import _open
-from ..function.io import *
+from ..function.io import red
 from ..path import join_path
 
 from .object import *
@@ -43,7 +43,7 @@ def get_collection(name: str) -> Optional[Collection]:
         if collection.name == name:
             return collection
 
-    raise ValueError(f'Collection not found: {name!r}')
+    red(f'Collection not found: {name!r}')
 
 
 def calc_coll_level(name: str, amount: int) -> Optional[int]:

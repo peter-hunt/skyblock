@@ -15,13 +15,17 @@ def get_minion_cap(amount: int) -> int:
     return last_cap
 
 
-def get_minion_cap_info(amount: int) -> Tuple[int, int]:
+def get_minion_cap_info(amount: int) -> Tuple[int, int, bool]:
     last_cap = 5
+    new_added = False
     for index, (cap, total) in enumerate(MINION_CAP):
-        if amount < total:
+        if amount <= total:
+            if amount == total:
+                new_added = True
+                last_cap += 1
             break
         last_cap = cap
     if index == len(MINION_CAP) - 1:
-        return last_cap, 0
+        return last_cap, -1, False
     else:
-        return last_cap, MINION_CAP[index + 1][1] - amount
+        return last_cap, MINION_CAP[index + 1][1] - amount, new_added

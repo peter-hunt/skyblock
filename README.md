@@ -33,6 +33,7 @@ It requires the Skyblock Data repo, [Skyblock Data](https://github.com/peter-hun
 - [Content](#content)
   - [Added Features:](#added-features)
   - [Planned Features:](#planned-features)
+- [Example Saves](#example-saves)
 - [Screenshots](#screenshots)
 - [How to Contribute](#how-to-contribute)
 - [Helpful Links](#helpful-links)
@@ -129,14 +130,25 @@ To check command usage, type `help` for command documentation.
 * Commissions
 * Dungeons
 * Fairy Souls
-* Forging (Dwarven Mines)
+* Forging (Dwarven Mines) (Forging recipes already are accessable)
 * HoTM Skill Tree (Dwarven Mines)
 * Mayors and Unique Perks
-* Milestone Pets (Grandma Wolf Pet added)
 * Minion Support Items
 * NPC Usage (like Kat, Fetchur, etc.)
 * Pet Support Items
-* Sentences organized into files for translation update (abilities added)
+* Templates organized into files for translation update (abilities included)
+
+# Example Saves
+
+There's some example game save file in the [example](./example) folder. The example files are used in the introduction video. (coming soon)
+
+You can view the saves with the following links, or copy the following files under the `~/skyblock/saves` folder to play it.
+
+The following `Example Game` is my test game, which is achievable in-game.
+
+* [Example Game](example/game.json)
+
+Some of the items, enchantments, and so on in the future Pro save is currently unobtainable in-game.
 
 # Screenshots
 

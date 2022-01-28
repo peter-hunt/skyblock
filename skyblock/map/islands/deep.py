@@ -25,7 +25,7 @@ PIGMANS_DEN = Zone(
     mobs=[get_mob('redstone_pigman')],
 )
 SLIMEHILL = Zone(
-    'slilmehill', 20, -10,
+    'slimehill', 20, -10,
     resources=[get_resource('stone'), get_resource('emerald_ore')],
     mobs=[get_mob('small_emerald_slime'),
           get_mob('medium_emerald_slime'),

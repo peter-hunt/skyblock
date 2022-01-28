@@ -135,9 +135,6 @@ Claim a minion's inventory.
 > minion info <slot>
 Display minion inventory.
 
-> minion organize
-Organize placed minions.
-
 > minion place <index> <slot>
 Place a minion.
 

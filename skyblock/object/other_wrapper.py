@@ -232,7 +232,7 @@ def enchanted_book_type(cls: type, /) -> type:
         elif max_level == 9:
             self.rarity = 'mythic'
         else:
-            self.rarity = 'supreme'
+            self.rarity = 'divine'
 
     cls.__init__ = __init__
 

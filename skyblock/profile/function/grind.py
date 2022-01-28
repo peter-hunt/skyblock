@@ -27,6 +27,17 @@ from ...object.resources import get_resource
 __all__ = ['fish', 'gather', 'slay']
 
 
+
+@checkpoint
+def _fish_choose_weapon(self) -> int:
+    while True:
+        green('Please enter the index of weapon to slay the sea creature:')
+        cmd = input(']> ').strip()
+        index = self.parse_index(cmd)
+        if index is not None:
+            return index
+
+
 @checkpoint
 def fish(self, rod_index: int, iteration: int = 1, /):
     rod = Empty() if rod_index is None else self.inventory[rod_index]
@@ -46,13 +57,15 @@ def fish(self, rod_index: int, iteration: int = 1, /):
     time_mult = 1 - enchants.get('lure', 0) * 0.05
     time_mult /= 1 + rod.get_stat('fishing_speed', self) / 100
     blessing = 0.05 * enchants.get('blessing', 0)
-    expertise = 1 + 0.02 * enchants.get('expertise', 0)
     frail_mult = 1 - 0.05 * enchants.get('frail', 0)
     luck = 1 + 0.01 * enchants.get('luck_of_the_sea', 0)
     luck += fishing_level * 0.002
     magnet = enchants.get('magnet', 0)
 
     sea_creature_chance = self.get_stat('sea_creature_chance')
+
+    fishing_exp_mult = 1 + 0.02 * enchants.get('expertise', 0)
+    use_expertise = enchants.get('expertise', 0) != 0
 
     zone = self.zone
     table = [
@@ -92,9 +105,33 @@ def fish(self, rod_index: int, iteration: int = 1, /):
             mob = get_mob(mob_name).copy()
             mob.health *= frail_mult
 
-            alive = self.slay(mob, rod_index)
+            weapon_index = _fish_choose_weapon(self)
+            if weapon_index is None:
+                continue
+            alive = self.slay(mob, weapon_index)
             if not alive:
                 return
+
+            self.stats['sea_creature_killed'] += 1
+            sea_creature_killed = self.stats['sea_creature_killed']
+            dolphin_pet_rarity = {250: 'common', 1000: 'uncommon', 2500: 'rare',
+                                  5000: 'epic', 10000: 'legendary'}.get(sea_creature_killed, '')
+            if dolphin_pet_rarity:
+                pet_item = get_item('dolphin_pet', rarity=dolphin_pet_rarity)
+                green(f'You reached a new Sea Creature Killed Milestone of {BLUE}{sea_creature_killed} {GREEN}kills!')
+                green(f'A wild {pet_item.display()} {GREEN}has decided to befriend you!')
+                self.recieve_item(pet_item.to_obj())
+
+            if use_expertise:
+                self.inventory[rod_index].expertise_count += 1
+                expertise_count = self.inventory[rod_index].expertise_count
+                expertise_level = {50: 2, 100: 3, 250: 4, 500: 5,
+                                   1000: 6, 2500: 7, 5500: 8, 10000: 9, 15000: 10}.get(expertise_count, 0)
+                if expertise_level != 0:
+                    self.inventory[rod_index].enchantments['expertise'] = expertise_level
+                    fishing_exp_mult = 1 + 0.02 * expertise_level
+                    blue(f'Expertise {format_roman(expertise_level - 1)} {YELLOW}on your {rod.display()}'
+                         f' {YELLOW}was upgraded to {BLUE}Expertise {format_roman(expertise_level)}{YELLOW}!')
 
         else:
             pool = random() * total_weight
@@ -105,9 +142,9 @@ def fish(self, rod_index: int, iteration: int = 1, /):
                     break
                 pool -= weight
 
-            if isinstance(drop, (int, float, tuple)):
-                if isinstance(drop, tuple):
-                    drop = random_amount(drop)
+            if isinstance(drop, (int, float, list)):
+                if isinstance(drop, list):
+                    drop = random_amount(tuple(drop))
                 if random_bool(blessing):
                     green('Your Blessing enchant got you double drops!')
                     drop *= 2
@@ -142,8 +179,7 @@ def fish(self, rod_index: int, iteration: int = 1, /):
                     gray(f'{RARITY_COLORS[rarity]}{rarity_display}! {AQUA}'
                          f'You found a {drop_item.display()}{AQUA}.')
 
-            exp_gained = fishing_exp * expertise
-            self.add_skill_exp('fishing', exp_gained, display=True)
+            self.add_skill_exp('fishing', random_amount(fishing_exp, mult=fishing_exp_mult), display=True)
             self.add_exp(random_amount((1, 6)) + magnet)
 
         if i >= (last_cp + cp_step) * iteration:
@@ -173,12 +209,14 @@ def gather(self, name: str, tool_index: Optional[int],
     enchants = getattr(tool, 'enchantments', {})
 
     if isinstance(resource, Crop):
-        time_cost = 0.4
+        time_cost = 0.1
         if self.has_item({'name': 'farmer_orb'}):
-            time_cost -= 0.05
+            time_cost -= 0.02
 
         drop_item = resource.name
         default_amount = resource.amount
+        farming_exp_mult = 1 + 0.01 * enchants.get('cultivating', 0)
+        use_cultivating = enchants.get('cultivating', 0) != 0
 
         last_cp = Decimal()
         cp_step = Decimal('0.1')
@@ -189,6 +227,17 @@ def gather(self, name: str, tool_index: Optional[int],
 
             count_pool = random_amount(default_amount, mult=fortune_mult)
 
+            if use_cultivating:
+                self.inventory[tool_index].cultivating_count += 1
+                cultivating_count = self.inventory[tool_index].cultivating_count
+                cultivating_level = {1000: 2, 5000: 3, 25000: 4, 100000: 5, 300000: 6, 1500000: 7,
+                                     5000000: 8, 20000000: 9, 100000000: 10}.get(cultivating_count, 0)
+                if cultivating_level != 0:
+                    self.inventory[tool_index].enchantments['cultivating'] = cultivating_level
+                    farming_exp_mult = 1 + 0.01 * enchants.get('cultivating', 0)
+                    blue(f'Cultivating {format_roman(cultivating_level - 1)} {YELLOW}on your {tool.display()}'
+                         f' {YELLOW}was upgraded to {BLUE}Cultivating {format_roman(cultivating_level)}{YELLOW}!')
+
             self.recieve_item({'name': drop_item, 'count': count_pool})
             self.collect(drop_item, count_pool)
 
@@ -198,7 +247,7 @@ def gather(self, name: str, tool_index: Optional[int],
                     self.recieve_item({'name': 'seeds', 'count': seeds_pool})
                     self.collect('seeds', seeds_pool)
 
-            self.add_skill_exp('farming', resource.farming_exp, display=True)
+            self.add_skill_exp('farming', random_amount(resource.farming_exp, mult=farming_exp_mult), display=True)
             if i >= (last_cp + cp_step) * iteration:
                 while i >= (last_cp + cp_step) * iteration:
                     last_cp += cp_step
@@ -268,6 +317,7 @@ def gather(self, name: str, tool_index: Optional[int],
     elif isinstance(resource, Mineral):
         magic_find = self.get_stat('magic_find', tool_index)
         magic_find_str = f'{AQUA}(+{format_number(magic_find)}% Magic Find!)'
+        count_ore = resource.name not in {'stone', 'netherrack', 'end_stone'}
 
         breaking_power = tool.get_stat('breaking_power', self)
         mining_speed = tool.get_stat('mining_speed', self, default=50)
@@ -283,6 +333,10 @@ def gather(self, name: str, tool_index: Optional[int],
         exp_mult = 1 + 0.125 * enchants.get('experience', 0)
         if self.has_item({'name': 'experience_artifact'}):
             exp_mult *= 1.25
+        if getattr(tool, 'modifier') == 'magnetic':
+            tool_rarity = tool.rarity[0]
+            tool_rarity_index = 'cureldsv'.index(tool_rarity)
+            exp_mult *= (1.1, 1.12, 1.14, 1.16, 1.18, 1.2, 1.22, 1.24, 1.26)[tool_rarity_index]
 
         lapis_exp_bonus = 1
 
@@ -295,8 +349,21 @@ def gather(self, name: str, tool_index: Optional[int],
                 lapis_exp_bonus += 0.5
 
         exp_mult *= lapis_exp_bonus
+        mining_exp_mult = 1
+        compact_chance = 0
+        if getattr(tool, 'modifier') == 'refined':
+            tool_rarity = tool.rarity[0]
+            tool_rarity_index = 'cureldsv'.index(tool_rarity)
+            mining_exp_mult += 0.01 * tool_rarity_index
+            compact_chance += 0.0001
+        use_compact = enchants.get('compact', 0) != 0
+        if use_compact:
+            mining_exp_mult += 0.1 * enchants['compact']
+            compact_chance += (0.001, 0.002, 0.002, 0.003, 0.003,
+                               0.004, 0.004, 0.004, 0.005, 0.006)[enchants['compact'] - 1]
 
         drop_item = resource.drop
+        enchanted_item = 'enchanted_' + resource.drop.rstrip('_block')
         default_amount = resource.amount
 
         last_cp = Decimal()
@@ -306,12 +373,49 @@ def gather(self, name: str, tool_index: Optional[int],
             mining_fortune = self.get_stat('mining_fortune', tool_index)
             fortune_mult = 1 + mining_fortune / 100
 
-            count_pool = random_amount(default_amount, mult=fortune_mult)
-            self.recieve_item({'name': drop_item, 'count': count_pool})
-            self.collect(drop_item, count_pool)
+            if random_amount(compact_chance) == 1:
+                self.recieve_item({'name': enchanted_item, 'count': 1})
+                self.collect(enchanted_item, 1)
+                aqua(f'{BOLD}COMPACT! {CLN}You found a {GREEN}{format_name(enchanted_item)}')
+            else:
+                count_pool = random_amount(default_amount, mult=fortune_mult)
+                self.recieve_item({'name': drop_item, 'count': count_pool})
+                self.collect(drop_item, count_pool)
+
+            if use_compact:
+                self.inventory[tool_index].compact_count += 1
+                compact_count = self.inventory[tool_index].compact_count
+                compact_level = {100: 2, 500: 3, 1500: 4, 5000: 5,
+                                 15000: 6, 50000: 7, 150000: 8, 500000: 9, 1000000: 10}.get(compact_count, 0)
+                if compact_level != 0:
+                    self.inventory[tool_index].enchantments['compact'] = compact_level
+                    mining_exp_mult = 1
+                    compact_chance = 0
+                    if getattr(tool, 'modifier') == 'refined':
+                        tool_rarity = tool.rarity[0]
+                        tool_rarity_index = 'cureldsv'.index(tool_rarity)
+                        mining_exp_mult += 0.01 * tool_rarity_index
+                        compact_chance += 0.0001
+                    if use_compact:
+                        mining_exp_mult += 0.1 * enchants['compact']
+                        compact_chance += (0.001, 0.002, 0.002, 0.003, 0.003,
+                                           0.004, 0.004, 0.004, 0.005, 0.006)[enchants['compact'] - 1]
+                    blue(f'Compact {format_roman(compact_level - 1)} {YELLOW}on your {tool.display()}'
+                         f' {YELLOW}was upgraded to {BLUE}Compact {format_roman(compact_level)}{YELLOW}!')
+
+            if count_ore:
+                self.stats['ores_mined'] += 1
+                ores_mined = self.stats['ores_mined']
+                rock_pet_rarity = {2500: 'common', 7500: 'uncommon', 20000: 'rare',
+                                   100000: 'epic', 250000: 'legendary'}.get(ores_mined, '')
+                if rock_pet_rarity:
+                    pet_item = get_item('rock_pet', rarity=rock_pet_rarity)
+                    green(f'You reached a new Ore Mined Milestone of {BLUE}{ores_mined} {GREEN}ores!')
+                    green(f'A wild {pet_item.display()} {GREEN}has decided to befriend you!')
+                    self.recieve_item(pet_item.to_obj())
 
             self.add_exp(random_amount(resource.exp, mult=exp_mult))
-            self.add_skill_exp('mining', resource.mining_exp, display=True)
+            self.add_skill_exp('mining', random_amount(resource.mining_exp, mult=mining_exp_mult), display=True)
 
             if resource.name == 'end_stone' and random_bool(0.1):
                 self.slay(get_mob('endermite', level=37))
@@ -319,7 +423,7 @@ def gather(self, name: str, tool_index: Optional[int],
             if 'diamond' in resource.name:
                 if random_bool(0.01 * (1 + magic_find / 100)):
                     loot = get_item('rare_diamond')
-                    self.recieve_item(loot)
+                    self.recieve_item(loot.to_obj())
 
                     rarity_color = RARITY_COLORS['rare']
                     white(f'{rarity_color}RARE DROP! '
@@ -402,11 +506,12 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
     weapon_abilities = getattr(weapon, 'abilities', {})
     weapon_enchants = getattr(weapon, 'enchantments', {})
 
-    weapon_dmg = 0
-    if not isinstance(weapon, Empty):
-        weapon_dmg = weapon.get_stat('damage', self)
-        if weapon_enchants.get('ultimate_jerry', 0) != 0:
-            weapon_dmg += weapon_enchants['ultimate_jerry'] * 10
+    use_mithrils_protection = False
+    activate_mithrils_protection = False
+
+    use_kill_count = False
+    if 'raider_axe' in weapon_abilities:
+        use_kill_count = True
 
     set_bonus = True
     for piece in self.armor:
@@ -421,6 +526,8 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
         if name in PROJ_PROT_EFT:
             defense += 7 * piece_enchants.get('projectile_protection', 0)
 
+        if 'mithrils_protection' in piece.abilities:
+            use_mithrils_protection = True
         for current_ability in piece.abilities:
             if current_ability in SET_BONUSES:
                 break
@@ -489,7 +596,9 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
     prosecute = 0.1 * weapon_enchants.get('prosecute', 0)
     punch = 1 + 0.08 * weapon_enchants.get('punch', 0)
     scavenger = 0.3 * weapon_enchants.get('scavenger', 0)
-    if 'raider_coins' in weapon_abilities and mob.level >= 10:
+    if set_bonus == 'death_tax' and mob.level >= 10:
+        scavenger += 5
+    if 'raider_axe' in weapon_abilities and mob.level >= 10:
         scavenger += 20
     if 'syphon' in weapon_enchants:
         syphon = 0.1 + 0.1 * weapon_enchants['syphon']
@@ -514,6 +623,8 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
     exp_mult *= 1 + 0.04 * enchanting_level
     if self.has_item({'name': 'experience_artifact'}):
         exp_mult *= 1.25
+    fishing_exp_mult = 1 + 0.02 * weapon_enchants.get('expertise', 0)
+
 
     damage_recieved_mult = 1
     if name in SEA_CREATURES:
@@ -560,7 +671,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
         actual_speed = speed
         if set_bonus == 'young_blood' and hp >= health / 2:
             actual_speed += 70
-        time_cost = 10 / (5 * actual_speed / 100)
+        time_cost = 1 / (5 * actual_speed / 100)
         sleep(time_cost)
 
         width, _ = get_terminal_size()
@@ -570,6 +681,9 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
         healed = round((time_cost // 2) * (1.5 + health / 100), 1)
         if set_bonus == 'holy_blood':
             healed *= 3
+        if activate_mithrils_protection:
+            healed *= 3
+            activate_mithrils_protection = False
         healed *= healing_mult
         hp = min(hp + healed, health)
 
@@ -589,6 +703,8 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
         striked = False
 
         while True:
+            weapon_dmg = 0 if isinstance(weapon, Empty) else weapon.get_stat('damage', self)
+
             if isinstance(weapon, Bow) and infinite_quiver != 10:
                 if not self.has_item({'name': 'arrow', 'count': 1}):
                     red("You don't have any arrows in your inventory!")
@@ -697,6 +813,8 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
 
             damage_recieved = mob.damage / (1 + actual_defense / 100)
             damage_recieved *= damage_recieved_mult
+            if use_mithrils_protection:
+                damage_recieved = min(damage_recieved, health * 0.4)
             if damage_recieved != 0:
                 hp = max(hp - damage_recieved, 0)
                 gray(f"You've recieved {YELLOW}"
@@ -704,6 +822,8 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
 
             true_damage_recieved = mob.true_damage / (1 + true_defense / 100)
             true_damage_recieved *= damage_recieved_mult
+            if use_mithrils_protection:
+                true_damage_recieved = min(true_damage_recieved, health * 0.4)
             if true_damage_recieved != 0:
                 hp = max(hp - true_damage_recieved, 0)
                 gray(f"You've recieved {YELLOW}"
@@ -747,8 +867,13 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
         self.stats['kills'] += 1
         self.add_kill(mob.name)
 
+        if use_kill_count:
+            self.inventory[weapon_index].kill_count += 1
+
         if vampirism != 0 and hp != health:
             hp += (health - hp) * (vampirism / 100)
+        if set_bonus == 'death_tax' and mob.level >= 10:
+            hp = min(hp + 20, health)
 
         self.add_exp(mob.exp * random_int(exp_mult) + random_int(added_exp))
 
@@ -793,15 +918,16 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
         if self.has_item({'name': 'scavenger_talisman'}):
             coins_recieved += 0.5 * mob.level
         coins_pool = random_int(coins_recieved)
-        self.purse += coins_pool
-        gray(f'+ {GOLD}{format_number(coins_pool)} Coins')
+        if coins_pool != 0:
+            self.purse += coins_pool
+            gray(f'+ {GOLD}{format_number(coins_pool)} Coins')
 
         if getattr(mob, 'farming_exp', 0) != 0:
             self.add_skill_exp('farming', mob.farming_exp, display=True)
         if getattr(mob, 'combat_exp', 0) != 0:
             self.add_skill_exp('combat', mob.combat_exp, display=True)
         if getattr(mob, 'fishing_exp', 0) != 0:
-            self.add_skill_exp('fishing', mob.fishing_exp, display=True)
+            self.add_skill_exp('fishing', random_amount(mob.fishing_exp, mult=fishing_exp_mult), display=True)
 
         phoenix_pool = random()
         if phoenix_pool <= 0.0000008:

@@ -13,7 +13,10 @@ DWARVEN_ENTRENCE = Zone(
 )
 DWARVEN_VILLAGE = Zone(
     'dwarven_village', 20, -140,
-    resources=[get_resource('stone')],
+    resources=[get_resource('stone'), get_resource('coal_ore'),
+               get_resource('iron_ore'), get_resource('gold_ore'),
+               get_resource('lapis_ore'), get_resource('redstone_ore'),
+               get_resource('emerald_ore'), get_resource('diamond_ore')],
     npcs=[get_npc('bubu'),
           get_npc('gimley'),
           get_npc('hornum'),
@@ -27,7 +30,11 @@ FAR = Zone(
 )
 FORGE = Zone(
     'forge', 0, -70,
-    npcs=[get_npc('jotraeline_greatforge'), ],
+    resources=[get_resource('stone'), get_resource('coal_ore'),
+               get_resource('iron_ore'), get_resource('gold_ore'),
+               get_resource('lapis_ore'), get_resource('redstone_ore'),
+               get_resource('emerald_ore'), get_resource('diamond_ore')],
+    npcs=[get_npc('jotraeline_greatforge')],
 )
 GOBLINS = Zone(
     'goblins', -110, 110,
@@ -47,6 +54,7 @@ MIST = Zone(
 )
 PALACE = Zone(
     'palace', 120, 120,
+    resources=[get_resource('stone')],
     npcs=[get_npc('brammor'), get_npc('emkam'), get_npc('emmor'),
           get_npc('erren'), get_npc('grandan'), get_npc('redos'),
           get_npc('thormyr')],

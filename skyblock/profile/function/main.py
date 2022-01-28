@@ -1,4 +1,5 @@
 from re import fullmatch
+from time import time
 from typing import Optional
 
 from ..._lib import add_history
@@ -438,7 +439,7 @@ def mainloop(self):
                 tier = int(match.group(2))
             elif match := fullmatch(
                 (r'(common|uncommon|rare|epic|legendary|mythic'
-                 r'|supreme|special|very_special)_(\w+)'),
+                 r'|divine|special|very_special)_(\w+)'),
                 name,
             ):
                 rarity = match.group(1)
@@ -701,6 +702,7 @@ def mainloop(self):
 
         elif words[0] == 'save':
             self.dump()
+            self.last_update = time()
             green('Saved!')
 
         elif words[0] == 'sell':
@@ -774,7 +776,7 @@ def mainloop(self):
             stat_name = 'all'
             index = None
             if len(words) == 3:
-                stat_name = self.parse_index(words[1])
+                stat_name = words[1]
                 index = self.parse_index(words[2])
                 if index is None:
                     continue
@@ -817,7 +819,7 @@ def mainloop(self):
                 red(f'You are not wearing a {part}!')
                 continue
 
-            self.recieve_item(armor_piece)
+            self.recieve_item(armor_piece.to_obj())
             self.armor[slot_index] = Empty()
 
             green(f'Unequipped {armor_piece.display()}{GREEN}!')

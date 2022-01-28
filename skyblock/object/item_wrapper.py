@@ -129,7 +129,7 @@ def item_type(cls: type, /) -> type:
 
         if self.__class__.__name__ == 'Pet':
             lvl = calc_pet_level(self.rarity, self.exp)
-            return (f'{GRAY}[Lvl {lvl}] {rarity_color}{name}')
+            return f'{GRAY}[Lvl {lvl}] {rarity_color}{name}'
         elif self.__class__.__name__ == 'Minion':
             tier_str = format_roman(self.tier)
             return f'{rarity_color}{name} {tier_str}'
@@ -400,7 +400,7 @@ def item_type(cls: type, /) -> type:
         elif self.__class__.__name__ in {'Drill', 'Pickaxe'}:
             info += f'\n{DARK_GRAY}Breaking Power {self.breaking_power}\n'
 
-            for stat_name in ('damage',):
+            for stat_name in ('damage', 'defense', 'intelligence'):
                 display_stat = format_name(stat_name)
                 value = self.get_stat(stat_name, profile)
 
@@ -532,6 +532,8 @@ def item_type(cls: type, /) -> type:
                 type_str = 'a bow'
             elif self.category == 'armor':
                 type_str = 'armor'
+            elif self.category == 'pickaxe':
+                type_str = 'a pickaxe'
 
             info += (
                 f'\n{DARK_GRAY}Reforge Stone\n\n'
@@ -761,6 +763,7 @@ def item_type(cls: type, /) -> type:
         value = getattr(self, name, default)
         enchants = getattr(self, 'enchantments', {})
         self_name = getattr(self, 'name', None)
+        abilities = getattr(self, 'abilities', [])
 
         set_bonus = True
         for piece in profile.armor:
@@ -783,7 +786,7 @@ def item_type(cls: type, /) -> type:
         has_active_pet = active_pet.__class__.__name__ == 'Pet'
         if has_active_pet:
             pet_level = calc_pet_level(active_pet.rarity, active_pet.exp)
-            pet_mult = 100 / pet_level
+            pet_mult = pet_level / 100
         else:
             pet_level = 0
             pet_mult = 0
@@ -805,8 +808,12 @@ def item_type(cls: type, /) -> type:
                 if set_bonus == 'strong_blood':
                     value += 75
 
-            elif 'pure_emerald' in getattr(self, 'abilities', []):
+            elif 'pure_emerald' in abilities:
                 value += 2.5 * sqrt(sqrt(profile.purse))
+
+            if 'raider_axe' in abilities:
+                kill_count = getattr(self, 'kill_count', 0)
+                value += min(35, kill_count // 500)
 
             if enchants.get('one_for_all', 0) != 0:
                 value *= 3.1
@@ -824,6 +831,7 @@ def item_type(cls: type, /) -> type:
                     value += pet_mult * 5
                 elif 'common_primal_force' in active_pet.abilities:
                     value += pet_mult * 3
+
         elif name == 'health':
             value += enchants.get('growth', 0) * 15
         elif name == 'defense':
@@ -834,6 +842,16 @@ def item_type(cls: type, /) -> type:
             value += enchants.get('big_brain', 0) * 5
             value += enchants.get('smarty_pants', 0) * 5
         elif name == 'strength':
+            if 'raider_axe' in abilities:
+                wood_collection = 0
+                wood_collection += profile.get_collection_amount('oak_wood')
+                wood_collection += profile.get_collection_amount('birch_wood')
+                wood_collection += profile.get_collection_amount('spruce_wood')
+                wood_collection += profile.get_collection_amount('dark_oak_wood')
+                wood_collection += profile.get_collection_amount('acacia_wood')
+                wood_collection += profile.get_collection_amount('jungle_wood')
+                value += min(100, wood_collection // 500)
+
             if self_name == 'aspect_of_the_dragons':
                 if has_active_pet:
                     if 'one_with_the_dragons' in active_pet.abilities:
@@ -870,6 +888,9 @@ def item_type(cls: type, /) -> type:
         elif self.__class__.__name__ in {'FishingRod', 'Bow', 'Sword'}:
             if name in {'damage', 'strength'}:
                 value += 2 * self.hot_potato
+
+        if enchants.get('chimera', 0) != 0:
+            value += getattr(pet, name, 0) * pet_mult * 0.2
 
         if getattr(self, 'modifier', None) is not None:
             modifier_bonus = get_modifier(self.modifier, self.rarity)

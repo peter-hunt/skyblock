@@ -1,6 +1,7 @@
 __all__ = ['SET_BONUSES']
 
 SET_BONUSES = (
+    'death_tax',
     'farm_armor_speed',
     'farm_suit_speed',
     'pumpkin_buff',

@@ -24,6 +24,17 @@ def format_temp(template: str, params: Dict[str, Any] = {}, /) -> str:
             )
         elif isinstance(value, (int, float)):
             value_str = format_number(fround(value, 1))
+        elif isinstance(value, tuple):
+            if len(value) == 0:
+                value_str = ''
+            elif len(value) == 1:
+                value_str = f'{value[0]}'
+            elif len(value) == 2:
+                value_str = f'{value[0]} and {value[1]}'
+            else:
+                names = [format_name(name) for name in value]
+                names[-1] = f'and {names[-1]}'
+                value_str = ', '.join(names)
         else:
             value_str = f'{value}'
 

@@ -91,6 +91,11 @@ SPECIAL_NAMES = {
     'tacticians_sword': "Tactician's Sword",
 
     # armor pieces
+    'rosettas_helmet': "Rosetta's Helmet",
+    'rosettas_chestplate': "Rosetta's Chestplate",
+    'rosettas_leggings': "Rosetta's Leggings",
+    'rosettas_boots': "Rosetta's Boots",
+
     'skeletons_helmet': "Skeleton's Helmet",
     'spiders_boots': "Spider's Boots",
     'ranchers_boots': "Rancher's Boots",

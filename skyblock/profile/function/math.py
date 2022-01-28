@@ -325,8 +325,7 @@ def get_stat(self, name: str, index: Optional[int] = None, /, *,
             item = Empty()
 
     if getattr(item, 'modifier', None) is not None:
-        modifier_bonus = get_modifier(item.modifier, item.rarity)
-        bonus_value += modifier_bonus.get(name, 0)
+        bonus_value += get_modifier(item.modifier, item.rarity).get(name, 0)
 
     item_ench = getattr(item, 'enchantments', {})
 
@@ -349,7 +348,7 @@ def get_stat(self, name: str, index: Optional[int] = None, /, *,
         bonus_value += item_ench.get('cultivating', 0)
         bonus_value += item_ench.get('harvesting', 0) * 12.6
 
-    if not isinstance(item, Accessory):
+    if item is not None and not isinstance(item, Accessory):
         bonus_value += item.get_stat(name, self)
 
     combat_level = self.get_skill_level('combat')
@@ -452,7 +451,7 @@ def get_stat(self, name: str, index: Optional[int] = None, /, *,
         base_value += max(min(fishing_level - 19, 6), 0) * 4
         base_value += max(min(fishing_level - 25, 35), 0) * 5
         base_value += 2 * bestiary_ms
-        if set_bonus == 'lapis_armor':
+        if set_bonus == 'lapis_armor_health':
             bonus_value += 60
         if has_active_pet:
             if 'archimedes' in active_pet.abilities:
@@ -581,7 +580,7 @@ def get_stat(self, name: str, index: Optional[int] = None, /, *,
             bonus_value += (base_value + bonus_value) * (0.1 * pet_mult)
 
     if cap is not None:
-        base_value = min(cap, base_value)
+        base_vaule = min(cap, base_value)
         bonus_value = min(cap - base_value, bonus_value)
     elif name in {'defense', 'speed', 'crit_chance'}:
         base_value = max(base_value, 0)

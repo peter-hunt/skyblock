@@ -6,8 +6,11 @@ __all__ = [
 
 ULTIMATE_ENCHS = [
     'bank',
-    # 'chimera',
+    'chimera',
+    'compact',
     # 'combo',
+    'cultivating',
+    'expertise',
     'last_stand',
     'no_pain_no_gain',
     'one_for_all',
@@ -160,6 +163,14 @@ ENCH_LVLS = {
     'luck_of_the_sea': 5,
     'lure': 5,
     'magnet': 5,
+
+    'chimera': 5,
+    'compact': 1,
+    'cultivating': 1,
+    'expertise': 1,
+    'last_stand': 5,
+    'no_pain_no_gain': 5,
+    'soul_eater': 5,
 }
 
 ENCH_REQUIREMENTS = [
@@ -249,7 +260,7 @@ SWORD_ENCHS = [
     'vampirism',
     'venomous',
 
-    # 'chimera',
+    'chimera',
     # 'combo',
     'one_for_all',
     'soul_eater',
@@ -285,6 +296,7 @@ ARMOR_ENCHS = [
     'smarty_pants',
     'sugar_rush',
 
+    'bank',
     'last_stand',
     'no_pain_no_gain',
 ]
@@ -294,14 +306,15 @@ AXE_ENCHS = [
 ]
 
 HOE_ENCHS = [
-    # 'cultivating',
+    'cultivating',
     'harvesting',
 ]
 
 PICKAXE_ENCHS = [
-    # 'compact',
+    'compact',
     'efficiency',
     'experience',
+    'fortune',
 ]
 
 FISHING_ROD_ENCHS = [

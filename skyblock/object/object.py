@@ -27,7 +27,7 @@ class Item(ItemType):
     name: str
     count: int = 1
     # common | uncommon | rare | epic | legendary |
-    # mythic | supreme | special | very_special
+    # mythic | divine | special | very_special
     rarity: str = 'common'
 
     abilities: List[str] = []
@@ -127,6 +127,8 @@ class Drill(ItemType):
     mining_fortune: int = 0
 
     damage: int = 0
+    defense: int = 0
+    intelligence: int = 0
 
     modifier: Optional[str] = None
     enchantments: Dict[str, int] = {}
@@ -156,6 +158,7 @@ class FishingRod(ItemType):
 
     modifier: Optional[str] = None
     enchantments: Dict[str, int] = {}
+    expertise_count: int = 0
     hot_potato: int = 0
     stars: Optional[int] = None
     fishing_skill_req: Optional[int] = None
@@ -169,6 +172,7 @@ class Hoe(ItemType):
     rarity: str
     modifier: Optional[str] = None
     enchantments: Dict[str, int] = {}
+    cultivating_count: int = 0
 
 
 @item_type
@@ -214,9 +218,11 @@ class Pickaxe(ItemType):
     mining_speed: int
 
     damage: int = 0
+    defense: int = 0
 
     modifier: Optional[str] = None
     enchantments: Dict[str, int] = {}
+    compact_count: int = 0
 
     abilities: List[str] = []
 
@@ -258,6 +264,8 @@ class Sword(ItemType):
     combat_skill_req: Optional[int] = None
     dungeon_skill_req: Optional[int] = None
     dungeon_completion_req: Optional[int] = None
+
+    kill_count: int = 0
 
     abilities: List[str] = []
 

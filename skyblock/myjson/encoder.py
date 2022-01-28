@@ -34,7 +34,7 @@ def _dumps(obj, /, *, current_indent=0, current_width=0,
             if char == '"':
                 result += '\\"'
             elif char in {'\b', '\f', '\n', '\r', '\t', '\v', '\\'}:
-                result += f'{char!r}'
+                result += f'{char!r}'[1:-1]
             else:
                 result += char
         return f'"{result}"'

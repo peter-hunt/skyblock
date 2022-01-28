@@ -7,9 +7,6 @@ from ..object import *
 END_NPCS = [
     Npc('pearl_dealer',
         init_dialog=[
-            (f"Ender Pearls attract the attention of Endermen,"
-             f" but {LIGHT_PURPLE}Silent Pearls{WHITE} don't!"
-             f" You can get them in my shop."),
             ('The End has endless End Stone and Obsidian.'
              ' You may find a special type of these'
              ' resources deep in the caves'),
@@ -18,8 +15,17 @@ END_NPCS = [
         trades=[
             (10, {'name': 'end_stone'}),
             (50, {'name': 'obsidian'}),
+            (3_500, {'name': 'holy_dragon_fragment'}),
+            (3_500, {'name': 'old_dragon_fragment'}),
+            (3_500, {'name': 'protector_dragon_fragment'}),
+            (3_500, {'name': 'unstable_dragon_fragment'}),
+            (3_500, {'name': 'young_dragon_fragment'}),
+            (20_000, {'name': 'strong_dragon_fragment'}),
+            (20_000, {'name': 'wise_dragon_fragment'}),
+            (120_000, {'name': 'superior_dragon_fragment'}),
             (499_999, {'name': 'stonk'}),
+            (1_000_000, {'name': 'aspect_of_the_dragons'}),
             (1_500_000, {'name': 'enchanted_book',
-                         'enchantments': {'ender_slayer': 4}}),
+                         'enchantments': {'ender_slayer': 6}}),
         ]),
 ]

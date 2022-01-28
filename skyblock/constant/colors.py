@@ -40,7 +40,7 @@ RARITY_COLORS = {
     'epic': f'{BOLD}{DARK_PURPLE}',
     'legendary': f'{BOLD}{GOLD}',
     'mythic': f'{BOLD}{LIGHT_PURPLE}',
-    'supreme': f'{BOLD}{DARK_RED}',
+    'divine': f'{BOLD}{AQUA}',
     'special': f'{BOLD}{RED}',
     'very_special': f'{BOLD}{RED}',
 

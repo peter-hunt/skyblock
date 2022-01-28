@@ -1,7 +1,7 @@
 __all__ = [
     'STAT_ALIASES',
-    'ACCESSORY_REFORGES', 'ARMOR_REFORGES', 'BOW_REFORGES', 'MELEE_REFORGES',
-    'ACCESSORY_MODIFIERS', 'ARMOR_MODIFIERS', 'BOW_MODIFIERS', 'MELEE_MODIFIERS',
+    'ACCESSORY_REFORGES', 'ARMOR_REFORGES', 'BOW_REFORGES', 'MELEE_REFORGES', 'PICKAXE_REFORGES',
+    'ACCESSORY_MODIFIERS', 'ARMOR_MODIFIERS', 'BOW_MODIFIERS', 'MELEE_MODIFIERS', 'PICKAXE_MODIFIERS',
     'MODIFIERS', 'REFORGE_COST',
 ]
 
@@ -443,7 +443,30 @@ MELEE_MODIFIERS = {
     ),
 }
 
+PICKAXE_REFORGES = (
+    'fruitful', 'magnetic', 'refined',
+)
+
+PICKAXE_MODIFIERS = {
+    'fruitful': (
+        {'def': 3, 'int': 1, 'min_ftn': 3},
+        {'def': 4, 'int': 1, 'min_ftn': 3},
+        {'def': 5, 'int': 1, 'min_ftn': 3},
+        {'def': 7, 'int': 1, 'min_ftn': 3},
+        {'def': 9, 'int': 1, 'min_ftn': 3},
+        {'def': 12, 'int': 1, 'min_ftn': 3},
+    ),
+    'magnetic': (
+        {'def': 4}, {'def': 5}, {'def': 6},
+        {'def': 8}, {'def': 10}, {'def': 14},
+    ),
+    'refined': (
+        {'def': 5}, {'def': 7}, {'def': 9},
+        {'def': 13}, {'def': 16}, {'def': 20},
+    ),
+}
+
 MODIFIERS = {**ACCESSORY_MODIFIERS, **ARMOR_MODIFIERS,
-             **BOW_MODIFIERS, **MELEE_MODIFIERS}
+             **BOW_MODIFIERS, **MELEE_MODIFIERS, **PICKAXE_MODIFIERS}
 
 REFORGE_COST = (250, 500, 1_000, 2_500, 5_000, 10_000)

@@ -1,6 +1,7 @@
 from collections import defaultdict
 from math import ceil, floor, radians, tan
 from os import get_terminal_size
+from random import choice
 from time import sleep
 from typing import Iterable, Optional, Union
 
@@ -632,20 +633,33 @@ def display_shop(self, npc: Npc, trade_index: Optional[int] = None, /):
             return
 
         digits = len(f'{len(npc.trades)}')
-        for index, (cost, pointer) in enumerate(npc.trades):
-            name = pointer['name']
-            kwargs = {key: pointer[key] for key in pointer
+        for index, (cost, items) in enumerate(npc.trades):
+            if not isinstance(items, list):
+                items = [items]
+
+            name = items[0]['name']
+            kwargs = {key: items[0][key] for key in items[0]
                       if key not in {'name', 'count'}}
             item = get_item(name, **kwargs)
-            if getattr(item, 'count', 1) != 1:
-                item.count = 1
+            if item is not None:
+                if getattr(item, 'count', 1) != 1:
+                    item.count = 1
+                gray(f'  {(index + 1):>{digits}} {item.display()}')
+
+            for pointer in items[1:]:
+                name = pointer['name']
+                kwargs = {key: pointer[key] for key in pointer
+                        if key not in {'name', 'count'}}
+                item = get_item(name, **kwargs)
+                if item is None:
+                    continue
+                if getattr(item, 'count', 1) != 1:
+                    item.count = 1
+
+                gray(f'  {" " * digits} {item.display()}')
 
             if isinstance(cost, (int, float)):
-                gray(f'  {(index + 1):>{digits}} {item.display()}{GRAY}'
-                     f' for {GOLD}{format_number(cost)} coins{GRAY}.')
-                continue
-
-            gray(f'  {(index + 1):>{digits}} {item.display()}{GRAY}')
+                cost = [cost]
             for cost_pointer in cost:
                 if isinstance(cost_pointer, int):
                     gray(f"  {'':>{digits}}   {GOLD}"
@@ -662,15 +676,18 @@ def display_shop(self, npc: Npc, trade_index: Optional[int] = None, /):
                 count_str = '' if count == 1 else f' {GRAY}x {count}'
                 gray(f"  {'':>{digits}}   {cost_item.display()}{count_str}")
     else:
-        pointer = npc.trades[trade_index][1]
-        name = pointer['name']
-        count = pointer.get('count', 1)
-        kwargs = {key: pointer[key] for key in pointer
-                  if key not in {'name', 'count'}}
-        item = get_item(name, **kwargs)
-        if getattr(item, 'count', 1) != 1:
-            item.count = 1
-        self.display_item(item)
+        items = npc.trades[trade_index][1]
+        if not isinstance(items, list):
+            items = [items]
+        for pointer in items:
+            name = pointer['name']
+            count = pointer.get('count', 1)
+            kwargs = {key: pointer[key] for key in pointer
+                    if key not in {'name', 'count'}}
+            item = get_item(name, **kwargs)
+            if getattr(item, 'count', 1) != 1:
+                item.count = 1
+            self.display_item(item)
 
 
 def display_stat(self, stat_name: str, index: Optional[int] = None, /):
@@ -858,10 +875,17 @@ def npc_silent(name: str, /):
 def npc_speak(name: str, dialog: Iterable):
     iterator = iter(dialog)
     npc_name = format_name(name)
-    yellow(f'[NPC] {npc_name}{WHITE}: {next(iterator)}')
+    sentence = next(iterator)
+    if isinstance(sentence, tuple):
+        yellow(f'[NPC] {npc_name}{WHITE}: {choice(sentence)}')
+    else:
+        yellow(f'[NPC] {npc_name}{WHITE}: {sentence}')
     for sentence in iterator:
         sleep(1.5)
-        yellow(f'[NPC] {npc_name}{WHITE}: {sentence}')
+        if isinstance(sentence, tuple):
+            yellow(f'[NPC] {npc_name}{WHITE}: {choice(sentence)}')
+        else:
+            yellow(f'[NPC] {npc_name}{WHITE}: {sentence}')
 
 
 display_functions = {

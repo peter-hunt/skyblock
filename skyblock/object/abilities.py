@@ -41,6 +41,11 @@ ABILITIES = [
 
     # armor abilities
     NamedAbility(
+        id='death_tax',
+        name='Full Set Bonus: Death Tax',
+        display_id='death_tax',
+    ),
+    NamedAbility(
         id='farm_armor_speed',
         name='Full Set Bonus: Bonus Speed',
         display_id='increase_region_speed',
@@ -92,6 +97,11 @@ ABILITIES = [
     AnonymousAbility(
         id='mining_double_defense',
         display_id='mining_double_defense',
+    ),
+    NamedAbility(
+        id='mithrils_protection',
+        name="Mithril's Protection",
+        display_id='mithrils_protection',
     ),
     AnonymousAbility(
         id='ender_armor',
@@ -157,9 +167,8 @@ ABILITIES = [
 
     # weapon abilities
     AnonymousAbility(
-        id='raider_coins',
-        display_id='raider_coins',
-        variables={'coins': 20},
+        id='raider_axe',
+        display_id='raider_axe',
     ),
     AnonymousAbility(
         id='tacticians_sword',

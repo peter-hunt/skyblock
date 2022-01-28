@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Optional
 
 from .._lib import _open
-from ..function.io import *
+from ..function.io import red
 from ..function.util import get, includes
 from ..path import join_path
 
@@ -46,4 +46,4 @@ def get_resource(name: str, **kwargs) -> Optional[ItemType]:
     if includes(RESOURCES, name):
         return get(RESOURCES, name, **kwargs)
     else:
-        raise ValueError(f'Resource not found: {name!r}')
+        red(f'Resource not found: {name!r}')

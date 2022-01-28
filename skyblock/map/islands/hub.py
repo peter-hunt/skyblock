@@ -29,7 +29,10 @@ COAL_MINE = Zone(
     resources=[get_resource('stone'), get_resource('coal_ore')],
 )
 COLOSSEUM = Zone('colosseum', -58, -58)
-COMMUNITY_CENTER = Zone('community_center', 0, -100)
+COMMUNITY_CENTER = Zone(
+    'community_center', 0, -100,
+    npcs=[get_npc('elizabeth')],
+)
 CRYPT = Zone(
     'crypt', -120, -100,
     mobs=[get_mob('crypt_ghoul'), get_mob('golden_ghoul')],
@@ -92,7 +95,7 @@ VILLAGE = Zone(
     npcs=[get_npc('andrew'), get_npc('armorsmith'), get_npc('duke'),
           get_npc('fish_merchant'), get_npc('jack'), get_npc('jamie'),
           get_npc('liam'), get_npc('mine_merchant'), get_npc('oringo'),
-          get_npc('ryu'), get_npc('weaponsmith')],
+          get_npc('rosetta'), get_npc('ryu'), get_npc('weaponsmith')],
 )
 WILDERNESS = Zone('wilderness', 75, -11, fishable=True)
 WIZARD_TOWER = Zone('wizard_tower', 40, 70)
@@ -100,7 +103,7 @@ WIZARD_TOWER = Zone('wizard_tower', 40, 70)
 
 HUB_JOINTS = [
     AUCTION_HOUSE, BANK, BAZAAR_ALLEY, BLACKSMITH, BUILDERS_HOUSE, COAL_MINE,
-    COMMUNITY_CENTER, FARM, FARMHOUSE, FASHION_SHOP, FLOWER_HOUSE, FOREST,
+    COLOSSEUM, COMMUNITY_CENTER, FARM, FARMHOUSE, FASHION_SHOP, FLOWER_HOUSE, FOREST,
     GRAVEYARD, HIGH_LEVEL, HUB_CASTLE, CRYPT, LIBRARY, MOUNTAIN, PETS_BUILDING,
     POTION_SHOP, RUINS, TAVERN, VILLAGE, WILDERNESS, WIZARD_TOWER,
 ]

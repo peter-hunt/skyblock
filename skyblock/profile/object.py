@@ -43,12 +43,14 @@ class Profile:
     fast_travel: List[str] = [('hub', None)]
 
     play_time: int = 0
-    stats: Dict[str, int] = {'deaths': 0, 'kills': 0}
+    stats: Dict[str, int] = {
+        'deaths': 0, 'kills': 0, 'ore_mined': 0, 'sea_creature_killed': 0,
+    }
 
     armor: List[Armor] = [Empty() for _ in range(4)]
     pets: List[Pet] = []
     ender_chest: List[Item] = []
-    inventory: List[Item] = [Empty() for _ in range(36)]
+    inventory: List[Item] = [Empty() for _ in range(80)]
     potion_bag: List[Item] = []
     quiver: List[Item] = []
     stash: List[Item] = []

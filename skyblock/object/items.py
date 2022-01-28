@@ -3,7 +3,7 @@ from os import walk
 from pathlib import Path
 
 from .._lib import _open
-from ..function.io import *
+from ..function.io import red
 from ..function.util import get, includes
 from ..path import join_path
 
@@ -32,7 +32,7 @@ ITEMS = sorted(ITEMS, key=lambda item: item.name)
 
 def get_item(name: str, /, **kwargs) -> ItemType:
     if not includes(ITEMS, name):
-        raise ValueError(f'Item not found: {name!r}')
+        red(f'Item not found: {name!r}')
     return get(ITEMS, name, **kwargs)
 
 

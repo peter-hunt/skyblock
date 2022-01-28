@@ -78,11 +78,11 @@ def buy(self, trade: Tuple, amount: int, /):
         count = pointer.get('count', 1)
         kwargs = {key: pointer[key] for key in pointer
                   if key not in {'count', 'name'}}
-        item = get_item(name, kwargs)
+        item = get_item(name, **kwargs)
         if getattr(item, 'count', 1) != 1:
             item.count = 1
         count_str = '' if count == 1 else f'{GRAY} x {count}'
-        display.append(f'{load_item.display()}{count_str}')
+        display.append(f'{item.display()}{count_str}')
 
     display_str = f'{GREEN}, '.join(display)
 
@@ -163,12 +163,12 @@ def combine(self, index_1: int, index_2: int, /):
         self.recieve_item(pointer)
         return
 
-    if (isinstance(item_2, (Accessory, Armor, Bow, Sword, FishingRod))
+    if (isinstance(item_2, (Accessory, Armor, Bow, Sword, FishingRod, Pickaxe))
             and isinstance(item_1, ReforgeStone)):
         index_1, index_2 = index_2, index_1
         item_1, item_2 = item_2, item_1
 
-    if (isinstance(item_1, (Accessory, Armor, Bow, Sword, FishingRod))
+    if (isinstance(item_1, (Accessory, Armor, Bow, Sword, FishingRod, Pickaxe))
             and isinstance(item_2, ReforgeStone)):
         cost = item_2.cost['curelm'.index(item_1.rarity[0])]
 
@@ -186,13 +186,22 @@ def combine(self, index_1: int, index_2: int, /):
             if not (isinstance(item_1, (Sword, FishingRod))
                     and getattr(item_1, 'damage', 0) != 0):
                 combinable = False
+        elif item_2.category == 'pickaxe':
+            if not isinstance(item_1, Pickaxe):
+                combinable = False
 
         if not combinable:
             red('These items cannot be combined!')
             return
 
+        if item_2.mining_skill_req is not None:
+            if item_2.mining_skill_req > self.get_skill_level('mining'):
+                red(f'Cannot combine!')
+                red(f'Requires Mining level {format_roman(item_2.mining_skill_req)}')
+                return
+
         if self.purse < cost:
-            red("You don't have enough Coins!")
+            red(f"You don't have enough Coins! {format_number(cost)} coins required.")
             return
 
         self.purse -= cost
@@ -343,13 +352,13 @@ def craft(self, recipes: List[Recipe], amount: int = 1, /):
                 tier_str = format_roman(tier)
                 green(f"You crafted a {YELLOW}Tier {tier_str}"
                       f" {format_name(name)}{GREEN}! That's a new one!")
-                cap, to_next = get_minion_cap_info(len(self.crafted_minions))
-                if to_next > 0:
-                    green(f' Craft {to_next} more unique Minions'
-                          f' to unlock your {cap + 1}th Minion slot!')
-                elif to_next == 0:
+                cap, to_next, new_added = get_minion_cap_info(len(self.crafted_minions))
+                if new_added:
                     gold(f' You have now unlocked your {cap}th Minion slot!')
                     self.placed_minions.append(Empty())
+                else:
+                    green(f' Craft {to_next} more unique Minions'
+                          f' to unlock your {cap + 1}th Minion slot!')
 
 
 def despawn_pet(self, /):
@@ -492,7 +501,8 @@ def enchant(self, item_index: int, /):
                 xp_str = ', '.join(
                     f'{GRAY}{xp}' if lvl + 1 < current
                     else f'{RED}{xp}' if lvl + 1 == current
-                    else f'{DARK_AQUA}{xp}{AQUA}➜{AQUA}{dxp}'
+                    else (f'{DARK_AQUA}{xp}{AQUA}➜{dxp}' if dxp <= exp_level
+                          else f'{DARK_AQUA}{xp}{AQUA}➜{YELLOW}{dxp}')
                     if xp != dxp else f'{AQUA}{xp}'
                     for lvl, (xp, dxp) in enumerate(
                         zip(xps, discounted_level)))
@@ -588,9 +598,9 @@ def goto(self, dest: str, /):
 
         dist = calc_dist(zone, target)
         speed = self.get_stat('speed')
-        time_cost = float(dist) / (speed / 10)
+        time_cost = float(dist) / speed
         green(f'Going from {zone} to {target}...')
-        gray(f'(eta: {time_cost:.1f}s)')
+        gray(f'(eta: {time_cost:.2f}s)')
         sleep(time_cost)
         self.zone = target.name
         zone = get(island.zones, target.name)
@@ -866,7 +876,7 @@ def warp(self, dest: str, /):
     island = get(ISLANDS, dest)
     gray(f'Warping to {AQUA}{dest_zone}{GRAY}'
          f' of {AQUA}{island}{GRAY}...')
-    sleep(6)
+    sleep(1)
 
     self.island = dest
     self.zone = dest_zone.name
