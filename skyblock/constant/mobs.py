@@ -1,7 +1,7 @@
 __all__ = [
     'CUBISM_EFT', 'ENDER_SLAYER_EFT', 'BOA_EFT', 'SMITE_EFT',
     'BLAST_PROT_EFT', 'PROJ_PROT_EFT', 'IMPALING_EFT',
-    'SEA_CREATURES', 'ZOMBIES', 'SKELETONS',
+    'SEA_CREATURES', 'ZOMBIES', 'SKELETONS', 'END_MOBS', 'WITHERS', 'NETHER_MOBS',
     'BESTIARY_ALTER',
 ]
 
@@ -14,6 +14,7 @@ CUBISM_EFT = [
 
 ENDER_SLAYER_EFT = [
     'enderman',
+    'endermite',
     'zealot',
     'voidling_fanatic',
     'voidling_extremist',
@@ -70,6 +71,27 @@ ZOMBIES = [
 SKELETONS = [
     'skeleton', 'gravel_skeleton',
     'diamond_skeleton',
+]
+
+END_MOBS = [
+    'enderman',
+    'endermite',
+    'zealot',
+    'watcher',
+    'obsidian_defender',
+    'voidling_fanatic',
+    'voidling_extremist',
+]
+
+WITHERS = [
+    'wither_skeleton',
+]
+
+NETHER_MOBS = [
+    'ghast',
+    'small_magma_cube', 'medium_magma_cube', 'large_magma_cube',
+    'zombie_pigman',
+    'blaze', 'mini_blaze',
 ]
 
 BESTIARY_ALTER = {

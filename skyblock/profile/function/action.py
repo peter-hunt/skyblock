@@ -734,6 +734,11 @@ def talkto_npc(self, npc: Npc, /) -> Optional[str]:
         self.npc_talked.append(npc.name)
         return
     if npc.trades is not None:
+        if npc.dialog is not None:
+            if isinstance(npc.dialog, list):
+                self.npc_speak(npc.name, npc.dialog)
+            elif isinstance(npc.dialog, tuple):
+                self.npc_speak(npc.name, choice(npc.dialog))
         self.display_shop(npc, None)
         return npc.name
     elif npc.dialog is not None:

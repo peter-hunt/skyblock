@@ -683,8 +683,13 @@ def display_shop(self, npc: Npc, trade_index: Optional[int] = None, /):
 
             name = items[0]['name']
             kwargs = {key: items[0][key] for key in items[0]
-                      if key not in {'name', 'count'}}
+                      if key not in {'name', 'count', 'abilities', 'damage', 'active', 'exp', 'kill_count'} | {*STAT_COLORS.keys()}}
+            set_attrs = {key: items[0][key] for key in items[0]
+                        if key in {'abilities', 'damage', 'exp', 'kill_count'} | {*STAT_COLORS.keys()}}
+
             item = get_item(name, **kwargs)
+            for attr, value in set_attrs.items():
+                setattr(item, attr, value)
             if item is not None:
                 if getattr(item, 'count', 1) != 1:
                     item.count = 1
@@ -693,7 +698,7 @@ def display_shop(self, npc: Npc, trade_index: Optional[int] = None, /):
             for pointer in items[1:]:
                 name = pointer['name']
                 kwargs = {key: pointer[key] for key in pointer
-                        if key not in {'name', 'count'}}
+                          if key not in {'name', 'count'}}
                 item = get_item(name, **kwargs)
                 if item is None:
                     continue
@@ -725,12 +730,16 @@ def display_shop(self, npc: Npc, trade_index: Optional[int] = None, /):
             items = [items]
         for pointer in items:
             name = pointer['name']
-            count = pointer.get('count', 1)
             kwargs = {key: pointer[key] for key in pointer
-                    if key not in {'name', 'count'}}
+                      if key not in {'name', 'count', 'abilities', 'damage', 'active', 'exp', 'kill_count'} | {*STAT_COLORS.keys()}}
+            set_attrs = {key: pointer[key] for key in pointer
+                        if key in {'abilities', 'damage', 'exp', 'kill_count'} | {*STAT_COLORS.keys()}}
+
             item = get_item(name, **kwargs)
             if getattr(item, 'count', 1) != 1:
                 item.count = 1
+            for attr, value in set_attrs.items():
+                setattr(item, attr, value)
             self.display_item(item)
 
 

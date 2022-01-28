@@ -406,7 +406,10 @@ def get_stat(self, name: str, index: Optional[int] = None, /, *,
         if isinstance(item, Accessory):
             if item.modifier is not None:
                 modifier_bonus = get_modifier(item.modifier, item.rarity)
-                bonus_value += modifier_bonus.get(name, 0)
+                if item.name == 'hegemony_artifact':
+                    bonus_value += modifier_bonus.get(name, 0) * 2
+                else:
+                    bonus_value += modifier_bonus.get(name, 0)
 
     for piece in self.armor:
         if not isinstance(piece, Armor):
@@ -477,6 +480,9 @@ def get_stat(self, name: str, index: Optional[int] = None, /, *,
     elif name == 'defense':
         base_value += min(mining_level, 14) * 1
         base_value += max(min(mining_level - 14, 46), 0) * 2
+        if has_active_pet:
+            if 'turtle_tactics' in active_pet.abilities:
+                base_value *= 1 + 0.2 * pet_mult
     elif name == 'strength':
         base_value += min(foraging_level, 14) * 1
         base_value += max(min(foraging_level - 14, 36), 0) * 2

@@ -10,6 +10,7 @@ from ...constant.colors import *
 from ...constant.mobs import (
     CUBISM_EFT, ENDER_SLAYER_EFT, BOA_EFT, SMITE_EFT, BLAST_PROT_EFT,
     PROJ_PROT_EFT, IMPALING_EFT, SEA_CREATURES, ZOMBIES, SKELETONS,
+    END_MOBS, WITHERS,
 )
 from ...function.io import *
 from ...function.math import calc_bestiary_level, calc_pet_level
@@ -460,6 +461,13 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
     if not isinstance(weapon, (Empty, Bow, Sword, FishingRod, Pickaxe, Drill)):
         weapon = Empty()
 
+    active_pet = self.get_active_pet()
+    has_active_pet = isinstance(active_pet, Pet)
+    if has_active_pet:
+        pet_mult = calc_pet_level(active_pet.rarity, active_pet.exp) / 100
+    else:
+        pet_mult = 0
+
     catacombs_level = self.get_skill_level('catacombs')
     combat_level = self.get_skill_level('combat')
     fishing_level = self.get_skill_level('fishing')
@@ -635,17 +643,38 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
         elif self.has_item({'name': 'sea_creature_talisman'}):
             damage_recieved_mult *= 0.95
     if name in ZOMBIES:
-        if self.has_item({'name': 'zombie_talisman'}):
+        if self.has_item({'name': 'zombie_artifact'}):
+            damage_recieved_mult *= 0.85
+        elif self.has_item({'name': 'zombie_ring'}):
+            damage_recieved_mult *= 0.9
+        elif self.has_item({'name': 'zombie_talisman'}):
             damage_recieved_mult *= 0.95
     if name in SKELETONS:
         if self.has_item({'name': 'skeleton_talisman'}):
             damage_recieved_mult *= 0.95
+    if name in END_MOBS:
+        if self.has_item({'name': 'ender_artifact'}):
+            damage_recieved_mult *= 0.8
+    if name in WITHERS:
+        if self.has_item({'name': 'wither_artifact'}):
+            damage_recieved_mult *= 0.8
+    if name in NETHER_MOBS:
+        if self.has_item({'name': 'nether_artifact'}):
+            damage_recieved_mult *= 0.95
 
-    if self.has_item({'name': 'intimidation_artifact'}) and mob.level <= 25:
-        damage_recieved_mult = 0
-    elif self.has_item({'name': 'intimidation_ring'}) and mob.level <= 5:
-        damage_recieved_mult = 0
-    elif self.has_item({'name': 'intimidation_talisman'}) and mob.level <= 1:
+    intimidation_level = 0
+    if self.has_item({'name': 'intimidation_artifact'}):
+        intimidation_level = 25
+    elif self.has_item({'name': 'intimidation_ring'}):
+        intimidation_level = 5
+    elif self.has_item({'name': 'intimidation_talisman'}):
+        intimidation_level = 1
+    if has_active_pet:
+        if 'legendary_flamvoyant' in active_pet.abilities:
+            intimidation_level += floor(20 * pet_mult)
+        elif 'epic_flamvoyant' in active_pet.abilities:
+            intimidation_level += floor(15 * pet_mult)
+    if mob.level <= intimidation_level:
         damage_recieved_mult = 0
 
     if set_bonus == 'pumpkin_buff':

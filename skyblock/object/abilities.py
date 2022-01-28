@@ -314,6 +314,66 @@ ABILITIES = [
         display_id='increase_sea_creature_chance',
         variables={'value': 10},
     ),
+    NamedAbility(
+        id='epic_flamvoyant',
+        name='Flamvoyant',
+        display_id='flamvoyant',
+        variables={'level': 15},
+    ),
+    NamedAbility(
+        id='legendary_flamvoyant',
+        name='Flamvoyant',
+        display_id='flamvoyant',
+        variables={'level': 20},
+    ),
+    NamedAbility(
+        id='turtle_tactics',
+        name='Turtle Tactics',
+        display_id='turtle_tactics',
+        variables={'perc': 20},
+    ),
+    NamedAbility(
+        id='greed_0',
+        name='Greed',
+        display_id='greed',
+        variables={'coins': '100,000', 'bonus': 0},
+    ),
+    NamedAbility(
+        id='greed_20',
+        name='Greed',
+        display_id='greed',
+        variables={'coins': '1,000,000', 'bonus': 20},
+    ),
+    NamedAbility(
+        id='greed_40',
+        name='Greed',
+        display_id='greed',
+        variables={'coins': '3,500,000', 'bonus': 40},
+    ),
+    NamedAbility(
+        id='greed_60',
+        name='Greed',
+        display_id='greed',
+        variables={'coins': '7,500,000', 'bonus': 60},
+    ),
+    NamedAbility(
+        id='greed_80',
+        name='Greed',
+        display_id='greed',
+        variables={'coins': '17,500,000', 'bonus': 80},
+    ),
+    NamedAbility(
+        id='greed_100',
+        name='Greed',
+        display_id='greed',
+        variables={'coins': '30,000,000', 'bonus': 100},
+    ),
+    NamedAbility(
+        id='greed_120',
+        name='Greed',
+        display_id='greed',
+        variables={'coins': '50,000,000', 'bonus': 120},
+    ),
 
     # accessory abilities
     AnonymousAbility(
@@ -475,6 +535,21 @@ ABILITIES = [
         variables={'entities': 'zombies', 'percent': 15},
     ),
     AnonymousAbility(
+        id='ender_artifact',
+        display_id='reduce_damage_taken',
+        variables={'entities': 'end_mobs', 'percent': 20},
+    ),
+    AnonymousAbility(
+        id='wither_artifact',
+        display_id='reduce_damage_taken',
+        variables={'entities': 'withers', 'percent': 20},
+    ),
+    AnonymousAbility(
+        id='nether_artifact',
+        display_id='reduce_damage_taken',
+        variables={'entities': 'nether mobs', 'percent': 5},
+    ),
+    AnonymousAbility(
         id='village_affinity_talisman',
         display_id='increase_held_region_speed',
         variables={'percent': 10, 'place': ('village',)},
@@ -502,6 +577,10 @@ ABILITIES = [
     AnonymousAbility(
         id='scavenger_talisman',
         display_id='scavenger_talisman',
+    ),
+    AnonymousAbility(
+        id='hegemony_artifact',
+        display_id='hegemony_artifact',
     ),
 ]
 
