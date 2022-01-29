@@ -477,10 +477,11 @@ def mainloop(self):
         elif words[0] in {'kill', 'slay'}:
             name = words[1]
             mob = get_mob(name)
-
             if mob is None:
                 continue
-            if get(zone.mobs, name) is None:
+
+            mob = get(zone.mobs, name)
+            if mob is None:
                 red(f'Mob not avaliable at {zone}: {name!r}')
                 continue
 

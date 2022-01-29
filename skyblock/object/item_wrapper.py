@@ -836,9 +836,8 @@ def item_type(cls: type, /) -> type:
             value += enchants.get('growth', 0) * 15
         elif name == 'defense':
             value += enchants.get('protection', 0) * 3
-            if profile.island in {'gold', 'deep', 'mines'} and self.name in {
-                'glacite_helmet', 'glacite_chestplate',
-                'glacite_leggings', 'glacite_boots'}:
+            if (profile.island in {'gold', 'deep', 'mines'}
+                    and 'mining_double_defense' in abilities):
                 value *= 2
         elif name == 'true_defense':
             value += enchants.get('true_protection', 0) * 3
