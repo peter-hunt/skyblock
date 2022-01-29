@@ -145,6 +145,7 @@ Convert a minion to item.
 Display information about your money.
 
 > move <index> <index>
+> mv <index> <index>
 > switch <index> <index>
 Switch items slot in the inventory.
 

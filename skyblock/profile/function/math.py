@@ -385,11 +385,7 @@ def get_stat(self, name: str, index: Optional[int] = None, /, *,
             set_bonus = False
             continue
 
-        bonus_value += getattr(piece, name, 0)
-
-        if getattr(piece, 'modifier', None) is not None:
-            modifier_bonus = get_modifier(piece.modifier, piece.rarity)
-            bonus_value += modifier_bonus.get(name, 0)
+        bonus_value += piece.get_stat(name, self)
 
         for current_ability in piece.abilities:
             if current_ability in SET_BONUSES:

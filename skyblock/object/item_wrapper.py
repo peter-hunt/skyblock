@@ -836,6 +836,10 @@ def item_type(cls: type, /) -> type:
             value += enchants.get('growth', 0) * 15
         elif name == 'defense':
             value += enchants.get('protection', 0) * 3
+            if profile.island in {'gold', 'deep', 'mines'} and self.name in {
+                'glacite_helmet', 'glacite_chestplate',
+                'glacite_leggings', 'glacite_boots'}:
+                value *= 2
         elif name == 'true_defense':
             value += enchants.get('true_protection', 0) * 3
         elif name == 'intelligence':
@@ -889,8 +893,10 @@ def item_type(cls: type, /) -> type:
             if name in {'damage', 'strength'}:
                 value += 2 * self.hot_potato
 
-        if enchants.get('chimera', 0) != 0:
-            value += getattr(pet, name, 0) * pet_mult * 0.2
+        active_pet = profile.get_active_pet()
+        has_active_pet = active_pet.__class__.__name__ == 'Pet'
+        if has_active_pet and enchants.get('chimera', 0) != 0:
+            value += getattr(active_pet, name, 0) * pet_mult * 0.2
 
         if getattr(self, 'modifier', None) is not None:
             modifier_bonus = get_modifier(self.modifier, self.rarity)

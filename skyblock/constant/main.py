@@ -552,13 +552,23 @@ SELL_PRICE = {
     'rare_diamond': 1_000,
     'exp_share_core': 100_000,
 
+    'hardened_diamond_helmet': 6_400,
+    'hardened_diamond_chestplate': 10_240,
+    'hardened_diamond_leggings': 8_960,
+    'hardened_diamond_boots': 5_120,
+
+    'glacite_helmet': 100_000,
+    'glacite_chestplate': 100_000,
+    'glacite_leggings': 100_000,
+    'glacite_boots': 100_000,
+
     'ender_helmet': 10_000,
     'ender_chestplate': 10_000,
     'ender_leggings': 10_000,
     'ender_boots': 10_000,
 
-    'undead_sword': 5,
-    'flaming_sword': 20,
+    'undead_sword': 50,
+    'flaming_sword': 100,
 
     'bag_of_cash': 1_000_000,
 }

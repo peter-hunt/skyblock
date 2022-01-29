@@ -591,7 +591,7 @@ def mainloop(self):
         elif words[0] == 'money':
             self.display_money()
 
-        elif words[0] in {'move', 'switch'}:
+        elif words[0] in {'move', 'mv', 'switch'}:
             index_1 = self.parse_index(words[1])
             index_2 = self.parse_index(words[2])
             if index_1 is None or index_2 is None:
