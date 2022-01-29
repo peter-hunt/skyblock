@@ -472,7 +472,6 @@ def enchant(self, item_index: int, /):
 
     all_ench = [row[0] for row in ENCHS]
     requirements = dict(ENCH_REQUIREMENTS)
-    print(requirements)
 
     gray('Avaliable enchantments and xp level needed:')
     for name in enchant_table:

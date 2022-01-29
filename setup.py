@@ -5,7 +5,7 @@ setup(
     name='skyblock-peterhunt',
     version='0.1.0',
     author='Peter Hunt',
-    author_email='huangtianhao@icloud.com',
+    author_email='huangtnhao@gmail.com',
     description=('Hypixel Skyblock Remake in Python.'
                  ' A command-line-based RPG game.'),
     url='https://github.com/peter-hunt/skyblock',
