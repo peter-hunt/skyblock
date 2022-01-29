@@ -310,6 +310,28 @@ def craft(self, recipes: List[Recipe], amount: int = 1, /):
                 red("You haven't reached the required collection yet!")
                 return
 
+    if amount == -1:
+        recipe = recipes[0]
+        for ingr_pointer in recipe.ingredients:
+            _ingr_pointer = ingr_pointer.copy()
+            _ingr_pointer['count'] = ingr_pointer.get('count', 1)
+            if not self.has_item(_ingr_pointer):
+                red("You don't have the required items!")
+                return
+        enough = True
+        while True:
+            for ingr_pointer in recipe.ingredients:
+                _ingr_pointer = ingr_pointer.copy()
+                _ingr_pointer['count'] = ingr_pointer.get('count', 1) * amount
+                if not self.has_item(_ingr_pointer):
+                    enough = False
+                    break
+            if not enough:
+                break
+            amount += 1
+        amount -= 1
+
+    for recipe in recipes:
         for ingr_pointer in recipe.ingredients:
             _ingr_pointer = ingr_pointer.copy()
             _ingr_pointer['count'] = ingr_pointer.get('count', 1) * amount

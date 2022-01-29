@@ -58,7 +58,7 @@ Combine items with anvil.
 > use <index> [amount]
 Consume item.
 
-> craft <recipe-name> [amount]
+> craft <recipe-name> [amount|--max]
 Craft items.
 
 > deathcount

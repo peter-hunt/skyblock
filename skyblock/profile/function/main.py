@@ -189,12 +189,18 @@ def mainloop(self):
             amount = 1
 
             if len(words) == 3:
-                amount = parse_int(words[2])
-                if amount is None:
-                    continue
-                if amount == 0:
-                    red(f'Amount must be a positive integer.')
-                    continue
+                if words[2] == '--max':
+                    if isinstance(recipe, RecipeGroup):
+                        red('Cannot use --max on recipe group.')
+                        continue
+                    amount = -1
+                else:
+                    amount = parse_int(words[2])
+                    if amount is None:
+                        continue
+                    if amount == 0:
+                        red(f'Amount must be a positive integer.')
+                        continue
 
             if isinstance(recipe, Recipe):
                 recipes = [recipe]
