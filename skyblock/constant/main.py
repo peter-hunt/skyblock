@@ -570,6 +570,7 @@ SELL_PRICE = {
     'undead_sword': 50,
     'flaming_sword': 100,
 
+    'sorrow': 300_000,
     'bag_of_cash': 1_000_000,
 }
 

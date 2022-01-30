@@ -480,6 +480,7 @@ HUB_NPCS = [
             (50_000, {'name': 'ender_artifact'}),
             (50_000, {'name': 'wither_artifact'}),
             (50_000, {'name': 'nether_artifact'}),
+            (50_000, {'name': 'travel_scroll_to_dark_auction'}),
             (50_000, {'name': 'enchanted_book',
                       'enchantments': {'sharpness': 6}}),
             (50_000, {'name': 'enchanted_book',

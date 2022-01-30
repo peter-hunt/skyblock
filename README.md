@@ -128,6 +128,7 @@ To check command usage, type `help` for command documentation.
 
 * Brewing and Potion effects
 * Commissions
+* Diana, Griffin Pet and Mythologicals
 * Dungeons
 * Fairy Souls
 * Forging (Dwarven Mines) (Forging recipes already are accessable)
@@ -147,6 +148,7 @@ You can view the saves with the following links, or copy the following files und
 The following `Example Game` is my test game, which is achievable in-game.
 
 * [Example Game](example/game.json)
+* [Pro Game](example/pro.json)  (based on YouTuber 56ms's Strawberry profile in January 2022)
 
 Some of the items, enchantments, and so on in the future Pro save is currently unobtainable in-game.
 

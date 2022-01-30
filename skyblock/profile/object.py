@@ -15,6 +15,7 @@ class Profile:
     name: str
     last_update: int = 0
 
+    # starter | gold | deluxe | super_deluxe | premier | luxurious | palatial
     bank_level: str = 'starter'
     experience: Number = 0
     balance: Number = 0
