@@ -736,7 +736,7 @@
   "fast_travel": [
     ["hub", null],
     ["hub", "castle"],
-    ["hub", "crypts"],
+    ["hub", "crypt"],
     ["hub", "dark_auction"],
     ["park", null],
     ["park", "howl"],
