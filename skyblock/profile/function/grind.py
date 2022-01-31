@@ -500,7 +500,6 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
     crit_damage = self.get_stat('crit_damage', weapon_index)
     attack_speed = self.get_stat('attack_speed', weapon_index)
     # intelligence = self.get_stat('intelligence', weapon_index)
-    attack_speed = self.get_stat('attack_speed', weapon_index)
     magic_find = self.get_stat('magic_find', weapon_index)
     magic_find += bestiary_stat
     magic_find_str = f'{AQUA}(+{format_number(magic_find)}% Magic Find!)'
@@ -700,7 +699,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
         actual_speed = speed
         if set_bonus == 'young_blood' and hp >= health / 2:
             actual_speed += 70
-        time_cost = 1 / (5 * actual_speed / 100)
+        time_cost = 3 / actual_speed
         sleep(time_cost)
 
         width, _ = get_terminal_size()
@@ -717,7 +716,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
         hp = min(hp + healed, health)
 
         attack_time_cost = 1 / (1 + attack_speed / 100)
-        sleep(1 / (speed / 100))
+        sleep(1 / actual_speed)
 
         mob_hp = mob.health
 
