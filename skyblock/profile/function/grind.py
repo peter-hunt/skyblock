@@ -868,7 +868,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
 
             if hp <= 0:
                 red(f' ☠ {GRAY}You were killed by {mob_name}.')
-                self.die(name)
+                self.die(mob.name)
                 return False
 
             if random_bool(0.5) and thorns != 0:
@@ -907,10 +907,10 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
         self.add_exp(mob.exp * random_int(exp_mult) + random_int(added_exp))
 
         for pointer, loot_amount, rarity, drop_chance in mob.drops:
-            name = pointer['name']
+            loot_name = pointer['name']
             kwargs = {key: pointer[key] for key in pointer
                       if key not in {'name', 'count'}}
-            item = get_item(name, **kwargs)
+            item = get_item(loot_name, **kwargs)
             amount_pool = random_amount(loot_amount)
             pointer['count'] = amount_pool
 
@@ -923,7 +923,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                 continue
 
             self.recieve_item(pointer)
-            self.collect(name, amount_pool)
+            self.collect(loot_name, amount_pool)
 
             if rarity not in {'common', 'uncommon'}:
                 if getattr(item, 'count', 1) != 1:
@@ -932,7 +932,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
                 white(f'{RARITY_COLORS[rarity]}{rarity_str} DROP! '
                       f'{WHITE}({item.display()}{WHITE}) {magic_find_str}')
 
-        if 'diamond' in name:
+        if 'diamond' in mob.name:
             if random_bool(0.01 * (1 + magic_find / 100)):
                 self.recieve_item({'name': 'rare_diamond'})
 

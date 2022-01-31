@@ -1,10 +1,10 @@
 {
   "name": "game",
-  "last_update": 1643635774,
+  "last_update": 1643638926,
   "bank_level": "starter",
-  "experience": 88811.40000000055,
-  "balance": 199189.6392788,
-  "purse": 2481.0,
+  "experience": 143142.60000000367,
+  "balance": 216400.6392788,
+  "purse": 14737.0,
   "mithril_powder": 181,
   "island": "mines",
   "zone": "ice_walls",
@@ -87,13 +87,13 @@
   "experience_skill_alchemy": 0,
   "experience_skill_carpentry": 0,
   "experience_skill_catacombs": 0,
-  "experience_skill_combat": 61137.40000000028,
-  "experience_skill_enchanting": 76174.27539804675,
+  "experience_skill_combat": 81937.40000000029,
+  "experience_skill_enchanting": 79043.36306987228,
   "experience_skill_farming": 11325.0,
   "experience_skill_fishing": 6660,
   "experience_skill_foraging": 12593,
   "experience_skill_mining": 75753,
-  "experience_skill_taming": 62585.443749582824,
+  "experience_skill_taming": 75849.43895796385,
   "collection": {
     "acacia_wood": 304,
     "birch_wood": 3160,
@@ -243,14 +243,14 @@
     "zombie_4"
   ],
   "fast_travel": [["hub", null]],
-  "play_time": 59852.79657936096,
+  "play_time": 62128.17026233673,
   "stats": {
     "deaths": 7,
     "deaths_bone": 1,
     "deaths_diamond_zombie": 1,
     "deaths_goblin_boots": 1,
     "deaths_ice_walker": 4,
-    "kills": 2287,
+    "kills": 2807,
     "kills_blaze": 61,
     "kills_chicken": 241,
     "kills_cow": 65,
@@ -261,7 +261,7 @@
     "kills_goblin": 52,
     "kills_gravel_skeleton": 22,
     "kills_howling_spirit": 2,
-    "kills_ice_walker": 555,
+    "kills_ice_walker": 1075,
     "kills_lapis_zombie": 240,
     "kills_magma_cube": 47,
     "kills_miner_zombie": 25,
@@ -314,12 +314,16 @@
       "type": "armor"
     },
     {
-      "name": "hardened_diamond_leggings",
+      "name": "glacite_leggings",
       "rarity": "rare",
       "part": "leggings",
-      "defense": 95,
+      "defense": 125,
+      "speed": 15,
+      "mining_speed": 10,
+      "true_defense": 20,
       "modifier": "pure",
       "enchantments": {"growth": 5, "protection": 5, "thorns": 3},
+      "abilities": ["expert_miner", "mining_double_defense"],
       "type": "armor"
     },
     {
@@ -346,7 +350,7 @@
       "name": "guardian_pet",
       "rarity": "epic",
       "category": "enchanting",
-      "exp": 1626.9685000000006,
+      "exp": 4265.044334411876,
       "defense": 50,
       "intelligence": 100,
       "type": "pet"
@@ -364,7 +368,7 @@
       "name": "tiger_pet",
       "rarity": "uncommon",
       "category": "combat",
-      "exp": 39065.580422429564,
+      "exp": 62955.49500477821,
       "active": true,
       "strength": 15,
       "crit_chance": 5,
@@ -451,7 +455,7 @@
         "thunderlord": 5,
         "vampirism": 5
       },
-      "kill_count": 1013,
+      "kill_count": 1015,
       "abilities": ["raider_axe"],
       "type": "sword"
     },
@@ -552,7 +556,7 @@
       "type": "item"
     },
     {"name": "enchanted_oak", "count": 2, "rarity": "uncommon", "type": "item"},
-    {},
+    {"name": "glacite_jewel", "rarity": "rare", "type": "item"},
     {},
     {},
     {"name": "titanium", "count": 2, "rarity": "rare", "type": "item"},
@@ -807,37 +811,37 @@
       "name": "cobblestone_minion",
       "tier": 5,
       "cooldown": 10,
-      "last_action": 1643635772,
+      "last_action": 1643638922,
       "inventory": [
         {"name": "cobblestone", "count": 64, "type": "item"},
         {"name": "cobblestone", "count": 64, "type": "item"},
-        {"name": "cobblestone", "count": 8, "type": "item"},
-        {},
-        {},
-        {}
+        {"name": "cobblestone", "count": 64, "type": "item"},
+        {"name": "cobblestone", "count": 64, "type": "item"},
+        {"name": "cobblestone", "count": 64, "type": "item"},
+        {"name": "cobblestone", "count": 64, "type": "item"}
       ]
     },
     {
       "name": "enderman_minion",
       "tier": 3,
       "cooldown": 30,
-      "last_action": 1643635746,
+      "last_action": 1643638926,
       "inventory": [
         {"name": "ender_pearl", "count": 16, "type": "item"},
         {"name": "ender_pearl", "count": 16, "type": "item"},
-        {"name": "ender_pearl", "count": 12, "type": "item"},
-        {}
+        {"name": "ender_pearl", "count": 16, "type": "item"},
+        {"name": "ender_pearl", "count": 16, "type": "item"}
       ]
     },
     {
       "name": "diamond_minion",
       "tier": 4,
       "cooldown": 27,
-      "last_action": 1643635765,
+      "last_action": 1643638924,
       "inventory": [
-        {"name": "diamond", "count": 49, "type": "item"},
-        {},
-        {},
+        {"name": "diamond", "count": 64, "type": "item"},
+        {"name": "diamond", "count": 64, "type": "item"},
+        {"name": "diamond", "count": 38, "type": "item"},
         {},
         {},
         {}
@@ -847,11 +851,11 @@
       "name": "diamond_minion",
       "tier": 6,
       "cooldown": 25,
-      "last_action": 1643635751,
+      "last_action": 1643638926,
       "inventory": [
-        {"name": "diamond", "count": 52, "type": "item"},
-        {},
-        {},
+        {"name": "diamond", "count": 64, "type": "item"},
+        {"name": "diamond", "count": 64, "type": "item"},
+        {"name": "diamond", "count": 51, "type": "item"},
         {},
         {},
         {},
@@ -864,10 +868,10 @@
       "name": "mithril_minion",
       "tier": 4,
       "cooldown": 75,
-      "last_action": 1643635709,
+      "last_action": 1643638859,
       "inventory": [
-        {"name": "mithril", "count": 32, "type": "item"},
-        {},
+        {"name": "mithril", "count": 64, "type": "item"},
+        {"name": "mithril", "count": 52, "type": "item"},
         {},
         {},
         {},
@@ -878,7 +882,7 @@
       "name": "coal_minion",
       "tier": 5,
       "cooldown": 12,
-      "last_action": 1643635763,
+      "last_action": 1643638919,
       "inventory": [
         {"name": "coal", "count": 64, "type": "item"},
         {"name": "coal", "count": 64, "type": "item"},
@@ -892,7 +896,7 @@
       "name": "gold_minion",
       "tier": 5,
       "cooldown": 18,
-      "last_action": 1643635765,
+      "last_action": 1643638915,
       "inventory": [
         {"name": "gold", "count": 64, "type": "item"},
         {"name": "gold", "count": 64, "type": "item"},
@@ -906,20 +910,24 @@
       "name": "obsidian_minion",
       "tier": 3,
       "cooldown": 42,
-      "last_action": 1643635748,
-      "inventory": [{"name": "obsidian", "count": 29, "type": "item"}, {}, {}]
+      "last_action": 1643638898,
+      "inventory": [
+        {"name": "obsidian", "count": 64, "type": "item"},
+        {"name": "obsidian", "count": 40, "type": "item"},
+        {}
+      ]
     },
     {
       "name": "birch_minion",
       "tier": 4,
       "cooldown": 45,
-      "last_action": 1643635748,
+      "last_action": 1643638898,
       "inventory": [
         {"name": "birch_wood", "count": 64, "type": "item"},
         {"name": "birch_wood", "count": 64, "type": "item"},
-        {"name": "birch_wood", "count": 59, "type": "item"},
-        {},
-        {},
+        {"name": "birch_wood", "count": 64, "type": "item"},
+        {"name": "birch_wood", "count": 64, "type": "item"},
+        {"name": "birch_wood", "type": "item"},
         {}
       ]
     },
@@ -927,14 +935,14 @@
       "name": "sugar_cane_minion",
       "tier": 4,
       "cooldown": 20,
-      "last_action": 1643635762,
+      "last_action": 1643638922,
       "inventory": [
         {"name": "sugar_cane", "count": 64, "type": "item"},
         {"name": "sugar_cane", "count": 64, "type": "item"},
-        {"name": "sugar_cane", "count": 55, "type": "item"},
-        {},
-        {},
-        {}
+        {"name": "sugar_cane", "count": 64, "type": "item"},
+        {"name": "sugar_cane", "count": 64, "type": "item"},
+        {"name": "sugar_cane", "count": 64, "type": "item"},
+        {"name": "sugar_cane", "count": 64, "type": "item"}
       ]
     }
   ],
