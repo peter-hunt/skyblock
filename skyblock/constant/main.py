@@ -550,6 +550,10 @@ SELL_PRICE = {
     'lapis_boots': 1_000,
     'lapis_crystal': 1_000,
     'rare_diamond': 1_000,
+    'miner_helmet': 2_050,
+    'miner_chestplate': 4_050,
+    'miner_leggings': 3_050,
+    'miner_boots': 2_700,
     'exp_share_core': 100_000,
 
     'hardened_diamond_helmet': 6_400,

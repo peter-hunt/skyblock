@@ -715,7 +715,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
         healed *= healing_mult
         hp = min(hp + healed, health)
 
-        attack_time_cost = 1 / (1 + attack_speed / 100)
+        attack_time_cost = 0.4 / (1 + attack_speed / 100)
         sleep(1 / actual_speed)
 
         mob_hp = mob.health
