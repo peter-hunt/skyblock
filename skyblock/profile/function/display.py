@@ -91,10 +91,10 @@ def display_bestiary(self, name: str, /):
             for drop in drops:
                 if drop[2] != rarity:
                     continue
-                name = drop[0]['name']
+                drop_name = drop[0]['name']
                 kwargs = {key: drop[0][key] for key in drop[0]
                         if key not in {'name', 'count'}}
-                item = get_item(name, **kwargs)
+                item = get_item(drop_name, **kwargs)
                 if getattr(item, 'count', 1) != 1:
                     item.count = 1
                 count = drop[1]

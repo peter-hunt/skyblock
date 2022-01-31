@@ -48,6 +48,7 @@ def ls():
 
 @checkpoint
 def main():
+    clear()
     yellow(f'Welcome to {GREEN}Skyblock{YELLOW}!')
 
     if is_dir() and is_dir('saves'):
