@@ -126,6 +126,7 @@ To check command usage, type `help` for command documentation.
 
 ## Planned Features:
 
+* Accessory Bags, Minion Bags, Wardrobe, etc.
 * Brewing and Potion effects
 * Commissions
 * Diana, Griffin Pet and Mythologicals

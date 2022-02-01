@@ -397,7 +397,6 @@ HUB_NPCS = [
         ],
         trades=[
             (6, {'name': 'flint'}),
-            (4, {'name': 'gravel'}),
         ]),
     Npc('rosetta',
         init_dialog=[

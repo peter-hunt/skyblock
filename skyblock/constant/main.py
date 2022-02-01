@@ -561,6 +561,7 @@ SELL_PRICE = {
     'hardened_diamond_leggings': 8_960,
     'hardened_diamond_boots': 5_120,
 
+    'glacite_jewel': 50_000,
     'glacite_helmet': 100_000,
     'glacite_chestplate': 100_000,
     'glacite_leggings': 100_000,
@@ -576,6 +577,9 @@ SELL_PRICE = {
 
     'sorrow': 300_000,
     'bag_of_cash': 1_000_000,
+
+    'griffin_feather': 1_000,
+    'ancient_claw': 200,
 }
 
 SKILL_EXP = [
