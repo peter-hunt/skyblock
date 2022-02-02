@@ -911,7 +911,10 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
             kwargs = {key: pointer[key] for key in pointer
                       if key not in {'name', 'count'}}
             item = get_item(loot_name, **kwargs)
+            if isinstance(item, Pet):
+                item.exp = 0
             amount_pool = random_amount(loot_amount)
+            pointer = item.to_obj()
             pointer['count'] = amount_pool
 
             drop_chance *= looting

@@ -350,6 +350,7 @@ SELL_PRICE = {
     'mutant_nether_wart': 76_800,
 
     'hot_potato_book': 13_000,
+    'fuming_potato_book': 1_000_000,
 
     'cobblestone': 1,
     'coal': 2,
