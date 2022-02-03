@@ -663,6 +663,10 @@ def mainloop(self):
 
                 self.remove_pet(index)
 
+            elif words[1] == 'sort':
+                self.pets = sorted(self.pets, key=lambda pet: (-'curelm'.index(pet.rarity[0]), -pet.exp, pet.name))
+                green('Sorted pet list!')
+
             elif words[1] == 'summon':
                 index = self.parse_index(words[2], len(self.pets))
                 if index is None:

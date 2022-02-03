@@ -168,6 +168,9 @@ Display info about a pet.
 > pet remove <index>
 Remove a pet from the pet menu to your inventory.
 
+> pet sort
+Automatically sort pet depending on rarity and level.
+
 > pet summon <index>
 Summon a pet from the inventory.
 

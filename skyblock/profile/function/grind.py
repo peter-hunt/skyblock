@@ -84,7 +84,7 @@ def fish(self, rod_index: int, iteration: int = 1, /):
     last_cp = Decimal()
     cp_step = Decimal('0.1')
     for i in range(1, iteration + 1):
-        sleep(random_amount((5, 30), mult=time_mult))
+        sleep(random_amount((0.5, 3), mult=time_mult))
         if i != 1:
             print()
 
