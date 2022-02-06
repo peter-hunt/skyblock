@@ -51,7 +51,7 @@ def profile_wrapper(cls):
                 if key in {
                     'armor', 'pets', 'ender_chest', 'inventory',
                     'placed_minions', 'potion_bag', 'quiver', 'stash',
-                    'talisman_bag', 'wardrobe',
+                    'accessory_bag', 'minion_bag', 'wardrobe',
                 }:
                     obj[key] = [item.to_obj() for item in value]
                 elif key in {'crafted_minions', 'npc_talked', 'visited_zones'}:
@@ -88,7 +88,7 @@ def profile_wrapper(cls):
             content += ', '
 
         if key in {'armor', 'pets', 'ender_chest', 'inventory', 'potion_bag',
-                   'quiver', 'stash', 'talisman_bag', 'wardrobe'}:
+                   'quiver', 'stash', 'accessory_bag', 'minion_bag', 'wardrobe'}:
             content += (f'{key}=[load_item(item)'
                         f' for item in obj.get({key!r}, {default[key]!r})]')
         elif key == 'placed_minions':

@@ -31,12 +31,30 @@ profile_doc = """
 > armor [armor-part]
 Display equipped armor.
 
+> bag
+Show avaliable bags.
+
+> bag accessory
+> bag minion
+Show content of bag.
+
+> bag accessory info <index>
+> bag minion info <index>
+Show info of item in bag.
+
+> bag put <index>
+Put item into bag.
+
+> bag accessory remove <index>
+> bag minion remove <index>
+Remove item from bag.
+
 > be [mob]
 > bestiary [mob]
 Display bestiary of the mob.
 
 > buy <index> [amount]
-Buy item from the shop.
+Buy item from shop.
 
 > cheat
 Cheat to debug.
@@ -45,7 +63,7 @@ Cheat to debug.
 Clear the screen.
 
 > clearstash
-Removes all items currently in the Stash.
+Removes all items currently in Stash.
 
 > collection [collection]
 > collections [collection]

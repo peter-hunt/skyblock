@@ -52,10 +52,10 @@ class Profile:
     pets: List[Pet] = []
     ender_chest: List[Item] = []
     inventory: List[Item] = [Empty() for _ in range(80)]
-    potion_bag: List[Item] = []
     quiver: List[Item] = []
     stash: List[Item] = []
-    talisman_bag: List[Item] = []
+    accessory_bag: List[Item] = []
+    minion_bag: List[Item] = []
     wardrobe: List[Item] = []
     wardrobe_slot: Optional[int] = None
 

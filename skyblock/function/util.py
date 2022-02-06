@@ -219,12 +219,7 @@ def index(ls: List[Any], name: str, /) -> int:
 def is_valid_usage(usage: str, words: List[str], /) -> bool:
     all_words = usage.split()[1:]
     pos_words = [word for word in all_words if word[0] != '[']
-
-    if len(words) > len(all_words):
-        return False
-    if len(words) < len(pos_words):
-        return False
-    return True
+    return len(pos_words) <= len(words) <= len(all_words)
 
 
 def parse_int(string: str, /, *, warn=True) -> Optional[int]:

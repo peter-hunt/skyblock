@@ -68,12 +68,17 @@ def mainloop(self):
         add_history(original_input)
 
         phrase = words[0]
-        if len(words) >= 2:
-            phrase = ' '.join(words[:2])
-            if phrase not in profile_help:
-                phrase = words[0]
+        cmd_found = False
+        for i in range(len(words), 0, -1):
+            phrase = ' '.join(words[:i])
+            for key in profile_help:
+                if key == phrase:
+                    cmd_found = True
+                    break
+            if cmd_found:
+                break
 
-        if phrase not in profile_help:
+        if not cmd_found:
             red(f'Command not found: {phrase!r}.')
             continue
         if not is_valid_usage(profile_help[phrase][0], words):
@@ -90,6 +95,61 @@ def mainloop(self):
                 red('Please input a valid armor part!')
                 continue
             self.display_armor(part)
+
+        if words[0] == 'bag':
+            if len(words) == 1:
+                white(f'Accessory bag {GRAY}(bag accessory)')
+                white(f'Minion bag {GRAY}(bag minion)')
+            elif len(words) == 2:
+                if words[1] in {'accessory', 'minion'}:
+                    storage = getattr(self, f'{words[1]}_bag')
+                    self.display_storage(storage)
+
+            elif len(words) == 3:
+                if words[1] == 'put':
+                    index = self.parse_index(words[2])
+                    if index is None:
+                        continue
+
+                    item = self.inventory[index]
+                    if isinstance(item, Empty):
+                        red("You don't have an item there!")
+                    elif isinstance(item, Accessory):
+                        self.inventory[index] = Empty()
+                        self.accessory_bag.append(item)
+                        self.accessory_bag = sorted(
+                            self.accessory_bag,
+                            key=lambda accessory: (-'curelm'.index(accessory.rarity[0]), accessory.name)
+                        )
+                    elif isinstance(item, Minion):
+                        self.inventory[index] = Empty()
+                        self.minion_bag.append(item)
+                        self.minion_bag = sorted(
+                            self.minion_bag,
+                            key=lambda minion: (minion.name, minion.tier)
+                        )
+                    else:
+                        red('Invalid item type to put in a bag.')
+                        continue
+                    green(f'Added {item.display()}{GREEN} into bag!')
+            elif len(words) == 4:
+                if words[1] in {'accessory', 'minion'} and words[2] == 'info':
+                    storage = getattr(self, f'{words[1]}_bag')
+                    index = self.parse_index(words[3], len(storage))
+                    if index is None:
+                        continue
+
+                    self.display_item(storage[index])
+                if words[1] in {'accessory', 'minion'} and words[2] == 'remove':
+                    storage = getattr(self, f'{words[1]}_bag')
+                    index = self.parse_index(words[3], len(storage))
+                    if index is None:
+                        continue
+
+                    item = storage.pop(index)
+                    self.recieve_item(item.to_obj())
+                    setattr(self, f'{words[1]}_bag', storage)
+                    green(f'Removed {item.display()}{GREEN} from bag!')
 
         elif words[0] in {'be', 'bestiary'}:
             if len(words) == 1:
@@ -128,7 +188,6 @@ def mainloop(self):
             self.buy(chosen_trade, amount)
 
         elif words[0] == 'cheat':
-            # self.recieve_item({'name': 'raider_axe'})
             ...
 
         elif words[0] == 'clear':
@@ -523,7 +582,7 @@ def mainloop(self):
             self.display_location()
 
         elif words[0] == 'ls':
-            self.display_inv()
+            self.display_storage()
 
         elif words[0] == 'merge':
             index_1 = self.parse_index(words[1])

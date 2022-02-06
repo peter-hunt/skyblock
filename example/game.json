@@ -1,13 +1,13 @@
 {
   "name": "game",
-  "last_update": 1643863832,
+  "last_update": 1644125687,
   "bank_level": "starter",
-  "experience": 350820.04000001814,
-  "balance": 226746.15206437605,
-  "purse": 91903.4,
-  "mithril_powder": 596,
-  "island": "hub",
-  "zone": "village",
+  "experience": 375067.44000001956,
+  "balance": 409076.1985399324,
+  "purse": 1400.0,
+  "mithril_powder": 1010,
+  "island": "mines",
+  "zone": "veins",
   "visited_zones": [
     "animal_pen",
     "bank",
@@ -91,66 +91,66 @@
   "experience_skill_combat": 224785.59999998542,
   "experience_skill_enchanting": 112973.65401438918,
   "experience_skill_farming": 11325.0,
-  "experience_skill_fishing": 25483,
+  "experience_skill_fishing": 30085,
   "experience_skill_foraging": 23909,
-  "experience_skill_mining": 86253,
-  "experience_skill_taming": 193068.27158533118,
+  "experience_skill_mining": 99463,
+  "experience_skill_taming": 201469.16408533434,
   "collection": {
     "acacia_wood": 304,
-    "birch_wood": 4409,
+    "birch_wood": 4793,
     "blaze_rod": 85,
-    "bone": 427,
+    "bone": 587,
     "carrot": 1160,
     "chicken": 1775,
-    "clay": 1461,
-    "clownfish": 14,
-    "coal": 4784,
-    "cobblestone": 7135,
+    "clay": 1623,
+    "clownfish": 17,
+    "coal": 5168,
+    "cobblestone": 7711,
     "cocoa": 6,
     "dark_oak_wood": 274,
-    "diamond": 28939,
+    "diamond": 30316,
     "emerald": 290,
-    "ender_pearl": 7279,
-    "feather": 1496,
-    "fish": 252,
+    "ender_pearl": 7423,
+    "feather": 1656,
+    "fish": 309,
     "flint": 1,
     "ghast_tear": 65,
     "glowstone": 7,
-    "gold": 5225,
+    "gold": 5673,
     "gunpowder": 2,
     "ice": 1388,
-    "ink_sack": 269,
+    "ink_sack": 331,
     "iron": 160,
-    "jungle_wood": 3122,
+    "jungle_wood": 3570,
     "leather": 116,
-    "lily_pad": 129,
+    "lily_pad": 150,
     "magma_cream": 85,
     "melon": 808,
-    "mithril": 5873,
+    "mithril": 7318,
     "mushroom": 2,
     "mutton": 2,
     "nether_wart": 956,
     "netherrack": 4,
     "oak_wood": 2212,
-    "obsidian": 3146,
+    "obsidian": 3531,
     "pork": 3,
     "potato": 1237,
-    "prismarine_crystals": 19,
-    "prismarine_shard": 25,
-    "pufferfish": 1155,
+    "prismarine_crystals": 23,
+    "prismarine_shard": 28,
+    "pufferfish": 1317,
     "pumpkin": 427,
     "quartz": 2,
     "rabbit": 1,
-    "rotten_flesh": 2484,
-    "salmon": 80,
+    "rotten_flesh": 2646,
+    "salmon": 93,
     "sand": 896,
     "seeds": 3370,
     "slime_ball": 1,
     "spider_eye": 103,
-    "sponge": 1,
+    "sponge": 2,
     "spruce_wood": 674,
     "string": 303,
-    "sugar_cane": 6570,
+    "sugar_cane": 6954,
     "wheat": 2551
   },
   "crafted_minions": [
@@ -258,7 +258,7 @@
     "zombie_4"
   ],
   "fast_travel": [["hub", null]],
-  "play_time": 87584.61803865433,
+  "play_time": 89729.52033138275,
   "stats": {
     "deaths": 10,
     "deaths_bone": 1,
@@ -267,7 +267,7 @@
     "deaths_goblin_boots": 1,
     "deaths_ice_walker": 4,
     "deaths_zealot": 2,
-    "kills": 6655,
+    "kills": 6665,
     "kills_blaze": 61,
     "kills_chicken": 241,
     "kills_cow": 65,
@@ -282,22 +282,22 @@
     "kills_lapis_zombie": 302,
     "kills_magma_cube": 47,
     "kills_miner_zombie": 25,
-    "kills_monster_of_the_deep": 1,
+    "kills_monster_of_the_deep": 2,
     "kills_mooshroom": 1,
-    "kills_night_squid": 12,
+    "kills_night_squid": 14,
     "kills_obsidian_defender": 112,
     "kills_pack_spirit": 3,
     "kills_pig": 1,
     "kills_rabbit": 1,
     "kills_rain_slime": 1,
-    "kills_sea_archer": 2,
-    "kills_sea_guardian": 8,
-    "kills_sea_walker": 8,
-    "kills_sea_witch": 7,
+    "kills_sea_archer": 3,
+    "kills_sea_guardian": 10,
+    "kills_sea_walker": 9,
+    "kills_sea_witch": 8,
     "kills_sheep": 1,
     "kills_skeleton": 1,
     "kills_sneaky_creeper": 2,
-    "kills_squid": 14,
+    "kills_squid": 16,
     "kills_voracious_spider": 100,
     "kills_weaver_spider": 101,
     "kills_wither_skeleton": 1,
@@ -306,8 +306,8 @@
     "kills_zombie": 28,
     "kills_zombie_pigman": 10,
     "kills_zombie_villager": 12,
-    "ores_mined": 8412,
-    "sea_creature_killed": 54
+    "ores_mined": 8697,
+    "sea_creature_killed": 64
   },
   "armor": [
     {
@@ -324,13 +324,16 @@
       "type": "armor"
     },
     {
-      "name": "obsidian_chestplate",
-      "rarity": "epic",
+      "name": "glacite_chestplate",
+      "rarity": "rare",
       "part": "chestplate",
-      "defense": 250,
+      "defense": 150,
+      "speed": 15,
+      "mining_speed": 10,
+      "true_defense": 20,
       "modifier": "pure",
       "enchantments": {"growth": 5, "protection": 5, "thorns": 3},
-      "combat_skill_req": 14,
+      "abilities": ["expert_miner", "mining_double_defense"],
       "type": "armor"
     },
     {
@@ -371,6 +374,14 @@
     },
     {
       "name": "guardian_pet",
+      "rarity": "legendary",
+      "category": "enchanting",
+      "defense": 50,
+      "intelligence": 100,
+      "type": "pet"
+    },
+    {
+      "name": "guardian_pet",
       "rarity": "epic",
       "category": "enchanting",
       "exp": 42347.67492443536,
@@ -391,8 +402,7 @@
       "name": "tiger_pet",
       "rarity": "uncommon",
       "category": "combat",
-      "exp": 225533.4390871237,
-      "active": true,
+      "exp": 226879.52408712357,
       "strength": 15,
       "crit_chance": 5,
       "crit_damage": 50,
@@ -404,7 +414,8 @@
       "name": "rock_pet",
       "rarity": "uncommon",
       "category": "mining",
-      "exp": 17206.359887331982,
+      "exp": 32662.059887332387,
+      "active": true,
       "defense": 200,
       "true_defense": 10,
       "type": "pet"
@@ -473,14 +484,6 @@
       "health": 50,
       "defense": 33.333333333333336,
       "strength": 20,
-      "type": "pet"
-    },
-    {
-      "name": "guardian_pet",
-      "rarity": "legendary",
-      "category": "enchanting",
-      "defense": 50,
-      "intelligence": 100,
       "type": "pet"
     }
   ],
@@ -558,25 +561,25 @@
     },
     {
       "name": "enchanted_diamond",
-      "count": 34,
+      "count": 41,
       "rarity": "uncommon",
       "type": "item"
     },
     {
       "name": "enchanted_gold",
-      "count": 12,
+      "count": 14,
       "rarity": "uncommon",
       "type": "item"
     },
     {
       "name": "enchanted_cobblestone",
-      "count": 4,
+      "count": 7,
       "rarity": "uncommon",
       "type": "item"
     },
     {
       "name": "enchanted_rotten_flesh",
-      "count": 3,
+      "count": 4,
       "rarity": "uncommon",
       "type": "item"
     },
@@ -588,34 +591,39 @@
     },
     {
       "name": "enchanted_sugar",
-      "count": 20,
+      "count": 22,
       "rarity": "uncommon",
       "type": "item"
     },
     {
       "name": "enchanted_mithril",
-      "count": 24,
+      "count": 32,
       "rarity": "uncommon",
       "type": "item"
     },
     {
       "name": "enchanted_ender_pearl",
-      "count": 14,
+      "count": 16,
       "rarity": "uncommon",
       "type": "item"
     },
     {
       "name": "enchanted_birch",
-      "count": 5,
+      "count": 7,
       "rarity": "uncommon",
       "type": "item"
     },
     {"name": "enchanted_oak", "count": 2, "rarity": "uncommon", "type": "item"},
-    {"name": "enchanted_coal", "count": 8, "rarity": "uncommon", "type": "item"},
+    {
+      "name": "enchanted_coal",
+      "count": 10,
+      "rarity": "uncommon",
+      "type": "item"
+    },
     {"name": "enchanted_iron", "rarity": "uncommon", "type": "item"},
     {"name": "glacite_jewel", "count": 12, "rarity": "rare", "type": "item"},
-    {"name": "titanium", "count": 17, "rarity": "rare", "type": "item"},
-    {"name": "clay", "count": 21, "type": "item"},
+    {"name": "titanium", "count": 31, "rarity": "rare", "type": "item"},
+    {"name": "clay", "count": 23, "type": "item"},
     {
       "name": "rogue_sword",
       "rarity": "common",
@@ -632,17 +640,11 @@
     },
     {
       "name": "enchanted_obsidian",
-      "count": 2,
+      "count": 4,
       "rarity": "uncommon",
       "type": "item"
     },
-    {
-      "name": "cave_spider_minion",
-      "tier": 1,
-      "cooldown": 26,
-      "slots": 2,
-      "type": "minion"
-    },
+    {},
     {
       "name": "raider_axe",
       "rarity": "rare",
@@ -671,20 +673,30 @@
       "abilities": ["raider_axe"],
       "type": "sword"
     },
-    {"name": "enchanted_bone", "count": 2, "rarity": "uncommon", "type": "item"},
-    {"name": "lily_pad", "count": 64, "type": "item"},
-    {"name": "lily_pad", "count": 64, "type": "item"},
+    {"name": "enchanted_bone", "count": 3, "rarity": "uncommon", "type": "item"},
+    {"name": "mithril", "count": 37, "type": "item"},
+    {},
     {"name": "oak_wood", "count": 64, "type": "item"},
-    {"name": "fish", "count": 42, "type": "item"},
-    {"name": "salmon", "count": 12, "type": "item"},
-    {"name": "clownfish", "count": 5, "type": "item"},
-    {"name": "ink_sack", "count": 45, "type": "item"},
-    {"name": "prismarine_shard", "count": 8, "type": "item"},
-    {"name": "enchanted_feather", "rarity": "uncommon", "type": "item"},
-    {"name": "prismarine_crystals", "count": 3, "type": "item"},
-    {"name": "enchanted_pufferfish", "rarity": "uncommon", "type": "item"},
-    {"name": "pufferfish", "count": 8, "type": "item"},
-    {"name": "lily_pad", "type": "item"},
+    {
+      "name": "enchanted_ender_pearl",
+      "count": 5,
+      "rarity": "uncommon",
+      "type": "item"
+    },
+    {},
+    {"name": "lily_pad", "count": 6, "type": "item"},
+    {},
+    {},
+    {
+      "name": "enchanted_feather",
+      "count": 2,
+      "rarity": "uncommon",
+      "type": "item"
+    },
+    {},
+    {},
+    {"name": "sponge", "type": "item"},
+    {},
     {},
     {},
     {},
@@ -713,16 +725,13 @@
       "type": "armor"
     },
     {
-      "name": "glacite_chestplate",
-      "rarity": "rare",
+      "name": "obsidian_chestplate",
+      "rarity": "epic",
       "part": "chestplate",
-      "defense": 150,
-      "speed": 15,
-      "mining_speed": 10,
-      "true_defense": 20,
+      "defense": 250,
       "modifier": "pure",
       "enchantments": {"growth": 5, "protection": 5, "thorns": 3},
-      "abilities": ["expert_miner", "mining_double_defense"],
+      "combat_skill_req": 14,
       "type": "armor"
     },
     {
@@ -737,7 +746,7 @@
       "abilities": ["ender_armor"],
       "type": "armor"
     },
-    {},
+    {"name": "mithril", "count": 64, "type": "item"},
     {
       "name": "lapis_helmet",
       "rarity": "uncommon",
@@ -778,41 +787,63 @@
       "abilities": ["lapis_armor_exp_bonus", "lapis_armor_health"],
       "type": "armor"
     },
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {}
+  ],
+  "quiver": [],
+  "stash": [],
+  "accessory_bag": [
     {"name": "farming_talisman", "modifier": "unpleasant", "type": "accessory"},
     {"name": "feather_talisman", "modifier": "unpleasant", "type": "accessory"},
+    {"name": "healing_talisman", "modifier": "superior", "type": "accessory"},
     {
       "name": "mine_affinity_talisman",
       "modifier": "unpleasant",
       "type": "accessory"
     },
-    {"name": "speed_talisman", "modifier": "superior", "type": "accessory"},
     {"name": "skeleton_talisman", "modifier": "superior", "type": "accessory"},
+    {"name": "speed_talisman", "modifier": "superior", "type": "accessory"},
     {"name": "vaccine_talisman", "modifier": "itchy", "type": "accessory"},
     {
       "name": "village_affinity_talisman",
       "modifier": "superior",
       "type": "accessory"
     },
-    {"name": "zombie_talisman", "modifier": "hurtful", "type": "accessory"},
+    {"name": "zombie_talisman", "modifier": "hurtful", "type": "accessory"}
+  ],
+  "minion_bag": [
     {
-      "name": "spider_minion",
+      "name": "acacia_minion",
       "tier": 2,
-      "cooldown": 26,
-      "slots": 4,
-      "type": "minion"
-    },
-    {
-      "name": "ghast_minion",
-      "tier": 1,
-      "cooldown": 50,
-      "slots": 2,
-      "type": "minion"
-    },
-    {
-      "name": "magma_cube_minion",
-      "tier": 1,
-      "cooldown": 32,
-      "slots": 2,
+      "cooldown": 48,
+      "slots": 3,
       "type": "minion"
     },
     {
@@ -823,24 +854,17 @@
       "type": "minion"
     },
     {
-      "name": "oak_minion",
-      "tier": 4,
-      "cooldown": 45,
-      "slots": 6,
-      "type": "minion"
-    },
-    {
-      "name": "emerald_minion",
-      "tier": 2,
-      "cooldown": 28,
-      "slots": 3,
-      "type": "minion"
-    },
-    {
-      "name": "nether_wart_minion",
+      "name": "carrot_minion",
       "tier": 3,
-      "cooldown": 47,
+      "cooldown": 18,
       "slots": 3,
+      "type": "minion"
+    },
+    {
+      "name": "cave_spider_minion",
+      "tier": 1,
+      "cooldown": 26,
+      "slots": 2,
       "type": "minion"
     },
     {
@@ -851,24 +875,10 @@
       "type": "minion"
     },
     {
-      "name": "wheat_minion",
-      "tier": 4,
-      "cooldown": 13,
-      "slots": 6,
-      "type": "minion"
-    },
-    {
-      "name": "sand_minion",
-      "tier": 3,
-      "cooldown": 24,
-      "slots": 3,
-      "type": "minion"
-    },
-    {
-      "name": "acacia_minion",
-      "tier": 2,
-      "cooldown": 48,
-      "slots": 3,
+      "name": "cow_minion",
+      "tier": 1,
+      "cooldown": 26,
+      "slots": 2,
       "type": "minion"
     },
     {
@@ -879,16 +889,16 @@
       "type": "minion"
     },
     {
-      "name": "spruce_minion",
-      "tier": 3,
-      "cooldown": 45,
+      "name": "emerald_minion",
+      "tier": 2,
+      "cooldown": 28,
       "slots": 3,
       "type": "minion"
     },
     {
-      "name": "cow_minion",
+      "name": "ghast_minion",
       "tier": 1,
-      "cooldown": 26,
+      "cooldown": 50,
       "slots": 2,
       "type": "minion"
     },
@@ -900,31 +910,10 @@
       "type": "minion"
     },
     {
-      "name": "skeleton_minion",
+      "name": "magma_cube_minion",
       "tier": 1,
-      "cooldown": 26,
+      "cooldown": 32,
       "slots": 2,
-      "type": "minion"
-    },
-    {
-      "name": "zombie_minion",
-      "tier": 4,
-      "cooldown": 24,
-      "slots": 6,
-      "type": "minion"
-    },
-    {
-      "name": "carrot_minion",
-      "tier": 3,
-      "cooldown": 18,
-      "slots": 3,
-      "type": "minion"
-    },
-    {
-      "name": "potato_minion",
-      "tier": 3,
-      "cooldown": 18,
-      "slots": 3,
       "type": "minion"
     },
     {
@@ -935,17 +924,76 @@
       "type": "minion"
     },
     {
+      "name": "nether_wart_minion",
+      "tier": 3,
+      "cooldown": 47,
+      "slots": 3,
+      "type": "minion"
+    },
+    {
+      "name": "oak_minion",
+      "tier": 4,
+      "cooldown": 45,
+      "slots": 6,
+      "type": "minion"
+    },
+    {
+      "name": "potato_minion",
+      "tier": 3,
+      "cooldown": 18,
+      "slots": 3,
+      "type": "minion"
+    },
+    {
       "name": "pumpkin_minion",
       "tier": 2,
       "cooldown": 32,
       "slots": 3,
       "type": "minion"
+    },
+    {
+      "name": "sand_minion",
+      "tier": 3,
+      "cooldown": 24,
+      "slots": 3,
+      "type": "minion"
+    },
+    {
+      "name": "skeleton_minion",
+      "tier": 1,
+      "cooldown": 26,
+      "slots": 2,
+      "type": "minion"
+    },
+    {
+      "name": "spider_minion",
+      "tier": 2,
+      "cooldown": 26,
+      "slots": 4,
+      "type": "minion"
+    },
+    {
+      "name": "spruce_minion",
+      "tier": 3,
+      "cooldown": 45,
+      "slots": 3,
+      "type": "minion"
+    },
+    {
+      "name": "wheat_minion",
+      "tier": 4,
+      "cooldown": 13,
+      "slots": 6,
+      "type": "minion"
+    },
+    {
+      "name": "zombie_minion",
+      "tier": 4,
+      "cooldown": 24,
+      "slots": 6,
+      "type": "minion"
     }
   ],
-  "potion_bag": [],
-  "quiver": [],
-  "stash": [],
-  "talisman_bag": [],
   "wardrobe": [],
   "wardrobe_slot": null,
   "placed_minions": [
@@ -953,7 +1001,7 @@
       "name": "cobblestone_minion",
       "tier": 6,
       "cooldown": 10,
-      "last_action": 1643863831,
+      "last_action": 1644125681,
       "inventory": [
         {"name": "cobblestone", "count": 64, "type": "item"},
         {"name": "cobblestone", "count": 64, "type": "item"},
@@ -961,16 +1009,16 @@
         {"name": "cobblestone", "count": 64, "type": "item"},
         {"name": "cobblestone", "count": 64, "type": "item"},
         {"name": "cobblestone", "count": 64, "type": "item"},
-        {"name": "cobblestone", "count": 21, "type": "item"},
-        {},
-        {}
+        {"name": "cobblestone", "count": 64, "type": "item"},
+        {"name": "cobblestone", "count": 64, "type": "item"},
+        {"name": "cobblestone", "count": 64, "type": "item"}
       ]
     },
     {
       "name": "enderman_minion",
       "tier": 6,
       "cooldown": 28,
-      "last_action": 1643863831,
+      "last_action": 1644125687,
       "inventory": [
         {"name": "ender_pearl", "count": 16, "type": "item"},
         {"name": "ender_pearl", "count": 16, "type": "item"},
@@ -987,52 +1035,52 @@
       "name": "diamond_minion",
       "tier": 4,
       "cooldown": 27,
-      "last_action": 1643863807,
+      "last_action": 1644125680,
       "inventory": [
         {"name": "diamond", "count": 64, "type": "item"},
         {"name": "diamond", "count": 64, "type": "item"},
-        {"name": "diamond", "count": 19, "type": "item"},
-        {},
-        {},
-        {}
+        {"name": "diamond", "count": 64, "type": "item"},
+        {"name": "diamond", "count": 64, "type": "item"},
+        {"name": "diamond", "count": 64, "type": "item"},
+        {"name": "diamond", "count": 64, "type": "item"}
       ]
     },
     {
       "name": "diamond_minion",
       "tier": 6,
       "cooldown": 25,
-      "last_action": 1643863826,
+      "last_action": 1644125676,
       "inventory": [
         {"name": "diamond", "count": 64, "type": "item"},
         {"name": "diamond", "count": 64, "type": "item"},
-        {"name": "diamond", "count": 31, "type": "item"},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {}
+        {"name": "diamond", "count": 64, "type": "item"},
+        {"name": "diamond", "count": 64, "type": "item"},
+        {"name": "diamond", "count": 64, "type": "item"},
+        {"name": "diamond", "count": 64, "type": "item"},
+        {"name": "diamond", "count": 64, "type": "item"},
+        {"name": "diamond", "count": 64, "type": "item"},
+        {"name": "diamond", "count": 64, "type": "item"}
       ]
     },
     {
       "name": "mithril_minion",
       "tier": 4,
       "cooldown": 75,
-      "last_action": 1643863784,
+      "last_action": 1644125684,
       "inventory": [
         {"name": "mithril", "count": 64, "type": "item"},
-        {"name": "mithril", "count": 42, "type": "item"},
-        {},
-        {},
-        {},
-        {}
+        {"name": "mithril", "count": 64, "type": "item"},
+        {"name": "mithril", "count": 64, "type": "item"},
+        {"name": "mithril", "count": 64, "type": "item"},
+        {"name": "mithril", "count": 64, "type": "item"},
+        {"name": "mithril", "count": 64, "type": "item"}
       ]
     },
     {
       "name": "coal_minion",
       "tier": 5,
       "cooldown": 12,
-      "last_action": 1643863823,
+      "last_action": 1644125687,
       "inventory": [
         {"name": "coal", "count": 64, "type": "item"},
         {"name": "coal", "count": 64, "type": "item"},
@@ -1046,7 +1094,7 @@
       "name": "gold_minion",
       "tier": 5,
       "cooldown": 18,
-      "last_action": 1643863825,
+      "last_action": 1644125671,
       "inventory": [
         {"name": "gold", "count": 64, "type": "item"},
         {"name": "gold", "count": 64, "type": "item"},
@@ -1060,56 +1108,56 @@
       "name": "obsidian_minion",
       "tier": 5,
       "cooldown": 39,
-      "last_action": 1643863826,
+      "last_action": 1644125672,
       "inventory": [
         {"name": "obsidian", "count": 64, "type": "item"},
-        {"name": "obsidian", "count": 38, "type": "item"},
-        {},
-        {},
-        {},
-        {}
+        {"name": "obsidian", "count": 64, "type": "item"},
+        {"name": "obsidian", "count": 64, "type": "item"},
+        {"name": "obsidian", "count": 64, "type": "item"},
+        {"name": "obsidian", "count": 64, "type": "item"},
+        {"name": "obsidian", "count": 64, "type": "item"}
       ]
     },
     {
       "name": "birch_minion",
       "tier": 5,
       "cooldown": 42,
-      "last_action": 1643863830,
+      "last_action": 1644125658,
       "inventory": [
-        {"name": "birch_wood", "count": 56, "type": "item"},
-        {},
-        {},
-        {},
-        {},
-        {}
+        {"name": "birch_wood", "count": 64, "type": "item"},
+        {"name": "birch_wood", "count": 64, "type": "item"},
+        {"name": "birch_wood", "count": 64, "type": "item"},
+        {"name": "birch_wood", "count": 64, "type": "item"},
+        {"name": "birch_wood", "count": 64, "type": "item"},
+        {"name": "birch_wood", "count": 64, "type": "item"}
       ]
     },
     {
       "name": "sugar_cane_minion",
       "tier": 4,
       "cooldown": 20,
-      "last_action": 1643863832,
+      "last_action": 1644125672,
       "inventory": [
         {"name": "sugar_cane", "count": 64, "type": "item"},
         {"name": "sugar_cane", "count": 64, "type": "item"},
         {"name": "sugar_cane", "count": 64, "type": "item"},
         {"name": "sugar_cane", "count": 64, "type": "item"},
         {"name": "sugar_cane", "count": 64, "type": "item"},
-        {"name": "sugar_cane", "count": 31, "type": "item"}
+        {"name": "sugar_cane", "count": 64, "type": "item"}
       ]
     },
     {
       "name": "jungle_minion",
       "tier": 4,
       "cooldown": 45,
-      "last_action": 1643863816,
+      "last_action": 1644125671,
       "inventory": [
-        {"name": "jungle_wood", "count": 47, "type": "item"},
-        {},
-        {},
-        {},
-        {},
-        {}
+        {"name": "jungle_wood", "count": 64, "type": "item"},
+        {"name": "jungle_wood", "count": 64, "type": "item"},
+        {"name": "jungle_wood", "count": 64, "type": "item"},
+        {"name": "jungle_wood", "count": 64, "type": "item"},
+        {"name": "jungle_wood", "count": 64, "type": "item"},
+        {"name": "jungle_wood", "count": 64, "type": "item"}
       ]
     }
   ],

@@ -398,7 +398,7 @@ def get_stat(self, name: str, index: Optional[int] = None, /, *,
             if current_ability != set_bonus:
                 set_bonus = False
 
-    for item in self.inventory:
+    for item in self.inventory + self.accessory_bag:
         if isinstance(item, Accessory):
             if item.modifier is not None:
                 modifier_bonus = get_modifier(item.modifier, item.rarity)

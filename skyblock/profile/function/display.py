@@ -33,7 +33,7 @@ from ...map.object import *
 __all__ = [
     'display_armor', 'display_bestiary', 'display_bestiaries',
     'display_collection_info', 'display_collection', 'display_collections',
-    'display_hotm', 'display_item', 'display_inv', 'display_location',
+    'display_hotm', 'display_item', 'display_storage', 'display_location',
     'display_minion_info', 'display_minions', 'display_money', 'display_pets',
     'display_playtime', 'display_recipe_info', 'display_recipe',
     'display_recipes', 'display_shop', 'display_stat', 'display_stats',
@@ -375,35 +375,6 @@ def display_item(self, item: ItemType, /):
     yellow(f"{BOLD}{'':-^{width}}")
 
 
-def display_inv(self, /):
-    length = len(self.inventory)
-
-    digits = len(f'{length}')
-    empty_slots = []
-    index = 0
-    is_empty = True
-    while index < length:
-        item = self.inventory[index]
-        if isinstance(item, Empty):
-            while index < length:
-                if not isinstance(self.inventory[index], Empty):
-                    break
-                empty_slots.append(index)
-                index += 1
-            continue
-
-        is_empty = False
-        if empty_slots:
-            for empty_index in empty_slots:
-                gray(f'{(empty_index + 1):>{digits + 2}}')
-            empty_slots.clear()
-        gray(f'{(index + 1):>{digits + 2}} {item.display()}')
-        index += 1
-
-    if is_empty:
-        gray('Your inventory is empty.')
-
-
 def display_location(self, /):
     island = get(ISLANDS, self.island)
     zone = get(island.zones, self.zone)
@@ -669,6 +640,55 @@ def display_recipes(self, /, *, show_all=False):
     yellow(f"{BOLD}{'':-^{width}}")
 
 
+def display_skill_add(self, name: str, amount: Number, /):
+    name_display = format_name(name)
+
+    exp = self.get_skill_exp(name)
+    _, exp_left, exp_to_next = calc_skill_level_info(name, exp)
+
+    dark_aqua(f'+ {format_number(amount)} {name_display}'
+              f' ({format_number(exp_left)}/{format_number(exp_to_next)})')
+
+
+def display_skill(self, name: str, /, *,
+                  reward: bool = True, end: bool = True):
+    width, _ = get_terminal_size()
+    width = ceil(width * 0.85)
+
+    yellow(f"{BOLD}{'':-^{width}}")
+
+    exp = self.get_skill_exp(name)
+    lvl, exp_left, exp_to_next = calc_skill_level_info(name, exp)
+    green(f'{format_name(name)} {format_roman(lvl)}')
+
+    if exp_left < exp_to_next:
+        perc = fround(exp_left / exp_to_next * 100, 2)
+        gray(f'Progress to level {format_roman(lvl + 1)}: {YELLOW}{perc}%')
+
+    bar = min(floor(exp_left / exp_to_next * 20), 20)
+    left, right = '-' * bar, '-' * (20 - bar)
+    green(f'{BOLD}{left}{GRAY}{BOLD}{right} {YELLOW}{format_number(exp_left)}'
+          f'{GOLD}/{YELLOW}{format_short(exp_to_next)}')
+
+    if reward and exp_left < exp_to_next:
+        gray(f'\nLevel {format_roman(lvl + 1)} Rewards:')
+        display_skill_reward(name, lvl, lvl + 1)
+
+    if end:
+        yellow(f"{BOLD}{'':-^{width}}")
+
+
+def display_skills(self, /):
+    width, _ = get_terminal_size()
+    width = ceil(width * 0.85)
+
+    for skill in ('farming', 'mining', 'combat', 'foraging', 'fishing',
+                  'enchanting', 'alchemy', 'taming', 'catacombs'):
+        self.display_skill(skill, reward=False, end=False)
+
+    yellow(f"{BOLD}{'':-^{width}}")
+
+
 def display_shop(self, npc: Npc, trade_index: Optional[int] = None, /):
     if trade_index is None:
         gray(f"{npc}'s shop:")
@@ -848,53 +868,35 @@ def display_stats(self, index: Optional[int] = None, /):
     dark_blue(f"{BOLD}{'':-^{width}}")
 
 
-def display_skill_add(self, name: str, amount: Number, /):
-    name_display = format_name(name)
+def display_storage(self, storage=None, /):
+    if storage is None:
+        storage = self.inventory
+    length = len(storage)
 
-    exp = self.get_skill_exp(name)
-    _, exp_left, exp_to_next = calc_skill_level_info(name, exp)
+    digits = len(f'{length}')
+    empty_slots = []
+    index = 0
+    is_empty = True
+    while index < length:
+        item = storage[index]
+        if isinstance(item, Empty):
+            while index < length:
+                if not isinstance(storage[index], Empty):
+                    break
+                empty_slots.append(index)
+                index += 1
+            continue
 
-    dark_aqua(f'+ {format_number(amount)} {name_display}'
-              f' ({format_number(exp_left)}/{format_number(exp_to_next)})')
+        is_empty = False
+        if empty_slots:
+            for empty_index in empty_slots:
+                gray(f'{(empty_index + 1):>{digits + 2}}')
+            empty_slots.clear()
+        gray(f'{(index + 1):>{digits + 2}} {item.display()}')
+        index += 1
 
-
-def display_skill(self, name: str, /, *,
-                  reward: bool = True, end: bool = True):
-    width, _ = get_terminal_size()
-    width = ceil(width * 0.85)
-
-    yellow(f"{BOLD}{'':-^{width}}")
-
-    exp = self.get_skill_exp(name)
-    lvl, exp_left, exp_to_next = calc_skill_level_info(name, exp)
-    green(f'{format_name(name)} {format_roman(lvl)}')
-
-    if exp_left < exp_to_next:
-        perc = fround(exp_left / exp_to_next * 100, 2)
-        gray(f'Progress to level {format_roman(lvl + 1)}: {YELLOW}{perc}%')
-
-    bar = min(floor(exp_left / exp_to_next * 20), 20)
-    left, right = '-' * bar, '-' * (20 - bar)
-    green(f'{BOLD}{left}{GRAY}{BOLD}{right} {YELLOW}{format_number(exp_left)}'
-          f'{GOLD}/{YELLOW}{format_short(exp_to_next)}')
-
-    if reward and exp_left < exp_to_next:
-        gray(f'\nLevel {format_roman(lvl + 1)} Rewards:')
-        display_skill_reward(name, lvl, lvl + 1)
-
-    if end:
-        yellow(f"{BOLD}{'':-^{width}}")
-
-
-def display_skills(self, /):
-    width, _ = get_terminal_size()
-    width = ceil(width * 0.85)
-
-    for skill in ('farming', 'mining', 'combat', 'foraging', 'fishing',
-                  'enchanting', 'alchemy', 'taming', 'catacombs'):
-        self.display_skill(skill, reward=False, end=False)
-
-    yellow(f"{BOLD}{'':-^{width}}")
+    if is_empty:
+        gray('empty')
 
 
 def display_warp(self, /):
