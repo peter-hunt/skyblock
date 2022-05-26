@@ -730,7 +730,7 @@ def display_shop(self, npc: Npc, trade_index: Optional[int] = None, /):
             if isinstance(cost, (int, float)):
                 cost = [cost]
             for cost_pointer in cost:
-                if isinstance(cost_pointer, int):
+                if isinstance(cost_pointer, (int, float)):
                     gray(f"  {'':>{digits}}   {GOLD}"
                          f"{format_number(cost_pointer)} coins{GRAY}")
                     continue
