@@ -705,13 +705,6 @@ def sell(self, index: int, /):
         yellow('Skipping as no item to sell.')
         return
 
-    island = get(ISLANDS, self.island)
-    zone = get(island.zones, self.zone)
-
-    if len(zone.npcs) == 0:
-        red('No NPCs around to sell the item.')
-        return
-
     if item.name not in SELL_PRICE:
         red('You cannot sell this item to an NPC!')
         return
