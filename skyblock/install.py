@@ -29,7 +29,8 @@ def install_data(*, is_update=False):
         print(f'\x1b[0;38;2;85;255;85m{doing_str} Assets...\x1b[0m')
         run(['git', 'clone', '-q',
              'https://github.com/peter-hunt/skyblock-data', data_dir])
-        print(f'\x1b[0;38;2;85;255;85mAssets {done_str}!\x1b[0m')
+        if Path(data_dir).is_dir():
+            print(f'\x1b[0;38;2;85;255;85mAssets {done_str}!\x1b[0m')
 
 
 def init():
