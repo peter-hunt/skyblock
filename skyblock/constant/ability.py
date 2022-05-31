@@ -1,4 +1,4 @@
-__all__ = ['SET_BONUSES']
+__all__ = ['SET_BONUSES', 'THREE_PIECE_BONUSES']
 
 SET_BONUSES = (
     'death_tax',
@@ -17,4 +17,8 @@ SET_BONUSES = (
     'strong_blood',
     'superior_blood',
     'fairys_outfit',
+)
+
+THREE_PIECE_BONUSES = (
+    'trolling_the_reaper',
 )

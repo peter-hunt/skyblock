@@ -5,7 +5,7 @@ from random import randint, random, vonmisesvariate
 from time import sleep, time
 from typing import Optional
 
-from ...constant.ability import SET_BONUSES
+from ...constant.ability import *
 from ...constant.colors import *
 from ...constant.mobs import (
     CUBISM_EFT, ENDER_SLAYER_EFT, BOA_EFT, SMITE_EFT, BLAST_PROT_EFT,
@@ -546,6 +546,29 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
             if current_ability != set_bonus:
                 set_bonus = False
 
+    three_set_bonus = True
+    for piece in self.armor:
+        if not isinstance(piece, Armor):
+            three_set_bonus = False
+            break
+
+        if 'mithrils_protection' in piece.abilities:
+            use_mithrils_protection = True
+        for current_ability in piece.abilities:
+            if current_ability in THREE_PIECE_BONUSES:
+                break
+        else:
+            continue
+        if three_set_bonus is True:
+            three_set_bonus = current_ability
+        elif three_set_bonus is not False:
+            if current_ability != three_set_bonus:
+                three_set_bonus = False
+
+    if three_set_bonus == 'trolling_the_reaper':
+        if name in ZOMBIES:
+            defense += 100
+
     enchants = 0
     enchants += 0.05 * weapon_enchants.get('sharpness', 0)
     if name in SMITE_EFT:
@@ -577,7 +600,7 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
         thorns += 3 * piece_enchants.get('thorns', 0)
         last_stand += 5 * piece_enchants.get('last_stand', 0)
         no_pain_no_gain.append(25 * piece_enchants.get('no_pain_no_gain', 0))
-        
+
     if healing_boost:
         healing_muly *= 2
 

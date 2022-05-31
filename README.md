@@ -9,7 +9,7 @@
 
 ## Hypixel Skyblock Remake in Python.
 
-**This project is a command-line-based fantasy RPG game.** You type commands to play the game. **Many mechanics and content are different from the original Hypixel Skyblock**, but I'm trying to make it as close to the original Hypixel Skyblock as possible.
+**This project is a command-line-based fantasy RPG game.** You type commands to play the game. **Many mechanics and content are a bit different from the original Hypixel Skyblock**, but I'm trying to make it as close to the original Hypixel Skyblock as possible.
 
 I started this project because **my friends couldn't log onto Hypixel**. I'm also learning many of the mechanics and getting better at Hypixel Skyblock by the time.
 
@@ -42,7 +42,7 @@ Well, if you **don't want to buy Minecraft for 26.95 dollars**, and you **still 
 
 The project is also for people who **can't connect to Hypixel or having a bad connection**.
 
-Even more, if you want to **play Skyblock cheaty**, then cheating on this project won't cost you a single dollar, even getting admin items or having trillions of coins. And if you want to **make your custom content or mod it**, this project is for you.
+Even more, if you want to **cheat Skyblock**, then cheating on this project won't cost you a single dollar, including having up to \[YouTube\] rank perks for free, even getting admin items or having trillions of coins. And if you want to **make your custom content or mod it**, this project is for you.
 
 # Credits
 
@@ -112,7 +112,7 @@ To check command usage, type `help` for command documentation.
 * Wardrobe and other bags/sacks.
 * Brewing and Potion effects
 * Commissions
-* Diana, Griffin Pet and Mythological creature
+* Diana, Griffin Pet and **Mythological** creature
 * Dungeons
 * Fairy Souls
 * Forging (Forging recipes already are accessible)

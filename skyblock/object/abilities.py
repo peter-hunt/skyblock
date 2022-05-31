@@ -588,6 +588,11 @@ ABILITIES = [
         id='hegemony_artifact',
         display_id='hegemony_artifact',
     ),
+    NamedAbility(
+        id='trolling_the_reaper',
+        name='Full Set Bonus: Trolling The Reaper',
+        display_id='trolling_the_reaper',
+    ),
 ]
 
 
