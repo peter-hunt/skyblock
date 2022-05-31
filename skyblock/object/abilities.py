@@ -375,6 +375,12 @@ ABILITIES = [
         variables={'coins': '50,000,000', 'bonus': 120},
     ),
 
+    NamedAbility(
+        id='healing_boost',
+        name='Healing Boost',
+        display_id='healing_boost',
+    ),
+
     # accessory abilities
     AnonymousAbility(
         id='farming_talisman',

@@ -262,6 +262,7 @@ class Sword(ItemType):
     hot_potato: int = 0
     stars: Optional[int] = None
     combat_skill_req: Optional[int] = None
+    slayer_req: Optional[Tuple[str, int]] = None
     dungeon_skill_req: Optional[int] = None
     dungeon_completion_req: Optional[int] = None
 
@@ -353,7 +354,7 @@ class Recipe:
     ingredients: List[ItemPointer]
     result: ItemPointer
     collection_req: Optional[Tuple[str, int]] = None
-    # slayer_req: Optional[Tuple[str, int]] = None
+    slayer_req: Optional[Tuple[str, int]] = None
 
 
 @recipe_group_type
@@ -362,7 +363,7 @@ class RecipeGroup:
     category: str
     recipes: List[str]
     collection_req: Optional[Tuple[str, int]] = None
-    # slayer_req: Optional[Tuple[str, int]] = None
+    slayer_req: Optional[Tuple[str, int]] = None
 
 
 @collection_type

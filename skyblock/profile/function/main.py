@@ -780,7 +780,7 @@ def mainloop(self):
             if index is not None:
                 if len(zone.npcs) == 0:
                     red('No NPCs around to sell the item.')
-                    return
+                    continue
                 self.sell(index)
                 continue
 
@@ -790,7 +790,7 @@ def mainloop(self):
 
             if len(zone.npcs) == 0:
                 red('No NPCs around to sell the item.')
-                return
+                continue
             sell_name = words[1]
             sold = False
             for i, item in enumerate(self.inventory):

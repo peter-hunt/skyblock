@@ -13,7 +13,7 @@
 
 I started this project because **my friends couldn't log onto Hypixel**. I'm also learning many of the mechanics and getting better at Hypixel Skyblock by the time.
 
-I chose Python because **I'm the most familiar with Python**. Plus, Python code is more readable and understandable than most of the other languages. And since this is a command-line project, which doesn't need to run fast, Python is the choice.
+I chose Python because **I'm the most familiar with Python**. Plus, Python code is more readable and understandable than most of the other languages. And since this is a **command**-line project, which doesn't need to run fast, Python is the choice.
 
 It requires the Skyblock Data repo, [Skyblock Data](https://github.com/peter-hunt/skyblock-data), which **will install and update automatically** (the main program updates the data every 12 hours).
 
@@ -27,9 +27,7 @@ It requires the Skyblock Data repo, [Skyblock Data](https://github.com/peter-hun
 - [License](#license)
 - [Warnings](#warnings)
 - [Installation](#installation)
-  - [With Pip](#with-pip)
-  - [With Git](#with-git)
-- [Usage](#usage)
+  - [Running](#running)
 - [Content](#content)
   - [Added Features:](#added-features)
   - [Planned Features:](#planned-features)
@@ -68,33 +66,17 @@ If your saved files go corrupt, then it's probably not going to be resolved.
 
 # Installation
 
-Use pip or git to install Skyblock as a Python library so you can run the game anywhere.
-
-## With Pip
-
-Use pip to install the project straight as an executable library.
-
-```bash
-pip install git+https://github.com/peter-hunt/skyblock.git
-```
-
-## With Git
-
-Or, to install from the source, use git to clone the source code.
+Use git command or GitHub install-as-zip to install Skyblock.
 
 ```bash
 git clone https://github.com/peter-hunt/skyblock.git
 ```
 
-To install the library from the source, go into the directory and:
-
-```bash
-python setup.py install
-```
+## Running
 
 **This project requires Python 3.8+**
 
-# Usage
+To run the project, go into the project directory and do:
 
 ```bash
 python -m skyblock
@@ -111,6 +93,7 @@ To check command usage, type `help` for command documentation.
 
 * Abilities
 * Accessories
+* Accessory bag and minion bag.
 * Armor Pieces, Tools, and Weapons
 * Bestiaries and Bestiary Milestones
 * Crafting
@@ -126,14 +109,14 @@ To check command usage, type `help` for command documentation.
 
 ## Planned Features:
 
-* Accessory Bags, Minion Bags, Wardrobe, etc.
+* Wardrobe and other bags/sacks.
 * Brewing and Potion effects
 * Commissions
-* Diana, Griffin Pet and Mythologicals
+* Diana, Griffin Pet and Mythological creature
 * Dungeons
 * Fairy Souls
-* Forging (Dwarven Mines) (Forging recipes already are accessable)
-* HoTM Skill Tree (Dwarven Mines)
+* Forging (Forging recipes already are accessible)
+* Heart of The Mountain Skill Tree
 * Mayors and Unique Perks
 * Minion Support Items
 * NPC Usage (like Kat, Fetchur, etc.)

@@ -27,6 +27,16 @@ for item_type in [*walk(join_path('skyblock', 'data', 'items'))][0][1]:
         with _open(join_path('skyblock', 'data', 'items',
                              item_type, file_name)) as file:
             ITEMS.append(load_item(load(file)))
+    for sub_type in [
+            *walk(join_path('skyblock', 'data', 'items', item_type))][0][1]:
+        for file_name in [
+                *walk(join_path('skyblock', 'data', 'items', item_type, sub_type))][0][2]:
+            if not file_name.endswith('.json'):
+                continue
+
+            with _open(join_path('skyblock', 'data', 'items',
+                                 item_type, sub_type, file_name)) as file:
+                ITEMS.append(load_item(load(file)))
 ITEMS = sorted(ITEMS, key=lambda item: item.name)
 
 

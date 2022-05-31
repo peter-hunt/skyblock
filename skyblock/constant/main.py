@@ -581,6 +581,10 @@ SELL_PRICE = {
 
     'griffin_feather': 1_000,
     'ancient_claw': 200,
+
+    'revenant_flesh': 1,
+    'revenant_viscera': 128,
+    'undead_catalyst': 2_000,
 }
 
 SKILL_EXP = [

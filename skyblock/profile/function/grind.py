@@ -564,16 +564,22 @@ def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
     ferocity += weapon_enchants.get('vicious', 0)
 
     healing_mult = 1
+    healing_boost = False
 
     for piece in self.armor:
         if not isinstance(piece, Armor):
             continue
 
+        if 'healing_boost' in piece.abilities:
+            healing_boost = True
         piece_enchants = getattr(piece, 'enchantments', {})
         healing_mult += 0.02 + piece_enchants.get('rejuvenate', 0)
         thorns += 3 * piece_enchants.get('thorns', 0)
         last_stand += 5 * piece_enchants.get('last_stand', 0)
         no_pain_no_gain.append(25 * piece_enchants.get('no_pain_no_gain', 0))
+        
+    if healing_boost:
+        healing_muly *= 2
 
     if set_bonus == 'deflect':
         thorns += 33
