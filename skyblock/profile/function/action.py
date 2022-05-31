@@ -73,9 +73,10 @@ def buy(self, trade: Tuple, amount: int, /):
     display = []
 
     for pointer in good:
+        pointer['count'] = pointer.get('count', 1) * amount
         self.recieve_item(pointer)
         name = pointer['name']
-        count = pointer.get('count', 1)
+        count = pointer['count']
         kwargs = {key: pointer[key] for key in pointer
                   if key not in {'count', 'name'}}
         item = get_item(name, **kwargs)
@@ -88,7 +89,7 @@ def buy(self, trade: Tuple, amount: int, /):
 
     if len(cost) == 1 and isinstance(cost[0], (float, int)):
         green(f'You bought {display_str}{GREEN} for '
-              f'{GOLD}{format_short(cost[0])} Coins{GREEN}!')
+              f'{GOLD}{format_short(cost[0] * amount)} Coins{GREEN}!')
     else:
         green(f'You bought {display_str}{GREEN}!')
 
