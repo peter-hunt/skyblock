@@ -1,7 +1,6 @@
 from json import load
 from os import walk
 from pathlib import Path
-from typing import Optional
 
 from .._lib import _open
 from ..function.io import red
@@ -28,7 +27,7 @@ for file_name in [*walk(join_path('skyblock', 'data', 'mobs'))][0][2]:
 MOBS = sorted(MOBS, key=lambda mob: (mob.name, mob.level))
 
 
-def get_mob(name: str, /, *, warn=True, **kwargs) -> Optional[ItemType]:
+def get_mob(name: str, /, *, warn=True, **kwargs) -> ItemType | None:
     if includes(MOBS, name):
         return get(MOBS, name, **kwargs)
     elif warn:

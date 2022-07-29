@@ -1,5 +1,3 @@
-from typing import Dict, Optional
-
 from ..constant.enchanting import *
 from ..constant.reforging import STAT_ALIASES, MODIFIERS
 from ..constant.util import Ench
@@ -31,7 +29,7 @@ def combine_enchant(ench_1: Ench, ench_2: Ench, /) -> Ench:
     return result
 
 
-def get_modifier(name: Optional[str], rarity: str, /) -> Dict[str, int]:
+def get_modifier(name: str | None, rarity: str, /) -> dict[str, int]:
     if name is None:
         return {}
     elif name not in MODIFIERS:

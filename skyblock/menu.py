@@ -1,7 +1,6 @@
 from os import walk
 from os.path import join
 from pathlib import Path
-from typing import List
 
 from ._lib import add_history
 from .constant.colors import *
@@ -24,7 +23,7 @@ def new():
     green('New profile created!')
 
 
-def get_profiles() -> List[str]:
+def get_profiles() -> list[str]:
     if not is_dir() or not is_dir('saves'):
         red('path not found: ~/skyblock/saves.')
         return []

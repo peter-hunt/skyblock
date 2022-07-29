@@ -1,7 +1,6 @@
 from json import load
 from os import walk
 from pathlib import Path
-from typing import Optional
 
 from .._lib import _open
 from ..function.io import red
@@ -38,7 +37,7 @@ def is_collection(name: str) -> bool:
     return False
 
 
-def get_collection(name: str) -> Optional[Collection]:
+def get_collection(name: str) -> Collection | None:
     for collection in COLLECTIONS:
         if collection.name == name:
             return collection
@@ -46,7 +45,7 @@ def get_collection(name: str) -> Optional[Collection]:
     red(f'Collection not found: {name!r}')
 
 
-def calc_coll_level(name: str, amount: int) -> Optional[int]:
+def calc_coll_level(name: str, amount: int) -> int | None:
     if (collection := get_collection(name)) is None:
         return
 

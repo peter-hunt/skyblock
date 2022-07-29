@@ -1,15 +1,12 @@
-from typing import Any, Dict, List, Tuple, Union
-
-
 __all__ = [
     'Amount', 'Ench', 'ItemPointer', 'Number', 'NUMBER_SCALES', 'ROMAN_NUM',
     'SPECIAL_ZONES', 'SPECIAL_NAMES', 'SPECIAL_ALTER', 'IGNORED_WORDS',
 ]
 
-Amount = Union[List[int], Tuple[int, int], int]
-Ench = Dict[str, int]
-ItemPointer = Dict[str, Any]
-Number = Union[float, int]
+Amount = list[int] | tuple[int, int] | int
+Ench = dict[str, int]
+ItemPointer = dict[str, any]
+Number = float | int
 
 NUMBER_SCALES = [
     ('', 1), ('k', 10 ** 3), ('m', 10 ** 6), ('b', 10 ** 9), ('t', 10 ** 12),

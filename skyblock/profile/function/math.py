@@ -1,7 +1,6 @@
 from collections import defaultdict
 from math import ceil
 from os import get_terminal_size
-from typing import Optional
 
 from ...constant.ability import SET_BONUSES
 from ...constant.colors import *
@@ -229,14 +228,14 @@ def get_bestiary_total(self, /) -> int:
     return count
 
 
-def get_collection_amount(self, name: str, /) -> Optional[int]:
+def get_collection_amount(self, name: str, /) -> int | None:
     if not is_collection(name):
         red(f'Unknown collection: {name!r}')
         return
     return self.collection[name]
 
 
-def get_collection_level(self, name: str, /) -> Optional[int]:
+def get_collection_level(self, name: str, /) -> int | None:
     if not is_collection(name):
         red(f'Unknown collection: {name!r}')
         return
@@ -324,7 +323,7 @@ def get_skill_level(self, name: str, /) -> int:
     return calc_skill_level(name, getattr(self, f'experience_skill_{name}'))
 
 
-def get_stat(self, name: str, index: Optional[int] = None, /, *,
+def get_stat(self, name: str, index: int | None = None, /, *,
              separated: bool = False):
     base_value = 0
     bonus_value = 0
@@ -612,8 +611,8 @@ def get_stat(self, name: str, index: Optional[int] = None, /, *,
         return base_value + bonus_value
 
 
-def parse_index(self, word: str, length: Optional[int] = None,
-                /, *, warn: bool = True) -> Optional[int]:
+def parse_index(self, word: str, length: int | None = None,
+                /, *, warn: bool = True) -> int | None:
     index = parse_int(word, warn=warn)
     if index is None:
         return

@@ -1,5 +1,3 @@
-from typing import Any, Dict
-
 from ..constant.colors import *
 from ..constant.util import ItemPointer
 from ..function.io import *
@@ -33,7 +31,7 @@ def placed_minion_type(cls: type, /) -> type:
 
     cls.__init__ = eval(init_str)
 
-    def to_obj(self, /) -> Dict[str, Any]:
+    def to_obj(self, /) -> dict[str, any]:
         result = {}
         result['name'] = self.name
         result['tier'] = self.tier
@@ -45,7 +43,7 @@ def placed_minion_type(cls: type, /) -> type:
     cls.to_obj = to_obj
 
     @classmethod
-    def load(cls, obj: Dict[str, Any], /):
+    def load(cls, obj: dict[str, any], /):
         inventory = [load_item(item) for item in obj['inventory']]
         return cls(obj['name'], obj['tier'],
                    obj['cooldown'], obj['last_action'], inventory)

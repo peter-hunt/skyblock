@@ -3,15 +3,15 @@ from math import isinf
 from re import fullmatch, sub
 from subprocess import call
 from textwrap import wrap
-from typing import Any, Dict, List, Optional, Tuple, Union
 from types import FunctionType
+from typing import Optional
 
 from ..constant.colors import CRIT_COLORS
 from ..constant.enchanting import ENCHS
 from ..constant.mobs import BESTIARY_ALTER
 from ..constant.util import (
     NUMBER_SCALES, ROMAN_NUM, SPECIAL_ZONES, SPECIAL_NAMES,
-    SPECIAL_ALTER, IGNORED_WORDS,
+    SPECIAL_ALTER, IGNORED_WORDS, Number,
 )
 
 from .io import red, yellow
@@ -87,7 +87,7 @@ def format_name(name: str, /) -> str:
     return result
 
 
-def format_number(number: Union[int, float], /, *, sign: bool = False) -> str:
+def format_number(number: Number, /, *, sign: bool = False) -> str:
     if isinf(number):
         if sign:
             return '+∞' if number > 0 else '-∞'
@@ -121,7 +121,7 @@ def format_roman(number: int, /) -> str:
     return result
 
 
-def format_short(number: Union[int, float], /) -> str:
+def format_short(number: Number, /) -> str:
     for letter, amount in reversed(NUMBER_SCALES):
         if number >= amount:
             break
@@ -143,7 +143,7 @@ def format_zone(name: str, /) -> str:
         return ' '.join(_format_word(word) for word in result.split(' '))
 
 
-def generate_help(doc: str, /) -> Dict[str, str]:
+def generate_help(doc: str, /) -> dict[str, str]:
     description = {}
 
     for para in doc.split('\n\n'):
@@ -157,8 +157,8 @@ def generate_help(doc: str, /) -> Dict[str, str]:
     return description
 
 
-def get(ls: List[Any], /, name: Optional[str] = None,
-        default: Optional[Any] = None, **kwargs) -> Any:
+def get(ls: list[any], /, name: str | None = None,
+        default: Optional[any] = None, **kwargs) -> any:
     attrs = {}
     args = {}
     for key, value in kwargs.items():
@@ -183,7 +183,7 @@ def get(ls: List[Any], /, name: Optional[str] = None,
     return default.copy() if hasattr(default, 'copy') else default
 
 
-def get_ench(name: str, /) -> Tuple[str, Tuple[int]]:
+def get_ench(name: str, /) -> tuple[str, tuple[int]]:
     for row in ENCHS:
         if row[0] == name:
             if isinstance(row[2], tuple):
@@ -202,27 +202,27 @@ def get_family(name: str, /) -> str:
     return name
 
 
-def includes(ls: List[Any], name: str, /) -> bool:
+def includes(ls: list[any], name: str, /) -> bool:
     for obj in ls:
         if obj.name == name:
             return True
     return False
 
 
-def index(ls: List[Any], name: str, /) -> int:
+def index(ls: list[any], name: str, /) -> int:
     for i, obj in enumerate(ls):
         if obj.name == name:
             return i
     raise ValueError(f'{name!r} not found from the list.')
 
 
-def is_valid_usage(usage: str, words: List[str], /) -> bool:
+def is_valid_usage(usage: str, words: list[str], /) -> bool:
     all_words = usage.split()[1:]
     pos_words = [word for word in all_words if word[0] != '[']
     return len(pos_words) <= len(words) <= len(all_words)
 
 
-def parse_int(string: str, /, *, warn=True) -> Optional[int]:
+def parse_int(string: str, /, *, warn=True) -> int | None:
     if fullmatch(r'\d+', string):
         return int(string)
     elif warn:

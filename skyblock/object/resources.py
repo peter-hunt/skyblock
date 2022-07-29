@@ -1,7 +1,6 @@
 from json import load
 from os import walk
 from pathlib import Path
-from typing import Optional
 
 from .._lib import _open
 from ..function.io import red
@@ -42,7 +41,7 @@ for file_name in [*walk(join_path('skyblock', 'data', 'resources'))][0][2]:
         RESOURCES.append(load_resource(load(file)))
 
 
-def get_resource(name: str, **kwargs) -> Optional[ItemType]:
+def get_resource(name: str, **kwargs) -> ItemType | None:
     if includes(RESOURCES, name):
         return get(RESOURCES, name, **kwargs)
     else:

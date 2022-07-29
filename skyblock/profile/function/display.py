@@ -3,7 +3,7 @@ from math import ceil, floor, radians, tan
 from os import get_terminal_size
 from random import choice
 from time import sleep
-from typing import Iterable, Optional, Union
+from typing import Iterable
 
 from ...constant.colors import *
 from ...constant.main import ARMOR_PARTS
@@ -42,7 +42,7 @@ __all__ = [
 ]
 
 
-def display_armor(self, part: Optional[str] = None, /):
+def display_armor(self, part: str | None = None, /):
     if part:
         item = self.armor[ARMOR_PARTS.index(part)]
         self.display_item(item)
@@ -536,7 +536,7 @@ def display_playtime(self, /):
     green(f'You have {hours} hours and {mins:0>2} minutes playtime!')
 
 
-def display_recipe_info(self, recipe: Union[Recipe, RecipeGroup], /):
+def display_recipe_info(self, recipe: Recipe | RecipeGroup, /):
     width, _ = get_terminal_size()
     width = ceil(width * 0.85)
     yellow(f"{BOLD}{'':-^{width}}")
@@ -594,7 +594,7 @@ def display_recipe_info(self, recipe: Union[Recipe, RecipeGroup], /):
     yellow(f"{BOLD}{'':-^{width}}")
 
 
-def display_recipe(self, category: Optional[str], /, *,
+def display_recipe(self, category: str | None, /, *,
                    show_all=False, end=True):
     width, _ = get_terminal_size()
     width = ceil(width * 0.85)
@@ -689,7 +689,7 @@ def display_skills(self, /):
     yellow(f"{BOLD}{'':-^{width}}")
 
 
-def display_shop(self, npc: Npc, trade_index: Optional[int] = None, /):
+def display_shop(self, npc: Npc, trade_index: int | None = None, /):
     if trade_index is None:
         gray(f"{npc}'s shop:")
         if len(npc.trades) == 0:
@@ -763,7 +763,7 @@ def display_shop(self, npc: Npc, trade_index: Optional[int] = None, /):
             self.display_item(item)
 
 
-def display_stat(self, stat_name: str, index: Optional[int] = None, /):
+def display_stat(self, stat_name: str, index: int | None = None, /):
     width, _ = get_terminal_size()
     width = ceil(width * 0.85)
 
@@ -847,7 +847,7 @@ def display_stat(self, stat_name: str, index: Optional[int] = None, /):
     dark_blue(f"{BOLD}{'':-^{width}}")
 
 
-def display_stats(self, index: Optional[int] = None, /):
+def display_stats(self, index: int | None = None, /):
     width, _ = get_terminal_size()
     width = ceil(width * 0.85)
 

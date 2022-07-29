@@ -1,4 +1,4 @@
-from typing import Dict, Iterator, List, Optional, Tuple, Union
+from typing import Iterator
 
 from ..constant.util import Amount, ItemPointer, Number
 
@@ -30,7 +30,7 @@ class Item(ItemType):
     # mythic | divine | special | very_special
     rarity: str = 'common'
 
-    abilities: List[str] = []
+    abilities: list[str] = []
 
 
 @item_type
@@ -43,9 +43,9 @@ class Empty(ItemType):
 class Accessory(ItemType):
     name: str
     rarity: str = 'common'
-    modifier: Optional[str] = None
+    modifier: str | None = None
 
-    abilities: List[str] = []
+    abilities: list[str] = []
 
 
 @item_type
@@ -70,15 +70,15 @@ class Armor(ItemType):
     ferocity: int = 0
     sea_creature_chance: int = 0
 
-    modifier: Optional[str] = None
-    enchantments: Dict[str, int] = {}
+    modifier: str | None = None
+    enchantments: dict[str, int] = {}
     hot_potato: int = 0
-    stars: Optional[int] = None
-    combat_skill_req: Optional[int] = None
-    dungeon_skill_req: Optional[int] = None
-    dungeon_completion_req: Optional[int] = None
+    stars: int | None = None
+    combat_skill_req: int | None = None
+    dungeon_skill_req: int | None = None
+    dungeon_completion_req: int | None = None
 
-    abilities: List[str] = []
+    abilities: list[str] = []
 
 
 @item_type
@@ -86,10 +86,10 @@ class Axe(ItemType):
     name: str
     rarity: str
     tool_speed: int
-    modifier: Optional[str] = None
-    enchantments: Dict[str, int] = {}
+    modifier: str | None = None
+    enchantments: dict[str, int] = {}
 
-    abilities: List[str] = []
+    abilities: list[str] = []
 
 
 @item_type
@@ -106,15 +106,15 @@ class Bow(ItemType):
 
     intelligence: int = 0
 
-    modifier: Optional[str] = None
-    enchantments: Dict[str, int] = {}
+    modifier: str | None = None
+    enchantments: dict[str, int] = {}
     hot_potato: int = 0
-    stars: Optional[int] = None
-    combat_skill_req: Optional[int] = None
-    dungeon_skill_req: Optional[int] = None
-    dungeon_completion_req: Optional[int] = None
+    stars: int | None = None
+    combat_skill_req: int | None = None
+    dungeon_skill_req: int | None = None
+    dungeon_completion_req: int | None = None
 
-    abilities: List[str] = []
+    abilities: list[str] = []
 
 
 @item_type
@@ -130,16 +130,16 @@ class Drill(ItemType):
     defense: int = 0
     intelligence: int = 0
 
-    modifier: Optional[str] = None
-    enchantments: Dict[str, int] = {}
+    modifier: str | None = None
+    enchantments: dict[str, int] = {}
 
-    abilities: List[str] = []
+    abilities: list[str] = []
 
 
 @enchanted_book_type
 @item_type
 class EnchantedBook(ItemType):
-    enchantments: Dict[str, int] = {}
+    enchantments: dict[str, int] = {}
     name: str = 'enchanted_book'
     rarity: str = 'common'
 
@@ -156,22 +156,22 @@ class FishingRod(ItemType):
     fishing_speed: int = 0
     sea_creature_chance: int = 0
 
-    modifier: Optional[str] = None
-    enchantments: Dict[str, int] = {}
+    modifier: str | None = None
+    enchantments: dict[str, int] = {}
     expertise_count: int = 0
     hot_potato: int = 0
-    stars: Optional[int] = None
-    fishing_skill_req: Optional[int] = None
+    stars: int | None = None
+    fishing_skill_req: int | None = None
 
-    abilities: List[str] = []
+    abilities: list[str] = []
 
 
 @item_type
 class Hoe(ItemType):
     name: str
     rarity: str
-    modifier: Optional[str] = None
-    enchantments: Dict[str, int] = {}
+    modifier: str | None = None
+    enchantments: dict[str, int] = {}
     cultivating_count: int = 0
 
 
@@ -206,7 +206,7 @@ class Pet(ItemType):
     ferocity: int = 0
     sea_creature_chance: int = 0
 
-    abilities: List = []
+    abilities: list = []
 
 
 @item_type
@@ -220,22 +220,22 @@ class Pickaxe(ItemType):
     damage: int = 0
     defense: int = 0
 
-    modifier: Optional[str] = None
-    enchantments: Dict[str, int] = {}
+    modifier: str | None = None
+    enchantments: dict[str, int] = {}
     compact_count: int = 0
 
-    abilities: List[str] = []
+    abilities: list[str] = []
 
 
 @item_type
 class ReforgeStone(ItemType):
     name: str
-    modifier: Optional[str] = None
-    category: Optional[str] = None
+    modifier: str | None = None
+    category: str | None = None
     rarity: str = 'common'
-    cost: Tuple[int] = (0, 0, 0, 0, 0, 0)
+    cost: tuple[int] = (0, 0, 0, 0, 0, 0)
 
-    mining_skill_req: Optional[int] = None
+    mining_skill_req: int | None = None
 
 
 @item_type
@@ -257,25 +257,25 @@ class Sword(ItemType):
     ferocity: int = 0
     speed: int = 0
 
-    modifier: Optional[str] = None
-    enchantments: Dict[str, int] = {}
+    modifier: str | None = None
+    enchantments: dict[str, int] = {}
     hot_potato: int = 0
-    stars: Optional[int] = None
-    combat_skill_req: Optional[int] = None
-    slayer_req: Optional[Tuple[str, int]] = None
-    dungeon_skill_req: Optional[int] = None
-    dungeon_completion_req: Optional[int] = None
+    stars: int | None = None
+    combat_skill_req: int | None = None
+    slayer_req: tuple[str, int] | None = None
+    dungeon_skill_req: int | None = None
+    dungeon_completion_req: int | None = None
 
     kill_count: int = 0
 
-    abilities: List[str] = []
+    abilities: list[str] = []
 
 
 @item_type
 class TravelScroll(ItemType):
     name: str
     island: str
-    zone: Optional[str] = None
+    zone: str | None = None
     rarity: str = 'rare'
 
 
@@ -344,33 +344,33 @@ class Mob:
     farming_exp: int = 0
     combat_exp: int = 0
     fishing_exp: int = 0
-    drops: List[Tuple[ItemPointer, Amount, str, Number]] = []
+    drops: list[tuple[ItemPointer, Amount, str, Number]] = []
 
 
 @recipe_type
 class Recipe:
     name: str
     category: str
-    ingredients: List[ItemPointer]
+    ingredients: list[ItemPointer]
     result: ItemPointer
-    collection_req: Optional[Tuple[str, int]] = None
-    slayer_req: Optional[Tuple[str, int]] = None
+    collection_req: tuple[str, int] | None = None
+    slayer_req: tuple[str, int] | None = None
 
 
 @recipe_group_type
 class RecipeGroup:
     name: str
     category: str
-    recipes: List[str]
-    collection_req: Optional[Tuple[str, int]] = None
-    slayer_req: Optional[Tuple[str, int]] = None
+    recipes: list[str]
+    collection_req: tuple[str, int] | None = None
+    slayer_req: tuple[str, int] | None = None
 
 
 @collection_type
 class Collection:
     name: str
     category: str
-    levels: List[Tuple[int, Union[str, Tuple[str], Number]]]
+    levels: list[tuple[int, str | tuple[str] | Number]]
 
     def __iter__(self, /) -> Iterator:
         return iter(self.levels)

@@ -1,5 +1,3 @@
-from typing import List
-
 from ..constant.enchanting import *
 from ..object.object import *
 
@@ -7,7 +5,7 @@ from ..object.object import *
 __all__ = ['get_enchantments']
 
 
-def get_enchantments(item) -> List[str]:
+def get_enchantments(item) -> list[str]:
     if isinstance(item, Armor):
         table = ARMOR_ENCHS
     elif isinstance(item, Axe):

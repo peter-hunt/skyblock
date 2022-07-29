@@ -1,5 +1,3 @@
-from typing import Dict, List, Optional, Tuple
-
 from ..constant.colors import *
 from ..constant.util import Number
 from ..function.io import red
@@ -20,7 +18,7 @@ class Ability:
 class AnonymousAbility(Ability):
     id: str
     display_id: int
-    variables: Dict[str, Number] = {}
+    variables: dict[str, Number] = {}
 
 
 @init_type
@@ -28,8 +26,8 @@ class NamedAbility(Ability):
     id: str
     name: str
     display_id: int
-    variables: Dict[str, Number] = {}
-    values: List[Number] = []
+    variables: dict[str, Number] = {}
+    values: list[Number] = []
 
 
 ABILITIES = [
@@ -596,7 +594,7 @@ ABILITIES = [
 ]
 
 
-def get_ability(id: str, /, *, warn=True) -> Optional[Ability]:
+def get_ability(id: str, /, *, warn=True) -> Ability | None:
     for item in ABILITIES:
         if item.id == id:
             return get(ABILITIES, id=id)

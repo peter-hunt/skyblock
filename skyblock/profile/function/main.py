@@ -1,6 +1,5 @@
 from re import fullmatch
 from time import time
-from typing import Optional
 
 from ..._lib import add_history
 from ...constant.colors import *
@@ -31,7 +30,7 @@ profile_help = generate_help(profile_doc)
 
 @checkpoint
 def mainloop(self):
-    last_shop: Optional[str] = None
+    last_shop: str | None = None
 
     green(f'You are playing on profile: {YELLOW}{self.name}')
 

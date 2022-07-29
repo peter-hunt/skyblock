@@ -1,5 +1,3 @@
-from typing import Union
-
 from ...constant.colors import *
 from ...constant.util import ItemPointer
 from ...function.io import *
@@ -19,7 +17,7 @@ def clearstash(self, /):
     green('You have cleared your stash!')
 
 
-def get_active_pet(self, /) -> Union[Pet, Empty]:
+def get_active_pet(self, /) -> Pet | Empty:
     for pet in self.pets:
         if pet.active:
             return pet

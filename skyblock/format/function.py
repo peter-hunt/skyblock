@@ -1,5 +1,3 @@
-from typing import Any, Dict
-
 from ..constant.colors import *
 from ..function.math import fround
 from ..function.util import format_name, format_number, format_zone
@@ -8,7 +6,7 @@ from ..function.util import format_name, format_number, format_zone
 __all__ = ['format_temp']
 
 
-def format_temp(template: str, params: Dict[str, Any] = {}, /) -> str:
+def format_temp(template: str, params: dict[str, any] = {}, /) -> str:
     result = template
 
     for code, color in COLOR_CODE.items():

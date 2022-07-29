@@ -1,5 +1,3 @@
-from typing import Dict
-
 from ..constant.colors import *
 from ..function.util import format_name, format_number, format_short
 
@@ -210,7 +208,7 @@ def mob_type(cls):
 
 
 def enchanted_book_type(cls: type, /) -> type:
-    def __init__(self, enchantments: Dict[str, int] = {},
+    def __init__(self, enchantments: dict[str, int] = {},
                  name: str = 'enchanted_book',
                  rarity: str = 'common'):
         self.name = 'enchanted_book'

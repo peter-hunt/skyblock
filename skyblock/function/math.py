@@ -1,6 +1,5 @@
 from itertools import count
 from math import floor, isinf
-from typing import Optional, Tuple
 
 from ..constant.colors import *
 from ..constant.main import (
@@ -28,7 +27,7 @@ def calc_bestiary_level(amount: int, /) -> int:
     return amount // 100000 + 11
 
 
-def calc_bestiary_upgrade_amount(amount: int, /) -> Tuple[int, int]:
+def calc_bestiary_upgrade_amount(amount: int, /) -> tuple[int, int]:
     for i in KILL_LEVELS:
         if i > amount:
             return amount, i
@@ -88,7 +87,7 @@ def calc_pet_level(rarity: str, exp: Number, /) -> int:
         return 100
 
 
-def calc_pet_upgrade_exp(rarity: str, exp: Number, /) -> Tuple[int, int]:
+def calc_pet_upgrade_exp(rarity: str, exp: Number, /) -> tuple[int, int]:
     if rarity == 'mythic':
         rarity = 'l'
 
@@ -111,7 +110,7 @@ def calc_skill_level(name: str, exp: Number, /) -> int:
 
 
 def calc_skill_level_info(name: str, exp: Number, /) -> \
-        Tuple[int, int, Optional[int]]:
+        tuple[int, int, int | None]:
     exp_table = DUNGEON_EXP if name == 'catacombs' else SKILL_EXP
     for line in exp_table:
         lvl, _, cumulative = line[:3]

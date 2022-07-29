@@ -1,5 +1,4 @@
 from math import floor, sqrt
-from typing import Any, Dict
 
 from ..constant.ability import SET_BONUSES
 from ..constant.colors import *
@@ -42,7 +41,7 @@ def item_type(cls: type, /) -> type:
 
     cls.__init__ = eval(init_str)
 
-    def to_obj(self, /) -> Dict[str, Any]:
+    def to_obj(self, /) -> dict[str, any]:
         if cls.__name__ == 'Empty':
             return {}
 

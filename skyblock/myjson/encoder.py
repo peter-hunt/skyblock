@@ -2,8 +2,6 @@ from decimal import Context
 from math import isinf, isnan
 
 
-NoneType = type(None)
-
 ctx = Context()
 ctx.prec = 20
 
@@ -67,7 +65,7 @@ def _dumps(obj, /, *, current_indent=0, current_width=0,
             return '{}'
 
         for item in obj:
-            if not isinstance(item, (bool, float, int, str, NoneType)):
+            if not isinstance(item, bool | float | int | str | None):
                 break
         else:
             compact = ', '.join(

@@ -3,7 +3,6 @@ from math import ceil, floor
 from os import get_terminal_size
 from random import randint, random, vonmisesvariate
 from time import sleep, time
-from typing import Optional
 
 from ...constant.ability import *
 from ...constant.colors import *
@@ -191,8 +190,8 @@ def fish(self, rod_index: int, iteration: int = 1, /):
 
 
 @checkpoint
-def gather(self, name: str, tool_index: Optional[int],
-           iteration: Optional[int] = 1, /):
+def gather(self, name: str, tool_index: int | None,
+           iteration: int | None = 1, /):
     resource = get_resource(name)
     tool = Empty() if tool_index is None else self.inventory[tool_index]
     iteration = 1 if iteration is None else iteration
@@ -450,7 +449,7 @@ def gather(self, name: str, tool_index: Optional[int],
 
 
 @checkpoint
-def slay(self, mob: Mob, weapon_index: Optional[int], iteration: int = 1,
+def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
          /) -> bool:
     name = mob.name
     mob_name = format_name(name)

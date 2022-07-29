@@ -1,7 +1,6 @@
 from json import load
 from os import walk
 from pathlib import Path
-from typing import List, Optional, Union
 
 from .._lib import _open
 from ..function.io import red
@@ -13,7 +12,7 @@ from .object import *
 __all__ = ['RECIPES', 'CRAFTABLES', 'get_recipe']
 
 
-def _select_recipes(recipes: List[Recipe], category: str) -> List[Recipe]:
+def _select_recipes(recipes: list[Recipe], category: str) -> list[Recipe]:
     has_not_req = [recipe for recipe in recipes
                    if recipe.collection_req is not None
                    and recipe.category == category]
@@ -70,7 +69,7 @@ CRAFTABLES = [recipe for recipe in RECIPES
 
 
 def get_recipe(name: str, /, *, warn: bool = True
-               ) -> Optional[Union[Recipe, RecipeGroup]]:
+               ) -> Recipe | RecipeGroup | None:
     if includes(RECIPES, name):
         return get(RECIPES, name)
     elif warn:

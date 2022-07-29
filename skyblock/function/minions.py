@@ -1,5 +1,3 @@
-from typing import Tuple
-
 from ..constant.minions import MINION_CAP
 
 
@@ -15,7 +13,7 @@ def get_minion_cap(amount: int) -> int:
     return last_cap
 
 
-def get_minion_cap_info(amount: int) -> Tuple[int, int, bool]:
+def get_minion_cap_info(amount: int) -> tuple[int, int, bool]:
     last_cap = 5
     new_added = False
     for index, (cap, total) in enumerate(MINION_CAP):

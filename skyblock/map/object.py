@@ -2,7 +2,6 @@ from decimal import Decimal
 from dataclasses import dataclass, field
 from math import dist, inf
 from types import FunctionType
-from typing import Dict, List, Optional, Tuple, Union
 
 from ..function.util import format_zone
 from ..object.object import *
@@ -14,13 +13,13 @@ __all__ = ['Npc', 'Zone', 'Island', 'calc_dist', 'add_dist', 'path_find']
 @dataclass
 class Npc:
     name: str
-    init_dialog: Optional[List[str]] = None
-    dialog: Optional[List[List[str]]] = None
+    init_dialog: list[str] | None = None
+    dialog: list[list[str]] | None = None
     # price, item, amount
-    trades: Optional[List[Tuple[Union[Tuple[int, ItemType], int],
-                                Union[ItemType, List[ItemType]]]]] = None
-    claim_item: Optional[ItemType] = None
-    function: Optional[FunctionType] = None
+    trades: list[tuple[tuple[int, ItemType] | int,
+                       ItemType | list[ItemType]]] | None = None
+    claim_item: ItemType | None = None
+    function: FunctionType | None = None
 
     def __repr__(self):
         return format_zone(self.name)
@@ -31,12 +30,12 @@ class Zone:
     name: str
     x: int
     z: int
-    portal: Optional[str] = None
+    portal: str | None = None
     fishable: bool = False
-    npcs: List[Npc] = field(default_factory=list)
-    resources: List[Resource] = field(default_factory=list)
-    mobs: List[Mob] = field(default_factory=list)
-    skill_req: Optional[Tuple[str, int]] = None
+    npcs: list[Npc] = field(default_factory=list)
+    resources: list[Resource] = field(default_factory=list)
+    mobs: list[Mob] = field(default_factory=list)
+    skill_req: tuple[str, int] | None = None
 
     def __repr__(self):
         return format_zone(self.name)
@@ -51,12 +50,12 @@ def calc_dist(zone_1: Zone, zone_2: Zone) -> Decimal:
     ), 2)
 
 
-def add_dist(zone_1: Zone, zone_2: Zone, DISTS: Dict) -> None:
-    DISTS[tuple(sorted((zone_1, zone_2)))] = calc_dist(zone_1, zone_2)
+def add_dist(zone_1: Zone, zone_2: Zone, dists: dict) -> None:
+    dists[tuple(sorted((zone_1, zone_2)))] = calc_dist(zone_1, zone_2)
 
 
 def path_find(start_zone: Zone, end_zone: Zone,
-              conns: List, dists: Dict) -> Tuple[List, Decimal]:
+              conns: list, dists: dict) -> tuple[list, Decimal]:
     paths = []
     for conn in conns:
         if start_zone in conn:
@@ -113,10 +112,10 @@ def path_find(start_zone: Zone, end_zone: Zone,
 class Island:
     name: str
     spawn: str
-    zones: List[Zone]
-    conns: List[Tuple[Zone, Zone]]
-    dists: Dict[Tuple[Zone, Zone], Decimal]
-    skill_req: Optional[Tuple[str, int]] = None
+    zones: list[Zone]
+    conns: list[tuple[Zone, Zone]]
+    dists: dict[tuple[Zone, Zone], Decimal]
+    skill_req: tuple[str, int] | None = None
 
     def __repr__(self):
         return format_zone(self.name)

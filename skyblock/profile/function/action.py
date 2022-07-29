@@ -1,7 +1,6 @@
 from math import floor
 from random import choice, random
 from time import sleep, time
-from typing import List, Optional, Tuple
 
 from ...constant.colors import *
 from ...constant.enchanting import *
@@ -44,7 +43,7 @@ def add_pet(self, index: int, /):
     green(f'Successfully added {item.display()} {GREEN}to your pet menu!')
 
 
-def buy(self, trade: Tuple, amount: int, /):
+def buy(self, trade: tuple, amount: int, /):
     cost = trade[0]
 
     if isinstance(cost, (int, float)):
@@ -303,7 +302,7 @@ def consume(self, index: int, amount: int = 1, /):
         red('This item is not consumable!')
 
 
-def craft(self, recipes: List[Recipe], amount: int = 1, /):
+def craft(self, recipes: list[Recipe], amount: int = 1, /):
     for recipe in recipes:
         if recipe.collection_req is not None:
             coll_name, lvl = recipe.collection_req
@@ -396,7 +395,7 @@ def despawn_pet(self, /):
     green(f'You despawned your {pet.display()}{GREEN}!')
 
 
-def die(self, killer: Optional[str] = None, /) -> bool:
+def die(self, killer: str | None = None, /) -> bool:
     if self.has_item({'name': 'saving_grace'}):
         self.remove_item({'name': 'saving_grace'})
         self.island = 'hub'
@@ -728,7 +727,7 @@ def summon_pet(self, index: int, /):
 
 
 @checkpoint
-def talkto_npc(self, npc: Npc, /) -> Optional[str]:
+def talkto_npc(self, npc: Npc, /) -> str | None:
     if npc.name not in self.npc_talked:
         if npc.init_dialog is not None:
             self.npc_speak(npc.name, npc.init_dialog)
