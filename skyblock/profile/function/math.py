@@ -364,6 +364,8 @@ def get_stat(self, name: str, index: int | None = None, /, *,
     elif name == 'farming_fortune':
         bonus_value += item_ench.get('cultivating', 0)
         bonus_value += item_ench.get('harvesting', 0) * 12.6
+    elif name == 'pristine':
+        bonus_value += item_ench.get('pristine', 0)
 
     if item is not None and not isinstance(item, Accessory):
         bonus_value += item.get_stat(name, self)

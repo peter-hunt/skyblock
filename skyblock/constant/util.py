@@ -68,6 +68,16 @@ SPECIAL_NAMES = {
     # items
     'tightly_tied_hay_bale': 'Tightly-Tied Hay Bale',
 
+    # gemstones
+    'rough_ruby_gemstone': '❤ Rough Ruby Gemstone',
+    'rough_amber_gemstone': '⸕ Rough Amber Gemstone',
+    'rough_sapphire_gemstone': '✎ Rough Sapphire Gemstone',
+    'rough_jade_gemstone': '☘ Rough Jade Gemstone',
+    'rough_amethyst_gemstone': '❈ Rough Amethyst Gemstone',
+    'rough_topaz_gemstone': '✧ Rough Topaz Gemstone',
+    'rough_jasper_gemstone': '❁ Rough Jasper Gemstone',
+    'rough_opal_gemstone': '❂ Rough Opal Gemstone',
+
     # npcs
     'oringo': 'Oringo the Traveling Zookeeper',
 

@@ -19,12 +19,14 @@ ALL_STATS = [
     'mining_fortune',
     'farming_fortune',
     'foraging_fortune',
+    'pristine',
 ]
 
 HIDDEN_STATS = [
     'true_defense',
     'attack_speed',
     'ferocity',
+    'pristine',
 ]
 
 PERC_STATS = [

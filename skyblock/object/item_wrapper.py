@@ -897,6 +897,14 @@ def item_type(cls: type, /) -> type:
             value += getattr(active_pet, name, 0) * pet_mult * 0.2
 
         if getattr(self, 'modifier', None) is not None:
+            if self.modifier == 'heated' and name == 'mining_speed':
+                match profile.island:
+                    case 'crystals':
+                        value += 240
+                    case 'mines':
+                        value += 120
+                    case _:
+                        value += 60
             modifier_bonus = get_modifier(self.modifier, self.rarity)
             value += modifier_bonus.get(name, 0)
 

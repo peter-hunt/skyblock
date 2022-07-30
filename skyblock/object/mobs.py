@@ -3,6 +3,7 @@ from os import walk
 from pathlib import Path
 
 from .._lib import _open
+from ..function.file import load_folder
 from ..function.io import red
 from ..function.util import get, includes
 from ..path import join_path
@@ -17,13 +18,7 @@ if not Path(join_path('skyblock', 'data', 'mobs')).is_dir():
         'Required data not found.\nRestart skyblock to fix it automatically.'
     )
 
-MOBS = []
-for file_name in [*walk(join_path('skyblock', 'data', 'mobs'))][0][2]:
-    if not file_name.endswith('.json'):
-        continue
-
-    with _open(join_path('skyblock', 'data', 'mobs', file_name)) as file:
-        MOBS.append(Mob.from_obj(load(file)))
+MOBS = load_folder(join_path('skyblock', 'data', 'mobs'), Mob.from_obj)
 MOBS = sorted(MOBS, key=lambda mob: (mob.name, mob.level))
 
 

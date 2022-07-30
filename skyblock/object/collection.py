@@ -1,8 +1,7 @@
-from json import load
-from os import walk
 from pathlib import Path
 
 from .._lib import _open
+from ..function.file import load_folder
 from ..function.io import red
 from ..path import join_path
 
@@ -16,16 +15,7 @@ if not Path(join_path('skyblock', 'data', 'collections')).is_dir():
         'Required data not found.\nRestart skyblock to fix it automatically.'
     )
 
-COLLECTIONS = []
-for category in [*walk(join_path('skyblock', 'data', 'collections'))][0][1]:
-    for file_name in [*walk(join_path('skyblock', 'data',
-                                      'collections', category))][0][2]:
-        if not file_name.endswith('.json'):
-            continue
-
-        with _open(join_path('skyblock', 'data', 'collections',
-                             category, file_name)) as file:
-            COLLECTIONS.append(Collection.load(load(file)))
+COLLECTIONS = load_folder(join_path('skyblock', 'data', 'collections'), Collection.load)
 COLLECTIONS = sorted(COLLECTIONS, key=lambda collection: collection.name)
 
 

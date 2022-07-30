@@ -40,7 +40,10 @@ SHEPHERDS_KEEP = Zone(
     mobs=[get_mob('sheep')],
     npcs=[get_npc('shepherd')],
 )
-TRAPPERS_DEN = Zone('trappers_den', 285, -570)
+TRAPPERS_DEN = Zone(
+    'trappers_den', 285, -570,
+    npcs=[get_npc('tony')],
+)
 TREASURE_HUNTER_CAMP = Zone(
     'treasure_hunter_camp', 200, -430,
     npcs=[get_npc('treasure_hunter')],

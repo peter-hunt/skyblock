@@ -315,6 +315,7 @@ PICKAXE_ENCHS = [
     'efficiency',
     'experience',
     'fortune',
+    'pristine',
 ]
 
 FISHING_ROD_ENCHS = [

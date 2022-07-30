@@ -3,6 +3,7 @@ from os import walk
 from pathlib import Path
 
 from .._lib import _open
+from ..function.file import load_folder
 from ..function.io import red
 from ..function.util import get, includes
 from ..path import join_path
@@ -32,13 +33,7 @@ if not Path(join_path('skyblock', 'data', 'resources')).is_dir():
         'Required data not found.\nRestart skyblock to fix it automatically.'
     )
 
-RESOURCES = []
-for file_name in [*walk(join_path('skyblock', 'data', 'resources'))][0][2]:
-    if not file_name.endswith('.json'):
-        continue
-
-    with _open(join_path('skyblock', 'data', 'resources', file_name)) as file:
-        RESOURCES.append(load_resource(load(file)))
+RESOURCES = load_folder(join_path('skyblock', 'data', 'resources'), load_resource)
 
 
 def get_resource(name: str, **kwargs) -> ItemType | None:

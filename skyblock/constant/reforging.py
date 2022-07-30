@@ -468,6 +468,7 @@ PICKAXE_MODIFIERS = {
         {'def': 5}, {'def': 7}, {'def': 9},
         {'def': 13}, {'def': 16}, {'def': 20},
     ),
+    'heated': ({}, {}, {}, {}, {}, {}),
 }
 
 MODIFIERS = {**ACCESSORY_MODIFIERS, **ARMOR_MODIFIERS,

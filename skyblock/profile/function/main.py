@@ -249,7 +249,8 @@ def mainloop(self):
             if len(words) == 3:
                 if words[2] == '--max':
                     if isinstance(recipe, RecipeGroup):
-                        red('Cannot use --max on recipe group.')
+                        for subrecipe in recipe.recipes:
+                            self.craft(get_recipe(subrecipe), -1)
                         continue
                     amount = -1
                 else:
@@ -361,6 +362,12 @@ def mainloop(self):
             if not isinstance(armor_piece, Armor):
                 red('Cannot equip non-armor item.')
                 continue
+
+            if armor_piece.collection_req is not None:
+                coll_name, lvl = armor_piece.collection_req
+                if self.get_collection_level(coll_name) < lvl:
+                    red("You haven't reached the required collection yet!")
+                    continue
 
             combat_req = armor_piece.combat_skill_req
             combat_level = self.get_skill_level('combat')
@@ -903,18 +910,6 @@ def mainloop(self):
                 self.display_warp()
             else:
                 self.warp(words[1])
-
-        elif words[0] == 'warpforge':
-            if 'forge' not in self.visited_zones:
-                red("You haven't been to The Forge yet!")
-            elif self.zone == 'forge':
-                yellow(f"Already at {AQUA}{format_zone('forge')}{YELLOW}!")
-            else:
-                self.island = 'mines'
-                island = get_island(self.island)
-                self.zone = 'forge'
-                zone = get(island.zones, self.zone)
-                gray(f'Warped to {AQUA}{zone}{GRAY} of {AQUA}{island}{GRAY}.')
 
         else:
             red('Unknown command. Type `help` for help.')

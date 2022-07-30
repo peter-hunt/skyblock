@@ -3,6 +3,7 @@ from os import walk
 from pathlib import Path
 
 from .._lib import _open
+from ..function.file import load_recipes
 from ..function.io import red
 from ..function.util import includes, get
 from ..path import join_path
@@ -28,38 +29,11 @@ if not Path(join_path('skyblock', 'data', 'recipes')).is_dir():
         'Required data not found.\nRestart skyblock to fix it automatically.'
     )
 
-_RECIPES = []
-RECIPES = []
-for category in [*walk(join_path('skyblock', 'data', 'recipes'))][0][1]:
-    for file_name in sorted([*walk(join_path('skyblock', 'data',
-                                   'recipes', category))][0][2]):
-        if not file_name.endswith('.json'):
-            continue
-
-        with _open(join_path('skyblock', 'data', 'recipes',
-                             category, file_name)) as file:
-            obj = load(file)
-            if 'recipes' in obj:
-                _RECIPES.append(RecipeGroup.from_obj(obj))
-            else:
-                _RECIPES.append(Recipe.from_obj(obj))
-    for sub_type in sorted([*walk(join_path('skyblock', 'data',
-                                   'recipes', category))][0][1]):
-        for file_name in sorted([*walk(join_path('skyblock', 'data',
-                                    'recipes', category, sub_type))][0][2]):
-            if not file_name.endswith('.json'):
-                continue
-
-            with _open(join_path('skyblock', 'data', 'recipes',
-                                category, sub_type, file_name)) as file:
-                obj = load(file)
-                if 'recipes' in obj:
-                    _RECIPES.append(RecipeGroup.from_obj(obj))
-                else:
-                    _RECIPES.append(Recipe.from_obj(obj))
+_RECIPES = load_recipes(join_path('skyblock', 'data', 'recipes'), Recipe.from_obj, RecipeGroup.from_obj)
 _RECIPES = sorted(_RECIPES, key=lambda recipe: recipe.name)
 
 
+RECIPES = []
 for category in {'farming', 'combat', 'mining', 'fishing', 'foraging',
                  'enchanting', 'forging', 'smelting'}:
     RECIPES.extend(_select_recipes(_RECIPES, category))

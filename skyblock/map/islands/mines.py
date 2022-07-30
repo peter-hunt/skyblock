@@ -18,6 +18,7 @@ DWARVEN_VILLAGE = Zone(
                get_resource('lapis_ore'), get_resource('redstone_ore'),
                get_resource('emerald_ore'), get_resource('diamond_ore')],
     npcs=[get_npc('bubu'),
+          get_npc('bulvar'),
           get_npc('gimley'),
           get_npc('hornum'),
           get_npc('sargwyn'),

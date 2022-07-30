@@ -331,6 +331,37 @@ ABILITIES = [
         variables={'perc': 20},
     ),
     NamedAbility(
+        id='rare_grounded',
+        name='Grounded',
+        display_id='grounded',
+        variables={'value': 100},
+    ),
+    NamedAbility(
+        id='rare_burrowing',
+        name='Burrowing',
+        display_id='burrowing',
+        variables={'value': 2.5},
+    ),
+    NamedAbility(
+        id='epic_grounded',
+        name='Grounded',
+        display_id='grounded',
+        variables={'value': 150},
+    ),
+    NamedAbility(
+        id='epic_burrowing',
+        name='Burrowing',
+        display_id='burrowing',
+        variables={'value': 3},
+    ),
+    NamedAbility(
+        id='wormhole',
+        name='Wormhole',
+        display_id='wormhole',
+        variables={'value': 100},
+    ),
+
+    NamedAbility(
         id='greed_0',
         name='Greed',
         display_id='greed',

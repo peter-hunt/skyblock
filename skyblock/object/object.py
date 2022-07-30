@@ -69,11 +69,13 @@ class Armor(ItemType):
     true_defense: int = 0
     ferocity: int = 0
     sea_creature_chance: int = 0
+    pristine: int = 0
 
     modifier: str | None = None
     enchantments: dict[str, int] = {}
     hot_potato: int = 0
     stars: int | None = None
+    collection_req: tuple[str, int] | None = None
     combat_skill_req: int | None = None
     dungeon_skill_req: int | None = None
     dungeon_completion_req: int | None = None
@@ -125,6 +127,7 @@ class Drill(ItemType):
     breaking_power: int
     mining_speed: int
     mining_fortune: int = 0
+    pristine: Number = 0
 
     damage: int = 0
     defense: int = 0
@@ -216,6 +219,7 @@ class Pickaxe(ItemType):
 
     breaking_power: int
     mining_speed: int
+    pristine: Number = 0
 
     damage: int = 0
     defense: int = 0

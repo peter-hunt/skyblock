@@ -71,6 +71,7 @@ STAT_COLORS = {
     'mining_fortune': f'{GOLD}☘',
     'farming_fortune': f'{GOLD}☘',
     'foraging_fortune': f'{GOLD}☘',
+    'pristine': f'{DARK_PURPLE}✧',
 }
 
 CRIT_COLORS = WHITE, YELLOW, GOLD, RED, RED, WHITE
