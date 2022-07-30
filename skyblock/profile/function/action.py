@@ -348,16 +348,18 @@ def craft(self, recipes: list[Recipe], amount: int = 1, /):
         name = result_pointer['name']
 
         if name.endswith('_pet'):
-            keep_weight = 80
-            upgrade_weight = 20 + 0.2 * self.get_stat('pet_luck')
-            total = keep_weight + upgrade_weight
-            if random() > (keep_weight / total):
-                result_pointer['rarity'] = {
-                    'common': 'uncommon',
-                    'uncommon': 'rare',
-                    'rare': 'epic',
-                    'epic': 'legendary',
-                }[result_pointer['rarity']]
+            if result_pointer['rarity'] == 'common':
+                roll = random()
+                if roll <= 0.15:
+                    result_pointer['rarity'] = 'rare'
+                elif roll <= 0.5:
+                    result_pointer['rarity'] = 'uncommon'
+            elif result_pointer['rarity'] == 'epic':
+                keep_weight = 80
+                upgrade_weight = 20 + 0.2 * self.get_stat('pet_luck')
+                total = keep_weight + upgrade_weight
+                if random() > (keep_weight / total):
+                    result_pointer['rarity'] = 'legendary'
 
         _result_pointer = result_pointer.copy()
         _result_pointer['count'] = result_pointer.get('count', 1) * amount

@@ -2,7 +2,6 @@ from json import load
 from os import walk
 from pathlib import Path
 
-from .._lib import _open
 from ..function.file import load_folder
 from ..function.io import red
 from ..function.util import get, includes

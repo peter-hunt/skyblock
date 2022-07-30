@@ -3,20 +3,21 @@ from time import time
 
 from ..._lib import add_history
 from ...constant.colors import *
-from ...constant.doc import profile_doc
+from ...constant.doc import profile_doc, debug_doc
 from ...constant.main import ARMOR_PARTS
 from ...constant.stat import ALL_STATS
 from ...function.io import *
 from ...function.math import calc_exp_level, calc_exp, calc_pet_exp
 from ...function.util import (
     checkpoint, clear, format_name, format_number, format_roman, format_short,
-    format_zone, generate_help, get, includes, is_valid_usage, parse_int,
+    generate_help, get, includes, is_valid_usage, parse_int,
 )
 from ...map.islands import get_island
 from ...object.collection import is_collection
 from ...object.items import ITEMS, get_item
 from ...object.mobs import get_mob
 from ...object.object import *
+from ...object.options import OPTIONS
 from ...object.placed_minion import *
 from ...object.recipes import get_recipe
 from ...object.resources import get_resource
@@ -25,7 +26,10 @@ from ...object.resources import get_resource
 __all__ = ['mainloop']
 
 
-profile_help = generate_help(profile_doc)
+if OPTIONS['debug']:
+    profile_help = generate_help(f'{profile_doc}\n\n{debug_doc}')
+else:
+    profile_help = generate_help(profile_doc)
 
 
 @checkpoint
@@ -95,7 +99,7 @@ def mainloop(self):
                 continue
             self.display_armor(part)
 
-        if words[0] == 'bag':
+        elif words[0] == 'bag':
             if len(words) == 1:
                 white(f'Accessory bag {GRAY}(bag accessory)')
                 white(f'Minion bag {GRAY}(bag minion)')
@@ -463,6 +467,21 @@ def mainloop(self):
                     continue
 
             self.gather(name, tool_index, amount)
+
+        elif words[0] == 'give':
+            name = words[1]
+            item = get_item(name)
+            if item is None:
+                continue
+
+            if len(words) == 2:
+                amount = 1
+            elif len(words) == 3:
+                amount = parse_int(words[2])
+
+            obj = item.to_obj()
+            obj['count'] = amount
+            self.recieve_item(obj)
 
         elif words[0] == 'goto':
             self.goto(words[1])

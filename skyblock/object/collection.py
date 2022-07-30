@@ -1,6 +1,5 @@
 from pathlib import Path
 
-from .._lib import _open
 from ..function.file import load_folder
 from ..function.io import red
 from ..path import join_path

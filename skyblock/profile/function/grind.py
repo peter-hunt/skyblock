@@ -17,6 +17,7 @@ from ...function.random import random_amount, random_bool, random_int
 from ...function.util import (
     checkpoint, format_crit, format_name, format_number, format_roman,
 )
+from ...object.abilities import get_ability
 from ...object.fishing import FISHING_TABLE, SEA_CREATRUE_TABLE
 from ...object.items import get_item
 from ...object.mobs import get_mob
@@ -61,6 +62,8 @@ def fish(self, rod_index: int, iteration: int = 1, /):
     luck = 1 + 0.01 * enchants.get('luck_of_the_sea', 0)
     luck += fishing_level * 0.002
     magnet = enchants.get('magnet', 0)
+    tier = self.get_tiered_bonus('shimmer')
+    exp_mult = 1 + get_ability('shimmer').tiered_variables['value'][tier] / 100
 
     sea_creature_chance = self.get_stat('sea_creature_chance')
 
@@ -180,7 +183,7 @@ def fish(self, rod_index: int, iteration: int = 1, /):
                          f'You found a {drop_item.display()}{AQUA}.')
 
             self.add_skill_exp('fishing', random_amount(fishing_exp, mult=fishing_exp_mult), display=True)
-            self.add_exp(random_amount((1, 6)) + magnet)
+            self.add_exp(random_amount(random_amount((1, 6)) + magnet, mult=exp_mult))
 
         if i >= (last_cp + cp_step) * iteration:
             while i >= (last_cp + cp_step) * iteration:
@@ -331,6 +334,8 @@ def gather(self, name: str, tool_index: int | None,
         time_cost = 30 * resource.hardness / mining_speed
 
         exp_mult = 1 + 0.125 * enchants.get('experience', 0)
+        tier = self.get_tiered_bonus('shimmer')
+        exp_mult *= 1 + get_ability('shimmer').tiered_variables['value'][tier] / 100
         if self.has_item({'name': 'experience_artifact'}):
             exp_mult *= 1.25
         if getattr(tool, 'modifier') == 'magnetic':
@@ -658,6 +663,8 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
     exp_mult *= 1 + 0.04 * enchanting_level
     if self.has_item({'name': 'experience_artifact'}):
         exp_mult *= 1.25
+    tier = self.get_tiered_bonus('shimmer')
+    exp_mult *= 1 + get_ability('shimmer').tiered_variables['value'][tier] / 100
     fishing_exp_mult = 1 + 0.02 * weapon_enchants.get('expertise', 0)
 
 

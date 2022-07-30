@@ -30,6 +30,14 @@ class NamedAbility(Ability):
     values: list[Number] = []
 
 
+@init_type
+class TieredBonus(Ability):
+    id: str
+    name: str
+    display_id: int
+    tiered_variables: dict[str, list[Number]] = {}
+
+
 ABILITIES = [
     # misc abilities
     AnonymousAbility(
@@ -621,6 +629,13 @@ ABILITIES = [
         id='trolling_the_reaper',
         name='Full Set Bonus: Trolling The Reaper',
         display_id='trolling_the_reaper',
+    ),
+
+    TieredBonus(
+        id='shimmer',
+        name='Tiered Armor Bonus: Shimmer',
+        display_id='shimmer',
+        tiered_variables={'value': [0, 100, 200, 300]},
     ),
 ]
 

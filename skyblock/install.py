@@ -1,8 +1,10 @@
+from json import load
 from os import mkdir
 from os.path import join
 from pathlib import Path
 from subprocess import run
 
+from .myjson import dump
 from .path import is_data, join_path
 
 
@@ -37,3 +39,8 @@ def init():
     init_home_dir('skyblock')
     init_home_dir('skyblock', 'saves')
     install_data()
+    if not Path(join_path('skyblock', 'options.json')).is_file():
+        with open(join_path('skyblock', 'data', 'default_options.json')) as file:
+            default_options = load(file)
+        with open(join_path('skyblock', 'options.json'), 'w') as file:
+            dump(default_options, file)

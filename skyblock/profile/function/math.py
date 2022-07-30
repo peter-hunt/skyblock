@@ -26,7 +26,7 @@ __all__ = [
     'add_exp', 'add_kill', 'add_skill_exp', 'get_bestiary_amount',
     'get_bestiary_level', 'get_bestiary_milestone', 'get_bestiary_total',
     'get_collection_amount', 'get_collection_level', 'collect', 'get_skill_exp',
-    'get_skill_level', 'get_stat', 'parse_index',
+    'get_skill_level', 'get_stat', 'get_tiered_bonus', 'parse_index',
 ]
 
 
@@ -611,6 +611,16 @@ def get_stat(self, name: str, index: int | None = None, /, *,
         return base_value, bonus_value
     else:
         return base_value + bonus_value
+
+
+def get_tiered_bonus(self, name: str) -> int:
+    tier = 0
+    for armor in self.armor:
+        if name in getattr(armor, 'abilities', []):
+            tier += 1
+    if tier >= 1:
+        tier -= 1
+    return tier
 
 
 def parse_index(self, word: str, length: int | None = None,

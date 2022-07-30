@@ -1,4 +1,4 @@
-__all__ = ['menu_doc', 'profile_doc']
+__all__ = ['menu_doc', 'profile_doc', 'debug_doc']
 
 menu_doc = """
 > clear
@@ -237,4 +237,9 @@ Warps you to the The Forge area in the Dwarven Mines.
 
 > withdraw [all|half|<coins>]
 Withdraw coins from the bank to the purse.
+""".strip()
+
+debug_doc = """
+> give <item> [amount]
+Give player item. (DEBUG)
 """.strip()

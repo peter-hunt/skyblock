@@ -110,8 +110,11 @@ To check command usage, type `help` for command documentation.
 ## Planned Features:
 
 * Wardrobe and other bags/sacks.
+* Arachane
 * Brewing and Potion effects
 * Commissions
+* Crimson Isle
+* Crystal Hollows
 * Diana, Griffin Pet and **Mythological** creature
 * Dungeons
 * Fairy Souls
