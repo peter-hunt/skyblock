@@ -555,6 +555,9 @@ def display_recipe_info(self, recipe: Recipe | RecipeGroup, /):
             gray()
         gray('\nIngredients:')
         for pointer in _recipe.ingredients:
+            if isinstance(pointer, Number):
+                gold(f'  {format_number(pointer)} coins')
+                continue
             name = pointer['name']
             count = pointer.get('count', 1)
             kwargs = {key: pointer[key] for key in pointer

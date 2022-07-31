@@ -71,7 +71,7 @@ def _dumps(obj, /, *, current_indent=0, current_width=0,
             compact = ', '.join(
                 f'{_dumps(key)}: {_dumps(value)}' for key, value in obj.items()
             )
-            if current_width + len(compact) + 2 <= 80:
+            if current_width + len(compact) + 2 <= 80 and current_indent != 0:
                 return f'{{{compact}}}'
 
         keys = [*obj.keys()]

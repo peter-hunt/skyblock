@@ -67,6 +67,7 @@ SPECIAL_ZONES = {
 SPECIAL_NAMES = {
     # items
     'tightly_tied_hay_bale': 'Tightly-Tied Hay Bale',
+    'divans_alloy': "Divan's Alloy",
 
     # gemstones
     'rough_ruby_gemstone': '❤ Rough Ruby Gemstone',
@@ -77,6 +78,42 @@ SPECIAL_NAMES = {
     'rough_topaz_gemstone': '✧ Rough Topaz Gemstone',
     'rough_jasper_gemstone': '❁ Rough Jasper Gemstone',
     'rough_opal_gemstone': '❂ Rough Opal Gemstone',
+
+    'flawed_ruby_gemstone': '❤ Flawed Ruby Gemstone',
+    'flawed_amber_gemstone': '⸕ Flawed Amber Gemstone',
+    'flawed_sapphire_gemstone': '✎ Flawed Sapphire Gemstone',
+    'flawed_jade_gemstone': '☘ Flawed Jade Gemstone',
+    'flawed_amethyst_gemstone': '❈ Flawed Amethyst Gemstone',
+    'flawed_topaz_gemstone': '✧ Flawed Topaz Gemstone',
+    'flawed_jasper_gemstone': '❁ Flawed Jasper Gemstone',
+    'flawed_opal_gemstone': '❂ Flawed Opal Gemstone',
+
+    'fine_ruby_gemstone': '❤ Fine Ruby Gemstone',
+    'fine_amber_gemstone': '⸕ Fine Amber Gemstone',
+    'fine_sapphire_gemstone': '✎ Fine Sapphire Gemstone',
+    'fine_jade_gemstone': '☘ Fine Jade Gemstone',
+    'fine_amethyst_gemstone': '❈ Fine Amethyst Gemstone',
+    'fine_topaz_gemstone': '✧ Fine Topaz Gemstone',
+    'fine_jasper_gemstone': '❁ Fine Jasper Gemstone',
+    'fine_opal_gemstone': '❂ Fine Opal Gemstone',
+
+    'flawless_ruby_gemstone': '❤ Flawless Ruby Gemstone',
+    'flawless_amber_gemstone': '⸕ Flawless Amber Gemstone',
+    'flawless_sapphire_gemstone': '✎ Flawless Sapphire Gemstone',
+    'flawless_jade_gemstone': '☘ Flawless Jade Gemstone',
+    'flawless_amethyst_gemstone': '❈ Flawless Amethyst Gemstone',
+    'flawless_topaz_gemstone': '✧ Flawless Topaz Gemstone',
+    'flawless_jasper_gemstone': '❁ Flawless Jasper Gemstone',
+    'flawless_opal_gemstone': '❂ Flawless Opal Gemstone',
+
+    'perfect_ruby_gemstone': '❤ Perfect Ruby Gemstone',
+    'perfect_amber_gemstone': '⸕ Perfect Amber Gemstone',
+    'perfect_sapphire_gemstone': '✎ Perfect Sapphire Gemstone',
+    'perfect_jade_gemstone': '☘ Perfect Jade Gemstone',
+    'perfect_amethyst_gemstone': '❈ Perfect Amethyst Gemstone',
+    'perfect_topaz_gemstone': '✧ Perfect Topaz Gemstone',
+    'perfect_jasper_gemstone': '❁ Perfect Jasper Gemstone',
+    'perfect_opal_gemstone': '❂ Perfect Opal Gemstone',
 
     # npcs
     'oringo': 'Oringo the Traveling Zookeeper',
@@ -158,12 +195,18 @@ SPECIAL_NAMES = {
     'titans_leggings': "Titan's Leggings",
     'titans_boots': "Titan's Boots",
 
+    'divan_helmet': 'Helmet of Divan',
+    'divan_chestplate': 'Chestplate of Divan',
+    'divan_leggings': 'Leggings of Divan',
+    'divan_boots': 'Boots of Divan',
+
     # tools
     'mithril_drill_226': 'Mithril Drill SX-R226',
     'mithril_drill_326': 'Mithril Drill SX-R326',
     'titanium_drill_355': 'Titanium Drill DR-X355',
     'titanium_drill_455': 'Titanium Drill DR-X455',
     'titanium_drill_555': 'Titanium Drill DR-X555',
+    'divans_drill': "Divan's Drill",
 
     'farmers_rod': "Farmer's Rod",
 

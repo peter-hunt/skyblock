@@ -355,7 +355,7 @@ class Mob:
 class Recipe:
     name: str
     category: str
-    ingredients: list[ItemPointer]
+    ingredients: list[ItemPointer | int]
     result: ItemPointer
     collection_req: tuple[str, int] | None = None
     slayer_req: tuple[str, int] | None = None

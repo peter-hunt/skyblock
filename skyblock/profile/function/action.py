@@ -13,7 +13,7 @@ from ...function.random import random_amount, random_int
 from ...function.reforging import combine_enchant
 from ...function.util import (
     checkpoint, format_name, format_number, format_roman, format_short,
-    format_zone, get, get_ench, includes,
+    format_zone, get, get_ench, includes, Number,
 )
 from ...install import install_data
 from ...map.islands import ISLANDS
@@ -313,6 +313,10 @@ def craft(self, recipes: list[Recipe], amount: int = 1, /):
     if amount == -1:
         recipe = recipes[0]
         for ingr_pointer in recipe.ingredients:
+            if isinstance(ingr_pointer, Number):
+                if self.purse < ingr_pointer:
+                    red("You don't have enough coins!")
+                    return
             _ingr_pointer = ingr_pointer.copy()
             _ingr_pointer['count'] = ingr_pointer.get('count', 1)
             if not self.has_item(_ingr_pointer):
@@ -321,6 +325,10 @@ def craft(self, recipes: list[Recipe], amount: int = 1, /):
         enough = True
         while True:
             for ingr_pointer in recipe.ingredients:
+                if isinstance(ingr_pointer, Number):
+                    if self.purse < ingr_pointer:
+                        enough = False
+                        break
                 _ingr_pointer = ingr_pointer.copy()
                 _ingr_pointer['count'] = ingr_pointer.get('count', 1) * amount
                 if not self.has_item(_ingr_pointer):
@@ -333,6 +341,11 @@ def craft(self, recipes: list[Recipe], amount: int = 1, /):
 
     for recipe in recipes:
         for ingr_pointer in recipe.ingredients:
+            if isinstance(ingr_pointer, Number):
+                if self.purse < ingr_pointer * amount:
+                    red("You don't have enough coins!")
+                    return
+                continue
             _ingr_pointer = ingr_pointer.copy()
             _ingr_pointer['count'] = ingr_pointer.get('count', 1) * amount
             if not self.has_item(_ingr_pointer):
@@ -340,6 +353,10 @@ def craft(self, recipes: list[Recipe], amount: int = 1, /):
                 return
 
         for ingr_pointer in recipe.ingredients:
+            if isinstance(ingr_pointer, Number):
+                self.purse -= ingr_pointer * amount
+                gray(f'- {GOLD}{format_number(ingr_pointer * amount)} coins')
+                continue
             _ingr_pointer = ingr_pointer.copy()
             _ingr_pointer['count'] = ingr_pointer.get('count', 1) * amount
             self.remove_item(_ingr_pointer)
@@ -348,13 +365,14 @@ def craft(self, recipes: list[Recipe], amount: int = 1, /):
         name = result_pointer['name']
 
         if name.endswith('_pet'):
-            if result_pointer['rarity'] == 'common':
+            rarity = result_pointer.get('rarity')
+            if rarity == 'common':
                 roll = random()
                 if roll <= 0.15:
                     result_pointer['rarity'] = 'rare'
                 elif roll <= 0.5:
                     result_pointer['rarity'] = 'uncommon'
-            elif result_pointer['rarity'] == 'epic':
+            elif rarity == 'epic':
                 keep_weight = 80
                 upgrade_weight = 20 + 0.2 * self.get_stat('pet_luck')
                 total = keep_weight + upgrade_weight
