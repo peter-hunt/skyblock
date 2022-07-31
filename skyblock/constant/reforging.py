@@ -444,10 +444,14 @@ MELEE_MODIFIERS = {
 }
 
 PICKAXE_REFORGES = (
-    'auspicious', 'fleet', 'fruitful', 'magnetic', 'refined',
+    'ambered', 'auspicious', 'fleet', 'fruitful', 'magnetic', 'mithraic', 'refined',
 )
 
 PICKAXE_MODIFIERS = {
+    'ambered': (
+        {'min_spd': 25}, {'min_spd': 31}, {'min_spd': 38},
+        {'min_spd': 46}, {'min_spd': 55}, {'min_spd': 65},
+    ),
     'auspicious': (
         {'min_spd': 7, 'min_ftn': 8}, {'min_spd': 14, 'min_ftn': 8},
         {'min_spd': 23, 'min_ftn': 8}, {'min_spd': 34, 'min_ftn': 8},
@@ -468,6 +472,10 @@ PICKAXE_MODIFIERS = {
     'magnetic': (
         {'def': 4}, {'def': 5}, {'def': 6},
         {'def': 8}, {'def': 10}, {'def': 14},
+    ),
+    'mithraic': (
+        {'min_spd': 6}, {'min_spd': 12}, {'min_spd': 20},
+        {'min_spd': 30}, {'min_spd': 40}, {'min_spd': 70},
     ),
     'refined': (
         {'def': 5}, {'def': 7}, {'def': 9},

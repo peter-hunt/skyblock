@@ -6,11 +6,8 @@ from time import sleep, time
 
 from ...constant.ability import *
 from ...constant.colors import *
-from ...constant.mobs import (
-    CUBISM_EFT, ENDER_SLAYER_EFT, BOA_EFT, SMITE_EFT, BLAST_PROT_EFT,
-    PROJ_PROT_EFT, IMPALING_EFT, SEA_CREATURES, ZOMBIES, SKELETONS,
-    END_MOBS, WITHERS, NETHER_MOBS,
-)
+from ...constant.mobs import *
+from ...constant.resource import *
 from ...function.io import *
 from ...function.math import calc_bestiary_level, calc_pet_level
 from ...function.random import random_amount, random_bool, random_int
@@ -323,9 +320,11 @@ def gather(self, name: str, tool_index: int | None,
         count_ore = resource.name not in {'stone', 'netherrack', 'end_stone'}
 
         breaking_power = tool.get_stat('breaking_power', self)
-        mining_speed = tool.get_stat('mining_speed', self, default=50)
-        if 'efficiency' in enchants:
-            mining_speed += 10 + 20 * enchants['efficiency']
+
+        mining_speed = self.get_stat('mining_speed', tool_index)
+        is_gemstone = resource.name in GEMSTONES
+        if is_gemstone:
+            mining_speed += tool.get_stat('gemstone_mining_speed', self)
 
         if resource.breaking_power > breaking_power:
             red(f'You need a strong tool to mine {format_name(resource.name)}.')
@@ -376,6 +375,8 @@ def gather(self, name: str, tool_index: int | None,
         for i in range(1, iteration + 1):
             sleep(time_cost)
             mining_fortune = self.get_stat('mining_fortune', tool_index)
+            if is_gemstone:
+                mining_fortune += tool.get_stat('gemstone_mining_fortune', self)
             fortune_mult = 1 + mining_fortune / 100
 
             if random_amount(compact_chance) == 1:
@@ -491,8 +492,7 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
 
     bestiary_level = calc_bestiary_level(self.stats.get(f'kills_{name}', 0))
     bestiary_stat = min(bestiary_level, 5)
-    bestiary_stat += 2 * max(min(bestiary_level - 5, 5), 0)
-    bestiary_stat += 3 * max(bestiary_level - 10, 0)
+    bestiary_stat += 2 * max(min(bestiary_level - 5, 5), 0) + 3 * max(bestiary_level - 10, 0)
 
     health = self.get_stat('health', weapon_index)
     defense = self.get_stat('defense', weapon_index)
@@ -523,6 +523,14 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
     use_kill_count = False
     if 'raider_axe' in weapon_abilities:
         use_kill_count = True
+
+    damage_bonus_mult = 1
+    if 'undead_sword' in weapon_abilities and name in UNDEADS:
+        damage_bonus_mult *= 2
+    elif 'spider_sword' in weapon_abilities and name in SPIDERS:
+        damage_bonus_mult *= 2
+    elif 'end_sword' in weapon_abilities and name in END_MOBS:
+        damage_bonus_mult *= 2
 
     set_bonus = True
     for piece in self.armor:
@@ -575,11 +583,11 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
 
     enchants = 0
     enchants += 0.05 * weapon_enchants.get('sharpness', 0)
-    if name in SMITE_EFT:
+    if name in UNDEADS:
         enchants += 0.08 * weapon_enchants.get('smite', 0)
-    if name in BOA_EFT:
+    if name in SPIDERS:
         enchants += 0.08 * weapon_enchants.get('bane_of_arthropods', 0)
-    if name in ENDER_SLAYER_EFT:
+    if name in END_MOBS:
         enchants += 0.12 * weapon_enchants.get('ender_slayer', 0)
     if name in CUBISM_EFT:
         enchants += 0.1 * weapon_enchants.get('cubism', 0)
@@ -606,7 +614,7 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
         no_pain_no_gain.append(25 * piece_enchants.get('no_pain_no_gain', 0))
 
     if healing_boost:
-        healing_muly *= 2
+        healing_mult *= 2
 
     if set_bonus == 'deflect':
         thorns += 33
@@ -831,7 +839,7 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
                     0.04 * min(combat_level, 50)
                     + 0.01 * max(min(combat_level - 50, 10), 0)
                 )
-                damage_dealt *= 1 + damage_mult
+                damage_dealt *= damage_mult * damage_bonus_mult
 
                 damage_dealt += (
                     (2 + fire_aspect_level) * 0.5 *

@@ -185,6 +185,23 @@ ABILITIES = [
         id='pure_emerald',
         display_id='pure_emerald',
     ),
+
+    AnonymousAbility(
+        id='undead_sword',
+        display_id='damage_undead',
+        variables={'value': 100},
+    ),
+    AnonymousAbility(
+        id='spider_sword',
+        display_id='damage_spider',
+        variables={'value': 100},
+    ),
+    AnonymousAbility(
+        id='end_sword',
+        display_id='damage_end',
+        variables={'value': 100},
+    ),
+
     AnonymousAbility(
         id='sword_of_the_stars',
         display_id='sword_of_the_stars',

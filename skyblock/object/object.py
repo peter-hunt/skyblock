@@ -45,6 +45,8 @@ class Accessory(ItemType):
     rarity: str = 'common'
     modifier: str | None = None
 
+    slayer_req: tuple[str, int] | None = None
+
     abilities: list[str] = []
 
 
@@ -128,6 +130,9 @@ class Drill(ItemType):
     mining_speed: int
     mining_fortune: int = 0
     pristine: Number = 0
+
+    gemstone_mining_speed: int = 0
+    gemstone_mining_fortune: int = 0
 
     damage: int = 0
     defense: int = 0
@@ -326,7 +331,7 @@ class Log(Resource):
 class Mineral(Resource):
     name: str
     drop: str
-    amount: int = 1
+    amount: Amount = 1
     breaking_power: int = 0
     hardness: Number = 2
     exp: Amount = 1

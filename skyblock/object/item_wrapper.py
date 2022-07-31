@@ -430,6 +430,30 @@ def item_type(cls: type, /) -> type:
                 info += '\n' + '\n'.join(f'{GRAY}{stat}'
                                          for stat in bonus_stats)
 
+            gemstone_stats = []
+
+            for stat_name in ('gemstone_mining_speed', 'gemstone_mining_fortune'):
+                value = self.get_stat(stat_name, profile)
+
+                if value == 0:
+                    continue
+
+                value_str = format_number(fround(value, 1), sign=True)
+                if stat_name == 'gemstone_mining_speed':
+                    icon = STAT_COLORS['mining_speed']
+                    display_name = 'Mining Speed'
+                else:
+                    icon = STAT_COLORS['mining_fortune']
+                    display_name = 'Mining Fortune'
+                gemstone_stats.append(f'Gives {GREEN}{value_str} {LIGHT_PURPLE}Gemstone'
+                                   f' {icon} {display_name}')
+
+            if len(gemstone_stats) != 0:
+                if len(basic_stats) + len(bonus_stats) != 0:
+                    info += '\n'
+                info += '\n' + '\n'.join(f'{GRAY}{stat}'
+                                         for stat in gemstone_stats)
+
         elif self.__class__.__name__ == 'FishingRod':
             is_dungeon = self.stars is not None
 
@@ -536,10 +560,8 @@ def item_type(cls: type, /) -> type:
 
             info += (
                 f'\n{DARK_GRAY}Reforge Stone\n\n'
-                f'{GRAY}Can be used in a Reforge Anvil\n'
-                f'or with the Dungeon Blacksmith\n'
-                f'to apply the {BLUE}{format_name(self.modifier)}\n'
-                f'{GRAY}reforge to {type_str}.'
+                f'{GRAY}Can be used in a Reforge Anvil or with the Dungeon Blacksmith'
+                f' to apply the {BLUE}{format_name(self.modifier)} {GRAY}reforge to {type_str}.'
             )
 
             if getattr(self, 'mining_skill_req', None) is not None:

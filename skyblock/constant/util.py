@@ -208,6 +208,11 @@ SPECIAL_NAMES = {
     'titanium_drill_555': 'Titanium Drill DR-X555',
     'divans_drill': "Divan's Drill",
 
+    'ruby_drill_15': 'Ruby Drill TX-15',
+    'gemstone_drill_522': 'Gemstone Drill LT-522',
+    'topaz_drill_12': 'Topaz Drill KGR-12',
+    'jasper_drill_10': 'Jasper Drill X',
+
     'farmers_rod': "Farmer's Rod",
 
     # reforge stones

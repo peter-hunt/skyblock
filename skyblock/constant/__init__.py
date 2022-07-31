@@ -14,6 +14,8 @@ from .mobs import *
 from .mobs import __all__ as __mobs__
 from .reforging import *
 from .reforging import __all__ as __reforging__
+from .resource import *
+from .resource import __all__ as __resource__
 from .stat import *
 from .stat import __all__ as __stat__
 from .util import *
@@ -21,4 +23,4 @@ from .util import __all__ as __util__
 
 
 __all__ = (__ability__ + __colors__ + ___doc__ + __enchanting__ + __main__
-           + __minions__ + __mobs__ + __reforging__ + __stat__ + __util__)
+           + __minions__ + __mobs__ + __reforging__ + __resource__ + __stat__ + __util__)

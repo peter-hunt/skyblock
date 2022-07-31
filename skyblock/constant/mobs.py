@@ -1,7 +1,8 @@
 __all__ = [
-    'CUBISM_EFT', 'ENDER_SLAYER_EFT', 'BOA_EFT', 'SMITE_EFT',
+    'CUBISM_EFT',
     'BLAST_PROT_EFT', 'PROJ_PROT_EFT', 'IMPALING_EFT',
-    'SEA_CREATURES', 'ZOMBIES', 'SKELETONS', 'END_MOBS', 'WITHERS', 'NETHER_MOBS',
+    'SEA_CREATURES',
+    'ZOMBIES', 'SKELETONS', 'SPIDERS', 'END_MOBS', 'WITHERS', 'NETHER_MOBS', 'UNDEADS',
     'BESTIARY_ALTER',
 ]
 
@@ -12,23 +13,6 @@ CUBISM_EFT = [
     'rain_slime', 'ghost',
 ]
 
-ENDER_SLAYER_EFT = [
-    'enderman',
-    'endermite',
-    'zealot',
-    'voidling_fanatic',
-    'voidling_extremist',
-]
-
-# BANE_OF_ARTHROPODS
-BOA_EFT = [
-    'splitter_spider',
-    'weaver_spider',
-    'voracious_spider',
-    'dasher_spider',
-    'spider_jockey',
-]
-
 BLAST_PROT_EFT = [
     'sneaky_creeper', 'large_magma_cube', 'ghast',
 ]
@@ -36,15 +20,6 @@ BLAST_PROT_EFT = [
 PROJ_PROT_EFT = [
     'skeleton', 'gravel_skeleton', 'watcher',
     'diamond_skeleton', 'sea_archer',
-]
-
-SMITE_EFT = [
-    'zombie', 'zombie_villager', 'skeleton',
-    'gravel_skeleton',
-    'crypt_ghoul', 'golden_ghoul',
-    'lapis_zombie',
-    'redstone_pigman',
-    'diamond_zombie', 'diamond_skeleton',
 ]
 
 
@@ -62,10 +37,19 @@ SEA_CREATURES = [
     'guardian_defender', 'deep_sea_protector', 'water_hydra', 'sea_emperor',
 ]
 
+SPIDERS = [
+    'splitter_spider',
+    'weaver_spider',
+    'voracious_spider',
+    'dasher_spider',
+    'spider_jockey',
+]
+
 ZOMBIES = [
     'zombie', 'zombie_villager',
     'crypt_ghoul', 'golden_ghoul',
     'lapis_zombie', 'diamond_zombie',
+    'redstone_pigman', 'zombie_pigman',
 ]
 
 SKELETONS = [
@@ -93,6 +77,8 @@ NETHER_MOBS = [
     'zombie_pigman',
     'blaze', 'mini_blaze',
 ]
+
+UNDEADS = ZOMBIES + SKELETONS + WITHERS
 
 BESTIARY_ALTER = {
     'crypt_ghoul': ('crypt_ghoul', 'golden_ghoul'),

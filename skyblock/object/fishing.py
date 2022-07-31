@@ -16,7 +16,7 @@ if not Path(join_path('skyblock', 'data', 'fishing')).is_dir():
 
 with _open(join_path('skyblock', 'data',
                      'fishing', 'fishing_table.json')) as file:
-    FISHING_TABLE = load(file)
+    FISHING_TABLE: list = load(file)
 
 with _open(join_path('skyblock', 'data',
                      'fishing', 'sea_creature_table.json')) as file:
