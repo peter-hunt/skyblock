@@ -12,7 +12,7 @@ def _float_to_str(f):
 
 
 def _dumps(obj, /, *, current_indent=0, current_width=0,
-           indent=2, sort_keys=True):
+           indent=2, sort_keys=True, use_compact=False):
     if obj is None:
         return 'null'
     elif isinstance(obj, bool):
@@ -39,13 +39,13 @@ def _dumps(obj, /, *, current_indent=0, current_width=0,
     elif isinstance(obj, tuple):
         return _dumps([*obj], current_indent=current_indent,
                       current_width=current_width, indent=indent,
-                      sort_keys=sort_keys)
+                      sort_keys=sort_keys, use_compact=True)
     elif isinstance(obj, list):
         if len(obj) == 0:
             return '[]'
 
-        compact = ', '.join(_dumps(item) for item in obj)
-        if current_width + len(compact) + 2 <= 80:
+        compact = ', '.join(_dumps(item, use_compact=True) for item in obj)
+        if current_width + len(compact) + 2 <= 80 and use_compact:
             return f'[{compact}]'
 
         result = '['
@@ -56,7 +56,7 @@ def _dumps(obj, /, *, current_indent=0, current_width=0,
             result += _dumps(
                 item, current_indent=current_indent + indent,
                 current_width=current_indent + indent,
-                indent=indent, sort_keys=sort_keys,
+                indent=indent, sort_keys=sort_keys, use_compact=True,
             )
         result += '\n' + ' ' * current_indent + ']'
         return result
@@ -69,9 +69,9 @@ def _dumps(obj, /, *, current_indent=0, current_width=0,
                 break
         else:
             compact = ', '.join(
-                f'{_dumps(key)}: {_dumps(value)}' for key, value in obj.items()
+                f'{_dumps(key, use_compact=True)}: {_dumps(value, use_compact=True)}' for key, value in obj.items()
             )
-            if current_width + len(compact) + 2 <= 80 and current_indent != 0:
+            if current_width + len(compact) + 2 <= 80 and use_compact:
                 return f'{{{compact}}}'
 
         keys = [*obj.keys()]
@@ -83,13 +83,13 @@ def _dumps(obj, /, *, current_indent=0, current_width=0,
             if index != 0:
                 result += ','
             result += '\n' + ' ' * (current_indent + indent)
-            more_indent = _dumps(key) + ': '
+            more_indent = _dumps(key, use_compact=True) + ': '
             more_len = len(more_indent)
             result += more_indent
             result += _dumps(
                 obj[key], current_indent=current_indent + indent,
                 current_width=current_indent + indent + more_len,
-                indent=indent, sort_keys=sort_keys,
+                indent=indent, sort_keys=sort_keys, use_compact=True,
             )
         result += '\n' + ' ' * current_indent + '}'
         return result
@@ -98,9 +98,9 @@ def _dumps(obj, /, *, current_indent=0, current_width=0,
 
 
 def dumps(obj, /, *, indent=2, sort_keys=False):
-    return _dumps(obj, indent=indent, sort_keys=sort_keys)
+    return _dumps(obj, indent=indent, sort_keys=sort_keys, use_compact=False)
 
 
 def dump(obj, file, /, *, indent=2, sort_keys=False):
-    content = _dumps(obj, indent=indent, sort_keys=sort_keys)
+    content = _dumps(obj, indent=indent, sort_keys=sort_keys, use_compact=False)
     file.write(content)
