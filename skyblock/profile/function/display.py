@@ -17,10 +17,7 @@ from ...function.math import (
     calc_bestiary_upgrade_amount, calc_skill_level_info, display_skill_reward,
     fround,
 )
-from ...function.util import (
-    format_name, format_number, format_roman, format_short, format_zone,
-    get, get_family, index,
-)
+from ...function.util import *
 from ...object.collection import COLLECTIONS, get_collection
 from ...object.items import get_item
 from ...object.mobs import MOBS, get_mob
@@ -911,6 +908,9 @@ def display_warp(self, /):
         return
 
     fast_travel = [scroll.copy() for scroll in self.fast_travel]
+    fast_travel = [(island, zone) for island, zone in fast_travel
+                   if (includes(ISLANDS, island)
+                       and includes(get(ISLANDS, island).zones, zone))]
     fast_travel = sorted(fast_travel, key=lambda item: (
         index(ISLANDS, item[0]),
         index((island := get(ISLANDS, item[0])).zones,

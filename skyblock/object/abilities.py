@@ -69,6 +69,94 @@ ABILITIES = [
         display_id='ender_artifact_upgrader',
     ),
 
+    AnonymousAbility(
+        id='lumino_fiber',
+        display_id='lumino_fiber',
+    ),
+    AnonymousAbility(
+        id='spell_powder',
+        display_id='spell_powder',
+    ),
+    AnonymousAbility(
+        id='leather_cloth',
+        display_id='leather_cloth',
+    ),
+    AnonymousAbility(
+        id='hallowed_skull',
+        display_id='hallowed_skull',
+    ),
+    AnonymousAbility(
+        id='burning_eye',
+        display_id='burning_eye',
+    ),
+    AnonymousAbility(
+        id='spectre_dust',
+        display_id='spectre_dust',
+    ),
+    AnonymousAbility(
+        id='wither_soul',
+        display_id='wither_soul',
+    ),
+    AnonymousAbility(
+        id='bezos',
+        display_id='bezos',
+    ),
+    AnonymousAbility(
+        id='blaze_ashes',
+        display_id='blaze_ashes',
+    ),
+    AnonymousAbility(
+        id='mutated_blaze_ashes',
+        display_id='mutated_blaze_ashes',
+    ),
+    AnonymousAbility(
+        id='millenia_old_blaze_ashes',
+        display_id='millenia_old_blaze_ashes',
+    ),
+    AnonymousAbility(
+        id='magma_chunk',
+        display_id='magma_chunk',
+    ),
+    AnonymousAbility(
+        id='kada_lead',
+        display_id='kada_lead',
+    ),
+    AnonymousAbility(
+        id='digested_mushrooms',
+        display_id='digested_mushrooms',
+    ),
+
+    AnonymousAbility(
+        id='kuudra_key',
+        display_id='kuudra_key',
+        variables={'tier': 'Basic'},
+    ),
+    AnonymousAbility(
+        id='hot_kuudra_key',
+        display_id='kuudra_key',
+        variables={'tier': 'Hot'},
+    ),
+    AnonymousAbility(
+        id='burning_kuudra_key',
+        display_id='kuudra_key',
+        variables={'tier': 'Burning'},
+    ),
+    AnonymousAbility(
+        id='fiery_kuudra_key',
+        display_id='kuudra_key',
+        variables={'tier': 'Fiery'},
+    ),
+    AnonymousAbility(
+        id='infernal_kuudra_key',
+        display_id='kuudra_key',
+        variables={'tier': 'Infernal'},
+    ),
+
+    AnonymousAbility(
+        id='rampart',
+        display_id='rampart',
+    ),
+
     # armor abilities
     NamedAbility(
         id='death_tax',

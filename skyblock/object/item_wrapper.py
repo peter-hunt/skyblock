@@ -617,10 +617,10 @@ def item_type(cls: type, /) -> type:
 
         elif self.__class__.__name__ == 'TravelScroll':
             r_name = ('Spawn' if self.zone is None
-                      else format_name(self.zone))
-            info += (f'\n{GRAY}Consume this item to add its\n'
-                     f'destination to your fast travel\noptions.\n\n'
-                     f'Island: {GREEN}{format_name(self.island)}{GRAY}\n'
+                      else format_zone(self.zone))
+            info += (f'\n{GRAY}Consume this item to add its'
+                     f' destination to your fast travel options.\n\n'
+                     f'Island: {GREEN}{format_zone(self.island)}{GRAY}\n'
                      f'Teleport: {YELLOW}{r_name}')
 
         ability_list = []
@@ -915,6 +915,14 @@ def item_type(cls: type, /) -> type:
                 value += 4 * self.hot_potato
             elif name == 'defense':
                 value += 2 * self.hot_potato
+
+            if 'rampart' in abilities and profile.island == 'crimson':
+                if name == 'health':
+                    value += 50
+                elif name == 'strength':
+                    value += 20
+                elif name == 'crit_damage':
+                    value += 15
         elif self.__class__.__name__ in {'FishingRod', 'Bow', 'Sword'}:
             if name in {'damage', 'strength'}:
                 value += 2 * self.hot_potato

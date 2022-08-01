@@ -20,7 +20,7 @@ from .io import red, yellow
 
 __all__ = [
     'camel_to_under', 'checkpoint', 'clear', 'format_name', 'format_number',
-    'format_roman', 'format_short', 'format_zone',  'get', 'generate_help',
+    'format_roman', 'format_short', 'format_zone', 'get', 'get_family', 'generate_help',
     'includes', 'index', 'is_valid_usage',
 ]
 
@@ -214,11 +214,12 @@ def includes(ls: list[any], name: str, /) -> bool:
     return False
 
 
-def index(ls: list[any], name: str, /) -> int:
+def index(ls: list[any], name: str, /, *, err=True) -> int:
     for i, obj in enumerate(ls):
         if obj.name == name:
             return i
-    raise ValueError(f'{name!r} not found from the list.')
+    if err:
+        raise ValueError(f'{name!r} not found from the list.')
 
 
 def is_valid_usage(usage: str, words: list[str], /) -> bool:

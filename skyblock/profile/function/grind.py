@@ -634,6 +634,8 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
         enchants += 0.08 * weapon_enchants.get('bane_of_arthropods', 0)
     if name in END_MOBS:
         enchants += 0.12 * weapon_enchants.get('ender_slayer', 0)
+    if name in BLAZES:
+        enchants += 0.03 * weapon_enchants.get('smoldering', 0)
     if name in CUBISM_EFT:
         enchants += 0.1 * weapon_enchants.get('cubism', 0)
     if name in IMPALING_EFT:

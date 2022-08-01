@@ -36,8 +36,17 @@ SPECIAL_ZONES = {
     'spider': "Spider's Den",
     'nest': 'Top of Nest',
 
-    'nether': 'Blazing Fortress',
-    'magma': 'Magma Fields',
+    'crimson': 'Crimson Isle',
+    'ashfang': 'Ruins of Ashfang',
+    'burning': 'Burning Desert',
+    'fields': 'Crimson Fields',
+    'magma': 'Magma Chamber',
+    'mystic': 'Mystic Marsh',
+    'odgers_hut': "Odger's Hut",
+    'skull': 'Forgotten Skull',
+    'smoldering': 'Smoldering Tomb',
+    'volcano': 'Blazing Volcano',
+    'wasteland': 'The Wasteland',
 
     'end': 'The End',
     'drag': "Dragon's Nest",
@@ -70,6 +79,9 @@ SPECIAL_NAMES = {
     'tightly_tied_hay_bale': 'Tightly-Tied Hay Bale',
     'divans_alloy': "Divan's Alloy",
     'ender_artifact_upgrader': 'Exceedingly Rare Ender Artifact Upgrader',
+
+    'millenia_old_blaze_ashes': 'Millenia-Old Blaze Ashes',
+    'netherrack_looking_sunshade': 'Netherrack-Looking Sunshade',
 
     # gemstones
     'rough_ruby_gemstone': '❤ Rough Ruby Gemstone',

@@ -3,7 +3,7 @@ __all__ = [
     'BLAST_PROT_EFT', 'PROJ_PROT_EFT', 'IMPALING_EFT',
     'SEA_CREATURES',
     'ZOMBIES', 'SPIDERS', 'WOLVES', 'SKELETONS', 'END_MOBS', 'ENDERMEN',
-    'WITHERS', 'NETHER_MOBS', 'UNDEADS',
+    'WITHERS', 'BLAZES', 'NETHER_MOBS', 'UNDEADS',
     'BESTIARY_ALTER',
 ]
 
@@ -83,6 +83,8 @@ ENDERMEN = [
 WITHERS = [
     'wither_skeleton',
 ]
+
+BLAZES = []
 
 NETHER_MOBS = [
     'ghast',
