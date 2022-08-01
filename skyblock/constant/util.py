@@ -41,6 +41,7 @@ SPECIAL_ZONES = {
 
     'end': 'The End',
     'drag': "Dragon's Nest",
+    'void': 'Void Sepulture',
 
     'park': 'The Park',
     'howl': 'Howling Cave',
@@ -68,6 +69,7 @@ SPECIAL_NAMES = {
     # items
     'tightly_tied_hay_bale': 'Tightly-Tied Hay Bale',
     'divans_alloy': "Divan's Alloy",
+    'ender_artifact_upgrader': 'Exceedingly Rare Ender Artifact Upgrader',
 
     # gemstones
     'rough_ruby_gemstone': '❤ Rough Ruby Gemstone',
@@ -199,6 +201,11 @@ SPECIAL_NAMES = {
     'divan_chestplate': 'Chestplate of Divan',
     'divan_leggings': 'Leggings of Divan',
     'divan_boots': 'Boots of Divan',
+
+    'pack_helmet': 'Helmet of the Pack',
+    'pack_chestplate': 'Chestplate of the Pack',
+    'pack_leggings': 'Leggings of the Pack',
+    'pack_boots': 'Boots of the Pack',
 
     # tools
     'mithril_drill_226': 'Mithril Drill SX-R226',

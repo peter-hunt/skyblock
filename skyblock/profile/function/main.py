@@ -233,7 +233,7 @@ def mainloop(self):
 
             category = words[1]
             if category in ('farming', 'mining', 'combat',
-                            'foraging', 'fishing'):
+                            'foraging', 'fishing', 'slayer'):
                 self.display_collection(category)
             elif is_collection(category):
                 if self.collection[category] == 0:

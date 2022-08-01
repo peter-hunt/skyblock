@@ -183,20 +183,14 @@ def item_type(cls: type, /) -> type:
         bonus_stats = []
 
         if self.__class__.__name__ == 'Accessory':
-            if self.modifier is not None:
-                modifier_bonus = get_modifier(self.modifier, self.rarity)
-            else:
-                modifier_bonus = {}
-
             for stat_name in ('strength', 'crit_chance', 'crit_damage',
                               'attack_speed'):
                 display_stat = format_name(stat_name)
                 ext = '%' if stat_name[0] in 'ac' else ''
 
-                if stat_name not in modifier_bonus:
+                value = fround(self.get_stat(stat_name), 1)
+                if value == 0:
                     continue
-
-                value = fround(modifier_bonus[stat_name], 1)
                 value_str = format_number(value, sign=True)
                 bonus = (f' {BLUE}({format_name(self.modifier)}'
                          f' {value_str}{ext})')
@@ -211,7 +205,9 @@ def item_type(cls: type, /) -> type:
                 info += '\n' + '\n'.join(f'{GRAY}{stat}'
                                          for stat in basic_stats)
 
-            for stat_name in ('health', 'defense', 'intelligence', 'speed'):
+            for stat_name in ('health', 'defense', 'intelligence', 'speed', 'magic_find',
+                              'mining_speed', 'mining_fortune', 'true_defense',
+                              'ferocity', 'sea_creature_chance', 'pristine'):
                 display_stat = format_name(stat_name)
                 ext = ' HP' if stat_name[0] == 'h' else ''
 
@@ -830,6 +826,11 @@ def item_type(cls: type, /) -> type:
                     if 'one_with_the_dragons' in active_pet.abilities:
                         value += pet_mult * 50
 
+            elif 'pooch_sword' in abilities:
+                value += profile.get_stat('health') // 50
+            elif 'shaman_sword' in abilities:
+                value += profile.get_stat('health') // 50
+
             elif self_name == 'aspect_of_the_end':
                 if set_bonus == 'strong_blood':
                     value += 75
@@ -933,7 +934,10 @@ def item_type(cls: type, /) -> type:
                     case _:
                         value += 60
             modifier_bonus = get_modifier(self.modifier, self.rarity)
-            value += modifier_bonus.get(name, 0)
+            if self.__class__.__name__ == 'Accessory' and profile.has_item({'name': 'hegemony_artifact'}):
+                value += modifier_bonus.get(name, 0) * 2
+            else:
+                value += modifier_bonus.get(name, 0)
 
         return value
 

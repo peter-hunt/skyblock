@@ -19,10 +19,13 @@ SET_BONUSES = (
     'strong_blood',
     'superior_blood',
     'fairys_outfit',
+
+    'absolute_unit',
 )
 
 THREE_PIECE_BONUSES = (
-    'trolling_the_reaper',
+    'revenant_trolling_the_reaper',
+    'reaper_trolling_the_reaper',
 )
 
 TIERED_BONUSES = (

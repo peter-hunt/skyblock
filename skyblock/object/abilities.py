@@ -44,6 +44,30 @@ ABILITIES = [
         id='exp_bottle',
         display_id='smash_exp_bottle',
     ),
+    AnonymousAbility(
+        id='undead_catalyst',
+        display_id='undead_catalyst',
+    ),
+    AnonymousAbility(
+        id='revenant_catalyst',
+        display_id='revenant_catalyst',
+    ),
+    AnonymousAbility(
+        id='shard_of_the_shredded',
+        display_id='shard_of_the_shredded',
+    ),
+    AnonymousAbility(
+        id='warden_heart',
+        display_id='warden_heart',
+    ),
+    AnonymousAbility(
+        id='red_claw_egg',
+        display_id='red_claw_egg',
+    ),
+    AnonymousAbility(
+        id='ender_artifact_upgrader',
+        display_id='ender_artifact_upgrader',
+    ),
 
     # armor abilities
     NamedAbility(
@@ -159,6 +183,22 @@ ABILITIES = [
         variables={'percent': 10},
     ),
 
+    NamedAbility(
+        id='healing_boost',
+        name="Ability: Healing Boost",
+        display_id='healing_boost',
+    ),
+    NamedAbility(
+        id='disgusting_healing',
+        name="Ability: Disgusting Healing",
+        display_id='disgusting_healing',
+    ),
+    NamedAbility(
+        id='brute_force',
+        name="Ability: Brute Force",
+        display_id='brute_force',
+    ),
+
     # tool abilities
     AnonymousAbility(
         id='jungle_axe',
@@ -200,6 +240,48 @@ ABILITIES = [
         id='end_sword',
         display_id='damage_end',
         variables={'value': 100},
+    ),
+    AnonymousAbility(
+        id='revenant_falchion',
+        display_id='damage_zombie',
+        variables={'value': 150},
+    ),
+    AnonymousAbility(
+        id='reaper_falchion',
+        display_id='reaper_falchion',
+    ),
+    AnonymousAbility(
+        id='axe_of_the_shredded',
+        display_id='axe_of_the_shredded',
+    ),
+    AnonymousAbility(
+        id='scorpion_foil',
+        display_id='damage_spider',
+        variables={'value': 150},
+    ),
+    AnonymousAbility(
+        id='shaman_sword',
+        display_id='shaman_sword',
+    ),
+    AnonymousAbility(
+        id='pooch_sword',
+        display_id='pooch_sword',
+    ),
+    AnonymousAbility(
+        id='voidwalker_katana',
+        display_id='voidwalker_katana',
+    ),
+    AnonymousAbility(
+        id='voidedge_katana',
+        display_id='voidedge_katana',
+    ),
+    AnonymousAbility(
+        id='vorpal_katana',
+        display_id='vorpal_katana',
+    ),
+    AnonymousAbility(
+        id='atomsplit_katana',
+        display_id='atomsplit_katana',
     ),
 
     AnonymousAbility(
@@ -595,9 +677,37 @@ ABILITIES = [
         variables={'entities': 'zombies', 'percent': 15},
     ),
     AnonymousAbility(
+        id='devour_ring',
+        display_id='devour_ring'
+    ),
+    AnonymousAbility(
+        id='spider_talisman',
+        display_id='reduce_damage_taken',
+        variables={'entities': 'spiders', 'percent': 5},
+    ),
+    AnonymousAbility(
+        id='spider_ring',
+        display_id='reduce_damage_taken',
+        variables={'entities': 'spiders', 'percent': 10},
+    ),
+    AnonymousAbility(
+        id='spider_artifact',
+        display_id='reduce_damage_taken',
+        variables={'entities': 'spiders', 'percent': 15},
+    ),
+    AnonymousAbility(
+        id='tarantula_talisman',
+        display_id='tarantula_talisman'
+    ),
+    AnonymousAbility(
         id='ender_artifact',
         display_id='reduce_damage_taken',
         variables={'entities': 'end_mobs', 'percent': 20},
+    ),
+    AnonymousAbility(
+        id='ender_relic',
+        display_id='reduce_damage_taken',
+        variables={'entities': 'end_mobs', 'percent': 25},
     ),
     AnonymousAbility(
         id='wither_artifact',
@@ -642,10 +752,22 @@ ABILITIES = [
         id='hegemony_artifact',
         display_id='hegemony_artifact',
     ),
+
+    # three piece bonus
     NamedAbility(
-        id='trolling_the_reaper',
+        id='revenant_trolling_the_reaper',
         name='Full Set Bonus: Trolling The Reaper',
-        display_id='trolling_the_reaper',
+        display_id='revenant_trolling_the_reaper',
+    ),
+    NamedAbility(
+        id='reaper_trolling_the_reaper',
+        name='Full Set Bonus: Trolling The Reaper',
+        display_id='reaper_trolling_the_reaper',
+    ),
+    NamedAbility(
+        id='absolute_unit',
+        name='Full Set Bonus: Absolute Unit',
+        display_id='absolute_unit',
     ),
 
     TieredBonus(

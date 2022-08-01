@@ -2,7 +2,8 @@ __all__ = [
     'CUBISM_EFT',
     'BLAST_PROT_EFT', 'PROJ_PROT_EFT', 'IMPALING_EFT',
     'SEA_CREATURES',
-    'ZOMBIES', 'SKELETONS', 'SPIDERS', 'END_MOBS', 'WITHERS', 'NETHER_MOBS', 'UNDEADS',
+    'ZOMBIES', 'SPIDERS', 'WOLVES', 'SKELETONS', 'END_MOBS', 'ENDERMEN',
+    'WITHERS', 'NETHER_MOBS', 'UNDEADS',
     'BESTIARY_ALTER',
 ]
 
@@ -37,6 +38,13 @@ SEA_CREATURES = [
     'guardian_defender', 'deep_sea_protector', 'water_hydra', 'sea_emperor',
 ]
 
+ZOMBIES = [
+    'zombie', 'zombie_villager',
+    'crypt_ghoul', 'golden_ghoul',
+    'lapis_zombie', 'diamond_zombie',
+    'redstone_pigman', 'zombie_pigman',
+]
+
 SPIDERS = [
     'splitter_spider',
     'weaver_spider',
@@ -45,11 +53,9 @@ SPIDERS = [
     'spider_jockey',
 ]
 
-ZOMBIES = [
-    'zombie', 'zombie_villager',
-    'crypt_ghoul', 'golden_ghoul',
-    'lapis_zombie', 'diamond_zombie',
-    'redstone_pigman', 'zombie_pigman',
+WOLVES = [
+    'wolf', 'old_wolf',
+    'pack_spirit', 'howling_spirit', 'soul_of_the_alpha',
 ]
 
 SKELETONS = [
@@ -63,6 +69,13 @@ END_MOBS = [
     'zealot',
     'watcher',
     'obsidian_defender',
+    'voidling_fanatic',
+    'voidling_extremist',
+]
+
+ENDERMEN = [
+    'enderman',
+    'zealot',
     'voidling_fanatic',
     'voidling_extremist',
 ]

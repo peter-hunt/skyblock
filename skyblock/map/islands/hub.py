@@ -93,7 +93,10 @@ RUINS = Zone(
     'ruins', -250, -80, fishable=True,
     mobs=[get_mob('wolf'), get_mob('old_wolf')],
 )
-TAVERN = Zone('tavern', -85, -69)
+TAVERN = Zone(
+    'tavern', -85, -69,
+    npcs=[get_npc('bartender')],
+)
 VILLAGE = Zone(
     'village', -3, -85, fishable=True,
     npcs=[get_npc('andrew'), get_npc('armorsmith'), get_npc('duke'),

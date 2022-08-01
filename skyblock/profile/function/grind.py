@@ -1,3 +1,4 @@
+from bdb import effective
 from decimal import Decimal
 from math import ceil, floor
 from os import get_terminal_size
@@ -525,12 +526,47 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
         use_kill_count = True
 
     damage_bonus_mult = 1
-    if 'undead_sword' in weapon_abilities and name in UNDEADS:
+    damage_recieved_mult = 1
+
+    if 'axe_of_the_shredded' in weapon_abilities and name in ZOMBIES:
+        damage_bonus_mult *= 3.5
+        damage_recieved_mult *= 0.75
+    elif 'reaper_falchion' in weapon_abilities and name in ZOMBIES:
+        damage_bonus_mult *= 3
+        damage_recieved_mult *= 0.8
+    elif 'revenant_falchion' in weapon_abilities and name in ZOMBIES:
+        damage_bonus_mult *= 2.5
+    elif 'undead_sword' in weapon_abilities and name in UNDEADS:
         damage_bonus_mult *= 2
+
+    elif 'scorpion_foil' in weapon_abilities and name in SPIDERS:
+        damage_bonus_mult *= 2.5
     elif 'spider_sword' in weapon_abilities and name in SPIDERS:
         damage_bonus_mult *= 2
+
+    elif 'pooch_sword' in weapon_abilities and name in WOLVES:
+        damage_recieved_mult *= 0.8
+        strength += 150
+    elif 'shaman_sword' in weapon_abilities and name in WOLVES:
+        damage_recieved_mult *= 0.8
+
+    elif 'atomsplit_katana' in weapon_abilities and name in ENDERMEN:
+        damage_bonus_mult *= 5.5
+        damage_recieved_mult *= 0.88
+    elif 'vorpal_katana' in weapon_abilities and name in ENDERMEN:
+        damage_bonus_mult *= 4.5
+        damage_recieved_mult *= 0.91
+    elif 'voidedge_katana' in weapon_abilities and name in ENDERMEN:
+        damage_bonus_mult *= 3.5
+        damage_recieved_mult *= 0.94
+    elif 'voidwalker_katana' in weapon_abilities and name in ENDERMEN:
+        damage_bonus_mult *= 2.5
+        damage_recieved_mult *= 0.97
+
     elif 'end_sword' in weapon_abilities and name in END_MOBS:
         damage_bonus_mult *= 2
+
+    use_brute_force = 'brute_force' in getattr(self.armor[0], 'abilities', [])
 
     set_bonus = True
     for piece in self.armor:
@@ -577,9 +613,18 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
             if current_ability != three_set_bonus:
                 three_set_bonus = False
 
-    if three_set_bonus == 'trolling_the_reaper':
+    if three_set_bonus == 'reaper_trolling_the_reaper':
         if name in ZOMBIES:
             defense += 100
+            damage_bonus_mult *= 2
+        else:
+            damage_bonus_mult *= 0.01
+    elif three_set_bonus == 'revenant_trolling_the_reaper':
+        if name in ZOMBIES:
+            defense += 100
+    elif three_set_bonus == 'absolute_unit':
+        if name in WOLVES:
+            damage_recieved_mult *= 0.8
 
     enchants = 0
     enchants += 0.05 * weapon_enchants.get('sharpness', 0)
@@ -675,8 +720,6 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
     exp_mult *= 1 + get_ability('shimmer').tiered_variables['value'][tier] / 100
     fishing_exp_mult = 1 + 0.02 * weapon_enchants.get('expertise', 0)
 
-
-    damage_recieved_mult = 1
     if name in SEA_CREATURES:
         if self.has_item({'name': 'sea_creature_artifact'}):
             damage_recieved_mult *= 0.85
@@ -691,11 +734,22 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
             damage_recieved_mult *= 0.9
         elif self.has_item({'name': 'zombie_talisman'}):
             damage_recieved_mult *= 0.95
+    if name in SPIDERS:
+        if self.has_item({'name': 'spider_artifact'}):
+            damage_recieved_mult *= 0.85
+    elif name in SPIDERS:
+        if self.has_item({'name': 'spider_ring'}):
+            damage_recieved_mult *= 0.9
+    elif name in SPIDERS:
+        if self.has_item({'name': 'spider_talisman'}):
+            damage_recieved_mult *= 0.95
     if name in SKELETONS:
         if self.has_item({'name': 'skeleton_talisman'}):
             damage_recieved_mult *= 0.95
     if name in END_MOBS:
-        if self.has_item({'name': 'ender_artifact'}):
+        if self.has_item({'name': 'ender_relic'}):
+            damage_recieved_mult *= 0.75
+        elif self.has_item({'name': 'ender_artifact'}):
             damage_recieved_mult *= 0.8
     if name in WITHERS:
         if self.has_item({'name': 'wither_artifact'}):
@@ -834,12 +888,17 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
                 effective_enchants += (
                     min(prosecute * (mob_hp / mob.health), 0.35)
                 )
+                if use_brute_force:
+                    effective_enchants += actual_speed / 125
                 damage_mult = 1 + effective_enchants
                 damage_mult += (
                     0.04 * min(combat_level, 50)
                     + 0.01 * max(min(combat_level - 50, 10), 0)
                 )
                 damage_dealt *= damage_mult * damage_bonus_mult
+                if self.has_item({'name': 'tarantula_talisman'}):
+                    if strike_count % 10 == 9:
+                        damage_dealt *= 1.1
 
                 damage_dealt += (
                     (2 + fire_aspect_level) * 0.5 *
@@ -863,7 +922,14 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
                     healed += life_steal * health
                 if syphon != 0:
                     healed += syphon * health * (crit_damage // 100)
-                hp = min(hp + healed, health)
+                if self.has_item({'name': 'devour_ring'}):
+                    healed += 5
+                if 'axe_of_the_shredded' in weapon_abilities:
+                    healed += 50
+                elif 'reaper_falchion' in weapon_abilities:
+                    healed += 10
+
+                hp = min(hp + healed * healing_mult, health)
 
                 if mob_hp <= 0:
                     green(f"\nYou've killed a {mob_name}!")

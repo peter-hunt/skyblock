@@ -86,11 +86,23 @@ HUB_NPCS = [
             ('Leave your coins with me and you will also earn interest'
              ' at the start of every season!'),
         ]),
+    Npc('bartender',
+        init_dialog=[
+            'A great warrior is nothing without their armor!',
+            'Talk to me again to open the Armorsmith Shop!',
+        ],
+        trades=[
+            (({'name': 'revenant_minion', 'tier': 11},
+              {'name': 'revenant_viscera', 'count': 64},
+              2_000_000),
+             {'name': 'revenant_minion', 'tier': 12}),
+        ]),
     Npc('bea',
         init_dialog=[
-            'Hello! Do you have a pet?',
-            'Pets are little companions for your adventures in SkyBlock!',
-            'Personally, I prefer the bee pet!',
+            'Welcome to the Bar, friend!',
+            (f'These are tying times, indeed. The {RED}Graveyard{WHITE} is overflowing with monsters!'
+             f' Anyone who comes in is spooked off by the grunts of zombies in the distance.'),
+            "Could you give me a hand? If you help clear out some of these monsters, I'll pay you for it.",
         ],
         trades=[
             ((4999,

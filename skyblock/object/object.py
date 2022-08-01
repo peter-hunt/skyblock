@@ -29,6 +29,7 @@ class Item(ItemType):
     # common | uncommon | rare | epic | legendary |
     # mythic | divine | special | very_special
     rarity: str = 'common'
+    slayer_req: tuple[str, int] | None = None
 
     abilities: list[str] = []
 
@@ -45,6 +46,23 @@ class Accessory(ItemType):
     rarity: str = 'common'
     modifier: str | None = None
 
+    strength: int = 0
+    crit_chance: int = 0
+    crit_damage: int = 0
+    attack_speed: int = 0
+
+    health: int = 0
+    defense: int = 0
+    intelligence: int = 0
+    speed: int = 0
+    magic_find: int = 0
+    mining_speed: int = 0
+    mining_fortune: int = 0
+    true_defense: int = 0
+    ferocity: int = 0
+    sea_creature_chance: int = 0
+    pristine: int = 0
+
     slayer_req: tuple[str, int] | None = None
 
     abilities: list[str] = []
@@ -60,6 +78,7 @@ class Armor(ItemType):
     strength: int = 0
     crit_chance: int = 0
     crit_damage: int = 0
+    attack_speed: int = 0
 
     health: int = 0
     defense: int = 0

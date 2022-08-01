@@ -401,12 +401,7 @@ def get_stat(self, name: str, index: int | None = None, /, *,
 
     for item in self.inventory + self.accessory_bag:
         if isinstance(item, Accessory):
-            if item.modifier is not None:
-                modifier_bonus = get_modifier(item.modifier, item.rarity)
-                if item.name == 'hegemony_artifact':
-                    bonus_value += modifier_bonus.get(name, 0) * 2
-                else:
-                    bonus_value += modifier_bonus.get(name, 0)
+            bonus_value += item.get_stat(name, self)
 
     for piece in self.armor:
         if not isinstance(piece, Armor):
@@ -591,6 +586,8 @@ def get_stat(self, name: str, index: int | None = None, /, *,
     elif name == 'farming_fortune':
         base_value += farming_level * 4
 
+    if set_bonus == 'absolute_unit' and name == 'health':
+        bonus_value += 50 * self.get_stat('crit_damage', index)
     if set_bonus == 'superior_dragon_armor':
         bonus_value += (base_value + bonus_value) * 0.05
     if set_bonus == 'fairy_armor' and name == 'speed':
@@ -601,11 +598,18 @@ def get_stat(self, name: str, index: int | None = None, /, *,
             bonus_value += (base_value + bonus_value) * (0.1 * pet_mult)
 
     if cap is not None:
-        base_vaule = min(cap, base_value)
+        base_value = min(cap, base_value)
         bonus_value = min(cap - base_value, bonus_value)
     elif name in {'defense', 'speed', 'crit_chance'}:
         base_value = max(base_value, 0)
         bonus_value = max(base_value + bonus_value, 0) - base_value
+
+    if name == 'speed' and 'brute_force' in getattr(self.armor[0], 'abilities', []):
+        base_value /= 2
+        bonus_value /= 2
+    elif name == 'crit_damage' and set_bonus == 'absolute_unit':
+        base_value /= 2
+        bonus_value /= 2
 
     if separated:
         return base_value, bonus_value
