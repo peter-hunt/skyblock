@@ -1,5 +1,6 @@
 from itertools import cycle
 from math import isinf
+from os import name as os_name
 from re import fullmatch, sub
 from subprocess import call
 from textwrap import wrap
@@ -40,8 +41,12 @@ def checkpoint(func: FunctionType, /) -> FunctionType:
     return result
 
 
-def clear():
-    call(['clear'])
+if os_name == 'nt':
+    def clear():
+        call(['cls'], shell=True)
+else:
+    def clear():
+        call(['clear'])
 
 
 def _format_word(word: str, /) -> str:
