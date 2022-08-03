@@ -84,13 +84,17 @@ WITHERS = [
     'wither_skeleton',
 ]
 
-BLAZES = []
+BLAZES = [
+    'ashfang', 'bezal', 'blaze', 'flare', 'millenia_aged_blaze',
+    'mutated_blaze', 'smoldering_blaze',
+]
 
 NETHER_MOBS = [
-    'ghast',
-    'small_magma_cube', 'medium_magma_cube', 'large_magma_cube',
-    'zombie_pigman',
-    'blaze', 'mini_blaze',
+    'ashfang', 'barbarian', 'barbarian_duke_x', 'bezal', 'bladesoul', 'blaze', 'dive_ghast',
+    'fire_mage', 'flaming_spider', 'flare', 'ghast', 'goliath_barbarian', 'kada_knight',
+    'krondor_necromancer', 'mage_outlaw', 'magma_cube_boss', 'magma_cube_rider', 'magma_cube',
+    'millenia_aged_blaze', 'mushroom_bull', 'mutated_blaze', 'smoldering_blaze', 'vanquisher',
+    'wither_skeleton', 'wither_spectre',
 ]
 
 UNDEADS = ZOMBIES + SKELETONS + WITHERS

@@ -70,6 +70,10 @@ ABILITIES = [
     ),
 
     AnonymousAbility(
+        id='corrupted_fragment',
+        display_id='corrupted_fragment',
+    ),
+    AnonymousAbility(
         id='lumino_fiber',
         display_id='lumino_fiber',
     ),
@@ -118,12 +122,32 @@ ABILITIES = [
         display_id='magma_chunk',
     ),
     AnonymousAbility(
+        id='magmag',
+        display_id='magmag',
+    ),
+    AnonymousAbility(
         id='kada_lead',
         display_id='kada_lead',
     ),
     AnonymousAbility(
         id='digested_mushrooms',
         display_id='digested_mushrooms',
+    ),
+    AnonymousAbility(
+        id='compact_ooze',
+        display_id='compact_ooze',
+    ),
+    AnonymousAbility(
+        id='cup_of_blood',
+        display_id='cup_of_blood',
+    ),
+    AnonymousAbility(
+        id='horn_of_taurus',
+        display_id='horn_of_taurus',
+    ),
+    AnonymousAbility(
+        id='pyroclastic_scale',
+        display_id='pyroclastic_scale',
     ),
 
     AnonymousAbility(

@@ -3,7 +3,7 @@ __all__ = [
     'SPECIAL_ZONES', 'SPECIAL_NAMES', 'SPECIAL_ALTER', 'IGNORED_WORDS',
 ]
 
-Amount = list[int] | tuple[int, int] | int
+Amount = list[int] | tuple[int, int] | int | float
 Ench = dict[str, int]
 ItemPointer = dict[str, any]
 Number = float | int
@@ -37,8 +37,9 @@ SPECIAL_ZONES = {
     'nest': 'Top of Nest',
 
     'crimson': 'Crimson Isle',
-    'ashfang': 'Ruins of Ashfang',
+    'ashfang_ruins': 'Ruins of Ashfang',
     'burning': 'Burning Desert',
+    'dukedom': 'The Dukedom',
     'fields': 'Crimson Fields',
     'magma': 'Magma Chamber',
     'mystic': 'Mystic Marsh',
@@ -147,6 +148,9 @@ SPECIAL_NAMES = {
     'giants_sword': "Giant's Sword",
     'necrons_blade': "Necron's Blade",
     'tacticians_sword': "Tactician's Sword",
+
+    # mob
+    'millenia_aged_blaze': 'Millenia-Aged Blaze',
 
     # armor pieces
     'rosettas_helmet': "Rosetta's Helmet",

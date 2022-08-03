@@ -660,6 +660,9 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
         last_stand += 5 * piece_enchants.get('last_stand', 0)
         no_pain_no_gain.append(25 * piece_enchants.get('no_pain_no_gain', 0))
 
+        if piece.modifier == 'molten' and name in NETHER_MOBS:
+            damage_recieved_mult *= 0.98
+
     if healing_boost:
         healing_mult *= 2
 
