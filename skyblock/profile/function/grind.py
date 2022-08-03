@@ -663,6 +663,12 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
         if piece.modifier == 'molten' and name in NETHER_MOBS:
             damage_recieved_mult *= 0.98
 
+    if self.has_item({'name': 'healing_ring'}):
+        healing_mult += 0.1
+    elif self.has_item({'name': 'healing_talisman'}):
+        healing_mult += 0.05
+    if self.has_item({'name': 'survivor_cube'}):
+        healing_mult += 0.05
     if healing_boost:
         healing_mult *= 2
 
@@ -725,6 +731,12 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
     exp_mult *= 1 + get_ability('shimmer').tiered_variables['value'][tier] / 100
     fishing_exp_mult = 1 + 0.02 * weapon_enchants.get('expertise', 0)
 
+    combat_exp_mult = 1
+    if self.has_item({'name': 'hunter_ring'}):
+        combat_exp_mult *= 1.05
+    elif self.has_item({'name': 'hunter_talisman'}):
+        combat_exp_mult *= 1.02
+
     if name in SEA_CREATURES:
         if self.has_item({'name': 'sea_creature_artifact'}):
             damage_recieved_mult *= 0.85
@@ -780,11 +792,6 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
 
     if set_bonus == 'pumpkin_buff':
         damage_recieved_mult *= 0.9
-
-    if self.has_item({'name': 'healing_ring'}):
-        healing_mult *= 1.1
-    elif self.has_item({'name': 'healing_talisman'}):
-        healing_mult *= 1.05
 
     soul_eater = weapon_enchants.get('soul_eater', 0) * 2
     soul_eater_strength = 0
@@ -1071,7 +1078,7 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
         if getattr(mob, 'farming_exp', 0) != 0:
             self.add_skill_exp('farming', mob.farming_exp, display=True)
         if getattr(mob, 'combat_exp', 0) != 0:
-            self.add_skill_exp('combat', mob.combat_exp, display=True)
+            self.add_skill_exp('combat', mob.combat_exp * combat_exp_mult, display=True)
         if getattr(mob, 'fishing_exp', 0) != 0:
             self.add_skill_exp('fishing', random_amount(mob.fishing_exp, mult=fishing_exp_mult), display=True)
 

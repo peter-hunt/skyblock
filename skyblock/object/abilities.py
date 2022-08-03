@@ -181,6 +181,15 @@ ABILITIES = [
         display_id='rampart',
     ),
 
+    AnonymousAbility(
+        id='griffin_feather',
+        display_id='griffin_feather',
+    ),
+    AnonymousAbility(
+        id='soul_string',
+        display_id='soul_string',
+    ),
+
     # armor abilities
     NamedAbility(
         id='death_tax',

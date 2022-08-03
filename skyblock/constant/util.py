@@ -1,3 +1,6 @@
+from .colors import *
+
+
 __all__ = [
     'Amount', 'Ench', 'ItemPointer', 'Number', 'NUMBER_SCALES', 'ROMAN_NUM',
     'SPECIAL_ZONES', 'SPECIAL_NAMES', 'SPECIAL_ALTER', 'IGNORED_WORDS',
@@ -83,6 +86,9 @@ SPECIAL_NAMES = {
 
     'millenia_old_blaze_ashes': 'Millenia-Old Blaze Ashes',
     'netherrack_looking_sunshade': 'Netherrack-Looking Sunshade',
+
+    # weapon
+    'sinseeker_scythe': f'{DARK_RED}Sin{DARK_PURPLE}seeker Scythe',
 
     # gemstones
     'rough_ruby_gemstone': '❤ Rough Ruby Gemstone',
