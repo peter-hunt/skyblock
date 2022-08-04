@@ -362,11 +362,11 @@ class Mineral(Resource):
 class Mob:
     name: str
     level: int
-    tier: int | None = None
     health: int
     defense: int = 0
     damage: int = 0
     true_damage: int = 0
+    tier: int | None = None
 
     coins: int = 0
     exp: int = 0
