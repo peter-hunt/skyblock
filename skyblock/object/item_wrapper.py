@@ -188,7 +188,7 @@ def item_type(cls: type, /) -> type:
                 display_stat = format_name(stat_name)
                 ext = '%' if stat_name[0] in 'ac' else ''
 
-                value = fround(self.get_stat(stat_name), 1)
+                value = fround(self.get_stat(stat_name, profile), 1)
                 if value == 0:
                     continue
                 value_str = format_number(value, sign=True)
@@ -211,6 +211,7 @@ def item_type(cls: type, /) -> type:
                 display_stat = format_name(stat_name)
                 ext = ' HP' if stat_name[0] == 'h' else ''
 
+                modifier_bonus = get_modifier(self.modifier, self.rarity)
                 if stat_name not in modifier_bonus:
                     continue
 
