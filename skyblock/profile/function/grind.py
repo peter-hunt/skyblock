@@ -587,6 +587,9 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
         elif name in PIGMEN:
             damage_bonus_mult *= 1.2
 
+    damage_bonus_mult *= 1 + 0.04 * weapon_enchants.get('duplex', 0)
+    duplex_fire_mult = 1 + 0.1 * weapon_enchants.get('duplex', 0)
+
     use_brute_force = 'brute_force' in getattr(self.armor[0], 'abilities', [])
 
     set_bonus = True
@@ -818,6 +821,12 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
     if mob.level <= intimidation_level:
         damage_recieved_mult = 0
 
+    burststopper_perc = 1
+    if self.has_item({'name': 'burststopper_artifact'}):
+        burststopper_perc = 0.9
+    elif self.has_item({'name': 'burststopper_talisman'}):
+        burststopper_perc = 0.95
+
     if set_bonus == 'pumpkin_buff':
         damage_recieved_mult *= 0.9
 
@@ -934,8 +943,8 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
                     if strike_count % 10 == 9:
                         damage_dealt *= 1.1
 
-                damage_dealt *= 1 + fire_aspect_level * 0.03
-                damage_dealt += flame * 15
+                damage_dealt *= 1 + fire_aspect_level * 0.03 * duplex_fire_mult
+                damage_dealt += flame * 15 * duplex_fire_mult
 
                 if mob.name == 'ice_walker' and isinstance(weapon, Pickaxe):
                     pass
@@ -984,6 +993,8 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
             damage_recieved *= damage_recieved_mult
             if use_mithrils_protection:
                 damage_recieved = min(damage_recieved, health * 0.4)
+            if damage_recieved > 0.5 * hp:
+                damage_recieved *= burststopper_perc
             if damage_recieved != 0:
                 hp = max(hp - damage_recieved, 0)
                 gray(f"You've recieved {YELLOW}"
@@ -993,6 +1004,8 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
             true_damage_recieved *= damage_recieved_mult
             if use_mithrils_protection:
                 true_damage_recieved = min(true_damage_recieved, health * 0.4)
+            if true_damage_recieved > 0.5 * hp:
+                true_damage_recieved *= burststopper_perc
             if true_damage_recieved != 0:
                 hp = max(hp - true_damage_recieved, 0)
                 gray(f"You've recieved {YELLOW}"

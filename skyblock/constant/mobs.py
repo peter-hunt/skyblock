@@ -41,16 +41,19 @@ SEA_CREATURES = [
 ZOMBIES = [
     'zombie', 'zombie_villager',
     'crypt_ghoul', 'golden_ghoul',
-    'lapis_zombie', 'diamond_zombie',
-    'redstone_pigman', 'zombie_pigman',
+    'lapis_zombie', 'redstone_pigman', 'diamond_zombie',
+
+    'revenant_horror', 'atoned_horror',
+    'revenant_sychophant', 'revenant_champion', 'deformed_revenant',
+    'atoned_champion', 'atoned_revenant',
 ]
 
 SPIDERS = [
-    'splitter_spider',
-    'weaver_spider',
-    'voracious_spider',
-    'dasher_spider',
-    'spider_jockey',
+    'splitter_spider', 'weaver_spider', 'voracious_spider',
+    'dasher_spider', 'spider_jockey',
+
+    'tarantula_broodfather',
+    'tarantula_vermin', 'tarantula_beast', 'mutant_tarantula',
 ]
 
 WOLVES = [
@@ -76,10 +79,10 @@ END_MOBS = [
 ] + DRAGONS
 
 ENDERMEN = [
-    'enderman',
-    'zealot',
-    'voidling_fanatic',
-    'voidling_extremist',
+    'enderman', 'zealot', 'voidling_fanatic', 'voidling_extremist',
+
+    'voidgloom_seraph',
+    'voidling_devotee', 'voidling_radical', 'voidcrazed_maniac',
 ]
 
 WITHERS = [
@@ -97,6 +100,9 @@ NETHER_MOBS = [
 BLAZES = [
     'ashfang', 'bezal', 'blaze', 'flare', 'millenia_aged_blaze',
     'mutated_blaze', 'smoldering_blaze',
+
+    'inferno_demonlord',
+    'flare_demon', 'kindleheart_demon', 'burningsoul_demon',
 ]
 
 PIGMEN = []

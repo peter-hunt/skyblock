@@ -116,6 +116,7 @@ To check command usage, type `help` for command documentation.
 * Commissions
 * Crystal Hollows
 * Diana, Griffin Pet and **Mythological** creature
+* Dragons
 * Dungeons
 * Fairy Souls
 * Forging (Forging recipes already are accessible)
