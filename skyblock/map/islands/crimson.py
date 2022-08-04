@@ -20,7 +20,7 @@ BARBARIAN_OUTPOST = Zone(
           get_mob('goliath_barbarian')],
 )
 BURNING_DESERT = Zone(
-    'burning', -550, -1000,
+    'burning', -550, -1000,  # -500, -750
     resources=[get_resource('netherrack'),
                get_resource('red_sand')],
     mobs=[get_mob('flaming_spider'),
@@ -33,18 +33,18 @@ COURTYARD = Zone(
     mobs=[get_mob('mage_outlaw')],
 )
 DRAGONTAIL = Zone(
-    'dragontail', -800, -1000,
+    'dragontail', -800, -1000,  # -600, -800
     resources=[get_resource('netherrack'),
                get_resource('red_sand')],
 )
 DUKEDOM = Zone(
-    'dukedom', -650, -1200,
+    'dukedom', -650, -1200,  # -550, -900
     resources=[get_resource('netherrack'),
                get_resource('red_sand')],
     mobs=[get_mob('barbarian_duke_x')],
 )
 FIELDS = Zone(
-    'fields', -400, -600,
+    'fields', -400, -600,  # -350, -650
     resources=[get_resource('netherrack')],
     mobs=[get_mob('magma_cube')],
 )
@@ -57,7 +57,7 @@ MAGE_OUTPOST = Zone(
           get_mob('krondor_necromancer')],
 )
 MAGMA = Zone(
-    'magma', -370, -1000,
+    'magma', -370, -1000,  # -350, -800
     resources=[get_resource('glowstone'),
                get_resource('quartz_ore'),
                get_resource('netherrack')],
@@ -83,7 +83,7 @@ SMOLDERING = Zone(
           get_mob('smoldering_blaze')],
 )
 STRONGHOLD = Zone(
-    'stronghold', -400, -500,
+    'stronghold', -400, -500,  # -350, -500
     npcs=[get_npc('elle_of_the_nether')],
     resources=[get_resource('netherrack'),
                get_resource('nether_wart')],

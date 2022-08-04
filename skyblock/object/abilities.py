@@ -68,6 +68,30 @@ ABILITIES = [
         id='ender_artifact_upgrader',
         display_id='ender_artifact_upgrader',
     ),
+    AnonymousAbility(
+        id='crude_gabagool',
+        display_id='crude_gabagool',
+    ),
+    AnonymousAbility(
+        id='fuel_gabagool',
+        display_id='fuel_gabagool',
+    ),
+    AnonymousAbility(
+        id='heavy_gabagool',
+        display_id='heavy_gabagool',
+    ),
+    AnonymousAbility(
+        id='hypergolic_gabagool',
+        display_id='hypergolic_gabagool',
+    ),
+    AnonymousAbility(
+        id='inferno_vertex',
+        display_id='inferno_vertex',
+    ),
+    AnonymousAbility(
+        id='inferno_apex',
+        display_id='inferno_apex',
+    ),
 
     AnonymousAbility(
         id='corrupted_fragment',
@@ -403,6 +427,22 @@ ABILITIES = [
     AnonymousAbility(
         id='atomsplit_katana',
         display_id='atomsplit_katana',
+    ),
+    AnonymousAbility(
+        id='twilight_dagger',
+        display_id='twilight_dagger',
+    ),
+    AnonymousAbility(
+        id='firedust_dagger',
+        display_id='firedust_dagger',
+    ),
+    AnonymousAbility(
+        id='mawdredge_dagger',
+        display_id='mawdredge_dagger',
+    ),
+    AnonymousAbility(
+        id='kindlebane_dagger',
+        display_id='kindlebane_dagger',
     ),
 
     AnonymousAbility(

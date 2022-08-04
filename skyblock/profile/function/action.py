@@ -298,6 +298,25 @@ def consume(self, index: int, amount: int = 1, /):
         if self.inventory[index].count == 0:
             self.inventory[index] = Empty()
 
+    elif item.name == 'reaper_pepper':
+        if self.reaper_peppers == 0:
+            green("You've eaten a reaper pepper, it's delicious!")
+        elif self.reaper_peppers == 1:
+            green("You've eaten a reaper pepper, it's uh... really hot.")
+        elif self.reaper_peppers == 2:
+            green("You've eaten a reaper pepper and begun regretting this decision.")
+        elif self.reaper_peppers == 3:
+            green("You've eaten a reaper pepper, where is the MILK??")
+        elif self.reaper_peppers == 4:
+            green("You've eaten a reaper pepper, you feel death creeping up in your spine."
+                  " Your whole life flashes by. Is that what it means to be endgame?")
+        else:
+            red('You already ate the maximum number of reaper peppers!')
+            red('You may want to visit a hospital ASAP.')
+            return
+        self.reaper_peppers += 1
+        self.inventory[index] = Empty()
+
     else:
         red('This item is not consumable!')
 

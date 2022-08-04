@@ -566,6 +566,27 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
     elif 'end_sword' in weapon_abilities and name in END_MOBS:
         damage_bonus_mult *= 2
 
+    elif 'twilight_dagger' in weapon_abilities:
+        if name in BLAZES:
+            damage_bonus_mult *= 1.5
+        elif name in SKELETONS:
+            damage_bonus_mult *= 1.2
+    elif 'firedust_dagger' in weapon_abilities:
+        if name in BLAZES:
+            damage_bonus_mult *= 1.2
+        elif name in PIGMEN:
+            damage_bonus_mult *= 1.1
+    elif 'mawdredge_dagger' in weapon_abilities:
+        if name in BLAZES:
+            damage_bonus_mult *= 2.5
+        elif name in SKELETONS:
+            damage_bonus_mult *= 1.5
+    elif 'kindlebane_dagger' in weapon_abilities:
+        if name in BLAZES:
+            damage_bonus_mult *= 1.5
+        elif name in PIGMEN:
+            damage_bonus_mult *= 1.2
+
     use_brute_force = 'brute_force' in getattr(self.armor[0], 'abilities', [])
 
     set_bonus = True

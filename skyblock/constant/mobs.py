@@ -3,7 +3,7 @@ __all__ = [
     'BLAST_PROT_EFT', 'PROJ_PROT_EFT', 'IMPALING_EFT',
     'SEA_CREATURES',
     'ZOMBIES', 'SPIDERS', 'WOLVES', 'SKELETONS', 'END_MOBS', 'ENDERMEN',
-    'WITHERS', 'BLAZES', 'NETHER_MOBS', 'UNDEADS',
+    'WITHERS', 'NETHER_MOBS', 'BLAZES', 'PIGMEN', 'UNDEADS',
     'BESTIARY_ALTER',
 ]
 
@@ -84,11 +84,6 @@ WITHERS = [
     'wither_skeleton',
 ]
 
-BLAZES = [
-    'ashfang', 'bezal', 'blaze', 'flare', 'millenia_aged_blaze',
-    'mutated_blaze', 'smoldering_blaze',
-]
-
 NETHER_MOBS = [
     'ashfang', 'barbarian', 'barbarian_duke_x', 'bezal', 'bladesoul', 'blaze', 'dive_ghast',
     'fire_mage', 'flaming_spider', 'flare', 'ghast', 'goliath_barbarian', 'kada_knight',
@@ -96,6 +91,13 @@ NETHER_MOBS = [
     'millenia_aged_blaze', 'mushroom_bull', 'mutated_blaze', 'smoldering_blaze', 'vanquisher',
     'wither_skeleton', 'wither_spectre',
 ]
+
+BLAZES = [
+    'ashfang', 'bezal', 'blaze', 'flare', 'millenia_aged_blaze',
+    'mutated_blaze', 'smoldering_blaze',
+]
+
+PIGMEN = []
 
 UNDEADS = ZOMBIES + SKELETONS + WITHERS
 

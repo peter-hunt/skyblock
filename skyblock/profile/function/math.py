@@ -469,6 +469,7 @@ def get_stat(self, name: str, index: int | None = None, /, *,
         if has_active_pet:
             if 'archimedes' in active_pet.abilities:
                 bonus_value += (base_value + bonus_value) * (0.2 * pet_mult)
+        bonus_value += self.reaper_peppers
     elif name == 'defense':
         base_value += min(mining_level, 14) * 1
         base_value += max(min(mining_level - 14, 46), 0) * 2

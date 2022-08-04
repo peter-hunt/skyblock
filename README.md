@@ -106,6 +106,7 @@ To check command usage, type `help` for command documentation.
 * Modifiers and Reforging
 * Pets and Pet Score
 * Skills
+* Slayers items
 
 ## Planned Features:
 
@@ -113,7 +114,6 @@ To check command usage, type `help` for command documentation.
 * Arachane
 * Brewing and Potion effects
 * Commissions
-* Crimson Isle
 * Crystal Hollows
 * Diana, Griffin Pet and **Mythological** creature
 * Dungeons
@@ -124,7 +124,10 @@ To check command usage, type `help` for command documentation.
 * Minion Support Items
 * NPC Usage (like Kat, Fetchur, etc.)
 * Pet Support Items
-* Templates organized into files for translation update (abilities included)
+* Power Stones and Magic Power
+* Slayers Recipes and Quests
+* Templates and abilities optimation
+* Templates organized for translation update (abilities included)
 
 # Example Saves
 

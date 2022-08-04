@@ -38,6 +38,8 @@ class Profile:
         collection.name: 0 for collection in COLLECTIONS
     }
 
+    reaper_peppers: int = 0
+
     crafted_minions: list[str] = []
     fast_travel: list[str] = [('hub', None)]
 
