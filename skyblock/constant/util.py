@@ -249,6 +249,7 @@ SPECIAL_NAMES = {
 
     # rarity
     'pray_rngesus': 'Pray RNGesus',
+    'rngesus_incarnate': 'RNGesus Incarnate',
 }
 
 SPECIAL_ALTER = {

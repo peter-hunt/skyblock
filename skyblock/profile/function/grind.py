@@ -648,23 +648,29 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
             damage_recieved_mult *= 0.8
 
     enchants = 0
-    enchants += 0.05 * weapon_enchants.get('sharpness', 0)
+    enchants += {1: 0.05, 2: 0.1, 3: 0.15, 4: 0.2, 5: 0.3,
+                 6: 0.45, 7: 0.65}.get(weapon_enchants.get('sharpness', 0), 0)
+    enchants += {1: 0.08, 2: 0.16, 3: 0.24, 4: 0.32, 5: 0.4,
+                 6: 0.5, 7: 0.65}.get(weapon_enchants.get('power', 0), 0)
     if name in UNDEADS:
-        enchants += 0.08 * weapon_enchants.get('smite', 0)
+        enchants += {1: 0.1, 2: 0.2, 3: 0.3, 4: 0.4, 5: 0.6,
+                     6: 0.8, 7: 1}.get(weapon_enchants.get('smite', 0), 0)
     if name in SPIDERS:
-        enchants += 0.08 * weapon_enchants.get('bane_of_arthropods', 0)
+        enchants += {1: 0.1, 2: 0.2, 3: 0.3, 4: 0.4, 5: 0.6,
+                     6: 0.8, 7: 1}.get(weapon_enchants.get('bane_of_arthropods', 0), 0)
     if name in END_MOBS:
-        enchants += 0.12 * weapon_enchants.get('ender_slayer', 0)
+        enchants += {1: 0.15, 2: 0.3, 3: 0.45, 4: 0.6, 5: 0.8,
+                     6: 1, 7: 1.3}.get(weapon_enchants.get('ender_slayer', 0), 0)
+    if name in DRAGONS:
+        enchants += 0.08 * weapon_enchants.get('dragon_hunter', 0)
     if name in BLAZES:
         enchants += 0.03 * weapon_enchants.get('smoldering', 0)
     if name in CUBISM_EFT:
-        enchants += 0.1 * weapon_enchants.get('cubism', 0)
+        enchants += {1: 0.1, 2: 0.2, 3: 0.3, 4: 0.4, 5: 0.6,
+                     6: 0.8}.get(weapon_enchants.get('cubism', 0), 0)
     if name in IMPALING_EFT:
         enchants += 0.125 * weapon_enchants.get('impaling', 0)
-    enchants += 0.08 * weapon_enchants.get('power', 0)
     enchants += 0.05 * weapon_enchants.get('spiked_hook', 0)
-
-    ferocity += weapon_enchants.get('vicious', 0)
 
     healing_mult = 1
     healing_boost = False
@@ -702,12 +708,16 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
 
     enchanting_level = self.get_skill_level('enchanting')
 
-    execute = 0.2 * weapon_enchants.get('execute', 0)
+    execute = {1: 0.2, 2: 0.4, 3: 0.6, 4: 0.8, 5: 1,
+               6: 1.25}.get(weapon_enchants.get('execute', 0), 0)
     fire_aspect_level = weapon_enchants.get('fire_aspect_level', 0)
     first_strike = 0.25 * weapon_enchants.get('first_strike', 0)
     flame = weapon_enchants.get('flame', 0)
-    giant_killer = 0.001 * weapon_enchants.get('giant_killer', 0)
-    infinite_quiver = weapon_enchants.get('infinite_quiver', 0)
+    giant_killer_perc += {1: 0.001, 2: 0.002, 3: 0.003, 4: 0.004, 5: 0.006,
+                          6: 0.009, 7: 0.012}.get(weapon_enchants.get('giant_killer', 0), 0)
+    giant_killer_dmg += {1: 0.05, 2: 0.1, 3: 0.15, 4: 0.2, 5: 0.3,
+                         6: 0.45, 7: 0.65}.get(weapon_enchants.get('giant_killer', 0), 0)
+    infinite_quiver_chnc = 0.03 * weapon_enchants.get('infinite_quiver', 0)
     knockback = 1 + 0.1 * weapon_enchants.get('knockback', 0)
     life_steal = 0.005 * weapon_enchants.get('life_steal', 0)
     if isinstance(weapon, Bow):
@@ -717,28 +727,25 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
     else:
         looting = 1
     luck = 1 + 0.05 * weapon_enchants.get('luck', 0)
-    overload = weapon_enchants.get('overload', 0)
-    prosecute = 0.1 * weapon_enchants.get('prosecute', 0)
+    overload_chnc = 0.1 * weapon_enchants.get('overload', 0)
+    prosecute = {1: 0.1, 2: 0.2, 3: 0.3, 4: 0.4, 5: 0.7,
+                 6: 1}.get(weapon_enchants.get('prosecute', 0), 0)
     punch = 1 + 0.08 * weapon_enchants.get('punch', 0)
     scavenger = 0.3 * weapon_enchants.get('scavenger', 0)
     if set_bonus == 'death_tax' and mob.level >= 10:
         scavenger += 5
     if 'raider_axe' in weapon_abilities and mob.level >= 10:
         scavenger += 20
-    if 'syphon' in weapon_enchants:
-        syphon = 0.1 + 0.1 * weapon_enchants['syphon']
-    else:
-        syphon = 0
-    titan_killer = 0.02 * weapon_enchants.get('titan_killer', 0)
+    syphon += {1: 0.2, 2: 0.3, 3: 0.4, 4: 0.5, 5: 0.6}.get(weapon_enchants.get('syphon', 0), 0)
+    titan_killer_perc = {1: 0.02, 2: 0.04, 3: 0.06, 4: 0.08, 5: 0.12,
+                         6: 0.16, 6: 0.2}.get(weapon_enchants.get('titan_killer', 0), 0)
+    titan_killer_dmg = {1: 0.06, 2: 0.12, 3: 0.18, 4: 0.24, 5: 0.4,
+                        6: 0.6, 6: 0.8}.get(weapon_enchants.get('titan_killer', 0), 0)
     triple_strike = 0.1 * weapon_enchants.get('triple_strike', 0)
-    thunderbolt = 0.15 * weapon_enchants.get('thunderbolt', 0)
-    thunderlord_level = weapon_enchants.get('thunderlord', 0)
-    if thunderlord_level <= 3:
-        thunderlord = 0.3 * thunderlord_level
-    elif thunderlord_level <= 5:
-        thunderlord = 0.25 * thunderlord_level
-    else:
-        thunderlord = 0.3 * thunderlord_level
+    thunderbolt += {1: 0.04, 2: 0.08, 3: 0.12, 4: 0.16, 5: 0.2,
+                    6: 0.25}.get(weapon_enchants.get('thunderbolt', 0), 0)
+    thunderlord += {1: 0.08, 2: 0.16, 3: 0.24, 4: 0.32, 5: 0.4,
+                    6: 0.5, 7: 0.6}.get(weapon_enchants.get('thunderbolt', 0), 0)
     vampirism = weapon_enchants.get('vampirism', 0)
 
     coins_mult = 1 + 0.01 * bestiary_level
@@ -817,9 +824,6 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
     soul_eater = weapon_enchants.get('soul_eater', 0) * 2
     soul_eater_strength = 0
 
-    crit_chance += overload
-    crit_damage += overload
-
     hp = health
 
     last_cp = Decimal()
@@ -864,12 +868,11 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
         while True:
             weapon_dmg = 0 if isinstance(weapon, Empty) else weapon.get_stat('damage', self)
 
-            if isinstance(weapon, Bow) and infinite_quiver != 10:
-                if not self.has_item({'name': 'arrow', 'count': 1}):
-                    red("You don't have any arrows in your inventory!")
-                    return
-                if random_bool(1 - infinite_quiver / 10):
-                    self.remove_item({'name': 'arrow', 'count': 1})
+            if not self.has_item({'name': 'arrow', 'count': 1}):
+                red("You don't have any arrows in your inventory!")
+                return
+            if random_bool(infinite_quiver_chnc):
+                self.remove_item({'name': 'arrow', 'count': 1})
 
             killed = False
 
@@ -894,7 +897,7 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
                 is_crit = False
                 if random_bool(crit_chance / 100):
                     damage_dealt *= 1 + crit_damage / 100
-                    if crit_chance >= 100 and random_bool(overload * 0.1):
+                    if crit_chance >= 100 and random_bool(overload_chnc):
                         damage_dealt *= 1.1
                     is_crit = True
 
@@ -910,17 +913,15 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
                 if strike_count < 3:
                     effective_enchants += triple_strike
                 effective_enchants += (
-                    min(giant_killer * (mob_hp - hp), giant_killer * 0.05)
+                    min(giant_killer_perc * ((mob_hp - hp) / hp / 100), giant_killer_dmg)
                 )
                 effective_enchants += (
-                    min(titan_killer * mob.defense / 100, 0.5)
+                    min(titan_killer_perc * mob.defense / 100, titan_killer_dmg)
                 )
                 effective_enchants += (
                     (execute / 100) * (1 - mob_hp / mob.health)
                 )
-                effective_enchants += (
-                    min(prosecute * (mob_hp / mob.health), 0.35)
-                )
+                effective_enchants += prosecute * (mob_hp / mob.health)
                 if use_brute_force:
                     effective_enchants += actual_speed / 125
                 damage_mult = 1 + effective_enchants
@@ -933,10 +934,7 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
                     if strike_count % 10 == 9:
                         damage_dealt *= 1.1
 
-                damage_dealt += (
-                    (2 + fire_aspect_level) * 0.5 *
-                    fire_aspect_level * weapon_dmg
-                )
+                damage_dealt *= 1 + fire_aspect_level * 0.03
                 damage_dealt += flame * 15
 
                 if mob.name == 'ice_walker' and isinstance(weapon, Pickaxe):
@@ -1073,8 +1071,7 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
             if rarity not in {'common', 'uncommon'}:
                 if getattr(item, 'count', 1) != 1:
                     item.count = 1
-                rarity_str = rarity.replace('_', ' ').upper()
-                white(f'{RARITY_COLORS[rarity]}{rarity_str} DROP! '
+                white(f'{RARITY_COLORS[rarity]}{format_name(rarity)} DROP! '
                       f'{WHITE}({item.display()}{WHITE}) {magic_find_str}')
 
         if 'diamond' in mob.name:

@@ -901,7 +901,11 @@ def item_type(cls: type, /) -> type:
         elif name == 'speed':
             value += enchants.get('sugar_rush', 0) * 2
         elif name == 'crit_damage':
-            value += enchants.get('critical', 0) * 10
+            value += {1: 10, 2: 20, 3: 30, 4: 40, 5: 50,
+                      6: 70, 7: 100}.get(enchants.get('critical', 0), 0)
+            value += enchants.get('overload', 0)
+        elif name == 'crit_chance':
+            value += enchants.get('overload', 0)
         elif name == 'mining_speed':
             if enchants.get('efficiency', 0) != 0:
                 value += 10 + 20 * enchants['efficiency']
@@ -909,6 +913,13 @@ def item_type(cls: type, /) -> type:
             value += enchants.get('angler', 0)
         elif name == 'ferocity':
             value += enchants.get('vicious', 0)
+
+        elif name == 'farming_fortune':
+            value += 12.5 * enchants.get('harvesting', 0)
+        elif name == 'mining_fortune':
+            value += {1: 10, 2: 20, 3: 30, 4: 45}.get(enchants.get('fortune', 0), 0)
+        elif name == 'pristine':
+            value += enchants.get('pristine', 0)
 
         if self.__class__.__name__ == 'Armor':
             if name == 'health':

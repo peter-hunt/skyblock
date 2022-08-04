@@ -2,7 +2,7 @@ __all__ = [
     'CUBISM_EFT',
     'BLAST_PROT_EFT', 'PROJ_PROT_EFT', 'IMPALING_EFT',
     'SEA_CREATURES',
-    'ZOMBIES', 'SPIDERS', 'WOLVES', 'SKELETONS', 'END_MOBS', 'ENDERMEN',
+    'ZOMBIES', 'SPIDERS', 'WOLVES', 'SKELETONS', 'DRAGONS', 'END_MOBS', 'ENDERMEN',
     'WITHERS', 'NETHER_MOBS', 'BLAZES', 'PIGMEN', 'UNDEADS',
     'BESTIARY_ALTER',
 ]
@@ -63,6 +63,8 @@ SKELETONS = [
     'diamond_skeleton',
 ]
 
+DRAGONS = []
+
 END_MOBS = [
     'enderman',
     'endermite',
@@ -71,7 +73,7 @@ END_MOBS = [
     'obsidian_defender',
     'voidling_fanatic',
     'voidling_extremist',
-]
+] + DRAGONS
 
 ENDERMEN = [
     'enderman',

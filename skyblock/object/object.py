@@ -362,6 +362,7 @@ class Mineral(Resource):
 class Mob:
     name: str
     level: int
+    tier: int | None = None
     health: int
     defense: int = 0
     damage: int = 0
@@ -372,6 +373,7 @@ class Mob:
     farming_exp: int = 0
     combat_exp: int = 0
     fishing_exp: int = 0
+    slayer_exp: tuple[str, int] | None = None
     drops: list[tuple[ItemPointer, Amount, str, Number]] = []
 
 

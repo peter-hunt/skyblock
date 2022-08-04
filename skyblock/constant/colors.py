@@ -45,7 +45,10 @@ RARITY_COLORS = {
     'very_special': f'{BOLD}{RED}',
 
     'rngesus': f'{BOLD}{LIGHT_PURPLE}',
+
+    'extraodinary': f'{BOLD}{DARK_PURPLE}',
     'pray_rngesus': f'{BOLD}{LIGHT_PURPLE}',
+    'rngesus_incarnate': f'{BOLD}{RED}',
 
     'good_catch': f'{BOLD}{GREEN}',
     'great_catch': f'{BOLD}{LIGHT_PURPLE}',
