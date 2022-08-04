@@ -99,6 +99,7 @@ To check command usage, type `help` for command documentation.
 * Crafting
 * Collections
 * Combining Enchantments, Reforge Stone, and Potato Books
+* Dyes
 * Farming, Mining, Simple Combat, Foraging, Fishing, and Enchanting
 * Fast Traveling
 * NPC Buying and Trading items

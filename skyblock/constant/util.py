@@ -248,6 +248,7 @@ SPECIAL_NAMES = {
     'necromancers_brooch': "Necromancer's Brooch",
 
     # rarity
+    'rngesus': 'RNGesus',
     'pray_rngesus': 'Pray RNGesus',
     'rngesus_incarnate': 'RNGesus Incarnate',
 }

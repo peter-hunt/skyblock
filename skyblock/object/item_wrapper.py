@@ -96,6 +96,13 @@ def item_type(cls: type, /) -> type:
         if self.__class__.__name__ == 'Empty':
             return f'{BOLD}{WHITE}Empty{CLN}'
 
+        use_dye = False
+        dye_color = ''
+        if self.__class__.__name__ == 'Armor':
+            if self.dye is not None:
+                use_dye = True
+                dye_color = DYE_COLORS.get(self.dye, GRAY)
+
         if self.__class__.__name__ == 'Minion':
             rarity_color = RARITY_COLORS['rare']
         else:
@@ -128,10 +135,15 @@ def item_type(cls: type, /) -> type:
 
         if self.__class__.__name__ == 'Pet':
             lvl = calc_pet_level(self.rarity, self.exp)
-            return f'{GRAY}[Lvl {lvl}] {rarity_color}{name}'
+            return f'{GRAY}[Lvl {lvl}] {rarity_color}{name}{CLN}'
         elif self.__class__.__name__ == 'Minion':
             tier_str = format_roman(self.tier)
-            return f'{rarity_color}{name} {tier_str}'
+            return f'{rarity_color}{name} {tier_str}{CLN}'
+        elif self.__class__.__name__ == 'Dye':
+            r, g, b = self.color
+            return f'\x1b[0;38;2;{r};{g};{b}m{name}{CLN}'
+        elif use_dye:
+            return f'{dye_color}✿ {name}{stars}{DARK_GRAY}{count}{CLN}'
         else:
             return f'{rarity_color}{name}{stars}{DARK_GRAY}{count}{CLN}'
 
@@ -152,6 +164,13 @@ def item_type(cls: type, /) -> type:
             pass
         elif getattr(self, 'modifier', None) is not None:
             modifier = f'{self.modifier.capitalize()} '
+
+        use_dye = False
+        dye_color = ''
+        if self.__class__.__name__ == 'Armor':
+            if self.dye is not None:
+                use_dye = True
+                dye_color = DYE_COLORS.get(self.dye, CLN)
 
         if self.__class__.__name__ == 'TravelScroll':
             name = f'Travel Scroll to {format_name(self.island)}'
@@ -176,6 +195,14 @@ def item_type(cls: type, /) -> type:
         elif self.__class__.__name__ == 'Minion':
             tier_str = format_roman(self.tier)
             info = f'{rarity_color}{name} {tier_str}'
+        elif self.__class__.__name__ == 'Dye':
+            r, g, b = self.color
+            info = f'\x1b[0;38;2;{r};{g};{b}m{name}'
+        elif self.__class__.__name__ == 'Armor':
+            if use_dye:
+                info = f'{dye_color}✿ {modifier}{name}{stars}'
+            else:
+                info = f'{rarity_color}{modifier}{name}{stars}'
         else:
             info = f'{rarity_color}{modifier}{name}{stars}'
 
@@ -624,6 +651,11 @@ def item_type(cls: type, /) -> type:
                      f'Island: {GREEN}{format_zone(self.island)}{GRAY}\n'
                      f'Teleport: {YELLOW}{r_name}')
 
+        elif self.__class__.__name__ == 'Dye':
+            r, g, b = self.color
+            info += (f'\n{GRAY}Apply to any armor piece using an anvil to change its color.\n\n'
+                     f'Color: \x1b[0;38;2;{r};{g};{b}m#{r:02X}{g:02X}{b:02X}')
+
         ability_list = []
 
         if self.__class__.__name__ == 'Pet':
@@ -753,6 +785,9 @@ def item_type(cls: type, /) -> type:
                 f'{GRAY}Max Storage: {YELLOW}{self.slots * 64}'
             ])
 
+        if use_dye:
+            footers.append(f'{dye_color}✿ {self.dye.capitalize()} Dyed')
+
         if self.__class__.__name__ == 'Armor':
             type_name = self.part.upper()
         elif self.__class__.__name__ == 'FishingRod':
@@ -760,7 +795,7 @@ def item_type(cls: type, /) -> type:
         elif self.__class__.__name__ == 'ReforgeStone':
             type_name = 'REFORGE STONE'
         elif self.__class__.__name__ in {
-            'Item', 'Pet', 'TravelScroll', 'EnchantedBook', 'Minion',
+            'Item', 'Pet', 'TravelScroll', 'EnchantedBook', 'Minion', 'Dye',
         }:
             type_name = ''
         else:

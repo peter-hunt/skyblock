@@ -59,11 +59,16 @@ SPIDERS = [
 WOLVES = [
     'wolf', 'old_wolf',
     'pack_spirit', 'howling_spirit', 'soul_of_the_alpha',
+
+    'sven_packmaster',
+    'pack_enforcer', 'sven_follower', 'sven_alpha',
 ]
 
 SKELETONS = [
-    'skeleton', 'gravel_skeleton',
-    'diamond_skeleton',
+    'skeleton', 'diamond_skeleton',
+    'gravel_skeleton', 'spider_jockey',
+    'watcher', 'obsidian_defender',
+    'sea_archer', 'sea_emperor',
 ]
 
 DRAGONS = []

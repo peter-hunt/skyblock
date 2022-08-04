@@ -129,9 +129,10 @@ def _recieve_item(self, pointer: ItemPointer, /) -> ItemPointer:
     counter = count
     name = pointer['name']
     kwargs = {key: pointer[key] for key in pointer
-              if key not in {'name', 'count', 'abilities', 'damage', 'active', 'exp', 'kill_count'} | {*STAT_COLORS.keys()}}
+              if key not in {'name', 'count', 'abilities', 'damage', 'active', 'exp',
+                             'kill_count', 'dye'} | {*STAT_COLORS.keys()}}
     set_attrs = {key: pointer[key] for key in pointer
-                 if key in {'abilities', 'damage', 'exp', 'kill_count'} | {*STAT_COLORS.keys()}}
+                 if key in {'abilities', 'damage', 'dye', 'exp', 'kill_count'} | {*STAT_COLORS.keys()}}
 
     item_obj = get_item(name, **kwargs)
     item_obj.count = count
@@ -184,9 +185,10 @@ def recieve_item(self, pointer: ItemPointer, /):
     count = pointer.get('count', 1)
     name = pointer['name']
     kwargs = {key: pointer[key] for key in pointer
-              if key not in {'name', 'count', 'abilities', 'damage', 'active', 'exp', 'kill_count'} | {*STAT_COLORS.keys()}}
+              if key not in {'name', 'count', 'abilities', 'damage', 'active', 'exp',
+                             'kill_count', 'dye'} | {*STAT_COLORS.keys()}}
     set_attrs = {key: pointer[key] for key in pointer
-                 if key in {'abilities', 'damage', 'exp', 'kill_count'} | {*STAT_COLORS.keys()}}
+                 if key in {'abilities', 'damage', 'dye', 'exp', 'kill_count'} | {*STAT_COLORS.keys()}}
 
     item = get_item(name, **kwargs)
     item.count = count

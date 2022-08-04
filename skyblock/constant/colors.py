@@ -3,7 +3,7 @@ __all__ = [
     'BLACK', 'DARK_BLUE', 'DARK_GREEN', 'DARK_AQUA', 'DARK_RED', 'DARK_PURPLE',
     'GOLD', 'GRAY', 'DARK_GRAY', 'BLUE', 'GREEN', 'AQUA', 'RED', 'LIGHT_PURPLE',
     'YELLOW', 'WHITE',
-    'COLOR_CODE', 'RARITY_COLORS', 'STAT_COLORS', 'CRIT_COLORS',
+    'COLOR_CODE', 'RARITY_COLORS', 'STAT_COLORS', 'CRIT_COLORS', 'DYE_COLORS',
 ]
 
 CLN = '\x1b[0m'
@@ -51,7 +51,8 @@ RARITY_COLORS = {
     'rngesus_incarnate': f'{BOLD}{RED}',
 
     'good_catch': f'{BOLD}{GREEN}',
-    'great_catch': f'{BOLD}{LIGHT_PURPLE}',
+    'great_catch': f'{BOLD}{DARK_PURPLE}',
+    'outstanding_catch': f'{BOLD}{LIGHT_PURPLE}',
 }
 
 STAT_COLORS = {
@@ -78,3 +79,30 @@ STAT_COLORS = {
 }
 
 CRIT_COLORS = WHITE, YELLOW, GOLD, RED, RED, WHITE
+
+DYE_COLORS = {
+    'aquamarine': f'\x1b[0;38;2;127;255;212m',
+    'bingo_blue': f'\x1b[0;38;2;0;47;167m',
+    'brick_red': f'\x1b[0;38;2;203;65;84m',
+    'bone': f'\x1b[0;38;2;227;218;201m',
+    'byzantium': f'\x1b[0;38;2;112;41;99m',
+    'carmine': f'\x1b[0;38;2;150;0;24m',
+    'celadon': f'\x1b[0;38;2;172;225;175m',
+    'celeste': f'\x1b[0;38;2;178;255;255m',
+    'cyclamen': f'\x1b[0;38;2;245;111;161m',
+    'dark_purple': f'\x1b[0;38;2;48;25;52m',
+    'emerald': f'\x1b[0;38;2;80;200;120m',
+    'flame': f'\x1b[0;38;2;226;88;34m',
+    'iceberg': f'\x1b[0;38;2;113;166;210m',
+    'livid': f'\x1b[0;38;2;102;153;204m',
+    'mango': f'\x1b[0;38;2;253;190;2m',
+    'midnight': f'\x1b[0;38;2;112;38;112m',
+    'nadeshiko': f'\x1b[0;38;2;246;173;198m',
+    'nyanza': f'\x1b[0;38;2;233;255;219m',
+    'necron': f'\x1b[0;38;2;231;65;60m',
+    'pure_black': f'\x1b[0;38;2;0;0;0m',
+    'pure_blue': f'\x1b[0;38;2;0;0;255m',
+    'pure_white': f'\x1b[0;38;2;255;255;255m',
+    'pure_yellow': f'\x1b[0;38;2;255;255;0m',
+    'wild_strawberry': f'\x1b[0;38;2;255;67;164m',
+}

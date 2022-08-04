@@ -68,6 +68,9 @@ def fish(self, rod_index: int, iteration: int = 1, /):
     fishing_exp_mult = 1 + 0.02 * enchants.get('expertise', 0)
     use_expertise = enchants.get('expertise', 0) != 0
 
+    magic_find = self.get_stat('magic_find', rod_index)
+    magic_find_str = f'{AQUA}(+{format_number(magic_find)}% Magic Find!)'
+
     zone = self.zone
     table = [
         line[:-1] for line in FISHING_TABLE
@@ -183,6 +186,29 @@ def fish(self, rod_index: int, iteration: int = 1, /):
             self.add_skill_exp('fishing', random_amount(fishing_exp, mult=fishing_exp_mult), display=True)
             self.add_exp(random_amount(random_amount((1, 6)) + magnet, mult=exp_mult))
 
+        if random_bool(0.000_000_066_7):
+            rarity = 'outstanding_catch'
+            item = get_item('aquamarine_dye')
+            white(f'{RARITY_COLORS[rarity]}OUTSTANDING CATCH! {AQUA}'
+                    f'You found a {item.display()}{AQUA}.')
+            self.recieve_item(item.to_obj())
+
+        if self.zone == 'wilderness':
+            if random_bool(0.000_000_1):
+                rarity = 'great_catch'
+                item = get_item('nadeshiko_dye')
+                white(f'{RARITY_COLORS[rarity]}GREAT CATCH! {AQUA}'
+                        f'You found a {item.display()}{AQUA}.')
+                self.recieve_item(item.to_obj())
+
+        if self.island == 'jerry':
+            if random_bool(0.000_000_1):
+                rarity = 'great_catch'
+                item = get_item('iceberg_dye')
+                white(f'{RARITY_COLORS[rarity]}GREAT CATCH! {AQUA}'
+                        f'You found a {item.display()}{AQUA}.')
+                self.recieve_item(item.to_obj())
+
         if i >= (last_cp + cp_step) * iteration:
             while i >= (last_cp + cp_step) * iteration:
                 last_cp += cp_step
@@ -249,6 +275,14 @@ def gather(self, name: str, tool_index: int | None,
                     self.collect('seeds', seeds_pool)
 
             self.add_skill_exp('farming', random_amount(resource.farming_exp, mult=farming_exp_mult), display=True)
+
+            if random_bool((0.000_000_125) * (1 + magic_find / 100)):
+                rarity = 'rngesus'
+                item = get_item('wild_strawberry_dye')
+                white(f'{RARITY_COLORS[rarity]}{format_name(rarity)} DROP! '
+                        f'{WHITE}({item.display()}{WHITE}) {magic_find_str}')
+                self.recieve_item(item.to_obj())
+
             if i >= (last_cp + cp_step) * iteration:
                 while i >= (last_cp + cp_step) * iteration:
                     last_cp += cp_step
@@ -284,6 +318,9 @@ def gather(self, name: str, tool_index: int | None,
 
         wood_name = resource.name.replace('_log', '_wood')
 
+        magic_find = self.get_stat('magic_find', tool_index)
+        magic_find_str = f'{AQUA}(+{format_number(magic_find)}% Magic Find!)'
+
         last_cp = Decimal()
         cp_step = Decimal('0.1')
         last_harvest = time()
@@ -309,6 +346,13 @@ def gather(self, name: str, tool_index: int | None,
 
                 self.add_skill_exp('foraging', resource.foraging_exp,
                                    display=True)
+
+                if random_bool((0.000_000_1) * (1 + magic_find / 100)):
+                    rarity = 'rngesus'
+                    item = get_item('mango_dye')
+                    white(f'{RARITY_COLORS[rarity]}{format_name(rarity)} DROP! '
+                          f'{WHITE}({item.display()}{WHITE}) {magic_find_str}')
+                    self.recieve_item(item.to_obj())
 
             if i >= (last_cp + cp_step) * iteration:
                 while i >= (last_cp + cp_step) * iteration:
@@ -435,6 +479,13 @@ def gather(self, name: str, tool_index: int | None,
                     rarity_color = RARITY_COLORS['rare']
                     white(f'{rarity_color}RARE DROP! '
                           f'{WHITE}({loot.display()}{WHITE}) {magic_find_str}')
+            elif 'emerald' in resource.name:
+                if random_bool((0.000_000_125) * (1 + magic_find / 100)):
+                    rarity = 'rngesus'
+                    item = get_item('emerald_dye')
+                    white(f'{RARITY_COLORS[rarity]}{format_name(rarity)} DROP! '
+                            f'{WHITE}({item.display()}{WHITE}) {magic_find_str}')
+                    self.recieve_item(item.to_obj())
 
             mithril_powder = random_amount(resource.mithril_powder)
             if mithril_powder != 0:
@@ -716,10 +767,10 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
     fire_aspect_level = weapon_enchants.get('fire_aspect_level', 0)
     first_strike = 0.25 * weapon_enchants.get('first_strike', 0)
     flame = weapon_enchants.get('flame', 0)
-    giant_killer_perc += {1: 0.001, 2: 0.002, 3: 0.003, 4: 0.004, 5: 0.006,
-                          6: 0.009, 7: 0.012}.get(weapon_enchants.get('giant_killer', 0), 0)
-    giant_killer_dmg += {1: 0.05, 2: 0.1, 3: 0.15, 4: 0.2, 5: 0.3,
-                         6: 0.45, 7: 0.65}.get(weapon_enchants.get('giant_killer', 0), 0)
+    giant_killer_perc = {1: 0.001, 2: 0.002, 3: 0.003, 4: 0.004, 5: 0.006,
+                         6: 0.009, 7: 0.012}.get(weapon_enchants.get('giant_killer', 0), 0)
+    giant_killer_dmg = {1: 0.05, 2: 0.1, 3: 0.15, 4: 0.2, 5: 0.3,
+                        6: 0.45, 7: 0.65}.get(weapon_enchants.get('giant_killer', 0), 0)
     infinite_quiver_chnc = 0.03 * weapon_enchants.get('infinite_quiver', 0)
     knockback = 1 + 0.1 * weapon_enchants.get('knockback', 0)
     life_steal = 0.005 * weapon_enchants.get('life_steal', 0)
@@ -739,16 +790,16 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
         scavenger += 5
     if 'raider_axe' in weapon_abilities and mob.level >= 10:
         scavenger += 20
-    syphon += {1: 0.2, 2: 0.3, 3: 0.4, 4: 0.5, 5: 0.6}.get(weapon_enchants.get('syphon', 0), 0)
+    syphon = {1: 0.2, 2: 0.3, 3: 0.4, 4: 0.5, 5: 0.6}.get(weapon_enchants.get('syphon', 0), 0)
     titan_killer_perc = {1: 0.02, 2: 0.04, 3: 0.06, 4: 0.08, 5: 0.12,
                          6: 0.16, 6: 0.2}.get(weapon_enchants.get('titan_killer', 0), 0)
     titan_killer_dmg = {1: 0.06, 2: 0.12, 3: 0.18, 4: 0.24, 5: 0.4,
                         6: 0.6, 6: 0.8}.get(weapon_enchants.get('titan_killer', 0), 0)
     triple_strike = 0.1 * weapon_enchants.get('triple_strike', 0)
-    thunderbolt += {1: 0.04, 2: 0.08, 3: 0.12, 4: 0.16, 5: 0.2,
-                    6: 0.25}.get(weapon_enchants.get('thunderbolt', 0), 0)
-    thunderlord += {1: 0.08, 2: 0.16, 3: 0.24, 4: 0.32, 5: 0.4,
-                    6: 0.5, 7: 0.6}.get(weapon_enchants.get('thunderbolt', 0), 0)
+    thunderbolt = {1: 0.04, 2: 0.08, 3: 0.12, 4: 0.16, 5: 0.2,
+                   6: 0.25}.get(weapon_enchants.get('thunderbolt', 0), 0)
+    thunderlord = {1: 0.08, 2: 0.16, 3: 0.24, 4: 0.32, 5: 0.4,
+                   6: 0.5, 7: 0.6}.get(weapon_enchants.get('thunderbolt', 0), 0)
     vampirism = weapon_enchants.get('vampirism', 0)
 
     coins_mult = 1 + 0.01 * bestiary_level
@@ -877,11 +928,12 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
         while True:
             weapon_dmg = 0 if isinstance(weapon, Empty) else weapon.get_stat('damage', self)
 
-            if not self.has_item({'name': 'arrow', 'count': 1}):
-                red("You don't have any arrows in your inventory!")
-                return
-            if random_bool(infinite_quiver_chnc):
-                self.remove_item({'name': 'arrow', 'count': 1})
+            if isinstance(weapon, Bow):
+                if not self.has_item({'name': 'arrow', 'count': 1}):
+                    red("You don't have any arrows in your inventory!")
+                    return
+                if random_bool(infinite_quiver_chnc):
+                    self.remove_item({'name': 'arrow', 'count': 1})
 
             killed = False
 

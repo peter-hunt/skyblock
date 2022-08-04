@@ -1,13 +1,13 @@
 {
   "name": "game",
-  "last_update": 1644125687,
+  "last_update": 1659234621,
   "bank_level": "starter",
   "experience": 375067.44000001956,
-  "balance": 409076.1985399324,
+  "balance": 1535508.4188394903,
   "purse": 1400.0,
   "mithril_powder": 1010,
   "island": "mines",
-  "zone": "veins",
+  "zone": "dwarven_village",
   "visited_zones": [
     "animal_pen",
     "bank",
@@ -105,7 +105,7 @@
     "clay": 1623,
     "clownfish": 17,
     "coal": 5168,
-    "cobblestone": 7711,
+    "cobblestone": 8287,
     "cocoa": 6,
     "dark_oak_wood": 274,
     "diamond": 30316,
@@ -258,7 +258,7 @@
     "zombie_4"
   ],
   "fast_travel": [["hub", null]],
-  "play_time": 89729.52033138275,
+  "play_time": 89983.1828365326,
   "stats": {
     "deaths": 10,
     "deaths_bone": 1,
@@ -573,7 +573,7 @@
     },
     {
       "name": "enchanted_cobblestone",
-      "count": 7,
+      "count": 10,
       "rarity": "uncommon",
       "type": "item"
     },
@@ -696,8 +696,8 @@
     {},
     {},
     {"name": "sponge", "type": "item"},
-    {},
-    {},
+    {"name": "cobblestone", "count": 32, "type": "item"},
+    {"name": "cobblestone", "count": 64, "type": "item"},
     {},
     {},
     {
@@ -1001,7 +1001,7 @@
       "name": "cobblestone_minion",
       "tier": 6,
       "cooldown": 10,
-      "last_action": 1644125681,
+      "last_action": 1659234621,
       "inventory": [
         {"name": "cobblestone", "count": 64, "type": "item"},
         {"name": "cobblestone", "count": 64, "type": "item"},
@@ -1018,7 +1018,7 @@
       "name": "enderman_minion",
       "tier": 6,
       "cooldown": 28,
-      "last_action": 1644125687,
+      "last_action": 1659234599,
       "inventory": [
         {"name": "ender_pearl", "count": 16, "type": "item"},
         {"name": "ender_pearl", "count": 16, "type": "item"},
@@ -1035,7 +1035,7 @@
       "name": "diamond_minion",
       "tier": 4,
       "cooldown": 27,
-      "last_action": 1644125680,
+      "last_action": 1659234610,
       "inventory": [
         {"name": "diamond", "count": 64, "type": "item"},
         {"name": "diamond", "count": 64, "type": "item"},
@@ -1049,7 +1049,7 @@
       "name": "diamond_minion",
       "tier": 6,
       "cooldown": 25,
-      "last_action": 1644125676,
+      "last_action": 1659234601,
       "inventory": [
         {"name": "diamond", "count": 64, "type": "item"},
         {"name": "diamond", "count": 64, "type": "item"},
@@ -1066,7 +1066,7 @@
       "name": "mithril_minion",
       "tier": 4,
       "cooldown": 75,
-      "last_action": 1644125684,
+      "last_action": 1659234584,
       "inventory": [
         {"name": "mithril", "count": 64, "type": "item"},
         {"name": "mithril", "count": 64, "type": "item"},
@@ -1080,7 +1080,7 @@
       "name": "coal_minion",
       "tier": 5,
       "cooldown": 12,
-      "last_action": 1644125687,
+      "last_action": 1659234611,
       "inventory": [
         {"name": "coal", "count": 64, "type": "item"},
         {"name": "coal", "count": 64, "type": "item"},
@@ -1094,7 +1094,7 @@
       "name": "gold_minion",
       "tier": 5,
       "cooldown": 18,
-      "last_action": 1644125671,
+      "last_action": 1659234619,
       "inventory": [
         {"name": "gold", "count": 64, "type": "item"},
         {"name": "gold", "count": 64, "type": "item"},
@@ -1108,7 +1108,7 @@
       "name": "obsidian_minion",
       "tier": 5,
       "cooldown": 39,
-      "last_action": 1644125672,
+      "last_action": 1659234584,
       "inventory": [
         {"name": "obsidian", "count": 64, "type": "item"},
         {"name": "obsidian", "count": 64, "type": "item"},
@@ -1122,7 +1122,7 @@
       "name": "birch_minion",
       "tier": 5,
       "cooldown": 42,
-      "last_action": 1644125658,
+      "last_action": 1659234612,
       "inventory": [
         {"name": "birch_wood", "count": 64, "type": "item"},
         {"name": "birch_wood", "count": 64, "type": "item"},
@@ -1136,7 +1136,7 @@
       "name": "sugar_cane_minion",
       "tier": 4,
       "cooldown": 20,
-      "last_action": 1644125672,
+      "last_action": 1659234612,
       "inventory": [
         {"name": "sugar_cane", "count": 64, "type": "item"},
         {"name": "sugar_cane", "count": 64, "type": "item"},
@@ -1150,7 +1150,7 @@
       "name": "jungle_minion",
       "tier": 4,
       "cooldown": 45,
-      "last_action": 1644125671,
+      "last_action": 1659234601,
       "inventory": [
         {"name": "jungle_wood", "count": 64, "type": "item"},
         {"name": "jungle_wood", "count": 64, "type": "item"},
@@ -1186,6 +1186,7 @@
     "iron_forger",
     "jack",
     "jamie",
+    "jotraeline_greatforge",
     "liam",
     "lonely_philosopher",
     "lumber_merchant",

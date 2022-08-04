@@ -252,6 +252,16 @@ def combine(self, index_1: int, index_2: int, /):
             self.recieve_item(pointer)
         return
 
+    if isinstance(item_1, Dye) and isinstance(item_2, Armor):
+        index_1, index_2 = index_2, index_1
+        item_1, item_2 = item_2, item_1
+
+    if isinstance(item_1, Armor) and isinstance(item_2, Dye):
+        item_1.dye = item_2.name.removesuffix('_dye')
+        self.recieve_item(item_1.to_obj())
+        self.inventory[index_2] = Empty()
+        return
+
     red('These items cannot be combined!')
     return
 

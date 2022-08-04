@@ -10,7 +10,7 @@ __all__ = [
     'ItemType', 'Item', 'Empty',
     'Accessory', 'EnchantedBook', 'ReforgeStone', 'TravelScroll',
     'Bow', 'Sword',
-    'Axe', 'Pickaxe', 'Drill', 'Hoe', 'FishingRod', 'Armor', 'Pet', 'Minion',
+    'Axe', 'Pickaxe', 'Drill', 'Dye', 'Hoe', 'FishingRod', 'Armor', 'Pet', 'Minion',
     'Resource',
     'Crop', 'Mineral', 'Log', 'Mob',
     'Recipe', 'RecipeGroup', 'Collection',
@@ -96,6 +96,8 @@ class Armor(ItemType):
     enchantments: dict[str, int] = {}
     hot_potato: int = 0
     stars: int | None = None
+    dye: str | None = None
+
     collection_req: tuple[str, int] | None = None
     combat_skill_req: int | None = None
     dungeon_skill_req: int | None = None
@@ -161,6 +163,13 @@ class Drill(ItemType):
     enchantments: dict[str, int] = {}
 
     abilities: list[str] = []
+
+
+@item_type
+class Dye(ItemType):
+    name: str
+    color: tuple[int]
+    rarity: str = 'epic'
 
 
 @enchanted_book_type
@@ -315,6 +324,7 @@ OBJECT_NAMES = {
     'axe': Axe,
     'bow': Bow,
     'drill': Drill,
+    'dye': Dye,
     'enchanted_book': EnchantedBook,
     'fishing_rod': FishingRod,
     'hoe': Hoe,
