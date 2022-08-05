@@ -12,6 +12,10 @@ Next, **post a screenshot or copy the text about how the error happened**. You s
 
 Last, wait for responses. If you've gone to this step, then congratulations, you just made your contribution! Contributions will improve the experience of you and others and prevent the bug from becoming worse.
 
+# Testing for Bugs
+
+It would be really helpful if you report any bug you encounter, including any unexpected behaviour, weird errors and exits, item glitches, and etc. I encourage you to try to crash or break this game (by playing), so that you may find rare bugs, and I'll be able to furthur optimize the code and make this project better.
+
 # Feature Ideas or Modification Suggestions
 
 If you have ideas about adding or improving features, address issues about them. **I'll determine if your suggestions are helpful for the project or not.** Helpful ideas will typically apply to the following rules:

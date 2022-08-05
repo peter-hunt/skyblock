@@ -19,7 +19,6 @@ from .recipes import __all__ as __recipes_all__
 from .resources import *
 from .resources import __all__ as __resources_all__
 
-
 __all__ = (
     __abilities_all__ + __collection_all__ + __fishing_all__ + __items_all__
     + __minions_all__ + __mobs_all__ + __object_all__ + __placed_minion_all__

@@ -15,7 +15,6 @@ from ...function.random import random_amount, random_bool, random_int
 from ...function.util import (
     checkpoint, format_crit, format_name, format_number, format_roman,
 )
-from ...object.abilities import get_ability
 from ...object.fishing import FISHING_TABLE, SEA_CREATRUE_TABLE
 from ...object.items import get_item
 from ...object.mobs import get_mob
@@ -57,32 +56,26 @@ def fish(self, rod_index: int, iteration: int = 1, /):
     time_mult /= 1 + rod.get_stat('fishing_speed', self) / 100
     blessing = 0.05 * enchants.get('blessing', 0)
     frail_mult = 1 - 0.05 * enchants.get('frail', 0)
-    luck = 1 + 0.01 * enchants.get('luck_of_the_sea', 0)
-    luck += fishing_level * 0.002
+    treasure_chance = 0.05 + 0.01 * enchants.get('luck_of_the_sea', 0)
+    treasure_chance += fishing_level * 0.002
     magnet = enchants.get('magnet', 0)
-    tier = self.get_tiered_bonus('shimmer')
-    exp_mult = 1 + get_ability('shimmer').tiered_variables['value'][tier] / 100
 
     sea_creature_chance = self.get_stat('sea_creature_chance')
 
     fishing_exp_mult = 1 + 0.02 * enchants.get('expertise', 0)
     use_expertise = enchants.get('expertise', 0) != 0
 
-    magic_find = self.get_stat('magic_find', rod_index)
-    magic_find_str = f'{AQUA}(+{format_number(magic_find)}% Magic Find!)'
-
     zone = self.zone
-    table = [
-        line[:-1] for line in FISHING_TABLE
-        if len(line[-1]) == 0 or zone in line[-1]
+    tables = [
+        [line for line in table if line[1] == 'normal'],
+        [line for line in table if line[1] == 'good_catch'],
+        [line for line in table if line[1] == 'great_catch'],
     ]
-
-    total_weight = 0
-    for choice in table:
-        if 'catch' in choice[1]:
-            total_weight += choice[2] * luck
-        else:
-            total_weight += choice[2]
+    total_weights = [
+        sum(line[2] for line in table if line[1] == 'normal'),
+        sum(line[2] for line in table if line[1] == 'good_catch'),
+        sum(line[2] for line in table if line[1] == 'great_catch'),
+    ]
 
     last_cp = Decimal()
     cp_step = Decimal('0.1')
@@ -90,8 +83,8 @@ def fish(self, rod_index: int, iteration: int = 1, /):
         sleep(random_amount((0.5, 3), mult=time_mult))
         if i != 1:
             print()
-
         is_sc = random_bool(sea_creature_chance / 100)
+
         if is_sc and fishing_level >= 1:
             avaliable_sc = [line for line in SEA_CREATRUE_TABLE
                             if line[2] <= fishing_level]
@@ -138,10 +131,41 @@ def fish(self, rod_index: int, iteration: int = 1, /):
                          f' {YELLOW}was upgraded to {BLUE}Expertise {format_roman(expertise_level)}{YELLOW}!')
 
         else:
+            if random_bool(0.000_000_066_7):
+                rarity = 'outstanding_catch'
+                item = get_item('aquamarine_dye')
+                white(f'{RARITY_COLORS[rarity]}OUTSTANDING CATCH! {AQUA}'
+                        f'You found a {item.display()}{AQUA}.')
+                self.recieve_item(item.to_obj())
+                continue
+            if zone == 'wilderness':
+                if random_bool(0.000_000_1):
+                    rarity = 'great_catch'
+                    item = get_item('nadeshiko_dye')
+                    white(f'{RARITY_COLORS[rarity]}GREAT CATCH! {AQUA}'
+                            f'You found a {item.display()}{AQUA}.')
+                    self.recieve_item(item.to_obj())
+                continue
+            if self.island == 'jerry':
+                if random_bool(0.000_000_1):
+                    rarity = 'great_catch'
+                    item = get_item('iceberg_dye')
+                    white(f'{RARITY_COLORS[rarity]}GREAT CATCH! {AQUA}'
+                            f'You found a {item.display()}{AQUA}.')
+                    self.recieve_item(item.to_obj())
+                continue
+
+            if random_bool(treasure_chance):
+                is_treasure = True
+                if random_bool(0.1):
+                    table, total_weight = tables[2], total_weights[2]
+                else:
+                    table, total_weight = tables[1], total_weights[1]
+            else:
+                is_treasure = False
+                table, total_weight = tables[0], total_weights[0]
             pool = random() * total_weight
             for drop, rarity, weight, fishing_exp in table:
-                if 'catch' in rarity:
-                    weight *= luck
                 if pool < weight:
                     break
                 pool -= weight
@@ -158,8 +182,7 @@ def fish(self, rod_index: int, iteration: int = 1, /):
                 drop_display = format_number(drop)
                 if drop_display.endswith('.0'):
                     drop_display = drop_display[:-2]
-
-                if 'catch' in rarity:
+                if is_treasure:
                     rarity_display = rarity.upper().replace('_', ' ')
                     gray(f'{RARITY_COLORS[rarity]}{rarity_display}! {AQUA}'
                          f'You found {GOLD}{format_number(drop)} Coins{AQUA}.')
@@ -178,36 +201,13 @@ def fish(self, rod_index: int, iteration: int = 1, /):
                 self.recieve_item(drop)
                 self.collect(drop_name, drop.get('count', 1))
 
-                if 'catch' in rarity:
+                if is_treasure:
                     rarity_display = rarity.upper().replace('_', ' ')
                     gray(f'{RARITY_COLORS[rarity]}{rarity_display}! {AQUA}'
                          f'You found a {drop_item.display()}{AQUA}.')
 
             self.add_skill_exp('fishing', random_amount(fishing_exp, mult=fishing_exp_mult), display=True)
-            self.add_exp(random_amount(random_amount((1, 6)) + magnet, mult=exp_mult))
-
-        if random_bool(0.000_000_066_7):
-            rarity = 'outstanding_catch'
-            item = get_item('aquamarine_dye')
-            white(f'{RARITY_COLORS[rarity]}OUTSTANDING CATCH! {AQUA}'
-                    f'You found a {item.display()}{AQUA}.')
-            self.recieve_item(item.to_obj())
-
-        if self.zone == 'wilderness':
-            if random_bool(0.000_000_1):
-                rarity = 'great_catch'
-                item = get_item('nadeshiko_dye')
-                white(f'{RARITY_COLORS[rarity]}GREAT CATCH! {AQUA}'
-                        f'You found a {item.display()}{AQUA}.')
-                self.recieve_item(item.to_obj())
-
-        if self.island == 'jerry':
-            if random_bool(0.000_000_1):
-                rarity = 'great_catch'
-                item = get_item('iceberg_dye')
-                white(f'{RARITY_COLORS[rarity]}GREAT CATCH! {AQUA}'
-                        f'You found a {item.display()}{AQUA}.')
-                self.recieve_item(item.to_obj())
+            self.add_exp(random_amount(random_amount((1, 6)) + magnet))
 
         if i >= (last_cp + cp_step) * iteration:
             while i >= (last_cp + cp_step) * iteration:
@@ -377,11 +377,7 @@ def gather(self, name: str, tool_index: int | None,
 
         time_cost = 30 * resource.hardness / mining_speed
 
-        exp_mult = 1 + 0.125 * enchants.get('experience', 0)
-        tier = self.get_tiered_bonus('shimmer')
-        exp_mult *= 1 + get_ability('shimmer').tiered_variables['value'][tier] / 100
-        if self.has_item({'name': 'experience_artifact'}):
-            exp_mult *= 1.25
+        exp_mult = 1
         if getattr(tool, 'modifier') == 'magnetic':
             tool_rarity = tool.rarity[0]
             tool_rarity_index = 'cureldsv'.index(tool_rarity)
@@ -806,11 +802,6 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
     added_exp = 0.2 * bestiary_level
 
     exp_mult = 1 + 0.125 * weapon_enchants.get('experience', 0)
-    exp_mult *= 1 + 0.04 * enchanting_level
-    if self.has_item({'name': 'experience_artifact'}):
-        exp_mult *= 1.25
-    tier = self.get_tiered_bonus('shimmer')
-    exp_mult *= 1 + get_ability('shimmer').tiered_variables['value'][tier] / 100
     fishing_exp_mult = 1 + 0.02 * weapon_enchants.get('expertise', 0)
 
     combat_exp_mult = 1
@@ -1109,7 +1100,7 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
         if set_bonus == 'death_tax' and mob.level >= 10:
             hp = min(hp + 20, health)
 
-        self.add_exp(mob.exp * random_int(exp_mult) + random_int(added_exp))
+        self.add_exp(random_amount(mob.exp + random_int(added_exp), mult=exp_mult))
 
         for pointer, loot_amount, rarity, drop_chance in mob.drops:
             loot_name = pointer['name']

@@ -2,7 +2,7 @@ __all__ = [
     'CUBISM_EFT',
     'BLAST_PROT_EFT', 'PROJ_PROT_EFT', 'IMPALING_EFT',
     'SEA_CREATURES',
-    'ZOMBIES', 'SPIDERS', 'WOLVES', 'SKELETONS', 'DRAGONS', 'END_MOBS', 'ENDERMEN',
+    'ZOMBIES', 'SPIDERS', 'WOLVES', 'SKELETONS', 'DRAGONS', 'ENDERMEN', 'DRAGONS', 'END_MOBS',
     'WITHERS', 'NETHER_MOBS', 'BLAZES', 'PIGMEN', 'UNDEADS',
     'BESTIARY_ALTER',
 ]
@@ -22,10 +22,6 @@ PROJ_PROT_EFT = [
     'skeleton', 'gravel_skeleton', 'watcher',
     'diamond_skeleton', 'sea_archer',
 ]
-
-
-# # DRAGON_HUNTER
-# DH_EFT
 
 IMPALING_EFT = [
     'squid', 'night_squid',
@@ -71,7 +67,17 @@ SKELETONS = [
     'sea_archer', 'sea_emperor',
 ]
 
-DRAGONS = []
+ENDERMEN = [
+    'enderman', 'zealot', 'voidling_fanatic', 'voidling_extremist',
+
+    'voidgloom_seraph',
+    'voidling_devotee', 'voidling_radical', 'voidcrazed_maniac',
+]
+
+DRAGONS = [
+    'protector_dragon', 'old_dragon', 'wise_dragon', 'unstable_dragon',
+    'young_dragon', 'strong_dragon', 'superior_dragon',
+]
 
 END_MOBS = [
     'enderman',
@@ -82,13 +88,6 @@ END_MOBS = [
     'voidling_fanatic',
     'voidling_extremist',
 ] + DRAGONS
-
-ENDERMEN = [
-    'enderman', 'zealot', 'voidling_fanatic', 'voidling_extremist',
-
-    'voidgloom_seraph',
-    'voidling_devotee', 'voidling_radical', 'voidcrazed_maniac',
-]
 
 WITHERS = [
     'wither_skeleton',

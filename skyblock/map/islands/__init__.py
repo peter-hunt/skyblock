@@ -23,5 +23,4 @@ ISLANDS = [HUB, BARN, DESERT, GOLD, DEEP, MINES, PARK, SPIDER, CRIMSON, END]
 def get_island(name: str, **kwargs) -> Npc:
     if not includes(ISLANDS, name):
         red(f'Island not found: {name!r}')
-        exit()
     return get(ISLANDS, name, **kwargs)

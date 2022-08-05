@@ -22,7 +22,6 @@ def is_collection(name: str) -> bool:
     for collection in COLLECTIONS:
         if collection.name == name:
             return True
-
     return False
 
 
@@ -30,16 +29,13 @@ def get_collection(name: str) -> Collection | None:
     for collection in COLLECTIONS:
         if collection.name == name:
             return collection
-
     red(f'Collection not found: {name!r}')
 
 
 def calc_coll_level(name: str, amount: int) -> int | None:
     if (collection := get_collection(name)) is None:
         return
-
     for lvl, (lvl_amount, _) in enumerate(collection):
         if amount < lvl_amount:
             return lvl
-
     return lvl + 1

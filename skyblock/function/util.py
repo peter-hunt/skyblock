@@ -69,13 +69,11 @@ def format_crit(string: str, /) -> str:
         if fullmatch(r'\d', char):
             next_color = next(color_iter)
     result += '✧'
-
     return result
 
 
 def format_name(name: str, /) -> str:
     result = name
-
     for original, alternative in SPECIAL_NAMES.items():
         if result.endswith(original):
             result = result.replace(original, alternative)
@@ -83,12 +81,10 @@ def format_name(name: str, /) -> str:
     else:
         result = result.replace('_', ' ')
         result = ' '.join(_format_word(word) for word in result.split(' '))
-
     for original, alternative in SPECIAL_ALTER.items():
         if result.startswith(original):
             result = result.replace(original, alternative)
             break
-
     return result
 
 
@@ -113,7 +109,6 @@ def format_number(number: Number, /, *, sign: bool = False) -> str:
         integer, floating = string.split('.')
         integer = ','.join(part[::-1] for part in wrap(integer[::-1], 3)[::-1])
         string = f'{integer}.{floating}'
-
     return f'{sign_str}{string}'
 
 
@@ -133,7 +128,6 @@ def format_short(number: Number, /) -> str:
     else:
         amount = 1
         letter = ''
-
     string = f'{number / amount:.1f}'
     if string.endswith('.0'):
         string = string[:-2]

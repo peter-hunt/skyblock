@@ -16,6 +16,7 @@ from ...function.reforging import get_modifier
 from ...function.util import (
     format_name, format_number, format_roman, get_family, parse_int,
 )
+from ...object.abilities import get_ability
 from ...object.collection import is_collection, get_collection, calc_coll_level
 from ...object.mobs import MOBS, get_mob
 from ...object.object import *
@@ -33,7 +34,14 @@ __all__ = [
 def add_exp(self, amount: Number, /):
     enchanting_level = self.get_skill_level('enchanting')
     original_level = calc_exp_level(self.experience)
-    self.experience += amount * (1 + 0.04 * enchanting_level)
+
+    mult = 1 + 0.04 * enchanting_level
+    if self.has_item({'name': 'experience_artifact'}):
+        mult *= 1.25
+    tier = self.get_tiered_bonus('shimmer')
+    mult *= 1 + get_ability('shimmer').tiered_variables['value'][tier] / 100
+
+    self.experience += amount * mult
     current_level = calc_exp_level(self.experience)
     if current_level > original_level:
         green(f'Reached XP level {current_level}.')

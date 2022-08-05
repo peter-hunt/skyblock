@@ -36,6 +36,7 @@ def add_pet(self, index: int, /):
 
     if not isinstance(item, Pet):
         red('Invalid pet.')
+        return
 
     self.pets.append(item)
     self.inventory[index] = Empty()
@@ -87,15 +88,15 @@ def buy(self, trade: tuple, amount: int, /):
     display_str = f'{GREEN}, '.join(display)
 
     if len(cost) == 1 and isinstance(cost[0], (float, int)):
-        green(f'You bought {display_str}{GREEN} for '
-              f'{GOLD}{format_short(cost[0] * amount)} Coins{GREEN}!')
+        green(f'You bought {display_str}{GREEN} for'
+              f' {GOLD}{format_short(cost[0] * amount)} Coins{GREEN}!')
     else:
         green(f'You bought {display_str}{GREEN}!')
 
 
 def claim_minion(self, slot: int, /) -> bool:
     if isinstance(self.placed_minions[slot], Empty):
-        red('This slot is empty!')
+        red('This minion slot is empty!')
         return
 
     items_left = []
@@ -132,12 +133,10 @@ def combine(self, index_1: int, index_2: int, /):
     if isinstance(item_1, EnchantedBook) and isinstance(item_2, EnchantedBook):
         result_enchants = combine_enchant(item_1.enchantments,
                                           item_2.enchantments)
-
         self.inventory[index_1] = Empty()
         self.inventory[index_2] = Empty()
         self.recieve_item({'name': 'enchanted_book',
                            'enchantments': result_enchants})
-
         return
 
     if (isinstance(item_2, (Axe, Drill, Pickaxe, Hoe,
@@ -170,8 +169,6 @@ def combine(self, index_1: int, index_2: int, /):
 
     if (isinstance(item_1, (Accessory, Armor, Bow, Sword, FishingRod, Pickaxe))
             and isinstance(item_2, ReforgeStone)):
-        cost = item_2.cost['curelm'.index(item_1.rarity[0])]
-
         combinable = True
         if item_2.category == 'accessory':
             if not isinstance(item_1, Accessory):
@@ -189,7 +186,6 @@ def combine(self, index_1: int, index_2: int, /):
         elif item_2.category == 'pickaxe':
             if not isinstance(item_1, Pickaxe):
                 combinable = False
-
         if not combinable:
             red('These items cannot be combined!')
             return
@@ -200,10 +196,10 @@ def combine(self, index_1: int, index_2: int, /):
                 red(f'Requires Mining level {format_roman(item_2.mining_skill_req)}')
                 return
 
+        cost = item_2.cost['curelm'.index(item_1.rarity[0])]
         if self.purse < cost:
             red(f"You don't have enough Coins! {format_number(cost)} coins required.")
             return
-
         self.purse -= cost
 
         pointer = item_1.to_obj()
@@ -285,7 +281,7 @@ def consume(self, index: int, amount: int = 1, /):
     elif item.name in {'experience_bottle', 'grand_experience_bottle',
                        'tiantium_experience_bottle'}:
         if amount > item.count:
-            red("You don't have enough item to do that!")
+            red("You don't have enough items to do that!")
             return
 
         if item.name == 'experience_bottle':
@@ -294,9 +290,6 @@ def consume(self, index: int, amount: int = 1, /):
             exp_amount = 1_500
         elif item.name == 'tiantium_experience_bottle':
             exp_amount = 250_000
-
-        if self.has_item({'name': 'experience_artifact'}):
-            exp_amount *= 1.25
 
         item_copy = item.copy()
         item_copy.count = amount

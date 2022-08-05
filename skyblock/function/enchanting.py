@@ -1,26 +1,26 @@
 from ..constant.enchanting import *
-from ..object.object import *
 
 
 __all__ = ['get_enchantments']
 
 
 def get_enchantments(item) -> list[str]:
-    if isinstance(item, Armor):
+    cls = item.__class__.__name__
+    if cls == 'Armor':
         table = ARMOR_ENCHS
-    elif isinstance(item, Axe):
+    elif cls == 'Axe':
         table = AXE_ENCHS
-    elif isinstance(item, Bow):
+    elif cls == 'Bow':
         table = BOW_ENCHS
-    elif isinstance(item, (Drill, Pickaxe)):
+    elif cls in {'Drill', 'Pickaxe'}:
         table = PICKAXE_ENCHS
-    elif isinstance(item, FishingRod):
+    elif cls == 'FishingRod':
         table = FISHING_ROD_ENCHS
         if item.damage != 0:
             table += SWORD_ENCHS
-    elif isinstance(item, Hoe):
+    elif cls == 'Hoe':
         table = HOE_ENCHS
-    elif isinstance(item, Sword):
+    elif cls == 'Sword':
         table = SWORD_ENCHS
     else:
         table = []

@@ -93,7 +93,7 @@ To check command usage, type `help` for command documentation.
 
 * Abilities
 * Accessories
-* Accessory bag and minion bag.
+* Accessory bag and Minion bag.
 * Armor Pieces, Tools, and Weapons
 * Bestiaries and Bestiary Milestones
 * Crafting
@@ -107,17 +107,16 @@ To check command usage, type `help` for command documentation.
 * Modifiers and Reforging
 * Pets and Pet Score
 * Skills
-* Slayers items
+* Slayers Items and Recipes
 
 ## Planned Features:
 
 * Wardrobe and other bags/sacks.
-* Arachane
+* Arachane & Dragons
 * Brewing and Potion effects
 * Commissions
 * Crystal Hollows
 * Diana, Griffin Pet and **Mythological** creature
-* Dragons
 * Dungeons
 * Fairy Souls
 * Forging (Forging recipes are already accessible)
@@ -127,7 +126,7 @@ To check command usage, type `help` for command documentation.
 * NPC Usage (like Kat, Fetchur, etc.)
 * Pet Support Items
 * Power Stones and Magic Power
-* Slayers Recipes and Quests
+* Slayers Quests
 * Templates and abilities optimation
 * Templates organized for translation update (abilities included)
 

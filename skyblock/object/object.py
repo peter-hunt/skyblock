@@ -36,8 +36,7 @@ class Item(ItemType):
 
 @item_type
 class Empty(ItemType):
-    def __repr__(self):
-        return '{}'
+    pass
 
 
 @item_type
@@ -169,6 +168,7 @@ class Drill(ItemType):
 class Dye(ItemType):
     name: str
     color: tuple[int]
+    count: int = 64
     rarity: str = 'epic'
 
 

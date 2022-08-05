@@ -190,9 +190,6 @@ def mainloop(self):
 
             self.buy(chosen_trade, amount)
 
-        elif words[0] == 'cheat':
-            ...
-
         elif words[0] == 'clear':
             clear()
 

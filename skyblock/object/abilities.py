@@ -39,17 +39,6 @@ class TieredBonus(Ability):
 
 
 ABILITIES = [
-    # misc abilities
-    AnonymousAbility(
-        id='ender_artifact_upgrader',
-        display_id='ender_artifact_upgrader',
-    ),
-
-    AnonymousAbility(
-        id='rampart',
-        display_id='rampart',
-    ),
-
     # armor abilities
     NamedAbility(
         id='death_tax',
@@ -646,6 +635,5 @@ def get_ability(id: str, /, *, warn=True) -> Ability | None:
     for item in ABILITIES:
         if item.id == id:
             return get(ABILITIES, id=id)
-
     if warn:
         red(f'Ability not found: {id!r}')
