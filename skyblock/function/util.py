@@ -21,7 +21,7 @@ from .io import red, yellow
 __all__ = [
     'camel_to_under', 'checkpoint', 'clear', 'format_name', 'format_number',
     'format_roman', 'format_short', 'format_zone', 'get', 'get_family', 'generate_help',
-    'includes', 'index', 'is_valid_usage',
+    'includes', 'includes_id', 'index', 'is_valid_usage',
 ]
 
 
@@ -210,6 +210,13 @@ def get_family(name: str, /) -> str:
 def includes(ls: list[any], name: str, /) -> bool:
     for obj in ls:
         if obj.name == name:
+            return True
+    return False
+
+
+def includes_id(ls: list[any], id_: str, /) -> bool:
+    for obj in ls:
+        if obj.id == id_:
             return True
     return False
 

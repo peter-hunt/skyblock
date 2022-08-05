@@ -120,7 +120,7 @@ To check command usage, type `help` for command documentation.
 * Dragons
 * Dungeons
 * Fairy Souls
-* Forging (Forging recipes already are accessible)
+* Forging (Forging recipes are already accessible)
 * Heart of The Mountain Skill Tree
 * Mayors and Unique Perks
 * Minion Support Items

@@ -658,14 +658,17 @@ def item_type(cls: type, /) -> type:
 
         ability_list = []
 
+        desc = get_template('desc', self.name, warn=False)
+        if desc is not None:
+            desc_str = format_temp(desc)
+            ability_list.append(f'{GRAY}{desc_str}')
+
         if self.__class__.__name__ == 'Pet':
             stat_mult = lvl_mult
         else:
             stat_mult = 1
 
         item_abilities = getattr(self, 'abilities', [])
-        if self.__class__.__name__ == 'Accessory':
-            item_abilities = [self.name] + item_abilities
         for ability_id in item_abilities:
             ability = get_ability(ability_id)
             ability_str = ''

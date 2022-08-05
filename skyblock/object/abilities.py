@@ -1,6 +1,6 @@
 from ..constant.colors import *
 from ..constant.util import Number
-from ..function.io import red
+from ..function.io import *
 from ..function.util import get
 
 from .other_wrapper import init_type
@@ -41,177 +41,13 @@ class TieredBonus(Ability):
 ABILITIES = [
     # misc abilities
     AnonymousAbility(
-        id='exp_bottle',
-        display_id='smash_exp_bottle',
-    ),
-    AnonymousAbility(
-        id='undead_catalyst',
-        display_id='undead_catalyst',
-    ),
-    AnonymousAbility(
-        id='revenant_catalyst',
-        display_id='revenant_catalyst',
-    ),
-    AnonymousAbility(
-        id='shard_of_the_shredded',
-        display_id='shard_of_the_shredded',
-    ),
-    AnonymousAbility(
-        id='warden_heart',
-        display_id='warden_heart',
-    ),
-    AnonymousAbility(
-        id='red_claw_egg',
-        display_id='red_claw_egg',
-    ),
-    AnonymousAbility(
         id='ender_artifact_upgrader',
         display_id='ender_artifact_upgrader',
-    ),
-    AnonymousAbility(
-        id='crude_gabagool',
-        display_id='crude_gabagool',
-    ),
-    AnonymousAbility(
-        id='fuel_gabagool',
-        display_id='fuel_gabagool',
-    ),
-    AnonymousAbility(
-        id='heavy_gabagool',
-        display_id='heavy_gabagool',
-    ),
-    AnonymousAbility(
-        id='hypergolic_gabagool',
-        display_id='hypergolic_gabagool',
-    ),
-    AnonymousAbility(
-        id='inferno_vertex',
-        display_id='inferno_vertex',
-    ),
-    AnonymousAbility(
-        id='inferno_apex',
-        display_id='inferno_apex',
-    ),
-
-    AnonymousAbility(
-        id='corrupted_fragment',
-        display_id='corrupted_fragment',
-    ),
-    AnonymousAbility(
-        id='lumino_fiber',
-        display_id='lumino_fiber',
-    ),
-    AnonymousAbility(
-        id='spell_powder',
-        display_id='spell_powder',
-    ),
-    AnonymousAbility(
-        id='leather_cloth',
-        display_id='leather_cloth',
-    ),
-    AnonymousAbility(
-        id='hallowed_skull',
-        display_id='hallowed_skull',
-    ),
-    AnonymousAbility(
-        id='burning_eye',
-        display_id='burning_eye',
-    ),
-    AnonymousAbility(
-        id='spectre_dust',
-        display_id='spectre_dust',
-    ),
-    AnonymousAbility(
-        id='wither_soul',
-        display_id='wither_soul',
-    ),
-    AnonymousAbility(
-        id='bezos',
-        display_id='bezos',
-    ),
-    AnonymousAbility(
-        id='blaze_ashes',
-        display_id='blaze_ashes',
-    ),
-    AnonymousAbility(
-        id='mutated_blaze_ashes',
-        display_id='mutated_blaze_ashes',
-    ),
-    AnonymousAbility(
-        id='millenia_old_blaze_ashes',
-        display_id='millenia_old_blaze_ashes',
-    ),
-    AnonymousAbility(
-        id='magma_chunk',
-        display_id='magma_chunk',
-    ),
-    AnonymousAbility(
-        id='magmag',
-        display_id='magmag',
-    ),
-    AnonymousAbility(
-        id='kada_lead',
-        display_id='kada_lead',
-    ),
-    AnonymousAbility(
-        id='digested_mushrooms',
-        display_id='digested_mushrooms',
-    ),
-    AnonymousAbility(
-        id='compact_ooze',
-        display_id='compact_ooze',
-    ),
-    AnonymousAbility(
-        id='cup_of_blood',
-        display_id='cup_of_blood',
-    ),
-    AnonymousAbility(
-        id='horn_of_taurus',
-        display_id='horn_of_taurus',
-    ),
-    AnonymousAbility(
-        id='pyroclastic_scale',
-        display_id='pyroclastic_scale',
-    ),
-
-    AnonymousAbility(
-        id='kuudra_key',
-        display_id='kuudra_key',
-        variables={'tier': 'Basic'},
-    ),
-    AnonymousAbility(
-        id='hot_kuudra_key',
-        display_id='kuudra_key',
-        variables={'tier': 'Hot'},
-    ),
-    AnonymousAbility(
-        id='burning_kuudra_key',
-        display_id='kuudra_key',
-        variables={'tier': 'Burning'},
-    ),
-    AnonymousAbility(
-        id='fiery_kuudra_key',
-        display_id='kuudra_key',
-        variables={'tier': 'Fiery'},
-    ),
-    AnonymousAbility(
-        id='infernal_kuudra_key',
-        display_id='kuudra_key',
-        variables={'tier': 'Infernal'},
     ),
 
     AnonymousAbility(
         id='rampart',
         display_id='rampart',
-    ),
-
-    AnonymousAbility(
-        id='griffin_feather',
-        display_id='griffin_feather',
-    ),
-    AnonymousAbility(
-        id='soul_string',
-        display_id='soul_string',
     ),
 
     # armor abilities
@@ -392,66 +228,9 @@ ABILITIES = [
         variables={'value': 150},
     ),
     AnonymousAbility(
-        id='reaper_falchion',
-        display_id='reaper_falchion',
-    ),
-    AnonymousAbility(
-        id='axe_of_the_shredded',
-        display_id='axe_of_the_shredded',
-    ),
-    AnonymousAbility(
         id='scorpion_foil',
         display_id='damage_spider',
         variables={'value': 150},
-    ),
-    AnonymousAbility(
-        id='shaman_sword',
-        display_id='shaman_sword',
-    ),
-    AnonymousAbility(
-        id='pooch_sword',
-        display_id='pooch_sword',
-    ),
-    AnonymousAbility(
-        id='voidwalker_katana',
-        display_id='voidwalker_katana',
-    ),
-    AnonymousAbility(
-        id='voidedge_katana',
-        display_id='voidedge_katana',
-    ),
-    AnonymousAbility(
-        id='vorpal_katana',
-        display_id='vorpal_katana',
-    ),
-    AnonymousAbility(
-        id='atomsplit_katana',
-        display_id='atomsplit_katana',
-    ),
-    AnonymousAbility(
-        id='twilight_dagger',
-        display_id='twilight_dagger',
-    ),
-    AnonymousAbility(
-        id='firedust_dagger',
-        display_id='firedust_dagger',
-    ),
-    AnonymousAbility(
-        id='mawdredge_dagger',
-        display_id='mawdredge_dagger',
-    ),
-    AnonymousAbility(
-        id='kindlebane_dagger',
-        display_id='kindlebane_dagger',
-    ),
-
-    AnonymousAbility(
-        id='sword_of_the_stars',
-        display_id='sword_of_the_stars',
-    ),
-    AnonymousAbility(
-        id='sword_of_the_universe',
-        display_id='sword_of_the_universe',
     ),
 
     # pet abilities
@@ -685,18 +464,6 @@ ABILITIES = [
         variables={'percent': 10, 'place': ('farm', 'barn', 'desert')},
     ),
     AnonymousAbility(
-        id='vaccine_talisman',
-        display_id='poison_immunity',
-    ),
-    AnonymousAbility(
-        id='farmer_orb',
-        display_id='farmer_orb',
-    ),
-    AnonymousAbility(
-        id='night_vision_charm',
-        display_id='night_vision_charm',
-    ),
-    AnonymousAbility(
         id='speed_talisman',
         display_id='give_held_speed',
         variables={'amount': 1},
@@ -712,43 +479,9 @@ ABILITIES = [
         variables={'amount': 5},
     ),
     AnonymousAbility(
-        id='feather_talisman',
-        display_id='feather_talisman',
-    ),
-    AnonymousAbility(
-        id='feather_ring',
-        display_id='feather_ring',
-    ),
-    AnonymousAbility(
-        id='feather_artifact',
-        display_id='feather_artifact',
-    ),
-    AnonymousAbility(
-        id='piggy_bank',
-        display_id='piggy_bank',
-    ),
-    AnonymousAbility(
-        id='cracked_piggy_bank',
-        display_id='cracked_piggy_bank',
-        variables={'percent': 75},
-    ),
-    AnonymousAbility(
-        id='broken_piggy_bank',
-        display_id='broken_piggy_bank',
-    ),
-    AnonymousAbility(
         id='haste_ring',
         display_id='grant_mining_speed',
         variables={'amount': 50},
-    ),
-    AnonymousAbility(
-        id='experience_artifact',
-        display_id='gain_exp',
-        variables={'percent': 25},
-    ),
-    AnonymousAbility(
-        id='talisman_of_coins',
-        display_id='talisman_of_coins',
     ),
     AnonymousAbility(
         id='emerald_ring',
@@ -838,10 +571,6 @@ ABILITIES = [
         variables={'entities': 'zombies', 'percent': 15},
     ),
     AnonymousAbility(
-        id='devour_ring',
-        display_id='devour_ring'
-    ),
-    AnonymousAbility(
         id='spider_talisman',
         display_id='reduce_damage_taken',
         variables={'entities': 'spiders', 'percent': 5},
@@ -855,10 +584,6 @@ ABILITIES = [
         id='spider_artifact',
         display_id='reduce_damage_taken',
         variables={'entities': 'spiders', 'percent': 15},
-    ),
-    AnonymousAbility(
-        id='tarantula_talisman',
-        display_id='tarantula_talisman'
     ),
     AnonymousAbility(
         id='ender_artifact',
@@ -889,29 +614,6 @@ ABILITIES = [
         id='mine_affinity_talisman',
         display_id='increase_held_region_speed',
         variables={'percent': 10, 'place': ('gold', 'deep', 'mines')},
-    ),
-    AnonymousAbility(
-        id='intimidation_talisman',
-        display_id='intimidation',
-        variables={'value': 1},
-    ),
-    AnonymousAbility(
-        id='intimidation_ring',
-        display_id='intimidation',
-        variables={'value': 5},
-    ),
-    AnonymousAbility(
-        id='intimidation_artifact',
-        display_id='intimidation',
-        variables={'value': 25},
-    ),
-    AnonymousAbility(
-        id='scavenger_talisman',
-        display_id='scavenger_talisman',
-    ),
-    AnonymousAbility(
-        id='hegemony_artifact',
-        display_id='hegemony_artifact',
     ),
 
     # three piece bonus

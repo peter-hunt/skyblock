@@ -1,13 +1,12 @@
-from json import load
-from os import walk
 from pathlib import Path
 
-from .._lib import _open
+from ..constant.util import Number
 from ..function.file import load_folder
-from ..function.io import red
+from ..function.io import *
 from ..function.util import get, includes
 from ..path import join_path
 
+from .items import *
 from .object import *
 
 
@@ -27,3 +26,19 @@ def get_mob(name: str, /, *, warn=True, **kwargs) -> ItemType | None:
         return get(MOBS, name, **kwargs)
     elif warn:
         red(f'Mob not found: {name!r}')
+
+
+for mob in MOBS:
+    for drop in mob.drops:
+        pointer = drop[0]
+        if isinstance(pointer, Number):
+            continue
+
+        pointer = pointer.copy()
+        name = pointer['name']
+        if not includes(ITEMS, name):
+            yellow(f'Item not found: {name!r} in mob drop {mob.name!r}')
+            continue
+        del pointer['name']
+        if get(ITEMS, name, **pointer) is None:
+            yellow(f'Invalid item: {name!r} in mob drop {mob.name!r}')

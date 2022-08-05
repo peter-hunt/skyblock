@@ -5,7 +5,7 @@ from ....constant.reforging import (
     ACCESSORY_REFORGES, ARMOR_REFORGES, BOW_REFORGES, MELEE_REFORGES,
     REFORGE_COST,
 )
-from ....function.io import gray, dark_gray, green, red
+from ....function.io import *
 from ....function.util import checkpoint, format_number
 from ....object.object import *
 

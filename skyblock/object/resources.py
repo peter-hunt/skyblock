@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from ..function.file import load_folder
-from ..function.io import red
+from ..function.io import *
 from ..function.util import get, includes
 from ..path import join_path
 

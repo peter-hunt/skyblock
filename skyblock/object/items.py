@@ -3,10 +3,11 @@ from os import walk
 from pathlib import Path
 
 from ..function.file import load_folder
-from ..function.io import red
-from ..function.util import get, includes
+from ..function.io import *
+from ..function.util import get, includes, includes_id
 from ..path import join_path
 
+from .abilities import ABILITIES
 from .object import *
 
 
@@ -29,3 +30,9 @@ def get_item(name: str, /, **kwargs) -> ItemType:
 
 def get_stack_size(name: str, /) -> int:
     return getattr(get_item(name), 'count', 1)
+
+
+for item in ITEMS:
+    for ability in getattr(item, 'abilities', []):
+        if not includes_id(ABILITIES, ability):
+            yellow(f'Invalid item ability: {ability!r} of item {item.name!r}')

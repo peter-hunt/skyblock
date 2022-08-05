@@ -1,10 +1,12 @@
 from pathlib import Path
 
+from ..constant.util import Number
 from ..function.file import load_recipes
-from ..function.io import red
+from ..function.io import *
 from ..function.util import includes, get
 from ..path import join_path
 
+from .items import *
 from .object import *
 
 __all__ = ['RECIPES', 'CRAFTABLES', 'get_recipe']
@@ -45,3 +47,21 @@ def get_recipe(name: str, /, *, warn: bool = True
         return get(RECIPES, name)
     elif warn:
         red(f'Recipe or Group not found: {name!r}')
+
+
+for recipe in _RECIPES:
+    if isinstance(recipe, RecipeGroup):
+        continue
+
+    for pointer in recipe.ingredients + [recipe.result]:
+        if isinstance(pointer, Number):
+            continue
+
+        pointer = pointer.copy()
+        name = pointer['name']
+        if not includes(ITEMS, name):
+            yellow(f'Item not found: {name!r} in recipe {recipe.name!r}')
+            continue
+        del pointer['name']
+        if get(ITEMS, name, **pointer) is None:
+            yellow(f'Invalid item: {name!r} in recipe {recipe.name!r}')
