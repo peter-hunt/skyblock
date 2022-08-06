@@ -305,7 +305,6 @@ SELL_PRICE = {
     'melon_block': 4.5,
     'glistering_melon': 3.5,
     'mushroom_block': 4,
-    'cactus_green': 1,
 
     'enchanted_hay_bale': 1_300,
     'tightly_tied_hay_bale': 187_200,
@@ -370,6 +369,7 @@ SELL_PRICE = {
     'titanium': 20,
     'sorrow': 13,
     'plasma': 20_000,
+    'hard_stone': 1,
 
     'enchanted_cobblestone': 160,
     'enchanted_coal': 320,
@@ -400,6 +400,8 @@ SELL_PRICE = {
     'enchanted_end_stone': 320,
     'enchanted_mithril': 1_600,
     'enchanted_titanium': 3_200,
+    'enchanted_hard_stone': 576,
+    'concentrated_stone': 200_000,
 
     'treasurite': 5_000,
 
@@ -581,6 +583,8 @@ SELL_PRICE = {
     'revenant_flesh': 1,
     'revenant_viscera': 128,
     'undead_catalyst': 2_000,
+
+    'kelvin_inverter': 2_000,
 }
 
 DUNGEON_EXP = [

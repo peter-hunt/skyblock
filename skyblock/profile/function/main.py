@@ -391,6 +391,14 @@ def mainloop(self):
             break
 
         elif words[0] == 'exp':
+            if len(words) == 3 and words[1] == 'add':
+                amount = parse_int(words[2])
+                if amount is None:
+                    continue
+                self.add_exp(amount)
+                green(f'Added {format_number(amount)} exp.')
+                continue
+
             lvl = calc_exp_level(self.experience)
             left = self.experience - calc_exp(lvl)
             if lvl <= 15:
@@ -399,7 +407,6 @@ def mainloop(self):
                 gap = 5 * lvl - 3
             else:
                 gap = 9 * lvl - 158
-
             gray(f'Experience: {BLUE}{format_number(lvl)} Levels')
             yellow(f'{format_short(left)}{GOLD}'
                    f'/{YELLOW}{format_short(gap)}'
@@ -475,7 +482,8 @@ def mainloop(self):
                 amount = 1
             elif len(words) == 3:
                 amount = parse_int(words[2])
-
+            if amount is None:
+                continue
             obj = item.to_obj()
             obj['count'] = amount
             self.recieve_item(obj)

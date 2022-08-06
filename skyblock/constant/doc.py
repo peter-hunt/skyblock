@@ -240,6 +240,9 @@ Withdraw coins from the bank to the purse.
 """.strip()
 
 debug_doc = """
+> exp add <amount>
+Give player experience. (DEBUG)
+
 > give <item> [amount]
 Give player item. (DEBUG)
 """.strip()

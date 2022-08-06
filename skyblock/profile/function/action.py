@@ -131,25 +131,21 @@ def combine(self, index_1: int, index_2: int, /):
         return
 
     if isinstance(item_1, EnchantedBook) and isinstance(item_2, EnchantedBook):
-        result_enchants = combine_enchant(item_1.enchantments,
-                                          item_2.enchantments)
+        result_enchants = combine_enchant(item_1.enchantments, item_2.enchantments)
         self.inventory[index_1] = Empty()
         self.inventory[index_2] = Empty()
         self.recieve_item({'name': 'enchanted_book',
                            'enchantments': result_enchants})
         return
 
-    if (isinstance(item_2, (Axe, Drill, Pickaxe, Hoe,
-                            Armor, Bow, Sword, FishingRod))
+    if (isinstance(item_2, Axe | Drill | Pickaxe | Hoe | Armor | Bow | Sword | FishingRod)
             and isinstance(item_1, EnchantedBook)):
         index_1, index_2 = index_2, index_1
         item_1, item_2 = item_2, item_1
 
-    if (isinstance(item_1, (Axe, Drill, Pickaxe, Hoe,
-                            Armor, Bow, Sword, FishingRod))
+    if (isinstance(item_1, Axe | Drill | Pickaxe | Hoe | Armor | Bow | Sword | FishingRod)
             and isinstance(item_2, EnchantedBook)):
-        result_enchants = combine_enchant(item_1.enchantments,
-                                          item_2.enchantments)
+        result_enchants = combine_enchant(item_1.enchantments, item_2.enchantments)
         enchant_table = get_enchantments(item_1)
         pointer = item_1.to_obj()
         pointer['enchantments'] = {
@@ -162,12 +158,12 @@ def combine(self, index_1: int, index_2: int, /):
         self.recieve_item(pointer)
         return
 
-    if (isinstance(item_2, (Accessory, Armor, Bow, Sword, FishingRod, Pickaxe))
+    if (isinstance(item_2, Accessory | Armor | Bow | Sword | FishingRod | Pickaxe | Drill)
             and isinstance(item_1, ReforgeStone)):
         index_1, index_2 = index_2, index_1
         item_1, item_2 = item_2, item_1
 
-    if (isinstance(item_1, (Accessory, Armor, Bow, Sword, FishingRod, Pickaxe))
+    if (isinstance(item_1, Accessory | Armor | Bow | Sword | FishingRod | Pickaxe | Drill)
             and isinstance(item_2, ReforgeStone)):
         combinable = True
         if item_2.category == 'accessory':
@@ -180,11 +176,10 @@ def combine(self, index_1: int, index_2: int, /):
             if not isinstance(item_1, Bow):
                 combinable = False
         elif item_2.category == 'melee':
-            if not (isinstance(item_1, (Sword, FishingRod))
-                    and getattr(item_1, 'damage', 0) != 0):
+            if not (isinstance(item_1, Sword | FishingRod) and getattr(item_1, 'damage', 0) != 0):
                 combinable = False
         elif item_2.category == 'pickaxe':
-            if not isinstance(item_1, Pickaxe):
+            if not isinstance(item_1, Pickaxe | Drill):
                 combinable = False
         if not combinable:
             red('These items cannot be combined!')
@@ -211,7 +206,7 @@ def combine(self, index_1: int, index_2: int, /):
         return
 
     if (item_1.name in {'hot_potato_book', 'fuming_potato_book'} and
-            isinstance(item_2, (Armor, Bow, Sword, FishingRod))):
+            isinstance(item_2, Armor | Bow | Sword | FishingRod)):
         index_1, index_2 = index_2, index_1
         item_1, item_2 = item_2, item_1
 
@@ -256,6 +251,26 @@ def combine(self, index_1: int, index_2: int, /):
         item_1.dye = item_2.name.removesuffix('_dye')
         self.recieve_item(item_1.to_obj())
         self.inventory[index_2] = Empty()
+        return
+
+    if isinstance(item_2, Drill | Pickaxe) and getattr(item_1, 'name', '') == 'silex':
+        index_1, index_2 = index_2, index_1
+        item_1, item_2 = item_2, item_1
+
+    if isinstance(item_1, Drill | Pickaxe) and getattr(item_2, 'name', '') == 'silex':
+        efficiency = item_1.enchantments.get('efficiency', 0)
+
+        if efficiency >= 10:
+            red('Error!')
+            gray('You have already applied the maximum number of'
+                 ' silexes to this item!')
+        elif efficiency >= 5:
+            item_1.enchantments['efficiency'] = efficiency + 1
+            self.inventory[index_2] = Empty()
+            gray(f'Applied silex to {item_1.display()}{GRAY}!')
+        else:
+            red('Error!')
+            gray('You must apply efficiency V enchantment to this item first!')
         return
 
     red('These items cannot be combined!')
