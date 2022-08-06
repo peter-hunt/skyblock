@@ -33,6 +33,7 @@ VOID_SEPULTURE = Zone(
     'void', -575, -320,
     resources=[get_resource('end_stone'), get_resource('obsidian')],
     mobs=[get_mob('voidling_fanatic'), get_mob('voidling_extremist')],
+    skill_req=('combat', 25),
 )
 
 END_JOINTS = [

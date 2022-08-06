@@ -99,8 +99,10 @@ class Armor(ItemType):
 
     collection_req: tuple[str, int] | None = None
     combat_skill_req: int | None = None
+    tier: int | None = None
     dungeon_skill_req: int | None = None
     dungeon_completion_req: int | None = None
+    floor_obtained: int | None = None
 
     abilities: list[str] = []
 
@@ -135,8 +137,10 @@ class Bow(ItemType):
     hot_potato: int = 0
     stars: int | None = None
     combat_skill_req: int | None = None
+    tier: int | None = None
     dungeon_skill_req: int | None = None
     dungeon_completion_req: int | None = None
+    floor_obtained: int | None = None
 
     abilities: list[str] = []
 
@@ -300,8 +304,10 @@ class Sword(ItemType):
     stars: int | None = None
     combat_skill_req: int | None = None
     slayer_req: tuple[str, int] | None = None
+    tier: int | None = None
     dungeon_skill_req: int | None = None
     dungeon_completion_req: int | None = None
+    floor_obtained: int | None = None
 
     kill_count: int = 0
 
@@ -376,6 +382,7 @@ class Mob:
     defense: int = 0
     damage: int = 0
     true_damage: int = 0
+    tier: int | None = None
     tier: int | None = None
 
     coins: int = 0

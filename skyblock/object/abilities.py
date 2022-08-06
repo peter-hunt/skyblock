@@ -221,6 +221,11 @@ ABILITIES = [
         display_id='damage_spider',
         variables={'value': 150},
     ),
+    NamedAbility(
+        id='love_tap',
+        name='Ability: Love Tap',
+        display_id='love_tap',
+    ),
 
     # pet abilities
     NamedAbility(
@@ -588,6 +593,11 @@ ABILITIES = [
         id='wither_artifact',
         display_id='reduce_damage_taken',
         variables={'entities': 'withers', 'percent': 20},
+    ),
+    AnonymousAbility(
+        id='wither_relic',
+        display_id='reduce_damage_taken',
+        variables={'entities': 'withers', 'percent': 25},
     ),
     AnonymousAbility(
         id='nether_artifact',

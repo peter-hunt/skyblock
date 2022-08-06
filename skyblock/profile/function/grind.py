@@ -842,7 +842,9 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
         elif self.has_item({'name': 'ender_artifact'}):
             damage_recieved_mult *= 0.8
     if name in WITHERS:
-        if self.has_item({'name': 'wither_artifact'}):
+        if self.has_item({'name': 'wither_relic'}):
+            damage_recieved_mult *= 0.75
+        elif self.has_item({'name': 'wither_artifact'}):
             damage_recieved_mult *= 0.8
     if name in NETHER_MOBS:
         if self.has_item({'name': 'nether_artifact'}):
@@ -1010,6 +1012,8 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
                 if 'axe_of_the_shredded' in weapon_abilities:
                     healed += 50
                 elif 'reaper_falchion' in weapon_abilities:
+                    healed += 10
+                elif 'love_tap' in weapon_abilities:
                     healed += 10
 
                 hp = min(hp + healed * healing_mult, health)

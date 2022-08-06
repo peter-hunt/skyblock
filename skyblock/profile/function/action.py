@@ -2,6 +2,8 @@ from math import floor
 from random import choice, random
 from time import sleep, time
 
+from ...object.recipes import get_recipe
+
 from ...constant.colors import *
 from ...constant.enchanting import *
 from ...constant.main import INTEREST_TABLE, SELL_PRICE
@@ -172,11 +174,22 @@ def combine(self, index_1: int, index_2: int, /):
         elif item_2.category == 'armor':
             if not isinstance(item_1, Armor):
                 combinable = False
+        elif item_2.category == 'helmet':
+            if not isinstance(item_1, Armor) or item_1.part != 'helmet':
+                combinable = False
+        elif item_2.category == 'leggings':
+            if not isinstance(item_1, Armor) or item_1.part != 'leggings':
+                combinable = False
         elif item_2.category == 'bow':
             if not isinstance(item_1, Bow):
                 combinable = False
         elif item_2.category == 'melee':
-            if not (isinstance(item_1, Sword | FishingRod) and getattr(item_1, 'damage', 0) != 0):
+            if item_2.name == 'midas_jewel' and item_1.name != 'midas_sword':
+                combinable = False
+            elif item_2.name == 'warped_stone' and item_1.name not in {
+                    'aspect_of_the_end', 'aspect_of_the_void'}:
+                combinable = False
+            elif not (isinstance(item_1, Sword | FishingRod) and getattr(item_1, 'damage', 0) != 0):
                 combinable = False
         elif item_2.category == 'pickaxe':
             if not isinstance(item_1, Pickaxe | Drill):
@@ -199,6 +212,8 @@ def combine(self, index_1: int, index_2: int, /):
 
         pointer = item_1.to_obj()
         pointer['modifier'] = item_2.modifier
+        if item_2.name == 'warped_stone':
+            pointer['stars'] = 0
         self.inventory[index_1] = Empty()
         self.inventory[index_2] = Empty()
         gray(f'- {GOLD}{format_number(cost)} Coins')
@@ -339,16 +354,19 @@ def consume(self, index: int, amount: int = 1, /):
         red('This item is not consumable!')
 
 
-def craft(self, recipes: list[Recipe], amount: int = 1, /):
-    for recipe in recipes:
-        if recipe.collection_req is not None:
-            coll_name, lvl = recipe.collection_req
-            if self.get_collection_level(coll_name) < lvl:
-                red("You haven't reached the required collection yet!")
-                return
+def craft(self, recipe: Recipe | RecipeGroup, amount: int = 1, /):
+    if isinstance(recipe, RecipeGroup):
+        for name in recipe.recipes:
+            self.craft(get_recipe(name), amount)
+        return
+
+    if recipe.collection_req is not None:
+        coll_name, lvl = recipe.collection_req
+        if self.get_collection_level(coll_name) < lvl:
+            red("You haven't reached the required collection yet!")
+            return
 
     if amount == -1:
-        recipe = recipes[0]
         for ingr_pointer in recipe.ingredients:
             if isinstance(ingr_pointer, Number):
                 if self.purse < ingr_pointer:
@@ -376,68 +394,67 @@ def craft(self, recipes: list[Recipe], amount: int = 1, /):
             amount += 1
         amount -= 1
 
-    for recipe in recipes:
-        for ingr_pointer in recipe.ingredients:
-            if isinstance(ingr_pointer, Number):
-                if self.purse < ingr_pointer * amount:
-                    red("You don't have enough coins!")
-                    return
-                continue
-            _ingr_pointer = ingr_pointer.copy()
-            _ingr_pointer['count'] = ingr_pointer.get('count', 1) * amount
-            if not self.has_item(_ingr_pointer):
-                red("You don't have the required items!")
+    for ingr_pointer in recipe.ingredients:
+        if isinstance(ingr_pointer, Number):
+            if self.purse < ingr_pointer * amount:
+                red("You don't have enough coins!")
                 return
+            continue
+        _ingr_pointer = ingr_pointer.copy()
+        _ingr_pointer['count'] = ingr_pointer.get('count', 1) * amount
+        if not self.has_item(_ingr_pointer):
+            red("You don't have the required items!")
+            return
 
-        for ingr_pointer in recipe.ingredients:
-            if isinstance(ingr_pointer, Number):
-                self.purse -= ingr_pointer * amount
-                gray(f'- {GOLD}{format_number(ingr_pointer * amount)} coins')
-                continue
-            _ingr_pointer = ingr_pointer.copy()
-            _ingr_pointer['count'] = ingr_pointer.get('count', 1) * amount
-            self.remove_item(_ingr_pointer)
+    for ingr_pointer in recipe.ingredients:
+        if isinstance(ingr_pointer, Number):
+            self.purse -= ingr_pointer * amount
+            gray(f'- {GOLD}{format_number(ingr_pointer * amount)} coins')
+            continue
+        _ingr_pointer = ingr_pointer.copy()
+        _ingr_pointer['count'] = ingr_pointer.get('count', 1) * amount
+        self.remove_item(_ingr_pointer)
 
-        result_pointer = recipe.result
-        name = result_pointer['name']
+    result_pointer = recipe.result
+    name = result_pointer['name']
 
-        if name.endswith('_pet'):
-            rarity = result_pointer.get('rarity')
-            if rarity == 'common':
-                roll = random()
-                if roll <= 0.15:
-                    result_pointer['rarity'] = 'rare'
-                elif roll <= 0.5:
-                    result_pointer['rarity'] = 'uncommon'
-            elif rarity == 'epic':
-                keep_weight = 80
-                upgrade_weight = 20 + 0.2 * self.get_stat('pet_luck')
-                total = keep_weight + upgrade_weight
-                if random() > (keep_weight / total):
-                    result_pointer['rarity'] = 'legendary'
+    if name.endswith('_pet'):
+        rarity = result_pointer.get('rarity')
+        if rarity == 'common':
+            roll = random()
+            if roll <= 0.15:
+                result_pointer['rarity'] = 'rare'
+            elif roll <= 0.5:
+                result_pointer['rarity'] = 'uncommon'
+        elif rarity == 'epic':
+            keep_weight = 80
+            upgrade_weight = 20 + 0.2 * self.get_stat('pet_luck')
+            total = keep_weight + upgrade_weight
+            if random() > (keep_weight / total):
+                result_pointer['rarity'] = 'legendary'
 
-        _result_pointer = result_pointer.copy()
-        _result_pointer['count'] = result_pointer.get('count', 1) * amount
-        self.recieve_item(_result_pointer)
+    _result_pointer = result_pointer.copy()
+    _result_pointer['count'] = result_pointer.get('count', 1) * amount
+    self.recieve_item(_result_pointer)
 
-        if name.endswith('_minion'):
-            tier = result_pointer['tier']
+    if name.endswith('_minion'):
+        tier = result_pointer['tier']
 
-            minion_name = name.replace('_minion', f'_{tier}')
-            if minion_name not in self.crafted_minions:
-                self.crafted_minions.append(minion_name)
-                self.crafted_minions.sort()
+        minion_name = name.replace('_minion', f'_{tier}')
+        if minion_name not in self.crafted_minions:
+            self.crafted_minions.append(minion_name)
+            self.crafted_minions.sort()
 
-                tier_str = format_roman(tier)
-                green(f"You crafted a {YELLOW}Tier {tier_str}"
-                      f" {format_name(name)}{GREEN}! That's a new one!")
-                cap, to_next, new_added = get_minion_cap_info(len(self.crafted_minions))
-                if new_added:
-                    gold(f' You have now unlocked your {cap}th Minion slot!')
-                    self.placed_minions.append(Empty())
-                else:
-                    green(f' Craft {to_next} more unique Minions'
-                          f' to unlock your {cap + 1}th Minion slot!')
+            tier_str = format_roman(tier)
+            green(f"You crafted a {YELLOW}Tier {tier_str}"
+                  f" {format_name(name)}{GREEN}! That's a new one!")
+            cap, to_next, new_added = get_minion_cap_info(len(self.crafted_minions))
+            if new_added:
+                gold(f' You have now unlocked your {cap}th Minion slot!')
+                self.placed_minions.append(Empty())
+            else:
+                green(f' Craft {to_next} more unique Minions'
+                      f' to unlock your {cap + 1}th Minion slot!')
 
 
 def despawn_pet(self, /):

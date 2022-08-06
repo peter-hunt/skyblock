@@ -152,7 +152,8 @@ SPECIAL_NAMES = {
     'runaans_bow': "Runaan's Bow",
 
     'giants_sword': "Giant's Sword",
-    'necrons_blade': "Necron's Blade",
+    'necrons_handle': "Necron's Handle",
+    'necrons_blade': "Necron's Blade (Unrefined)",
     'tacticians_sword': "Tactician's Sword",
 
     # mob

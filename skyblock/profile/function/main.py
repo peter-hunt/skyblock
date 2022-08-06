@@ -249,11 +249,9 @@ def mainloop(self):
 
             if len(words) == 3:
                 if words[2] == '--max':
-                    if isinstance(recipe, RecipeGroup):
-                        for subrecipe in recipe.recipes:
-                            self.craft(get_recipe(subrecipe), -1)
-                        continue
+                    self.craft(recipe, -1)
                     amount = -1
+                    continue
                 else:
                     amount = parse_int(words[2])
                     if amount is None:
@@ -262,11 +260,7 @@ def mainloop(self):
                         red(f'Amount must be a positive integer.')
                         continue
 
-            if isinstance(recipe, Recipe):
-                recipes = [recipe]
-            elif isinstance(recipe, RecipeGroup):
-                recipes = [get_recipe(name) for name in recipe.recipes]
-            self.craft(recipes, amount)
+            self.craft(recipe, amount)
 
         elif words[0] == 'deathcount':
             death_count = self.stats.get('deaths', 0)
@@ -532,6 +526,9 @@ def mainloop(self):
             if match := fullmatch(r'(\w+_minion)_([1-9]|1[0-2])', name):
                 name = match.group(1)
                 tier = int(match.group(2))
+            elif match := fullmatch(r'(perfect_(helmet|chestplate|leggings|boots))_([1-9]|1[0-2])', name):
+                name = match.group(1)
+                tier = int(match.group(3))
             elif match := fullmatch(
                 (r'(common|uncommon|rare|epic|legendary|mythic'
                  r'|divine|special|very_special)_(\w+)'),

@@ -35,7 +35,7 @@ def display(self):
         if self.zone is not None:
             name += f' {format_zone(self.zone)}'
     elif self.__class__.__name__ == 'Pet':
-        name = format_name('_'.join(self.name.split('_')[:-1]))
+        name = format_name(self.name.removesuffix('_pet'))
     elif self.__class__.__name__ == 'ReforgeStone':
         name = format_name(self.name)
     elif getattr(self, 'modifier', None) is not None:
@@ -63,8 +63,12 @@ def display(self):
     elif self.__class__.__name__ == 'Dye':
         r, g, b = self.color
         return f'\x1b[0;38;2;{r};{g};{b}m{name}{CLN}'
-    else:
-        return f'{rarity_color}{name}{stars}{DARK_GRAY}{count}{CLN}'
+    elif self.__class__.__name__ == 'Armor':
+        if self.name.startswith('perfect'):
+            tier_str = format_roman(self.tier)
+            return f'{rarity_color}{name} - Tier {tier_str}{stars}{CLN}'
+
+    return f'{rarity_color}{name}{stars}{DARK_GRAY}{count}{CLN}'
 
 
 def info(self, profile, /):
@@ -77,12 +81,6 @@ def info(self, profile, /):
     else:
         rarity_color = RARITY_COLORS[self.rarity]
 
-    modifier = ''
-    if self.__class__.__name__ == 'ReforgeStone':
-        pass
-    elif getattr(self, 'modifier', None) is not None:
-        modifier = f'{self.modifier.capitalize()} '
-
     use_dye = False
     dye_color = ''
     if self.__class__.__name__ == 'Armor':
@@ -90,38 +88,7 @@ def info(self, profile, /):
             use_dye = True
             dye_color = DYE_COLORS.get(self.dye, CLN)
 
-    if self.__class__.__name__ == 'TravelScroll':
-        name = f'Travel Scroll to {format_name(self.island)}'
-        if self.zone is not None:
-            name += f' {format_name(self.zone)}'
-    elif self.__class__.__name__ == 'Pet':
-        name = format_name(self.name.removesuffix('_pet'))
-    else:
-        name = format_name(self.name)
-
-    if getattr(self, 'stars', None) is None:
-        stars = ''
-    elif self.stars <= 5:
-        stars = f' {GOLD}' + self.stars * '✪'
-    else:
-        stars = f' {RED}' + (self.stars - 5) * '✪' + GOLD + (10 - self.stars) * '✪'
-
-    if self.__class__.__name__ == 'Pet':
-        lvl = calc_pet_level(self.rarity, self.exp)
-        info = f'{GRAY}[Lvl {lvl}] {rarity_color}{name}'
-    elif self.__class__.__name__ == 'Minion':
-        tier_str = format_roman(self.tier)
-        info = f'{rarity_color}{name} {tier_str}'
-    elif self.__class__.__name__ == 'Dye':
-        r, g, b = self.color
-        info = f'\x1b[0;38;2;{r};{g};{b}m{name}'
-    elif self.__class__.__name__ == 'Armor':
-        if use_dye:
-            info = f'{dye_color}✿ {modifier}{name}{stars}'
-        else:
-            info = f'{rarity_color}{modifier}{name}{stars}'
-    else:
-        info = f'{rarity_color}{modifier}{name}{stars}'
+    info = self.display()
 
     basic_stats = []
     bonus_stats = []
@@ -455,12 +422,15 @@ def info(self, profile, /):
         type_str = {
             'accessory': 'accessories', 'melee': 'a melee weapon', 'bow': 'a bow',
             'armor': 'armor', 'pickaxe': 'a pickaxe',
+            'helmet': 'a helmet', 'chestplate': 'a chestplate',
         }.get(self.category, self.category)
+        if self.name == 'midas_jewel':
+            type_str = f"{GOLD}Midas' Sword"
 
         info += (
             f'\n{DARK_GRAY}Reforge Stone\n\n'
             f'{GRAY}Can be used in a Reforge Anvil or with the Dungeon Blacksmith'
-            f' to apply the {BLUE}{format_name(self.modifier)} {GRAY}reforge to {type_str}.'
+            f' to apply the {BLUE}{format_name(self.modifier)} {GRAY}reforge to {type_str}{GRAY}.'
         )
 
         if getattr(self, 'mining_skill_req', None) is not None:
@@ -558,10 +528,15 @@ def info(self, profile, /):
         temp_str = format_temp(get_template('abilities', ability.display_id), temp_param)
         ability_list.append(f'{ability_str}{GRAY}{temp_str}')
 
+    modifier_temp = get_template('modifier', getattr(self, 'modifier', ''), warn=False)
+    if modifier_temp is not None:
+        ability_list.append(f'{BLUE}{format_name(self.modifier)} Bonus\n'
+                            f'{GRAY}{format_temp(modifier_temp)}')
+
     if len(ability_list) != 0:
         if len(basic_stats) + len(bonus_stats) != 0:
             info += '\n'
-        elif self.__class__.__name__ == 'Pet':
+        elif self.__class__.__name__ in {'Pet', 'ReforgeStone'}:
             info += '\n'
         info += '\n' + '\n\n'.join(ability_list)
 
@@ -632,7 +607,8 @@ def info(self, profile, /):
     if getattr(self, 'combat_skill_req', None) is not None:
         if combat_level < self.combat_skill_req:
             footers.append(f'{DARK_RED}❣ {RED}Requires {GREEN}Combat Skill {self.combat_skill_req}')
-    if getattr(self, 'dungeon_skill_req', None) is not None:
+    if (getattr(self, 'dungeon_skill_req', None) is not None
+            and getattr(self, 'stars', None) is not None):
         if catacombs_level < self.dungeon_skill_req:
             footers.append(f'{DARK_RED}❣ {RED}Requires {GREEN}Catacombs Skill {self.dungeon_skill_req}')
     if getattr(self, 'dungeon_completion_req', None) is not None:
@@ -669,8 +645,7 @@ def info(self, profile, /):
     if self.__class__.__name__ == 'Minion':
         pass
     else:
-        footers.append(f'{rarity_color}{self.rarity.upper()}'
-                        f' {type_name}'.rstrip())
+        footers.append(f'{rarity_color}{self.rarity.upper()} {type_name}'.rstrip())
 
     return info + '\n\n' + '\n'.join(footers) + CLN
 
@@ -838,7 +813,9 @@ def get_stat(self, name: str, profile, /, *, default: int = 0) -> Number:
         value += getattr(active_pet, name, 0) * pet_mult * 0.2
 
     if getattr(self, 'modifier', None) is not None:
-        if self.modifier == 'heated' and name == 'mining_speed':
+        if self.modifier == 'ancient' and name == 'crit_damage':
+            value += profile.get_skill_level('catacombs')
+        elif self.modifier == 'heated' and name == 'mining_speed':
             match profile.island:
                 case 'crystals':
                     value += 240
@@ -846,6 +823,7 @@ def get_stat(self, name: str, profile, /, *, default: int = 0) -> Number:
                     value += 120
                 case _:
                     value += 60
+
         modifier_bonus = get_modifier(self.modifier, self.rarity)
         if self.__class__.__name__ == 'Accessory' and profile.has_item({'name': 'hegemony_artifact'}):
             value += modifier_bonus.get(name, 0) * 2

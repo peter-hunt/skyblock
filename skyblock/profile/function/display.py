@@ -538,14 +538,22 @@ def display_recipe_info(self, recipe: Recipe | RecipeGroup, /):
     width = ceil(width * 0.85)
     yellow(f"{BOLD}{'':-^{width}}")
 
-    green(f'{format_name(recipe.name)}'
-          f' {DARK_GRAY}({recipe.name})')
+    green(f'{format_name(recipe.name)} {DARK_GRAY}({recipe.name})')
     dark_gray(f'{format_name(recipe.category)} Recipe')
 
+    use_group = False
     if isinstance(recipe, Recipe):
         recipes = [recipe]
     else:
         recipes = [get_recipe(name) for name in recipe.recipes]
+        if isinstance(recipes[0], RecipeGroup):
+            use_group = True
+
+    if use_group:
+        gray('Recipes:')
+        for index, _recipe in enumerate(recipes):
+            green(f'  {format_name(_recipe.name)} {DARK_GRAY}({_recipe.name})')
+        return
 
     for index, _recipe in enumerate(recipes):
         if index != 0:

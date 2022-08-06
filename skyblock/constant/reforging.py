@@ -7,6 +7,7 @@ __all__ = [
 
 STAT_ALIASES = {
     'hp': 'health',
+    'dmg': 'damage',
     'def': 'defense',
     'tdf': 'true_defense',
     'str': 'strength',
@@ -222,14 +223,6 @@ ARMOR_MODIFIERS = {
         {'hp': 15, 'spd': 2, 'int': 125}, {'hp': 20, 'spd': 3, 'int': 150},
     ),
 
-    'perfect': (
-        {'def': 25}, {'def': 35}, {'def': 50},
-        {'def': 65}, {'def': 80}, {'def': 110},
-    ),
-    'necrotic': (
-        {'int': 30},  {'int': 60},  {'int': 90},
-        {'int': 120}, {'int': 150}, {'int': 200},
-    ),
     'ancient': (
         {'hp': 7, 'def': 7, 'str': 4,  'cc': 3,  'int': 6},
         {'hp': 7, 'def': 7, 'str': 8,  'cc': 5,  'int': 9},
@@ -237,6 +230,19 @@ ARMOR_MODIFIERS = {
         {'hp': 7, 'def': 7, 'str': 18, 'cc': 9,  'int': 16},
         {'hp': 7, 'def': 7, 'str': 25, 'cc': 12, 'int': 20},
         {'hp': 7, 'def': 7, 'str': 35, 'cc': 15, 'int': 25},
+    ),
+    'empowered': (
+        {'hp': 10, 'def': 10}, {'hp': 15, 'def': 15},
+        {'hp': 20, 'def': 20}, {'hp': 25, 'def': 25},
+        {'hp': 35, 'def': 35}, {'hp': 50, 'def': 50},
+    ),
+    'necrotic': (
+        {'int': 30},  {'int': 60},  {'int': 90},
+        {'int': 120}, {'int': 150}, {'int': 200},
+    ),
+    'perfect': (
+        {'def': 25}, {'def': 35}, {'def': 50},
+        {'def': 65}, {'def': 80}, {'def': 110},
     ),
     'spiked': (
         {'hp': 2,  'def': 2,  'str': 3,   'spd': 1,
@@ -270,6 +276,10 @@ ARMOR_MODIFIERS = {
         {'hp': 5,  'str': 3},  {'hp': 7,  'str': 5},  {'hp': 10, 'str': 7},
         {'hp': 15, 'str': 10}, {'hp': 20, 'str': 12}, {'hp': 25, 'str': 15},
     ),
+    'giant': (
+        {'hp': 50},  {'hp': 60},  {'hp': 80},
+        {'hp': 120}, {'hp': 180}, {'hp': 240},
+    ),
     'warped': (
         {'str': 2,  'spd': 1, 'as': 2}, {'str': 4,  'spd': 1, 'as': 3},
         {'str': 6,  'spd': 2, 'as': 4}, {'str': 7,  'spd': 2, 'as': 5},
@@ -289,13 +299,17 @@ ARMOR_MODIFIERS = {
         {'hp': 20, 'def': 20, 'cc': 3}, {'hp': 25, 'def': 25, 'cc': 4},
         {'hp': 35, 'def': 35, 'cc': 5}, {'hp': 50, 'def': 50, 'cc': 6},
     ),
-    'giant': (
-        {'hp': 50},  {'hp': 60},  {'hp': 80},
-        {'hp': 120}, {'hp': 180}, {'hp': 240},
-    ),
     'submerged': (
         {'cc': 2, 'scc': 0.5}, {'cc': 4,  'scc': 0.6}, {'cc': 6,  'scc': 0.7},
         {'cc': 8, 'scc': 0.8}, {'cc': 10, 'scc': 0.9}, {'cc': 12, 'scc': 1},
+    ),
+    'undead': (
+        {'str': 1, 'as': 1, 'hp': 6,  'def': 6},
+        {'str': 2, 'as': 2, 'hp': 8,  'def': 8},
+        {'str': 2, 'as': 3, 'hp': 12, 'def': 12},
+        {'str': 3, 'as': 4, 'hp': 18, 'def': 18},
+        {'str': 5, 'as': 5, 'hp': 25, 'def': 25},
+        {'str': 7, 'as': 6, 'hp': 33, 'def': 33},
     ),
 }
 
@@ -434,10 +448,21 @@ MELEE_MODIFIERS = {
         {'str': 40, 'cd': 25}, {'str': 50, 'cd': 32},
         {'str': 60, 'cd': 40}, {'str': 75, 'cd': 50},
     ),
+    'gilded': (
+        {'dmg': 15, 'str': 15}, {'dmg': 30, 'str': 30},
+        {'dmg': 45, 'str': 45}, {'dmg': 60, 'str': 60},
+        {'dmg': 75, 'str': 75}, {'dmg': 90, 'str': 90},
+    ),
     'suspicious': (
         {'cc': 1, 'cd': 30}, {'cc': 2,  'cd': 40},
         {'cc': 3, 'cd': 50}, {'cc': 5,  'cd': 65},
         {'cc': 7, 'cd': 85}, {'cc': 10, 'cd': 110},
+    ),
+    'warped': (
+        {'dmg': 165, 'str': 165}, {'dmg': 165, 'str': 165},
+        {'dmg': 165, 'str': 165}, {'dmg': 165, 'str': 165},
+        {'dmg': 165, 'str': 165, 'int': 65},
+        {'dmg': 165, 'str': 165, 'int': 65},
     ),
     'withered': (
         {'str': 60},  {'str': 75},  {'str': 90},
