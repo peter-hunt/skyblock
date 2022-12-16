@@ -451,8 +451,8 @@ def gather(self, name: str, tool_index: int | None,
                          f' {YELLOW}was upgraded to {BLUE}Compact {format_roman(compact_level)}{YELLOW}!')
 
             if count_ore:
-                self.stats['ores_mined'] += 1
-                ores_mined = self.stats['ores_mined']
+                self.stats['ore_mined'] += 1
+                ores_mined = self.stats['ore_mined']
                 rock_pet_rarity = {2500: 'common', 7500: 'uncommon', 20000: 'rare',
                                    100000: 'epic', 250000: 'legendary'}.get(ores_mined, '')
                 if rock_pet_rarity:
