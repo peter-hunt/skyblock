@@ -29,10 +29,12 @@ It requires the Skyblock Data repo, [Skyblock Data](https://github.com/peter-hun
 - [Installation](#installation)
   - [Running](#running)
 - [Content](#content)
-  - [Added Features:](#added-features)
-  - [Planned Features:](#planned-features)
+  - [Warning](#warning)
+  - [Added Features](#added-features)
+  - [Planned Features](#planned-features)
 - [Example Saves](#example-saves)
 - [Screenshots](#screenshots)
+- [Known Issues and Fixes](#known-issues-and-fixes)
 - [How to Contribute](#how-to-contribute)
 - [Helpful Links](#helpful-links)
 
@@ -74,7 +76,7 @@ git clone https://github.com/peter-hunt/skyblock.git
 
 ## Running
 
-**This project requires Python 3.8+**
+**This project requires Python 3.10+**
 
 To run the project, go into the project directory and do:
 
@@ -89,7 +91,11 @@ To check command usage, type `help` for command documentation.
 
 # Content
 
-## Added Features:
+## Warning
+
+The content added in the Skyblock Remake may slightly differ from the original content, including special abilities, game mechanisms, tools, etc. You might want to read their in-game descriptions for detailed information.
+
+## Added Features
 
 * Abilities
 * Accessories
@@ -100,23 +106,23 @@ To check command usage, type `help` for command documentation.
 * Collections
 * Combining Enchantments, Reforge Stone, and Potato Books
 * Dyes
+* Enchantments, Modifiers, Recombobulation, and Reforges
 * Farming, Mining, Simple Combat, Foraging, Fishing, and Enchanting
 * Fast Traveling
 * NPC Buying and Trading items
 * Minions
-* Modifiers and Reforging
 * Pets and Pet Score
 * Skills
 * Slayers Items and Recipes
 
-## Planned Features:
+## Planned Features
 
 * Wardrobe and other bags/sacks.
 * Arachane & Dragons
 * Brewing and Potion effects
 * Commissions
 * Crystal Hollows
-* Diana, Griffin Pet and **Mythological** creature
+* Diana, Griffin Pet and Mythological creature
 * Dungeons
 * Fairy Souls
 * Forging (Forging recipes are already accessible)
@@ -153,6 +159,11 @@ Here's some footage on the gameplay:
 ![](screenshots/usage-4.png)
 ![](screenshots/usage-5.png)
 ![](screenshots/usage-6.png)
+
+# Known Issues and Fixes
+
+* Displaying the wrong colour in VSCode terminal when using certain Color Themes;
+  * Use `"terminal.integrated.minimumContrastRatio": 1` in configuration file `settings.json`.
 
 # How to Contribute
 

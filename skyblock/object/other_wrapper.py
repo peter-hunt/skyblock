@@ -1,4 +1,5 @@
 from ..constant.colors import *
+from ..constant.util import *
 from ..function.util import format_name, format_number, format_short
 
 
@@ -208,11 +209,13 @@ def mob_type(cls):
 
 
 def enchanted_book_type(cls: type, /) -> type:
-    def __init__(self, enchantments: dict[str, int] = {},
-                 name: str = 'enchanted_book',
-                 rarity: str = 'common'):
-        self.name = 'enchanted_book'
+    def __init__(self, name: str = 'enchanted_book',
+                 rarity: str = 'common',
+                 enchantments: dict[str, int] = {},
+                 recombobulated: bool = False):
+        self.name = name
         self.enchantments = enchantments
+        self.recombobulated = recombobulated
 
         max_level = 0
         if len(enchantments) != 0:
@@ -232,12 +235,10 @@ def enchanted_book_type(cls: type, /) -> type:
         else:
             self.rarity = 'divine'
 
+        if recombobulated:
+            self.rarity = PLUS_RARITY[self.rarity]
+
     cls.__init__ = __init__
-
-    def copy(self, /):
-        return type(self)(self.enchantments, self.name, self.rarity)
-
-    cls.copy = copy
 
     return cls
 

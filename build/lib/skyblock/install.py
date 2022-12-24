@@ -26,10 +26,7 @@ def install_data(*, is_update=False):
         doing_str, done_str = 'Fixing', 'Fixed'
     if is_update or not is_data():
         if Path(data_dir).is_dir():
-            try:
-                run(['rm', '-rf', data_dir])
-            except FileNotFoundError:
-                pass
+            run(['rm', '-rf', data_dir])
         mkdir(data_dir)
         print(f'\x1b[0;38;2;85;255;85m{doing_str} Assets...\x1b[0m')
         run(['git', 'clone', '-q',

@@ -8,6 +8,7 @@ setup(
     author_email='huangtnhao@gmail.com',
     description=('Hypixel Skyblock Remake in Python.'
                  ' A command-line-based RPG game.'),
+    packages=['skyblock'],
     url='https://github.com/peter-hunt/skyblock',
     classifiers=[
         'Programming Language :: Python :: 3',

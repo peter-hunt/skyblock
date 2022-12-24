@@ -34,7 +34,7 @@ _RECIPES = sorted(_RECIPES, key=lambda recipe: recipe.name)
 
 RECIPES = []
 for category in {'farming', 'combat', 'mining', 'fishing', 'foraging',
-                 'enchanting', 'forging', 'smelting'}:
+                 'enchanting', 'forging', 'slayer', 'smelting'}:
     RECIPES.extend(_select_recipes(_RECIPES, category))
 
 CRAFTABLES = [recipe for recipe in RECIPES
@@ -51,6 +51,9 @@ def get_recipe(name: str, /, *, warn: bool = True
 
 for recipe in _RECIPES:
     if isinstance(recipe, RecipeGroup):
+        for name in recipe.recipes:
+            if not includes(RECIPES, name):
+                yellow(f'Recipe not found: {name!r} in recipe group {recipe.name!r}')
         continue
 
     for pointer in recipe.ingredients + [recipe.result]:

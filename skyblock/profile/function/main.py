@@ -682,6 +682,13 @@ def mainloop(self):
                 red(f'Invalid subcommand of {words[0]}: {words[1]!r}')
 
         elif words[0] == 'money':
+            if len(words) == 3:
+                if words[1] == 'give':
+                    amount = parse_int(words[2])
+                    self.money += amount
+                    gray(f'+{GOLD}{format_number(amount)} coins')
+                    continue
+
             self.display_money()
 
         elif words[0] in {'move', 'mv', 'switch'}:

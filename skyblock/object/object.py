@@ -29,6 +29,7 @@ class Item(ItemType):
     # common | uncommon | rare | epic | legendary |
     # mythic | divine | special | very_special
     rarity: str = 'common'
+    recombobulated: bool = False
     slayer_req: tuple[str, int] | None = None
 
     abilities: list[str] = []
@@ -43,6 +44,7 @@ class Empty(ItemType):
 class Accessory(ItemType):
     name: str
     rarity: str = 'common'
+    recombobulated: bool = False
     modifier: str | None = None
 
     strength: int = 0
@@ -91,6 +93,7 @@ class Armor(ItemType):
     sea_creature_chance: int = 0
     pristine: int = 0
 
+    recombobulated: bool = False
     modifier: str | None = None
     enchantments: dict[str, int] = {}
     hot_potato: int = 0
@@ -112,6 +115,7 @@ class Axe(ItemType):
     name: str
     rarity: str
     tool_speed: int
+    recombobulated: bool = False
     modifier: str | None = None
     enchantments: dict[str, int] = {}
 
@@ -132,6 +136,7 @@ class Bow(ItemType):
 
     intelligence: int = 0
 
+    recombobulated: bool = False
     modifier: str | None = None
     enchantments: dict[str, int] = {}
     hot_potato: int = 0
@@ -162,6 +167,7 @@ class Drill(ItemType):
     defense: int = 0
     intelligence: int = 0
 
+    recombobulated: bool = False
     modifier: str | None = None
     enchantments: dict[str, int] = {}
 
@@ -174,14 +180,16 @@ class Dye(ItemType):
     color: tuple[int]
     count: int = 64
     rarity: str = 'epic'
+    recombobulated: bool = False
 
 
 @enchanted_book_type
 @item_type
 class EnchantedBook(ItemType):
-    enchantments: dict[str, int] = {}
     name: str = 'enchanted_book'
     rarity: str = 'common'
+    enchantments: dict[str, int] = {}
+    recombobulated: bool = False
 
 
 @item_type
@@ -196,6 +204,7 @@ class FishingRod(ItemType):
     fishing_speed: int = 0
     sea_creature_chance: int = 0
 
+    recombobulated: bool = False
     modifier: str | None = None
     enchantments: dict[str, int] = {}
     expertise_count: int = 0
@@ -210,6 +219,7 @@ class FishingRod(ItemType):
 class Hoe(ItemType):
     name: str
     rarity: str
+    recombobulated: bool = False
     modifier: str | None = None
     enchantments: dict[str, int] = {}
     cultivating_count: int = 0
@@ -261,6 +271,7 @@ class Pickaxe(ItemType):
     damage: int = 0
     defense: int = 0
 
+    recombobulated: bool = False
     modifier: str | None = None
     enchantments: dict[str, int] = {}
     compact_count: int = 0
@@ -274,6 +285,7 @@ class ReforgeStone(ItemType):
     modifier: str | None = None
     category: str | None = None
     rarity: str = 'common'
+    recombobulated: bool = False
     cost: tuple[int] = (0, 0, 0, 0, 0, 0)
 
     mining_skill_req: int | None = None
@@ -298,6 +310,7 @@ class Sword(ItemType):
     ferocity: int = 0
     speed: int = 0
 
+    recombobulated: bool = False
     modifier: str | None = None
     enchantments: dict[str, int] = {}
     hot_potato: int = 0
@@ -319,6 +332,7 @@ class TravelScroll(ItemType):
     name: str
     island: str
     zone: str | None = None
+    recombobulated: bool = False
     rarity: str = 'rare'
 
 
@@ -400,6 +414,7 @@ class Recipe:
     category: str
     ingredients: list[ItemPointer | int]
     result: ItemPointer
+    copy_upgrades: bool = False
     collection_req: tuple[str, int] | None = None
     slayer_req: tuple[str, int] | None = None
 

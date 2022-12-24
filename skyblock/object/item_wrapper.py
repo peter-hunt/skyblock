@@ -7,8 +7,8 @@ from ..constant.util import Number
 from ..function.math import *
 from ..function.reforging import get_modifier
 from ..function.util import (
-    camel_to_under, format_name, format_number, format_roman, format_short,
-    format_zone, get,
+    camel_to_under, format_name, format_number, format_rarity, format_roman, format_short,
+    format_zone,
 )
 from ..format.function import format_temp
 from ..format.template import get_template
@@ -94,16 +94,25 @@ def info(self, profile, /):
     bonus_stats = []
 
     if self.__class__.__name__ == 'Accessory':
+        if self.modifier is not None:
+            modifier_bonus = get_modifier(self.modifier, self.rarity)
+        else:
+            modifier_bonus = {}
+
         for stat_name in ('strength', 'crit_chance', 'crit_damage', 'attack_speed'):
             display_stat = format_name(stat_name)
             ext = '%' if stat_name[0] in 'ac' else ''
 
-            value = fround(self.get_stat(stat_name, profile), 1)
-            if value == 0:
-                continue
+            value = self.get_stat(stat_name, profile)
             value_str = format_number(value, sign=True)
-            bonus = f' {BLUE}({format_name(self.modifier)} {value_str}{ext})'
 
+            bonus = ''
+            if stat_name in modifier_bonus:
+                bonus_value = modifier_bonus[stat_name]
+                bonus_str = format_number(bonus_value, sign=True)
+                bonus += f' {BLUE}({format_name(self.modifier)} {bonus_str}{ext})'
+
+            value = fround(value, 1)
             if value == 0:
                 continue
 
@@ -118,14 +127,16 @@ def info(self, profile, /):
             display_stat = format_name(stat_name)
             ext = ' HP' if stat_name == 'health' else ''
 
-            modifier_bonus = get_modifier(self.modifier, self.rarity)
-            if stat_name not in modifier_bonus:
-                continue
-
-            value = fround(modifier_bonus[stat_name], 1)
+            value = self.get_stat(stat_name, profile)
             value_str = format_number(value, sign=True)
-            bonus = f' {BLUE}({format_name(self.modifier)} {value_str}{ext})'
 
+            bonus = ''
+            if stat_name in modifier_bonus:
+                bonus_value = modifier_bonus[stat_name]
+                bonus_str = format_number(bonus_value, sign=True)
+                bonus += f' {BLUE}({format_name(self.modifier)} {bonus_str}{ext})'
+
+            value = fround(value, 1)
             if value == 0:
                 continue
 
@@ -627,7 +638,10 @@ def info(self, profile, /):
     if use_dye:
         footers.append(f'{dye_color}✿ {self.dye.capitalize()} Dyed')
 
-    if self.__class__.__name__ == 'Armor':
+
+    if self.__class__.__name__ == 'Minion':
+        return info + '\n\n' + '\n'.join(footers) + CLN
+    elif self.__class__.__name__ == 'Armor':
         type_name = self.part.upper()
     elif self.__class__.__name__ == 'FishingRod':
         type_name = 'FISHING ROD'
@@ -641,11 +655,14 @@ def info(self, profile, /):
         type_name = self.__class__.__name__.upper()
     if getattr(self, 'stars', None) is not None:
         type_name = f'DUNGEON {type_name}'
+    type_name = f'{format_rarity(self.rarity)} {type_name}'.rstrip()
 
-    if self.__class__.__name__ == 'Minion':
-        pass
+    if getattr(self, 'recombobulated', False):
+        full_type = f'{rarity_color}█ {type_name} █'
     else:
-        footers.append(f'{rarity_color}{self.rarity.upper()} {type_name}'.rstrip())
+        full_type = f'{rarity_color}{type_name}'
+
+    footers.append(full_type)
 
     return info + '\n\n' + '\n'.join(footers) + CLN
 

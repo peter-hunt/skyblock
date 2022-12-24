@@ -21,6 +21,9 @@ SET_BONUSES = (
     'fairys_outfit',
 
     'absolute_unit',
+
+    'skeleton_soldier',
+    'skeleton_master',
 )
 
 THREE_PIECE_BONUSES = (

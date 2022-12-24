@@ -13,7 +13,7 @@ from ...function.io import *
 from ...function.math import calc_bestiary_level, calc_pet_level
 from ...function.random import random_amount, random_bool, random_int
 from ...function.util import (
-    checkpoint, format_crit, format_name, format_number, format_roman,
+    checkpoint, format_crit, format_name, format_number, format_rarity, format_roman,
 )
 from ...object.fishing import FISHING_TABLE, SEA_CREATRUE_TABLE
 from ...object.items import get_item
@@ -183,8 +183,7 @@ def fish(self, rod_index: int, iteration: int = 1, /):
                 if drop_display.endswith('.0'):
                     drop_display = drop_display[:-2]
                 if is_treasure:
-                    rarity_display = rarity.upper().replace('_', ' ')
-                    gray(f'{RARITY_COLORS[rarity]}{rarity_display}! {AQUA}'
+                    gray(f'{RARITY_COLORS[rarity]}{format_rarity(rarity)}! {AQUA}'
                          f'You found {GOLD}{format_number(drop)} Coins{AQUA}.')
             else:
                 if random_bool(blessing):
@@ -202,8 +201,7 @@ def fish(self, rod_index: int, iteration: int = 1, /):
                 self.collect(drop_name, drop.get('count', 1))
 
                 if is_treasure:
-                    rarity_display = rarity.upper().replace('_', ' ')
-                    gray(f'{RARITY_COLORS[rarity]}{rarity_display}! {AQUA}'
+                    gray(f'{RARITY_COLORS[rarity]}{format_rarity(rarity)}! {AQUA}'
                          f'You found a {drop_item.display()}{AQUA}.')
 
             self.add_skill_exp('fishing', random_amount(fishing_exp, mult=fishing_exp_mult), display=True)
@@ -222,6 +220,9 @@ def gather(self, name: str, tool_index: int | None,
     resource = get_resource(name)
     tool = Empty() if tool_index is None else self.inventory[tool_index]
     iteration = 1 if iteration is None else iteration
+
+    magic_find = self.get_stat('magic_find', tool_index)
+    magic_find_str = f'{AQUA}(+{format_number(magic_find)}% Magic Find!)'
 
     active_pet = self.get_active_pet()
     has_active_pet = isinstance(active_pet, Pet)
@@ -279,7 +280,7 @@ def gather(self, name: str, tool_index: int | None,
             if random_bool((0.000_000_125) * (1 + magic_find / 100)):
                 rarity = 'rngesus'
                 item = get_item('wild_strawberry_dye')
-                white(f'{RARITY_COLORS[rarity]}{format_name(rarity)} DROP! '
+                white(f'{RARITY_COLORS[rarity]}{format_rarity(rarity)} DROP! '
                         f'{WHITE}({item.display()}{WHITE}) {magic_find_str}')
                 self.recieve_item(item.to_obj())
 
@@ -350,7 +351,7 @@ def gather(self, name: str, tool_index: int | None,
                 if random_bool((0.000_000_1) * (1 + magic_find / 100)):
                     rarity = 'rngesus'
                     item = get_item('mango_dye')
-                    white(f'{RARITY_COLORS[rarity]}{format_name(rarity)} DROP! '
+                    white(f'{RARITY_COLORS[rarity]}{format_rarity(rarity)} DROP! '
                           f'{WHITE}({item.display()}{WHITE}) {magic_find_str}')
                     self.recieve_item(item.to_obj())
 
@@ -360,8 +361,6 @@ def gather(self, name: str, tool_index: int | None,
                 gray(f'{i} / {iteration} ({(last_cp * 100):.0f}%) done')
 
     elif isinstance(resource, Mineral):
-        magic_find = self.get_stat('magic_find', tool_index)
-        magic_find_str = f'{AQUA}(+{format_number(magic_find)}% Magic Find!)'
         count_ore = resource.name not in {'stone', 'netherrack', 'end_stone'}
 
         breaking_power = tool.get_stat('breaking_power', self)
@@ -479,7 +478,7 @@ def gather(self, name: str, tool_index: int | None,
                 if random_bool((0.000_000_125) * (1 + magic_find / 100)):
                     rarity = 'rngesus'
                     item = get_item('emerald_dye')
-                    white(f'{RARITY_COLORS[rarity]}{format_name(rarity)} DROP! '
+                    white(f'{RARITY_COLORS[rarity]}{format_rarity(rarity)} DROP! '
                             f'{WHITE}({item.display()}{WHITE}) {magic_find_str}')
                     self.recieve_item(item.to_obj())
 
@@ -511,8 +510,11 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
     weapon = (Empty() if weapon_index is None
               else self.inventory[weapon_index])
 
-    if not isinstance(weapon, (Empty, Bow, Sword, FishingRod, Pickaxe, Drill)):
+    if isinstance(weapon, (Empty, Bow, Sword, FishingRod, Pickaxe, Drill)):
+        weapon_name = weapon.name
+    else:
         weapon = Empty()
+        weapon_name = ''
 
     active_pet = self.get_active_pet()
     has_active_pet = isinstance(active_pet, Pet)
@@ -569,70 +571,83 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
     activate_mithrils_protection = False
 
     use_kill_count = False
-    if 'raider_axe' in weapon_abilities:
+    if weapon_name == 'raider_axe':
         use_kill_count = True
 
     damage_bonus_mult = 1
     damage_recieved_mult = 1
 
-    if 'axe_of_the_shredded' in weapon_abilities and name in ZOMBIES:
+    if weapon_name == 'axe_of_the_shredded' and name in ZOMBIES:
         damage_bonus_mult *= 3.5
         damage_recieved_mult *= 0.75
-    elif 'reaper_falchion' in weapon_abilities and name in ZOMBIES:
+    elif weapon_name == 'reaper_falchion' and name in ZOMBIES:
         damage_bonus_mult *= 3
         damage_recieved_mult *= 0.8
-    elif 'revenant_falchion' in weapon_abilities and name in ZOMBIES:
+    elif weapon_name == 'revenant_falchion' and name in ZOMBIES:
         damage_bonus_mult *= 2.5
-    elif 'undead_sword' in weapon_abilities and name in UNDEADS:
+    elif weapon_name == 'undead_sword' and name in UNDEADS:
         damage_bonus_mult *= 2
 
-    elif 'scorpion_foil' in weapon_abilities and name in SPIDERS:
+    elif weapon_name == 'scorpion_foil' and name in SPIDERS:
         damage_bonus_mult *= 2.5
-    elif 'spider_sword' in weapon_abilities and name in SPIDERS:
+    elif weapon_name == 'spider_sword' and name in SPIDERS:
         damage_bonus_mult *= 2
 
-    elif 'pooch_sword' in weapon_abilities and name in WOLVES:
+    elif weapon_name == 'pooch_sword' and name in WOLVES:
         damage_recieved_mult *= 0.8
         strength += 150
-    elif 'shaman_sword' in weapon_abilities and name in WOLVES:
+    elif weapon_name == 'shaman_sword' and name in WOLVES:
         damage_recieved_mult *= 0.8
 
-    elif 'atomsplit_katana' in weapon_abilities and name in ENDERMEN:
+    elif weapon_name == 'atomsplit_katana' and name in ENDERMEN:
         damage_bonus_mult *= 5.5
         damage_recieved_mult *= 0.88
-    elif 'vorpal_katana' in weapon_abilities and name in ENDERMEN:
+    elif weapon_name == 'vorpal_katana' and name in ENDERMEN:
         damage_bonus_mult *= 4.5
         damage_recieved_mult *= 0.91
-    elif 'voidedge_katana' in weapon_abilities and name in ENDERMEN:
+    elif weapon_name == 'voidedge_katana' and name in ENDERMEN:
         damage_bonus_mult *= 3.5
         damage_recieved_mult *= 0.94
-    elif 'voidwalker_katana' in weapon_abilities and name in ENDERMEN:
+    elif weapon_name == 'voidwalker_katana' and name in ENDERMEN:
         damage_bonus_mult *= 2.5
         damage_recieved_mult *= 0.97
 
-    elif 'end_sword' in weapon_abilities and name in END_MOBS:
+    elif weapon_name == 'end_sword' and name in END_MOBS:
         damage_bonus_mult *= 2
 
-    elif 'twilight_dagger' in weapon_abilities:
-        if name in BLAZES:
-            damage_bonus_mult *= 1.5
-        elif name in SKELETONS:
-            damage_bonus_mult *= 1.2
-    elif 'firedust_dagger' in weapon_abilities:
-        if name in BLAZES:
-            damage_bonus_mult *= 1.2
-        elif name in PIGMEN:
-            damage_bonus_mult *= 1.1
-    elif 'mawdredge_dagger' in weapon_abilities:
+    elif weapon_name == 'deathripper_dagger':
         if name in BLAZES:
             damage_bonus_mult *= 2.5
         elif name in SKELETONS:
             damage_bonus_mult *= 1.5
-    elif 'kindlebane_dagger' in weapon_abilities:
+    elif weapon_name == 'pyrochaos_dagger':
+        if name in BLAZES:
+            damage_bonus_mult *= 2
+        elif name in PIGMEN:
+            damage_bonus_mult *= 1.5
+    elif weapon_name == 'mawdredge_dagger':
+        if name in BLAZES:
+            damage_bonus_mult *= 2.5
+        elif name in SKELETONS:
+            damage_bonus_mult *= 1.5
+    elif weapon_name == 'kindlebane_dagger':
         if name in BLAZES:
             damage_bonus_mult *= 1.5
         elif name in PIGMEN:
             damage_bonus_mult *= 1.2
+    elif weapon_name == 'twilight_dagger':
+        if name in BLAZES:
+            damage_bonus_mult *= 1.5
+        elif name in SKELETONS:
+            damage_bonus_mult *= 1.2
+    elif weapon_name == 'firedust_dagger':
+        if name in BLAZES:
+            damage_bonus_mult *= 1.2
+        elif name in PIGMEN:
+            damage_bonus_mult *= 1.1
+
+    is_bow = isinstance(weapon, Bow)
+    ues_arrows = is_bow
 
     damage_bonus_mult *= 1 + 0.04 * weapon_enchants.get('duplex', 0)
     duplex_fire_mult = 1 + 0.1 * weapon_enchants.get('duplex', 0)
@@ -646,7 +661,6 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
             break
 
         piece_enchants = getattr(piece, 'enchantments', {})
-
         if name in BLAST_PROT_EFT:
             defense += 30 * piece_enchants.get('blast_protection', 0)
         if name in PROJ_PROT_EFT:
@@ -659,11 +673,30 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
                 break
         else:
             continue
+
         if set_bonus is True:
             set_bonus = current_ability
         elif set_bonus is not False:
             if current_ability != set_bonus:
                 set_bonus = False
+
+        if is_bow:
+            if piece.name == 'sniper_helmet':
+                damage_bonus_mult *= 1.1
+            elif piece.name in {
+                'skeleton_grunt_helmet', 'skeleton_grunt_chestplate',
+                'skeleton_grunt_leggings', 'skeleton_grunt_boots',
+                'skeleton_soldier_helmet', 'skeleton_soldier_chestplate',
+                'skeleton_soldier_leggings', 'skeleton_soldier_boots',
+                'skeleton_master_helmet', 'skeleton_master_chestplate',
+                'skeleton_master_leggings', 'skeleton_master_boots',
+            }:
+                damage_bonus_mult *= 1.05
+            if piece.name == 'skeleton_master_chestplate':
+                ues_arrows = False
+
+    if is_bow and set_bonus in {'skeleton_soldier', 'skeleton_master'}:
+        damage_bonus_mult *= 1.25
 
     three_set_bonus = True
     for piece in self.armor:
@@ -770,7 +803,7 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
     infinite_quiver_chnc = 0.03 * weapon_enchants.get('infinite_quiver', 0)
     knockback = 1 + 0.1 * weapon_enchants.get('knockback', 0)
     life_steal = 0.005 * weapon_enchants.get('life_steal', 0)
-    if isinstance(weapon, Bow):
+    if is_bow:
         looting = 1 + 0.15 * weapon_enchants.get('chance', 0)
     elif isinstance(weapon, Sword):
         looting = 1 + 0.15 * weapon_enchants.get('looting', 0)
@@ -921,7 +954,7 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
         while True:
             weapon_dmg = 0 if isinstance(weapon, Empty) else weapon.get_stat('damage', self)
 
-            if isinstance(weapon, Bow):
+            if ues_arrows:
                 if not self.has_item({'name': 'arrow', 'count': 1}):
                     red("You don't have any arrows in your inventory!")
                     return
@@ -1131,7 +1164,7 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
             if rarity not in {'common', 'uncommon'}:
                 if getattr(item, 'count', 1) != 1:
                     item.count = 1
-                white(f'{RARITY_COLORS[rarity]}{format_name(rarity)} DROP! '
+                white(f'{RARITY_COLORS[rarity]}{format_rarity(rarity)} DROP! '
                       f'{WHITE}({item.display()}{WHITE}) {magic_find_str}')
 
         if 'diamond' in mob.name:

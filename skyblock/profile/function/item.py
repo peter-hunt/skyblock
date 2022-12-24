@@ -1,5 +1,7 @@
+from collections import defaultdict
+
 from ...constant.colors import *
-from ...constant.util import ItemPointer
+from ...constant.util import ItemPointer, UPGRADE_ATTRS
 from ...function.io import *
 from ...function.util import format_number
 from ...object.items import get_item, get_stack_size
@@ -7,9 +9,13 @@ from ...object.object import *
 
 
 __all__ = [
-    'clearstash', 'get_active_pet', 'has_item', 'merge', 'pickupstash',
-    'put_stash', '_recieve_item', 'recieve_item', 'remove_item', 'split',
+    'check_items', 'clearstash', 'get_active_pet', 'has_item', 'index_item',
+    'map_items', 'merge', 'pickupstash', 'put_stash', '_recieve_item',
+    'recieve_item', 'remove_item', 'split',
 ]
+
+def check_items(self, /):
+    pass
 
 
 def clearstash(self, /):
@@ -41,6 +47,28 @@ def has_item(self, pointer: ItemPointer, /):
                 return True
 
     return False
+
+
+def index_item(self, pointer: ItemPointer, /):
+    kwargs = {key: pointer[key] for key in pointer
+              if key != 'count'}
+
+    for index, item in enumerate(self.inventory):
+        for key in kwargs:
+            if not hasattr(item, key) or getattr(item, key) != kwargs[key]:
+                break
+        else:
+            return index
+    return -1
+
+
+def map_items(self, /):
+    result = defaultdict(default_factory=int)
+    for item in self.inventory:
+        if isinstance(item, Empty | None):
+            continue
+        result[item.name] += getattr(item, 'count', 1)
+    return result
 
 
 def merge(self, index_1: int, index_2: int, /):
@@ -129,10 +157,9 @@ def _recieve_item(self, pointer: ItemPointer, /) -> ItemPointer:
     counter = count
     name = pointer['name']
     kwargs = {key: pointer[key] for key in pointer
-              if key not in {'name', 'count', 'abilities', 'damage', 'active', 'exp',
-                             'kill_count', 'dye'} | {*STAT_COLORS.keys()}}
+              if key not in {'name', 'count', 'damage'} | UPGRADE_ATTRS | {*STAT_COLORS.keys()}}
     set_attrs = {key: pointer[key] for key in pointer
-                 if key in {'abilities', 'damage', 'dye', 'exp', 'kill_count'} | {*STAT_COLORS.keys()}}
+                 if key in {'damage'} | UPGRADE_ATTRS | {*STAT_COLORS.keys()}}
 
     item_obj = get_item(name, **kwargs)
     item_obj.count = count
@@ -185,17 +212,17 @@ def recieve_item(self, pointer: ItemPointer, /):
     count = pointer.get('count', 1)
     name = pointer['name']
     kwargs = {key: pointer[key] for key in pointer
-              if key not in {'name', 'count', 'abilities', 'damage', 'active', 'exp',
-                             'kill_count', 'dye'} | {*STAT_COLORS.keys()}}
+              if key not in {'name', 'count', 'damage'} | UPGRADE_ATTRS | {*STAT_COLORS.keys()}}
     set_attrs = {key: pointer[key] for key in pointer
-                 if key in {'abilities', 'damage', 'dye', 'exp', 'kill_count'} | {*STAT_COLORS.keys()}}
+                 if key in {'damage'} | UPGRADE_ATTRS | {*STAT_COLORS.keys()}}
 
     item = get_item(name, **kwargs)
     item.count = count
     if getattr(item, 'count', 1) != 1:
         item.count = 1
     for attr, value in set_attrs.items():
-        setattr(item, attr, value)
+        if hasattr(item, attr):
+            setattr(item, attr, value)
     count_str = '' if count <= 1 else f' {DARK_GRAY}x {format_number(count)}'
     gray(f'+ {item.display()}{count_str}')
 
@@ -207,27 +234,26 @@ def remove_item(self, pointer: ItemPointer, /):
     kwargs = {key: pointer[key] for key in pointer
               if key not in {'name', 'count'}}
 
-    for index, item in enumerate(self.inventory):
-        if not hasattr(item, 'name') or item.name != name:
-            continue
-        for key in kwargs:
-            if (not hasattr(item, key)
-                    or getattr(item, key) != kwargs[key]):
-                break
+    while True:
+        index = self.index_item({key: value for key, value in pointer.items()
+                                if key != 'count'})
+        if index == -1:
+            break
+
+        item = self.inventory[index]
+        if not hasattr(item, 'count'):
+            counter -= 1
+            self.inventory[index] = Empty()
         else:
-            if not hasattr(item, 'count'):
-                counter -= 1
+            delta = min(counter, item.count)
+            if delta == item.count:
                 self.inventory[index] = Empty()
             else:
-                delta = min(counter, item.count)
-                if delta == item.count:
-                    self.inventory[index] = Empty()
-                else:
-                    self.inventory[index].count -= delta
-                counter -= delta
+                self.inventory[index].count -= delta
+            counter -= delta
 
-            if counter == 0:
-                break
+        if counter == 0:
+            break
 
     item = get_item(name, **kwargs)
     if getattr(item, 'count', 1) != 1:

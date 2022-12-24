@@ -38,7 +38,7 @@ def get_modifier(name: str | None, rarity: str, /) -> dict[str, int]:
 
     bonuses = MODIFIERS[name]
     rarity = rarity[0]
-    if rarity in {'m', 's', 'v'}:
+    if rarity in {'m', 'd', 's', 'v'}:
         rarity = 'l'
 
     result = {}

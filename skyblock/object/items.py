@@ -19,7 +19,7 @@ if not Path(join_path('skyblock', 'data', 'items')).is_dir():
     )
 
 ITEMS = load_folder(join_path('skyblock', 'data', 'items'), load_item)
-ITEMS = sorted(ITEMS, key=lambda item: item.name)
+ITEMS = sorted(ITEMS, key=lambda item: (item.name, getattr(item, 'tier', -1)))
 
 
 def get_item(name: str, /, **kwargs) -> ItemType:

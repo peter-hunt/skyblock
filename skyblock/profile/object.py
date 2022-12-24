@@ -45,7 +45,7 @@ class Profile:
 
     play_time: int = 0
     stats: dict[str, int] = {
-        'deaths': 0, 'kills': 0, 'ore_mined': 0, 'sea_creature_killed': 0,
+        'deaths': 0, 'kills': 0, 'ores_mined': 0, 'sea_creature_killed': 0,
     }
 
     armor: list[Armor] = [Empty() for _ in range(4)]

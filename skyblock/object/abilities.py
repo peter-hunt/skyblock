@@ -169,6 +169,45 @@ ABILITIES = [
         display_id='brute_force',
     ),
 
+    NamedAbility(
+        id='revenant_trolling_the_reaper',
+        name='Full Set Bonus: Trolling The Reaper',
+        display_id='revenant_trolling_the_reaper',
+    ),
+    NamedAbility(
+        id='reaper_trolling_the_reaper',
+        name='Full Set Bonus: Trolling The Reaper',
+        display_id='reaper_trolling_the_reaper',
+    ),
+    NamedAbility(
+        id='absolute_unit',
+        name='Full Set Bonus: Absolute Unit',
+        display_id='absolute_unit',
+    ),
+
+    TieredBonus(
+        id='shimmer',
+        name='Tiered Armor Bonus: Shimmer',
+        display_id='shimmer',
+        tiered_variables={'value': [0, 100, 200, 300]},
+    ),
+
+    NamedAbility(
+        id='skeleton_soldier',
+        name='Full Set Bonus: Skeleton Soldier',
+        display_id='skeleton_soldier',
+    ),
+    NamedAbility(
+        id='skeleton_master',
+        name='Full Set Bonus: Skeleton Master',
+        display_id='skeleton_master',
+    ),
+    NamedAbility(
+        id='skeletor',
+        name='Full Set Bonus: Skeletor',
+        display_id='skeletor',
+    ),
+
     # tool abilities
     AnonymousAbility(
         id='jungle_axe',
@@ -613,30 +652,6 @@ ABILITIES = [
         id='mine_affinity_talisman',
         display_id='increase_held_region_speed',
         variables={'percent': 10, 'place': ('gold', 'deep', 'mines')},
-    ),
-
-    # three piece bonus
-    NamedAbility(
-        id='revenant_trolling_the_reaper',
-        name='Full Set Bonus: Trolling The Reaper',
-        display_id='revenant_trolling_the_reaper',
-    ),
-    NamedAbility(
-        id='reaper_trolling_the_reaper',
-        name='Full Set Bonus: Trolling The Reaper',
-        display_id='reaper_trolling_the_reaper',
-    ),
-    NamedAbility(
-        id='absolute_unit',
-        name='Full Set Bonus: Absolute Unit',
-        display_id='absolute_unit',
-    ),
-
-    TieredBonus(
-        id='shimmer',
-        name='Tiered Armor Bonus: Shimmer',
-        display_id='shimmer',
-        tiered_variables={'value': [0, 100, 200, 300]},
     ),
 ]
 

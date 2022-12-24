@@ -7,6 +7,7 @@ from ...object.recipes import get_recipe
 from ...constant.colors import *
 from ...constant.enchanting import *
 from ...constant.main import INTEREST_TABLE, SELL_PRICE
+from ...constant.util import *
 from ...function.enchanting import get_enchantments
 from ...function.io import *
 from ...function.math import calc_exp_level, calc_exp
@@ -14,8 +15,8 @@ from ...function.minions import get_minion_cap, get_minion_cap_info
 from ...function.random import random_amount, random_int
 from ...function.reforging import combine_enchant
 from ...function.util import (
-    checkpoint, format_name, format_number, format_roman, format_short,
-    format_zone, get, get_ench, includes, Number,
+    checkpoint, format_name, format_number, format_rarity, format_roman,
+    format_short, format_zone, get, get_ench, includes, Number,
 )
 from ...install import install_data
 from ...map.islands import ISLANDS
@@ -288,6 +289,19 @@ def combine(self, index_1: int, index_2: int, /):
             gray('You must apply efficiency V enchantment to this item first!')
         return
 
+    if getattr(item_2, 'recombobulated', False) is False and item_1.name == 'recombobulator_3000':
+        index_1, index_2 = index_2, index_1
+        item_1, item_2 = item_2, item_1
+
+    if getattr(item_1, 'recombobulated', False) is False and item_2.name == 'recombobulator_3000':
+        item_1.rarity = PLUS_RARITY[item_1.rarity]
+        item_1.recombobulated = True
+        self.inventory[index_2] = Empty()
+        green(f'You recombobulated your {item_1.display()}{GREEN} to become'
+              f' {RARITY_COLORS[item_1.rarity]}{format_rarity(item_1.rarity)}{GREEN}!')
+
+        return
+
     red('These items cannot be combined!')
     return
 
@@ -393,30 +407,44 @@ def craft(self, recipe: Recipe | RecipeGroup, amount: int = 1, /):
                 break
             amount += 1
         amount -= 1
-
-    for ingr_pointer in recipe.ingredients:
-        if isinstance(ingr_pointer, Number):
-            if self.purse < ingr_pointer * amount:
-                red("You don't have enough coins!")
+    else:
+        for ingr_pointer in recipe.ingredients:
+            if isinstance(ingr_pointer, Number):
+                if self.purse < ingr_pointer * amount:
+                    red("You don't have enough coins!")
+                    return
+                continue
+            _ingr_pointer = ingr_pointer.copy()
+            _ingr_pointer['count'] = ingr_pointer.get('count', 1) * amount
+            if not self.has_item(_ingr_pointer):
+                red("You don't have the required items!")
                 return
-            continue
-        _ingr_pointer = ingr_pointer.copy()
-        _ingr_pointer['count'] = ingr_pointer.get('count', 1) * amount
-        if not self.has_item(_ingr_pointer):
-            red("You don't have the required items!")
-            return
 
-    for ingr_pointer in recipe.ingredients:
+    copied_upgrades = {}
+    for index, ingr_pointer in enumerate(recipe.ingredients):
         if isinstance(ingr_pointer, Number):
             self.purse -= ingr_pointer * amount
             gray(f'- {GOLD}{format_number(ingr_pointer * amount)} coins')
             continue
+        elif index == 0 and recipe.copy_upgrades:
+            source_index = self.index_item(ingr_pointer)
+            source_item = self.inventory[source_index].copy()
+            for upgrade_name in UPGRADE_ATTRS:
+                if not hasattr(source_item, upgrade_name):
+                    continue
+                copied_upgrades[upgrade_name] = getattr(source_item, upgrade_name)
+            if getattr(source_item, 'floor_obtained', None) is not None:
+                value = getattr(source_item, 'rarity')
+                if getattr(source_item, 'recombobulated', True):
+                    value = MINUS_RARITY[value]
+                copied_upgrades['rarity'] = value
         _ingr_pointer = ingr_pointer.copy()
         _ingr_pointer['count'] = ingr_pointer.get('count', 1) * amount
         self.remove_item(_ingr_pointer)
 
-    result_pointer = recipe.result
+    result_pointer = recipe.result.copy()
     name = result_pointer['name']
+    result_pointer['count'] = result_pointer.get('count', 1) * amount
 
     if name.endswith('_pet'):
         rarity = result_pointer.get('rarity')
@@ -433,9 +461,15 @@ def craft(self, recipe: Recipe | RecipeGroup, amount: int = 1, /):
             if random() > (keep_weight / total):
                 result_pointer['rarity'] = 'legendary'
 
-    _result_pointer = result_pointer.copy()
-    _result_pointer['count'] = result_pointer.get('count', 1) * amount
-    self.recieve_item(_result_pointer)
+    result_item = get_item(name, **{
+        key: value for key, value in result_pointer.items() if key != 'name'})
+
+    for key, value in copied_upgrades.items():
+        if hasattr(result_item, key):
+            setattr(result_item, key, value)
+
+    result_item.count = result_pointer.get('count', 1) * amount
+    self.recieve_item(result_item.to_obj())
 
     if name.endswith('_minion'):
         tier = result_pointer['tier']

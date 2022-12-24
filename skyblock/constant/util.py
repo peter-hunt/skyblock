@@ -3,7 +3,8 @@ from .colors import *
 
 __all__ = [
     'Amount', 'Ench', 'ItemPointer', 'Number', 'NUMBER_SCALES', 'ROMAN_NUM',
-    'SPECIAL_ZONES', 'SPECIAL_NAMES', 'SPECIAL_ALTER', 'IGNORED_WORDS',
+    'SPECIAL_ZONES', 'SPECIAL_NAMES', 'SPECIAL_ALTER', 'IGNORED_WORDS', 'UPGRADE_ATTRS',
+    'PLUS_RARITY', 'MINUS_RARITY',
 ]
 
 Amount = list[int] | tuple[int, int] | int | float
@@ -86,6 +87,10 @@ SPECIAL_NAMES = {
 
     'millenia_old_blaze_ashes': 'Millenia-Old Blaze Ashes',
     'netherrack_looking_sunshade': 'Netherrack-Looking Sunshade',
+
+    'diamantes_handle': "Diamante's Handle",
+    'lasrs_eye': "L.A.S.R.'s Eye",
+    'bigfoots_lasso': "Bigfoot's Lasso",
 
     # weapon
     'sinseeker_scythe': f'{DARK_RED}Sin{DARK_PURPLE}seeker Scythe',
@@ -265,3 +270,33 @@ SPECIAL_ALTER = {
 }
 
 IGNORED_WORDS = ('and', 'from', 'of', 'the', 'to')
+
+UPGRADE_ATTRS = {
+    'dye', 'enchantments', 'exp', 'floor_obtained', 'hot_potato',
+    'kill_count', 'modifier', 'recombobulated', 'stars',
+    'compact_count', 'cultivating_count', 'expertise_count',
+}
+
+PLUS_RARITY = {
+    'common': 'uncommon',
+    'uncommon': 'rare',
+    'rare': 'epic',
+    'epic': 'legendary',
+    'legendary': 'mythic',
+    'mythic': 'divine',
+    'divine': 'special',
+    'special': 'very_special',
+    'very_special': 'very_special',
+}
+
+MINUS_RARITY = {
+    'common': 'common',
+    'uncommon': 'common',
+    'rare': 'uncommon',
+    'epic': 'rare',
+    'legendary': 'epic',
+    'mythic': 'legendary',
+    'divine': 'mythic',
+    'special': 'divine',
+    'very_special': 'special',
+}

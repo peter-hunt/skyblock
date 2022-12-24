@@ -511,6 +511,11 @@ SELL_PRICE = {
     'enchanted_sponge': 2_000,
     'enchanted_wet_sponge': 80_000,
 
+    'magmafish': 20,
+    'silver_magmafish': 1_600,
+    'gold_magmafish': 128_000,
+    'diamond_magmafish': 10_240_000,
+
     'rookie_axe': 6,
     'sweet_axe': 25,
     'efficient_axe': 25,

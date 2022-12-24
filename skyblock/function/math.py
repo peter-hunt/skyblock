@@ -119,7 +119,7 @@ def calc_skill_level_info(name: str, exp: Number, /) -> \
                 return lvl - 1, exp_left, line[1]
     else:
         exp_left = exp - exp_table[-2][2]
-        return SKILL_LIMITS[name], exp_left, line[1]
+        return SKILL_LIMITS[name], exp_left, 0
 
 
 def display_skill_reward(name: str, original: Number, current: Number):

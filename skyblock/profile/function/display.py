@@ -6,7 +6,7 @@ from time import sleep
 from typing import Iterable
 
 from ...constant.colors import *
-from ...constant.main import ARMOR_PARTS
+from ...constant.main import ARMOR_PARTS, SKILL_LIMITS
 from ...constant.mobs import BESTIARY_ALTER
 from ...constant.stat import ALL_STATS, HIDDEN_STATS, PERC_STATS
 from ...constant.util import Number
@@ -652,10 +652,13 @@ def display_skill_add(self, name: str, amount: Number, /):
     name_display = format_name(name)
 
     exp = self.get_skill_exp(name)
-    _, exp_left, exp_to_next = calc_skill_level_info(name, exp)
+    level, exp_left, exp_to_next = calc_skill_level_info(name, exp)
+    outofgap = ''
+    if level != SKILL_LIMITS[name]:
+        outofgap = (f'/{format_number(exp_to_next)}')
 
     dark_aqua(f'+ {format_number(amount)} {name_display}'
-              f' ({format_number(exp_left)}/{format_number(exp_to_next)})')
+              f' ({format_number(exp_left)}{outofgap})')
 
 
 def display_skill(self, name: str, /, *,

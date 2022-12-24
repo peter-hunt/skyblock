@@ -12,7 +12,7 @@ from ..constant.enchanting import ENCHS
 from ..constant.mobs import BESTIARY_ALTER
 from ..constant.util import (
     NUMBER_SCALES, ROMAN_NUM, SPECIAL_ZONES, SPECIAL_NAMES,
-    SPECIAL_ALTER, IGNORED_WORDS, Number,
+    SPECIAL_ALTER, IGNORED_WORDS, UPGRADE_ATTRS, Number,
 )
 
 from .io import red, yellow
@@ -112,6 +112,10 @@ def format_number(number: Number, /, *, sign: bool = False) -> str:
     return f'{sign_str}{string}'
 
 
+def format_rarity(rarity: str, /) -> str:
+    return rarity.upper().replace('_', ' ')
+
+
 def format_roman(number: int, /) -> str:
     result = ''
     for letter, amount in reversed(ROMAN_NUM):
@@ -161,8 +165,7 @@ def get(ls: list[any], /, name: str | None = None,
     attrs = {}
     args = {}
     for key, value in kwargs.items():
-        if key in {'count', 'enchantments', 'hot_potato',
-                   'modifier', 'rarity', 'stars'}:
+        if key in {'count'} | UPGRADE_ATTRS:
             attrs[key] = value
         elif key not in {'type'}:
             args[key] = value

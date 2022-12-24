@@ -601,6 +601,8 @@ def get_stat(self, name: str, index: int | None = None, /, *,
         bonus_value += (base_value + bonus_value) * 0.05
     if set_bonus == 'fairy_armor' and name == 'speed':
         bonus_value += (base_value + bonus_value) * 0.1
+    if set_bonus == 'skeletor' and name in {'strength', 'crit_damage'}:
+        bonus_value += min(self.stats.get('skeletor_kills', 0) // 10, 50)
 
     if has_active_pet:
         if 'superior' in active_pet.abilities:

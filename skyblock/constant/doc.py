@@ -245,4 +245,7 @@ Give player experience. (DEBUG)
 
 > give <item> [amount]
 Give player item. (DEBUG)
+
+> money give <amount>
+Give player money. (DEBUG)
 """.strip()
