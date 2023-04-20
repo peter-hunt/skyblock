@@ -40,7 +40,7 @@ It requires the Skyblock Data repo, [Skyblock Data](https://github.com/peter-hun
 
 # Reasons for installing Skyblock
 
-Well, if you **don't want to buy Minecraft for 26.95 dollars**, and you **still want to play Hypixel Skyblock**, then this project is for you.
+Well, if you **don't want to buy Minecraft for 29.99 dollars**, and you **still want to play Hypixel Skyblock**, then this project is for you.
 
 The project is also for people who **can't connect to Hypixel or having a bad connection**.
 
