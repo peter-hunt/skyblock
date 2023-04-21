@@ -66,6 +66,7 @@ def fish(self, rod_index: int, iteration: int = 1, /):
     use_expertise = enchants.get('expertise', 0) != 0
 
     zone = self.zone
+    table = FISHING_TABLE
     tables = [
         [line for line in table if line[1] == 'normal'],
         [line for line in table if line[1] == 'good_catch'],
@@ -165,7 +166,7 @@ def fish(self, rod_index: int, iteration: int = 1, /):
                 is_treasure = False
                 table, total_weight = tables[0], total_weights[0]
             pool = random() * total_weight
-            for drop, rarity, weight, fishing_exp in table:
+            for drop, rarity, weight, fishing_exp, zone in table:
                 if pool < weight:
                     break
                 pool -= weight
