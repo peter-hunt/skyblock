@@ -109,7 +109,8 @@ def fish(self, rod_index: int, iteration: int = 1, /):
             alive = self.slay(mob, weapon_index)
             if not alive:
                 return
-
+            if 'sea_creature_killed' not in self.stats:
+                self.stats['sea_creature_killed'] = 0
             self.stats['sea_creature_killed'] += 1
             sea_creature_killed = self.stats['sea_creature_killed']
             dolphin_pet_rarity = {250: 'common', 1000: 'uncommon', 2500: 'rare',
