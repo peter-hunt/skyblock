@@ -1,7 +1,10 @@
+import os
+import shutil
 from json import load
 from os import mkdir
 from os.path import join
 from pathlib import Path
+from stat import S_IWUSR
 from subprocess import run
 
 from .myjson import dump
@@ -27,7 +30,10 @@ def install_data(*, is_update=False):
     if is_update or not is_data():
         if Path(data_dir).is_dir():
             try:
-                run(['rm', '-rf', data_dir])
+                packs_dir = join(data_dir, '.git', 'objects', 'pack')
+                for file in os.listdir(packs_dir):
+                    os.chmod(join(packs_dir, file), S_IWUSR)
+                shutil.rmtree(data_dir, True)
             except FileNotFoundError:
                 pass
         mkdir(data_dir)
