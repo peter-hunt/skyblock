@@ -147,7 +147,7 @@ def fish(self, rod_index: int, iteration: int = 1, /):
                     white(f'{RARITY_COLORS[rarity]}GREAT CATCH! {AQUA}'
                             f'You found a {item.display()}{AQUA}.')
                     self.recieve_item(item.to_obj())
-                continue
+                    continue
             if self.island == 'jerry':
                 if random_bool(0.000_000_1):
                     rarity = 'great_catch'
@@ -155,7 +155,7 @@ def fish(self, rod_index: int, iteration: int = 1, /):
                     white(f'{RARITY_COLORS[rarity]}GREAT CATCH! {AQUA}'
                             f'You found a {item.display()}{AQUA}.')
                     self.recieve_item(item.to_obj())
-                continue
+                    continue
 
             if random_bool(treasure_chance):
                 is_treasure = True
