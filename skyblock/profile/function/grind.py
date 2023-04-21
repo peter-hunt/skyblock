@@ -512,7 +512,7 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
     weapon = (Empty() if weapon_index is None
               else self.inventory[weapon_index])
 
-    if isinstance(weapon, (Empty, Bow, Sword, FishingRod, Pickaxe, Drill)):
+    if isinstance(weapon, (Bow, Sword, FishingRod, Pickaxe, Drill)):
         weapon_name = weapon.name
     else:
         weapon = Empty()
