@@ -15,7 +15,7 @@ def get_enchantments(item) -> list[str]:
     elif cls in {'Drill', 'Pickaxe'}:
         table = PICKAXE_ENCHS
     elif cls == 'FishingRod':
-        table = FISHING_ROD_ENCHS
+        table = FISHING_ROD_ENCHS.copy()
         if item.damage != 0:
             table += SWORD_ENCHS
     elif cls == 'Hoe':
