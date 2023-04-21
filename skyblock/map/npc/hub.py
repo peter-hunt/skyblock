@@ -245,11 +245,11 @@ HUB_NPCS = [
              ' boost some of your stats!'),
         ]),
     Npc('jacob',
-        dialog=[[
+        dialog=[
             'Howdy!',
             'I organize farming contests once every few days!',
             'You need Farming X to participate! :)',
-        ]]),
+        ]),
     Npc('jamie',
         init_dialog=[
             'You might have noticed that you have a Mana bar!',
