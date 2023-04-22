@@ -1029,9 +1029,9 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
                 damage_dealt += flame * 15 * duplex_fire_mult
 
                 if mob.name == 'ice_walker' and isinstance(weapon, Pickaxe):
-                    pass
-                else:
-                    damage_dealt /= 1 + mob.defense / 100
+                    damage_dealt *= 1000
+
+                damage_dealt /= 1 + mob.defense / 100
 
                 mob_hp = max(mob_hp - damage_dealt, 0)
                 damage_display = format_number(damage_dealt)
