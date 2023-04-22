@@ -394,8 +394,6 @@ def get_stat(self, name: str, index: int | None = None, /, *,
             set_bonus = False
             continue
 
-        bonus_value += piece.get_stat(name, self)
-
         for current_ability in piece.abilities:
             if current_ability in SET_BONUSES:
                 break
@@ -416,6 +414,7 @@ def get_stat(self, name: str, index: int | None = None, /, *,
             continue
 
         delta = 0
+        delta += piece.get_stat(name, self)
         armor_ench = getattr(piece, 'enchantments', {})
 
         if name == 'health':

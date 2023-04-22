@@ -19,9 +19,8 @@ SET_BONUSES = (
     'strong_blood',
     'superior_blood',
     'fairys_outfit',
-
+    'ender_armor',
     'absolute_unit',
-
     'skeleton_soldier',
     'skeleton_master',
 )
