@@ -49,7 +49,6 @@ def add_pet(self, index: int, /):
 
 def buy(self, trade: tuple, amount: int, /):
     cost = trade[0]
-
     if isinstance(cost, (int, float)):
         cost = [cost]
 
@@ -87,6 +86,7 @@ def buy(self, trade: tuple, amount: int, /):
             item.count = 1
         count_str = '' if count == 1 else f'{GRAY} x {count}'
         display.append(f'{item.display()}{count_str}')
+        pointer['count'] = pointer.get('count', 1) // amount
 
     display_str = f'{GREEN}, '.join(display)
 
@@ -188,7 +188,7 @@ def combine(self, index_1: int, index_2: int, /):
             if item_2.name == 'midas_jewel' and item_1.name != 'midas_sword':
                 combinable = False
             elif item_2.name == 'warped_stone' and item_1.name not in {
-                    'aspect_of_the_end', 'aspect_of_the_void'}:
+                'aspect_of_the_end', 'aspect_of_the_void'}:
                 combinable = False
             elif not (isinstance(item_1, Sword | FishingRod) and getattr(item_1, 'damage', 0) != 0):
                 combinable = False
@@ -631,7 +631,7 @@ def enchant(self, item_index: int, /):
                 f'{GRAY}{xp}' if lvl + 1 < current
                 else f'{RED}{xp}' if lvl + 1 == current
                 else (f'{DARK_AQUA}{xp}{AQUA}➜{dxp}' if dxp <= exp_level
-                        else f'{DARK_AQUA}{xp}{AQUA}➜{YELLOW}{dxp}')
+                      else f'{DARK_AQUA}{xp}{AQUA}➜{YELLOW}{dxp}')
                 if xp != dxp else f'{AQUA}{xp}'
                 for lvl, (xp, dxp) in enumerate(
                     zip(xps, discounted_level)))
