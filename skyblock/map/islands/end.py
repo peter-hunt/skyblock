@@ -18,8 +18,8 @@ END_CAVES = Zone(
     resources=[get_resource('end_stone'), get_resource('obsidian')],
     mobs=[get_mob('enderman', level=50)],
 )
-END_ENTRENCE = Zone(
-    'end_entrence', -540, -300, portal='spider',
+END_ENTRANCE = Zone(
+    'end_entrance', -540, -300, portal='spider',
     npcs=[get_npc('pearl_dealer')],
     resources=[get_resource('end_stone'), get_resource('obsidian')],
     mobs=[get_mob('enderman', level=42)],
@@ -37,13 +37,13 @@ VOID_SEPULTURE = Zone(
 )
 
 END_JOINTS = [
-    DRAGONS_NEST, END_CAVES, END_ENTRENCE, END_TUNNEL, VOID_SEPULTURE,
+    DRAGONS_NEST, END_CAVES, END_ENTRANCE, END_TUNNEL, VOID_SEPULTURE,
 ]
 END_CONNS = [
     (DRAGONS_NEST, END_CAVES),
     (DRAGONS_NEST, VOID_SEPULTURE),
     (END_CAVES, END_TUNNEL),
-    (END_ENTRENCE, END_TUNNEL),
+    (END_ENTRANCE, END_TUNNEL),
 ]
 
 END_DISTS = {}
@@ -52,6 +52,6 @@ for conn in END_CONNS:
     add_dist(*conn, END_DISTS)
 
 END = Island(
-    'end', 'end_entrence', END_JOINTS, END_CONNS, END_DISTS,
+    'end', 'end_entrance', END_JOINTS, END_CONNS, END_DISTS,
     skill_req=('combat', 12),
 )

@@ -7,7 +7,7 @@ from ..object import *
 
 __all__ = ['DEEP']
 
-DEEP_ENTRENCE = Zone('deep_entrence', 0, 90, portal='gold')
+DEEP_ENTRANCE = Zone('deep_entrance', 0, 90, portal='gold')
 GUNPOWDER_MINES = Zone(
     'gunpowder_mines', 5, 20,
     resources=[get_resource('stone'), get_resource('coal_ore'),
@@ -50,14 +50,14 @@ LIFT = Zone(
 )
 
 DEEP_JOINTS = [
-    DEEP_ENTRENCE, DIAMOND_RESERVE, GUNPOWDER_MINES, LAPIS_QUARRY, LIFT,
+    DEEP_ENTRANCE, DIAMOND_RESERVE, GUNPOWDER_MINES, LAPIS_QUARRY, LIFT,
     OBSIDIAN_SANCTUARY, PIGMANS_DEN, SLIMEHILL,
 ]
 DEEP_CONNS = [
     (DIAMOND_RESERVE, LIFT),
     (DIAMOND_RESERVE, OBSIDIAN_SANCTUARY),
     (DIAMOND_RESERVE, SLIMEHILL),
-    (DEEP_ENTRENCE, GUNPOWDER_MINES),
+    (DEEP_ENTRANCE, GUNPOWDER_MINES),
     (GUNPOWDER_MINES, LAPIS_QUARRY),
     (GUNPOWDER_MINES, LIFT),
     (LAPIS_QUARRY, PIGMANS_DEN),
@@ -74,6 +74,6 @@ for conn in DEEP_CONNS:
     add_dist(*conn, DEEP_DISTS)
 
 DEEP = Island(
-    'deep', 'deep_entrence', DEEP_JOINTS, DEEP_CONNS, DEEP_DISTS,
+    'deep', 'deep_entrance', DEEP_JOINTS, DEEP_CONNS, DEEP_DISTS,
     skill_req=('mining', 5),
 )

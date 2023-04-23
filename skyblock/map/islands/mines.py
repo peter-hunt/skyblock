@@ -7,8 +7,8 @@ from ..object import *
 
 __all__ = ['MINES']
 
-DWARVEN_ENTRENCE = Zone(
-    'dwarven_entrence', -60, -120, portal='deep',
+DWARVEN_ENTRANCE = Zone(
+    'dwarven_entrance', -60, -120, portal='deep',
     npcs=[get_npc('life_operator')],
 )
 DWARVEN_VILLAGE = Zone(
@@ -88,11 +88,11 @@ UPPER = Zone(
 )
 
 MINES_JOINTS = [
-    DWARVEN_ENTRENCE, DWARVEN_VILLAGE, FAR, FORGE, GOBLINS, ICE_WALLS, MIST,
+    DWARVEN_ENTRANCE, DWARVEN_VILLAGE, FAR, FORGE, GOBLINS, ICE_WALLS, MIST,
     PALACE, RAMPARTS, ROYAL, SPRINGS, VEINS, UPPER,
 ]
 MINES_CONNS = [
-    (DWARVEN_ENTRENCE, DWARVEN_VILLAGE),
+    (DWARVEN_ENTRANCE, DWARVEN_VILLAGE),
     (DWARVEN_VILLAGE, RAMPARTS),
     (DWARVEN_VILLAGE, ROYAL),
     (DWARVEN_VILLAGE, SPRINGS),
@@ -116,6 +116,6 @@ for conn in MINES_CONNS:
     add_dist(*conn, MINES_DISTS)
 
 MINES = Island(
-    'mines', 'dwarven_entrence', MINES_JOINTS, MINES_CONNS, MINES_DISTS,
+    'mines', 'dwarven_entrance', MINES_JOINTS, MINES_CONNS, MINES_DISTS,
     skill_req=('mining', 12),
 )
