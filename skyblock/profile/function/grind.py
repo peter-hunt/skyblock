@@ -217,6 +217,7 @@ def fish(self, rod_index: int, iteration: int = 1, /):
 @checkpoint
 def gather(self, name: str, tool_index: int | None,
            iteration: int | None = 1, /):
+    magic_find = 10
     resource = get_resource(name)
     tool = Empty() if tool_index is None else self.inventory[tool_index]
     iteration = 1 if iteration is None else iteration
