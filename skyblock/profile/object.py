@@ -51,7 +51,7 @@ class Profile:
     armor: list[Armor] = [Empty() for _ in range(4)]
     pets: list[Pet] = []
     ender_chest: list[Item] = []
-    inventory: list[Item] = [Empty() for _ in range(80)]
+    inventory: list[Item] = [Empty() for _ in range(36)]
     quiver: list[Item] = []
     stash: list[Item] = []
     accessory_bag: list[Item] = []
